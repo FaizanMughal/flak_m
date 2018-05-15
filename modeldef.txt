@@ -5,7 +5,7 @@
 Model "ShockRifleWave"
 {
 	Path "models"
-	Model 0 "shockrwm.umsh"
+	Model 0 "shockrwm_d.3d"
 	Skin 0 "shocktt1.png"
 	DONTCULLBACKFACES
 
@@ -16,7 +16,7 @@ Model "ShockRifleWave"
 Model "ShockBeamRing"
 {
 	Path "models"
-	Model 0 "utringex.umsh"
+	Model 0 "utringex_d.3d"
 	Skin 0 "asaring.png"
 	DONTCULLBACKFACES
 	USEACTORPITCH
@@ -37,7 +37,7 @@ Model "ShockBeamRing"
 Model "ShockBlastRing"
 {
 	Path "models"
-	Model 0 "utringex.umsh"
+	Model 0 "utringex_d.3d"
 	Skin 0 "ppurplering.png"
 	DONTCULLBACKFACES
 	USEACTORPITCH
@@ -58,7 +58,7 @@ Model "ShockBlastRing"
 Model "ShockRifle"
 {
 	Path "models"
-	Model 1 "asmd2pick.umsh"
+	Model 1 "asmd2pick_d.3d"
 	Skin 1 "asmd_t.png"
 	AngleOffset 270
 	PitchOffset 90
@@ -71,7 +71,7 @@ Model "ShockRifle"
 Model "ShockRifle"
 {
 	Path "models"
-	Model 1 "asmd2pick.umsh"
+	Model 1 "asmd2pick_d.3d"
 	Skin 1 "asmd_t.png"
 	AngleOffset 270
 	PitchOffset 90
@@ -84,7 +84,7 @@ Model "ShockRifle"
 Model "ShockRifle"
 {
 	Path "models"
-	Model 0 "asmd2m.umsh"
+	Model 0 "asmd2m_d.3d"
 	SurfaceSkin 0 0 "asmd_t1.png"
 	SurfaceSkin 0 1 "asmd_t2.png"
 	SurfaceSkin 0 2 "asmd_t3.png"
@@ -151,7 +151,7 @@ Model "ShockRifle"
 Model "FlakAmmo"
 {
 	Path "models"
-	Model 0 "flakammom.umsh"
+	Model 0 "flakammom_d.3d"
 	Skin 0 "jfa1.png"
 	PitchOffset 90
 	Scale 0.1 0.1 0.1
@@ -163,7 +163,7 @@ Model "FlakAmmo"
 Model "FlakAmmo2"
 {
 	Path "models"
-	Model 0 "flakslugm.umsh"
+	Model 0 "flakslugm_d.3d"
 	Skin 0 "jflakslugel1.png"
 	PitchOffset 90
 	Scale 0.04 0.04 0.04
@@ -175,7 +175,7 @@ Model "FlakAmmo2"
 Model "FlakSlug"
 {
 	Path "models"
-	Model 0 "flakslugm.umsh"
+	Model 0 "flakslugm_d.3d"
 	Skin 0 "jflakslugel1.png"
 	RollOffset 90
 	Scale 0.04 0.04 0.04
@@ -187,7 +187,7 @@ Model "FlakSlug"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 0 "chunkm.umsh"
+	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a00.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -199,7 +199,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 0 "chunkm.umsh"
+	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a01.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -211,7 +211,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 0 "chunkm.umsh"
+	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a02.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -223,7 +223,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 0 "chunkm.umsh"
+	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a03.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -235,7 +235,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 0 "chunkm.umsh"
+	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a04.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -247,7 +247,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 0 "chunkm.umsh"
+	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a05.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -259,7 +259,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 0 "chunkm.umsh"
+	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a06.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -271,7 +271,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 0 "chunkm.umsh"
+	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a07.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -283,7 +283,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 0 "chunkm.umsh"
+	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a08.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -295,7 +295,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 0 "chunkm.umsh"
+	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a09.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -307,7 +307,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 0 "chunkm.umsh"
+	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a10.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -319,7 +319,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 0 "chunkm.umsh"
+	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a11.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -332,7 +332,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 1 "chunk2m.umsh"
+	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a00.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -344,7 +344,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 1 "chunk2m.umsh"
+	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a01.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -356,7 +356,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 1 "chunk2m.umsh"
+	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a02.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -368,7 +368,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 1 "chunk2m.umsh"
+	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a03.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -380,7 +380,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 1 "chunk2m.umsh"
+	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a04.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -392,7 +392,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 1 "chunk2m.umsh"
+	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a05.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -404,7 +404,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 1 "chunk2m.umsh"
+	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a06.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -416,7 +416,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 1 "chunk2m.umsh"
+	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a07.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -428,7 +428,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 1 "chunk2m.umsh"
+	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a08.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -440,7 +440,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 1 "chunk2m.umsh"
+	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a09.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -452,7 +452,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 1 "chunk2m.umsh"
+	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a10.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -464,7 +464,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 1 "chunk2m.umsh"
+	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a11.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -477,7 +477,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 2 "chunk3m.umsh"
+	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a00.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -489,7 +489,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 2 "chunk3m.umsh"
+	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a01.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -501,7 +501,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 2 "chunk3m.umsh"
+	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a02.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -513,7 +513,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 2 "chunk3m.umsh"
+	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a03.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -525,7 +525,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 2 "chunk3m.umsh"
+	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a04.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -537,7 +537,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 2 "chunk3m.umsh"
+	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a05.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -549,7 +549,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 2 "chunk3m.umsh"
+	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a06.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -561,7 +561,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 2 "chunk3m.umsh"
+	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a07.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -573,7 +573,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 2 "chunk3m.umsh"
+	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a08.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -585,7 +585,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 2 "chunk3m.umsh"
+	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a09.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -597,7 +597,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 2 "chunk3m.umsh"
+	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a10.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -609,7 +609,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 2 "chunk3m.umsh"
+	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a11.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -622,7 +622,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 3 "chunk4m.umsh"
+	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a00.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -634,7 +634,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 3 "chunk4m.umsh"
+	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a01.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -646,7 +646,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 3 "chunk4m.umsh"
+	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a02.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -658,7 +658,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 3 "chunk4m.umsh"
+	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a03.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -670,7 +670,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 3 "chunk4m.umsh"
+	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a04.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -682,7 +682,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 3 "chunk4m.umsh"
+	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a05.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -694,7 +694,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 3 "chunk4m.umsh"
+	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a06.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -706,7 +706,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 3 "chunk4m.umsh"
+	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a07.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -718,7 +718,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 3 "chunk4m.umsh"
+	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a08.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -730,7 +730,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 3 "chunk4m.umsh"
+	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a09.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -742,7 +742,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 3 "chunk4m.umsh"
+	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a10.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -754,7 +754,7 @@ Model "FlakChunk"
 Model "FlakChunk"
 {
 	Path "models"
-	Model 3 "chunk4m.umsh"
+	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a11.png"
 	Scale 0.06 0.06 0.06
 	ZOffset 2
@@ -767,7 +767,7 @@ Model "FlakChunk"
 Model "FlakCannon"
 {
 	Path "models"
-	Model 1 "flak2pick.umsh"
+	Model 1 "flak2pick_d.3d"
 	Skin 1 "flak_t.png"
 	AngleOffset 90
 	PitchOffset 90
@@ -781,7 +781,7 @@ Model "FlakCannon"
 Model "FlakCannon"
 {
 	Path "models"
-	Model 1 "flak2pick.umsh"
+	Model 1 "flak2pick_d.3d"
 	Skin 1 "flak_t.png"
 	AngleOffset 90
 	PitchOffset 90
@@ -795,7 +795,7 @@ Model "FlakCannon"
 Model "FlakCannon"
 {
 	Path "models"
-	Model 0 "flakm.umsh"
+	Model 0 "flakm_d.3d"
 	SurfaceSkin 0 0 "flak_t1.png"
 	SurfaceSkin 0 1 "flak_t2.png"
 	SurfaceSkin 0 2 "flak_t3.png"
@@ -897,7 +897,7 @@ Model "FlakCannon"
 Model "WarheadAmmo"
 {
 	Path "models"
-	Model 0 "missile.umsh"
+	Model 0 "missile_d.3d"
 	Skin 0 "jmissile_01.png"
 	Scale -0.2 0.2 0.2
 	PitchOffset 90
@@ -909,7 +909,7 @@ Model "WarheadAmmo"
 Model "ShockWave"
 {
 	Path "models"
-	Model 0 "shockwavem.umsh"
+	Model 0 "shockwavem_d.3d"
 	Skin 0 "shockt1.png"
 	DONTCULLBACKFACES
 
@@ -920,7 +920,7 @@ Model "ShockWave"
 Model "WarShell"
 {
 	Path "models"
-	Model 0 "missile.umsh"
+	Model 0 "missile_d.3d"
 	Skin 0 "jmissile_01.png"
 	Scale -0.2 0.2 0.2
 	Offset -13 0 0
@@ -933,7 +933,7 @@ Model "WarShell"
 Model "GuidedWarShell"
 {
 	Path "models"
-	Model 0 "missile.umsh"
+	Model 0 "missile_d.3d"
 	Skin 0 "jmissile_01.png"
 	Scale -0.2 0.2 0.2
 	Offset -13 0 0
@@ -947,7 +947,7 @@ Model "GuidedWarShell"
 Model "WarheadLauncher"
 {
 	Path "models"
-	Model 1 "whpick.umsh"
+	Model 1 "whpick_d.3d"
 	Skin 1 "jwhpick1.png"
 	Scale -0.2 0.2 0.2
 	ZOffset 12
@@ -959,7 +959,7 @@ Model "WarheadLauncher"
 Model "WarheadLauncher"
 {
 	Path "models"
-	Model 1 "whpick.umsh"
+	Model 1 "whpick_d.3d"
 	Skin 1 "jwhpick1.png"
 	Scale -0.2 0.2 0.2
 	AngleOffset 180
@@ -971,7 +971,7 @@ Model "WarheadLauncher"
 Model "WarheadLauncher"
 {
 	Path "models"
-	Model 0 "warhead.umsh"
+	Model 0 "warhead_d.3d"
 	SurfaceSkin 0 0 "jwarhead1.png"
 	SurfaceSkin 0 1 "jwarhead2.png"
 	SurfaceSkin 0 2 "jwarhead3.png"
