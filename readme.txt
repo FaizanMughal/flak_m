@@ -7,10 +7,12 @@ Currently implemented:
 
  - ASMD Shock Rifle (slot 4)
  - Flak Cannon (slot 8)
+ - Redeemer (slot 0)
+
 
 In progress:
 
- - Redeemer (slot 0)
+ - N/A
 
 To be done:
 
@@ -37,4 +39,4 @@ To be done:
  - Invisibility (blursphere)
  - Jump Boots (light amplification visor)
  - Toxin Suit (radsuit)
- -
+ - ... maybe more
