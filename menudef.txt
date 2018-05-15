@@ -1,0 +1,20 @@
+OptionValue "UTMenuType"
+{
+	0, "Final"
+	1, "Beta"
+}
+
+OptionMenu "UTOptionMenu"
+{
+	Title "UT Options"
+
+	StaticText "Menu Options", "Gold"
+	Option "Menu Type", "flak_protomenu", "UTMenuType"
+	Command "Apply Changes", "event refreshmenu"
+}
+
+AddOptionMenu "OptionsMenu"
+{
+	StaticText " "
+	Submenu "UT Options", "UTOptionMenu"
+}

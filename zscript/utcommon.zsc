@@ -1,0 +1,64 @@
+Class UTWeapon : Weapon
+{
+	override Inventory CreateTossable( int amt )
+	{
+		Inventory d = Super.CreateTossable(amt);
+		if ( d && (d.GetClass() == GetClass()) )
+			d.SetState(d.ResolveState("Spawn")+1);
+		return d;
+	}
+
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !Owner || !Owner.player || (Owner.player.ReadyWeapon != self) ) return;
+		Owner.player.WeaponState |= WF_WEAPONBOBBING; // UT weapons always bob
+	}
+
+	Default
+	{
+		Inventory.PickupSound "ut/weapon";
+		Weapon.BobStyle "Smooth";
+		Weapon.BobSpeed 1.5;
+		Weapon.BobRangeX 0.2;
+		Weapon.BobRangeY 0.4;
+	}
+}
+
+Class UTMenuHandler : StaticEventHandler
+{
+	ui TextureID tex;
+
+	ui void StartMenu()
+	{
+		if ( gamestate != GS_TITLELEVEL ) return;
+		if ( CVar.GetCVar('flak_protomenu',players[consoleplayer]).GetBool() )
+		{
+			S_ChangeMusic("xyzdMenu");
+			tex = TexMan.CheckForTexture("protobg",TexMan.Type_Any);
+		}
+		else
+		{
+			S_ChangeMusic("utmenu23");
+			tex = TexMan.CheckForTexture("finalbg",TexMan.Type_Any);
+		}
+	}
+
+	override void ConsoleProcess( ConsoleEvent e )
+	{
+		if ( e.Name ~== "refreshmenu" ) StartMenu();
+	}
+
+	override void PostUiTick()
+	{
+		if ( gametic <= 0 ) StartMenu();
+	}
+
+	override void RenderOverlay( RenderEvent e )
+	{
+		if ( gamestate != GS_TITLELEVEL ) return;
+		if ( tex.IsNull() || !tex.IsValid() ) return;
+		Screen.Dim("Black",1.0,0,0,Screen.GetWidth(),Screen.GetHeight());
+		Screen.DrawTexture(tex,true,0,0,DTA_VirtualWidth,1024,DTA_VirtualHeight,768);
+	}
+}

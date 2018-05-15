@@ -1,0 +1,539 @@
+Class FlakAmmo : Ammo
+{
+	Default
+	{
+		Tag "Flak Shells";
+		Inventory.Icon "I_FLAK";
+		Inventory.PickupMessage "You picked up 10 Flak Shells.";
+		Inventory.PickupSound "ut/ammo";
+		Inventory.Amount 10;
+		Inventory.MaxAmount 50;
+		Ammo.BackpackAmount 50;
+		Ammo.BackpackMaxAmount 100;
+		Ammo.DropAmount 10;
+	}
+	States
+	{
+	Spawn:
+		FAMO A -1;
+		Stop;
+	}
+}
+
+Class FlakAmmo2 : FlakAmmo
+{
+	Default
+	{
+		Tag "Flak Shell";
+		Inventory.PickupMessage "You picked up a Flak Shell.";
+		Inventory.Amount 1;
+		Ammo.DropAmount 1;
+	}
+	States
+	{
+	Spawn:
+		FSLG A -1;
+		Stop;
+	}
+}
+
+Class ChunkLight : DynamicLight
+{
+	Default
+	{
+		DynamicLight.Type "Point";
+		Args 255,224,8;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		args[LIGHT_RED] = 255*target.alpha;
+		args[LIGHT_GREEN] = 224*target.alpha;
+		args[LIGHT_BLUE] = 128*target.alpha;
+	}
+}
+
+Class ChunkTrail : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+DONTSPLASH;
+		+FORCEXYBILLBOARD;
+		+INVISIBLE;	// temporarily until clipping screwery is fixed
+		Scale 0.2;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		let l = Spawn("ChunkLight",pos);
+		l.target = self;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		A_SpawnParticle("FFFF00",SPF_FULLBRIGHT,1,8,startalphaf:alpha);
+		A_SpawnParticle("E0A000",SPF_FULLBRIGHT,1,16,startalphaf:alpha*0.6);
+		A_SpawnParticle("804000",SPF_FULLBRIGHT,1,32,startalphaf:alpha*0.3);
+		if ( InStateSequence(CurState,FindState("Death")) ) return;
+		if ( !target )
+		{
+			SetStateLabel("Death");
+			return;
+		}
+		SetOrigin(target.pos+(0,0,speed),true);
+	}
+	States
+	{
+	Spawn:
+		FGLO A 1 Bright;
+		Wait;
+	Death:
+		FGLO A 1 Bright A_FadeOut(0.1);
+		Wait;
+	}
+
+}
+
+Class FlakChunk : Actor
+{
+	Actor lasthit;
+	ChunkTrail trail;
+	double rollvel, pitchvel;
+	double lifetime, lifespeed;
+	int lifetics;
+	Default
+	{
+		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
+		Radius 2;
+		Height 2;
+		Speed 80;
+		DamageFunction Random[Flak](12,18);
+		DamageType 'Shredded';
+		BounceType "Doom";
+		BounceFactor 0.8;
+		PROJECTILE;
+		+USEBOUNCESTATE
+		-BOUNCEAUTOOFF
+		Scale 0.5;
+	}
+	override bool CanCollideWith( Actor other, bool passive )
+	{
+		return (vel.length()>4.0);
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		lifetime = 0;
+		lifespeed = FRandom[Flak](0.004,0.008);
+		trail = ChunkTrail(Spawn("ChunkTrail",pos));
+		trail.target = self;
+		trail.speed = 0.5;
+		rollvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1);
+		scale *= Frandom[Flak](0.8,1.2);
+		SetState(ResolveState("Spawn")+Random[Flak](0,3));
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		lifetics++;
+		if ( lifetics > 3 )
+		{
+			lifetics = 0;
+			if ( frame < 11 ) frame++;
+		}
+		lifetime += lifespeed;
+		if ( (waterlevel <= 0) && (frame < 10) ) A_SpawnParticle("AAAAAA",0,35,2.0,velx:FRandom[Flak](-0.1,0.1),vely:FRandom[Flak](-0.1,0.1),velz:FRandom[Flak](-0.1,0.1),accelz:0.02,startalphaf:scale.x/0.5,sizestep:0.2);
+		if ( trail ) trail.alpha = max(0,11-frame)/11.;
+		if ( InStateSequence(CurState,FindState("Death")) ) return;
+		A_SetRoll(roll+rollvel,SPF_INTERPOLATE);
+		A_SetPitch(pitch+pitchvel,SPF_INTERPOLATE);
+	}
+	action void A_HandleBounce()
+	{
+		A_SprayDecal("WallCrack",-8);
+		A_Gravity();
+		invoker.rollvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
+		invoker.pitchvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
+		vel = (vel.unit()+(FRandom[Flak](-0.4,0.4),FRandom[Flak](-0.4,0.4),FRandom[Flak](-0.4,0.4))).unit()*vel.length();
+		A_PlaySound("flak/bounce",volume:0.3);
+		if ( vel.length() < 4.0 ) ExplodeMissile();
+	}
+	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
+	{
+		if ( !target.bNOBLOOD )
+		{
+			if ( target != lasthit ) target.SpawnBlood(pos,AngleTo(target),damage);
+			A_PlaySound("flak/meat",volume:0.3);
+		}
+		lasthit = target;
+		return damage;
+	}
+	States
+	{
+	Spawn:
+		FCH1 A 0;
+		Goto Idle;
+		FCH2 A 0;
+		Goto Idle;
+		FCH3 A 0;
+		Goto Idle;
+		FCH4 A 0;
+		Goto Idle;
+	Idle:
+		#### # -1;
+		Stop;
+	Bounce:
+		#### # 0 A_HandleBounce();
+		Goto Idle;
+	Death:
+		#### # 0
+		{
+			bMOVEWITHSECTOR = true;
+			A_SetTics(Random[Flak](30,50));
+		}
+		#### # 1
+		{
+			A_SetScale(scale.x-0.002);
+			if ( scale.x <= 0.0 ) Destroy();
+		}
+		Wait;
+	Crash:
+		TNT1 A 0
+		{
+			Spawn("BulletPuff",pos);
+			A_PlaySound("flak/hit",volume:0.3);
+			A_AlertMonsters();
+		}
+	XDeath:
+		TNT1 A 1;
+		Stop;
+	Dummy:
+		FCH1 ABCDEFGHIJKL -1;
+		FCH2 ABCDEFGHIJKL -1;
+		FCH3 ABCDEFGHIJKL -1;
+		FCH4 ABCDEFGHIJKL -1;
+		Stop;
+	}
+}
+
+Class SlugSmoke : Actor
+{
+	double lifetime, lifespeed;
+	Default
+	{
+		Radius 0.1;
+		Height 0;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+DONTSPLASH;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		lifetime = 0;
+		lifespeed = FRandom[Flak](0.004,0.008);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		lifetime += lifespeed;
+		if ( waterlevel <= 0 ) A_SpawnParticle("AAAAAA",0,50,16.0,velx:FRandom[Flak](-0.5,0.5),vely:FRandom[Flak](-0.5,0.5),velz:FRandom[Flak](-0.5,0.5),accelz:0.05,startalphaf:scale.x,sizestep:1.0);
+		scale.x = max(0,1-lifetime);
+		if ( scale.x <= 0 ) Destroy();
+	}
+	States
+	{
+	Spawn:
+		TNT1 A -1;
+		Stop;
+	}
+}
+
+Class SlugLight : DynamicLight
+{
+	double lifetime;
+	Default
+	{
+		DynamicLight.Type "Point";
+		Args 255,224,128,80;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		lifetime = 1.0;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		args[LIGHT_RED] = 255*lifetime;
+		args[LIGHT_GREEN] = 224*lifetime;
+		args[LIGHT_BLUE] = 128*lifetime;
+		lifetime -= 0.05;
+		if ( lifetime <= 0 ) Destroy();
+	}
+}
+
+Class FlakSlug : Actor
+{
+	ChunkTrail trail;
+	Default
+	{
+		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
+		DamageType 'FlakDeath';
+		Radius 2;
+		Height 2;
+		Speed 40;
+		PROJECTILE;
+		-NOGRAVITY;
+		+SKYEXPLODE;
+		+FORCERADIUSDMG;
+		+HITTRACER;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		trail = ChunkTrail(Spawn("ChunkTrail",pos));
+		trail.target = self;
+		trail.speed = 1;
+		vel.z += 5;
+	}
+	action void A_FlakExplode()
+	{
+		bForceXYBillboard = true;
+		A_SetRenderStyle(1.0,STYLE_Add);
+		A_SprayDecal("RocketBlast",150);
+		A_NoGravity();
+		A_SetScale(1.2);
+		A_Explode(Random[Flak](60,80),150);
+		A_QuakeEx(4,4,4,8,0,200,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
+		A_PlaySound("flak/explode",CHAN_VOICE);
+		if ( !Tracer ) Spawn("SlugSmoke",pos);
+		Spawn("SlugLight",pos);
+		Vector3 x, y, z;
+		double a, s;
+		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		Actor p;
+		for ( int i=0; i<5; i++ )
+		{
+			p = Spawn("FlakChunk",pos);
+			a = FRandom[Flak](0,360);
+			s = FRandom[Flak](0,0.2);
+			Vector3 dir = (x+y*cos(a)*s+z*sin(a)*s).unit();
+			p.angle = atan2(dir.y,dir.x);
+			p.pitch = -asin(dir.z);
+			p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed*FRandom[Flak](0.5,1.5);
+			p.target = target;
+		}
+	}
+	States
+	{
+	Spawn:
+		FSLG A 1
+		{
+			for ( int i=0; i<6; i++ )
+				A_SpawnParticle("AAAAAA",0,50,12.0,velx:FRandom[Flak](-0.5,0.5),vely:FRandom[Flak](-0.5,0.5),velz:FRandom[Flak](-0.5,0.5),accelz:0.02,startalphaf:0.5,sizestep:1.0);
+		}
+		Wait;
+	Death:
+		EXP2 A 0 A_FlakExplode();
+		EXP2 ABCDEFGHIJKLMNOPQR 1 BRIGHT;
+		Stop;
+	}
+}
+
+Class FlakLight : DynamicLight
+{
+	Default
+	{
+		DynamicLight.Type "Point";
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		args[LIGHT_INTENSITY] = 150;
+		args[LIGHT_RED] = 255;
+		args[LIGHT_GREEN] = 224;
+		args[LIGHT_BLUE] = 128;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.pos,true);
+	}
+}
+
+Class FlakMuzzle : Actor
+{
+	Vector3 ofs;
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		let l = Spawn("FlakLight",pos);
+		l.target = self;
+		if ( target ) ofs = target.Vec3To(self);
+		else ofs = (0,0,0);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		bInvisible = (target != players[consoleplayer].camera);
+		SetOrigin(target.Vec3Offset(ofs.x-target.vel.x,ofs.y-target.vel.y,ofs.z-target.vel.z),true);
+	}
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		Scale 0.08;
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		+DONTSPLASH;
+	}
+	States
+	{
+	Spawn:
+		FMUZ A 3 Bright;
+		Stop;
+	}
+}
+
+Class FlakCannon : UTWeapon
+{
+	action void A_Selecting()
+	{
+		A_PlaySound("flak/select",CHAN_WEAPON);
+	}
+	action void A_Loading( bool first = false )
+	{
+		if ( first ) A_PlaySound("flak/load",CHAN_WEAPON);
+		else A_PlaySound("flak/reload",CHAN_WEAPON);
+	}
+	action void A_FireChunks()
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		if ( weap.Ammo1.Amount <= 0 ) return;
+		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
+		A_PlaySound("flak/fire",CHAN_WEAPON);
+		A_QuakeEx(1,1,1,3,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
+		Vector3 x, y, z;
+		double a, s;
+		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+2.0*y-3.0*z;
+		let m = Spawn("FlakMuzzle",pos+(0,0,player.viewheight)+20.0*x+5.0*y-3.0*z);
+		m.target = self;
+		[x, y, z] = Matrix4.GetAxes(BulletSlope(),angle,roll);
+		Actor p;
+		for ( int i=0; i<8; i++ )
+		{
+			p = Spawn("FlakChunk",origin);
+			a = FRandom[Flak](0,360);
+			s = FRandom[Flak](0,0.2);
+			Vector3 dir = (x+y*cos(a)*s+z*sin(a)*s).unit();
+			p.angle = atan2(dir.y,dir.x);
+			p.pitch = -asin(dir.z);
+			p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
+			p.target = self;
+		}
+	}
+	action void A_FireSlug()
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		if ( weap.Ammo1.Amount <= 0 ) return;
+		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
+		A_PlaySound("flak/altfire",CHAN_WEAPON);
+		A_QuakeEx(2,2,2,10,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+		Vector3 x, y, z;
+		double a, s;
+		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+2.0*y-3.0*z;
+		let m = Spawn("FlakMuzzle",pos+(0,0,player.viewheight)+20.0*x+5.0*y-3.0*z);
+		m.target = self;
+		Actor p = Spawn("FlakSlug",origin);
+		p.angle = angle;
+		p.pitch = BulletSlope();
+		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
+		p.target = self;
+	}
+
+	Default
+	{
+		Tag "Flak Cannon";
+		Inventory.PickupMessage "You got the Flak Cannon.";
+		Weapon.SlotNumber 8;
+		Weapon.AmmoType "FlakAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "FlakAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 10;
+	}
+	States
+	{
+	Spawn:
+		FPCK A -1;
+		Stop;
+		FPCK B -1;
+		Stop;
+	Ready:
+		FLKS A 1 A_Selecting();
+		FLKS BCDEFGHIJKLMNOPQRSTUVWXYZ 1;
+		FKS2 ABC 1;
+		FLKL A 1 A_Loading(true);
+		FLKL BCDEFGHIJKLMNO 1;
+		Goto Idle;
+	Loading:
+		FLKL A 1
+		{
+			A_CheckReload();
+			if ( invoker.Ammo1.Amount > 0 ) A_Loading();
+		}
+		FLKL BCDEFGHIJKLMNO 1;
+	Idle:
+		FLKI A 10;
+		FLKI A 1 A_WeaponReady();
+		Wait;
+	Fire:
+		FLKF A 1 A_FireChunks();
+		FLKF BCDEFGHIJ 1;
+		FLKF JJ 4;
+		Goto Loading;
+	AltFire:
+		FLKA A 1 A_FireSlug();
+		FLKA BCDEFGHIJK 2;
+		FLKA KKK 4;
+		Goto Loading;
+	Select:
+		FLKS A 1 A_Raise(int.max);
+		Wait;
+	Deselect:
+		FLKD ABCDEFGHIJ 2;
+		FLKD J 1 A_Lower(int.max);
+		Wait;
+	}
+}

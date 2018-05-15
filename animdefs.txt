@@ -1,0 +1,7 @@
+texture static1
+	allowdecals
+	random
+	pic static1 tics 1
+	pic static2 tics 1
+	pic static3 tics 1
+	pic static4 tics 1

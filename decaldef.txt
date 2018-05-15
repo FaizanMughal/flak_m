@@ -1,0 +1,92 @@
+decal WallCrack1
+{
+	pic WallCrk1
+	translucent 0.75
+	shade "00 00 00"
+	x-scale 0.25
+	y-scale 0.25
+	randomflipx
+	randomflipy
+}
+decal WallCrack2
+{
+	pic WallCrk2
+	translucent 0.75
+	shade "00 00 00"
+	x-scale 0.25
+	y-scale 0.25
+	randomflipx
+	randomflipy
+}
+
+decalgroup WallCrack
+{
+	WallCrack1	1
+	WallCrack2	1
+}
+
+decal RocketBlast
+{
+	pic rcktblst
+	shade "00 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BigShockMark1
+{
+	pic bigshck1
+	shade "00 00 00"
+	x-scale 0.5
+	y-scale 0.5
+}
+
+decal BigShockMark2Sub
+{
+	pic bigshck2
+	shade "08 08 20"
+	x-scale 0.5
+	y-scale 0.5
+}
+
+decal BigShockMark2
+{
+	pic bigshck2
+	shade "20 10 60"
+	fullbright
+	animator GoAway2
+	x-scale 0.5
+	y-scale 0.5
+	lowerdecal BigShockMark2Sub
+}
+
+decal ShockMark
+{
+	pic shockmrk
+	shade "00 00 00"
+	randomflipx
+	randomflipy
+	x-scale 0.6
+	y-scale 0.6
+}
+decal ShockMarkBig
+{
+	pic shockmrk
+	shade "00 00 00"
+	randomflipx
+	randomflipy
+	x-scale 1.5
+	y-scale 1.5
+}
+
+decal BigBlast
+{
+	pic bigblast
+	shade "00 00 00"
+	randomflipx
+	randomflipy
+	x-scale 1.5
+	y-scale 1.5
+}

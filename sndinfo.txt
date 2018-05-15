@@ -1,0 +1,48 @@
+ut/ammo ammopick
+ut/weapon weaponpk
+$pitchshift ut/ammo 0
+$pitchshift ut/weapon 0
+
+flak/select pdown
+flak/load hidraul2
+flak/reload load1
+flak/fire shot1
+flak/altfire explode1
+flak/hit ricochet
+flak/meat chunkhit
+flak/bounce1 hit1
+flak/bounce2 hit2
+flak/bounce3 hit3
+$random flak/bounce { flak/bounce1 flak/bounce2 flak/bounce3 }
+flak/explode expl04
+$pitchshift flak/select 0
+$pitchshift flak/load 0
+$pitchshift flak/reload 0
+$pitchshift flak/fire 0
+$pitchshift flak/altfire 0
+$pitchshift flak/hit 0
+$pitchshift flak/meat 0
+$pitchshift flak/bounce 0
+$pitchshift flak/explode 0
+
+shock/select tazersel
+shock/fire tazefire
+shock/altfire tazealtf
+shock/hit expl03
+shock/ball expla02
+shock/blast specexpl
+$pitchshift shock/select 0
+$pitchshift shock/fire 0
+$pitchshift shock/altfire 0
+$pitchshift shock/hit 0
+$pitchshift shock/ball 5
+$pitchshift shock/blast 0
+
+warhead/explode warexplo
+warhead/fly warfly
+warhead/select warhpick
+warhead/fire warhshot
+$pitchshift warhead/explode 0
+$pitchshift warhead/fly 0
+$pitchshift warhead/select 0
+$pitchshift warhead/fire 0

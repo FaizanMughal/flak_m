@@ -1,0 +1,14 @@
+WHFONT
+{
+	- WHMINUS
+	0 WH0
+	1 WH1
+	2 WH2
+	3 WH3
+	4 WH4
+	5 WH5
+	6 WH6
+	7 WH7
+	8 WH8
+	9 WH9
+}
