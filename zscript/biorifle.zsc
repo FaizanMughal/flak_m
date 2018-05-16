@@ -1,0 +1,233 @@
+Class BioAmmo : Ammo
+{
+	Default
+	{
+		Tag "Biosludge Ammo";
+		Inventory.PickupMessage "You picked up the Biosludge Ammo.";
+		Inventory.PickupSound "ut/ammo";
+		Inventory.Amount 25;
+		Inventory.MaxAmount 100;
+		Ammo.BackpackAmount 50;
+		Ammo.BackpackMaxAmount 200;
+		Ammo.DropAmount 25;
+	}
+	States
+	{
+	Spawn:
+		BIOA A -1;
+		Stop;
+	}
+}
+
+Class BioHitbox : Actor
+{
+}
+
+Class BioLight : DynamicLight
+{
+}
+
+Class BioGel : Actor
+{
+	Actor l, b;
+	enum EHitType
+	{
+		HIT_NONE,
+		HIT_WALL,
+		HIT_CEILING,
+		HIT_FLOOR
+	};
+	int hittype;
+	int deadtimer;
+	Line atline;
+	int atside;
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		vel.z += 6;
+		deadtimer = -1;
+	}
+	action void A_SetToSlope( double dang, bool ceil = false )
+	{
+		vector3 fnormal;
+		if ( ceil ) fnormal = invoker.CurSector.floorplane.Normal;
+		else fnormal = invoker.CurSector.ceilingplane.Normal;
+		vector2 fnormalp1 = ((fnormal.x != 0) || (fnormal.y != 0))?(fnormal.x,fnormal.y).Unit():(0,0);
+		vector2 fnormalp2 = ((fnormal.x,fnormal.y).Length(),fnormal.z);
+		double fang = atan2(fnormalp1.y,fnormalp1.x); // floor angle (not pitch!)
+		double fpitch = atan2(fnormalp2.x,fnormalp2.y); // floor pitch
+		double ddiff1 = cos(fang-(dang-90));
+		double ddiff2 = cos(fang-dang);
+		invoker.pitch = -fpitch*ddiff2;
+		invoker.roll = fpitch*ddiff1;
+		invoker.angle = dang;
+	}
+	// align self to what surface was hit, currently does not support 3d floors + slopes properly
+	virtual void AlignSelf()
+	{
+		Vector3 normal;
+		FLineTraceData d;
+		A_NoGravity();
+		A_PlaySound("ges/hit");
+		A_SetSize(0.1,0);
+		if ( BlockingLine )
+		{
+			atline = BlockingLine;
+			normal = (-BlockingLine.delta.y,BlockingLine.delta.x,0).unit();
+			atside = 1;
+			if ( !BlockingLine.sidedef[1] || (CurSector == BlockingLine.frontsector) )
+			{
+				atside = 0;
+				normal *= -1;
+			}
+			angle = atan2(normal.y,normal.x);
+			pitch = 0;
+			roll = 0;
+			LineTrace(angle+180,8,0,data:d);
+			SetOrigin(d.HitLocation+normal*0.5,false);
+			hittype = HIT_WALL;
+		}
+		else if ( pos.z <= floorz+4 )
+		{
+			normal = cursector.floorplane.Normal;
+			pitch = asin(-normal.z);
+			angle = atan2(normal.y,normal.x);
+			roll = FRandom[GES](0,360);
+			SetOrigin((pos.x,pos.y,floorz)+normal*0.5,false);
+			hittype = HIT_FLOOR;
+		}
+		else if ( pos.z >= ceilingz-8 )
+		{
+			normal = cursector.ceilingplane.Normal;
+			pitch = asin(-normal.z);
+			angle = atan2(normal.y,normal.x);
+			roll = FRandom[GES](0,360);
+			SetOrigin((pos.x,pos.y,ceilingz)+normal*0.5,false);
+			if ( normal dot (0,0,-1) > 0.7 )
+				hittype = HIT_CEILING;
+			else hittype = HIT_FLOOR;
+		}
+		else SetStateLabel("Crash");
+	}
+	action void A_DropDrip()
+	{
+		// TODO
+	}
+	action void A_GelExplode()
+	{
+		if ( invoker.atline ) invoker.atline.RemoteActivate(target,invoker.atside,SPAC_Impact,pos);
+		A_Explode(Random[GES](15,20)*Scale.x,Min(250,Scale.x*75));
+		A_PlaySound("ges/explode",CHAN_VOICE);
+		// TODO particles
+	}
+	Default
+	{
+		Obituary "%o drank a glass of %k's dripping green load.";
+		RenderStyle "Add";
+		Radius 4;
+		Height 4;
+		Scale 2;
+		Speed 20;
+		PROJECTILE;
+		-NOGRAVITY;
+		+SKYEXPLODE;
+		+FORCERADIUSDMG;
+	}
+	States
+	{
+	Spawn:
+		GELF ABCDEFGHIJKLM 1 Bright;
+		Loop;
+	Death:
+		GELH A 1 Bright AlignSelf();
+		GELH BCDEFGHIJ 1 Bright;
+		GELH J 0 Bright A_SetTics(Random[GES](10,30));
+		GELH J -1 Bright
+		{
+			if ( invoker.hittype == HIT_WALL ) return ResolveState("Slide");
+			else if ( invoker.hittype == HIT_CEILING ) return ResolveState("Drip");
+			return ResolveState(null);
+		}
+		Stop;
+	Drip:
+		GELD ABCDEFGH 4 Bright;
+		GELD I 4 Bright A_DropDrip();
+		GELD JKLM 4 Bright;
+		GELD M -1 Bright;
+		Wait;
+	Slide:
+		GELS ABCDEFG 3 Bright;
+		Wait;
+	Crash:
+	XDeath:
+		#### # 1 A_SetTics(Random[GES](1,3));	// TODO EXPLOSION
+		TNT1 A 1 A_GelExplode();
+		Stop;
+	Shrivel:
+		GELX ABCDEFGHIJKL 1 Bright;	// UNUSED
+		Stop;
+	}
+}
+
+Class BioGlob : BioGel
+{
+	override void AlignSelf()
+	{
+		Super.AlignSelf();
+		// TODO splashes
+	}
+}
+
+Class BioSplash : BioGel
+{
+	override void AlignSelf()
+	{
+		Super.AlignSelf();
+		if ( hittype == HIT_CEILING ) hittype = HIT_FLOOR;
+	}
+}
+
+Class BioRifle : UTWeapon
+{
+	Default
+	{
+		Tag "GES Bio Rifle";
+		Inventory.PickupMessage "You got the GES BioRifle.";
+		Weapon.SlotNumber 3;
+		Weapon.AmmoType "BioAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "BioAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 25;
+	}
+	States
+	{
+	Spawn:
+		BIOP A -1;
+		Stop;
+		BIOP B -1;
+		Stop;
+	Ready:
+		BIOS ABCDEFGHIJKLMNOPQRSTUV 1;
+	Idle:
+		BIOI A 1 A_WeaponReady();
+		Goto Idle;
+	Fire:
+		BIOF ABCDEFGHI 1;
+		Goto Idle;
+	AltFire:
+		BIOC ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
+		BIC2 ABCDE 1;
+		BIOM A 1;
+		BIOE A 1;
+		Goto Idle;
+	Select:
+		BIOS A 1 A_Raise(int.max);
+		Wait;
+	Deselect:
+		BIOD ABCDEFGHIJ 1;
+		BIOD J 1 A_Lower(int.max);
+		Wait;
+	}
+}

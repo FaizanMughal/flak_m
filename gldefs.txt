@@ -1,0 +1,60 @@
+HardwareShader Texture "models/Jgreen.png"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+Brightmap Texture "models/JBRifle2.png"
+{
+	Map "brightmaps/JBRifle2.png"
+}
+Brightmap Texture "models/JBRifle21.png"
+{
+	Map "brightmaps/JBRifle21.png"
+}
+Brightmap Texture "models/JBRifle22.png"
+{
+	Map "brightmaps/JBRifle22.png"
+}
+Brightmap Texture "models/JBRifle23.png"
+{
+	Map "brightmaps/JBRifle23.png"
+}
+Brightmap Texture "models/JBRifle24.png"
+{
+	Map "brightmaps/JBRifle24.png"
+}
+Brightmap Texture "models/JBammo1.png"
+{
+	Map "brightmaps/JBammo1.png"
+}
+Brightmap Texture "models/ASMD_t.png"
+{
+	Map "brightmaps/ASMD_t.png"
+}
+Brightmap Texture "models/ASMD_t1.png"
+{
+	Map "brightmaps/ASMD_t1.png"
+}
+Brightmap Texture "models/ASMD_t3.png"
+{
+	Map "brightmaps/ASMD_t3.png"
+}
+Brightmap Texture "models/ASMD_t4.png"
+{
+	Map "brightmaps/ASMD_t4.png"
+}
+Brightmap Texture "models/JShockCore.png"
+{
+	Map "brightmaps/JShockCore.png"
+}
+Brightmap Texture "models/Jwarhead2.png"
+{
+	Map "brightmaps/Jwarhead2.png"
+}
+Brightmap Texture "models/Jwarhead4.png"
+{
+	Map "brightmaps/Jwarhead4.png"
+}
+Brightmap Texture "models/Jwhpick1.png"
+{
+	Map "brightmaps/Jwhpick1.png"
+}

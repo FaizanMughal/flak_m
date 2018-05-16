@@ -46,3 +46,14 @@ $pitchshift warhead/explode 0
 $pitchshift warhead/fly 0
 $pitchshift warhead/select 0
 $pitchshift warhead/fire 0
+
+ges/hit gelhit
+ges/select gelselec
+ges/fire gelshot
+ges/charge bioaltrep
+ges/explode explg02
+$pitchshift ges/hit 0
+$pitchshift ges/select 0
+$pitchshift ges/fire 0
+$pitchshift ges/charge 0
+$pitchshift ges/explode 0

@@ -3,7 +3,6 @@ Class FlakAmmo : Ammo
 	Default
 	{
 		Tag "Flak Shells";
-		Inventory.Icon "I_FLAK";
 		Inventory.PickupMessage "You picked up 10 Flak Shells.";
 		Inventory.PickupSound "ut/ammo";
 		Inventory.Amount 10;
@@ -118,8 +117,8 @@ Class FlakChunk : Actor
 	Default
 	{
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
-		Radius 2;
-		Height 2;
+		Radius 4;
+		Height 4;
 		Speed 80;
 		DamageFunction Random[Flak](12,18);
 		DamageType 'Shredded';
@@ -294,8 +293,8 @@ Class FlakSlug : Actor
 	{
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
 		DamageType 'FlakDeath';
-		Radius 2;
-		Height 2;
+		Radius 4;
+		Height 4;
 		Speed 40;
 		PROJECTILE;
 		-NOGRAVITY;

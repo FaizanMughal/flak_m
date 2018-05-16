@@ -2,8 +2,7 @@ Class ShockAmmo : Ammo
 {
 	Default
 	{
-		Tag "Flak Shells";
-		Inventory.Icon "I_ASMD";
+		Tag "ShockCore";
 		Inventory.PickupMessage "You picked up a Shock Core.";
 		Inventory.PickupSound "ut/ammo";
 		Inventory.Amount 10;

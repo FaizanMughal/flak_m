@@ -12,7 +12,7 @@ Currently implemented:
 
 In progress:
 
- - N/A
+ - GES Biorifle (slot 3)
 
 To be done:
 
@@ -21,7 +21,6 @@ To be done:
  - Translocator (slot 1)
  - Enforcer (slot 2)
    - Dual Enforcers (slot 2)
- - GES Biorifle (slot 3)
  - Pulsegun (slot 5)
  - Ripper (slot 6)
  - Minigun (slot 7)

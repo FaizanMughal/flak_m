@@ -4,7 +4,6 @@ Class WarheadAmmo : Ammo
 	Default
 	{
 		Tag "Redeemer Missile";
-		Inventory.Icon "I_WARH";
 		Inventory.PickupMessage "You picked up a Redeemer Missile.";
 		Inventory.PickupSound "ut/ammo";
 		Inventory.Amount 1;
@@ -193,8 +192,8 @@ Class WarShell : Actor
 	Default
 	{
 		Obituary "%o was vaporized by %k's Redeemer!!";
-		Radius 2;
-		Height 2;
+		Radius 4;
+		Height 4;
 		Speed 5;
 		DamageType 'RedeemerDeath';
 		PROJECTILE;
