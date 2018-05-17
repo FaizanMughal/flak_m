@@ -5,7 +5,6 @@ Class WarheadAmmo : Ammo
 	{
 		Tag "Redeemer Missile";
 		Inventory.PickupMessage "You picked up a Redeemer Missile.";
-		Inventory.PickupSound "ut/ammo";
 		Inventory.Amount 1;
 		Inventory.MaxAmount 2;
 		Ammo.BackpackAmount 0;
@@ -48,6 +47,7 @@ Class ShockWave : Actor
 	override void Tick()
 	{
 		Super.Tick();
+		if ( globalfreeze || level.frozen ) return;
 		if ( alpha <= 0 ) return;
 		icount++;
 		if ( icount == 4 ) Spawn("WarheadSubExplosion",pos);
@@ -136,6 +136,12 @@ Class WarheadHitbox : Actor
 		}
 		SetOrigin(target.pos-(0,0,height*0.5),true);
 	}
+	States
+	{
+	Spawn:
+		TNT1 A 10 A_AlertMonsters(0,AMF_TARGETEMITTER);
+		Wait;
+	}
 }
 
 Class WarheadExplodLight : DynamicLight
@@ -155,6 +161,7 @@ Class WarheadExplodLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
+		if ( globalfreeze || level.frozen ) return;
 		args[LIGHT_RED] = 255*lifetime;
 		args[LIGHT_GREEN] = 192*lifetime;
 		args[LIGHT_BLUE] = 128*lifetime;
@@ -218,6 +225,7 @@ Class WarShell : Actor
 	override void Tick()
 	{
 		Super.Tick();
+		if ( globalfreeze || level.frozen ) return;
 		if ( vel.length() > 0 )
 		{
 			Vector3 dir = vel.unit();
@@ -251,6 +259,7 @@ Class WarShell : Actor
 		A_SprayDecal("BigBlast");
 		A_QuakeEx(8,8,8,20,0,300,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.35);
 		A_PlaySound("shock/hit",CHAN_VOICE,attenuation:0.5);
+		A_AlertMonsters();
 		A_SetRenderStyle(1.0,STYLE_Add);
 		Spawn("WarheadExplodLight",pos);
 		let s = Spawn("ShockWave",pos);
@@ -264,6 +273,7 @@ Class WarShell : Actor
 		A_SprayDecal("BigBlast");
 		A_QuakeEx(8,8,8,20,0,300,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.35);
 		A_PlaySound("shock/hit",CHAN_VOICE,attenuation:0.5);
+		A_AlertMonsters();
 		A_SetRenderStyle(1.0,STYLE_Add);
 		Spawn("WarheadExplodLight",pos);
 	}
@@ -299,6 +309,7 @@ Class GuidedWarShell : WarShell
 	override void Tick()
 	{
 		Actor.Tick();
+		if ( globalfreeze || level.frozen ) return;
 		if ( !bMISSILE ) return;
 		if ( !target || !target.player || (target.Health <= 0) )
 		{
@@ -475,10 +486,6 @@ Class RedeemerHUDHandler : EventHandler
 Class WarheadLauncher : UTWeapon
 {
 	Actor guided;
-	action void A_Selecting()
-	{
-		A_PlaySound("warhead/select",CHAN_WEAPON);
-	}
 	action void A_WarheadFire()
 	{
 		Weapon weap = Weapon(invoker);
@@ -486,6 +493,7 @@ Class WarheadLauncher : UTWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		A_PlaySound("warhead/fire",CHAN_WEAPON);
+		A_AlertMonsters();
 		A_QuakeEx(6,6,6,20,0,100,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
 		Vector3 x, y, z;
 		double a, s;
@@ -505,6 +513,7 @@ Class WarheadLauncher : UTWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		A_PlaySound("warhead/fire",CHAN_WEAPON);
+		A_AlertMonsters();
 		A_QuakeEx(6,6,6,20,0,100,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
 		Vector3 x, y, z;
 		double a, s;
@@ -524,6 +533,7 @@ Class WarheadLauncher : UTWeapon
 	{
 		Tag "Redeemer";
 		Inventory.PickupMessage "You got the Redeemer.";
+		Weapon.UpSound "warhead/select";
 		Weapon.SlotNumber 0;
 		Weapon.AmmoType "WarheadAmmo";
 		Weapon.AmmoUse 1;
@@ -539,8 +549,7 @@ Class WarheadLauncher : UTWeapon
 		RDMP B -1;
 		Stop;
 	Ready:
-		WARS A 1 A_Selecting();
-		WARS BCDEFGHIJKLMNO 1;
+		WARS ABCDEFGHIJKLMNO 1;
 	Idle:
 		WARI A 1
 		{

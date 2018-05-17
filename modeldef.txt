@@ -20,7 +20,150 @@ Model "BioGel"
 	Skin 0 "Jgreen.png"
 	Scale 0.08 0.08 0.08
 	RollOffset 90
-	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+
+	// Flying
+	FrameIndex GELF A 0 0
+	FrameIndex GELF B 0 1
+	FrameIndex GELF C 0 2
+	FrameIndex GELF D 0 3
+	FrameIndex GELF E 0 4
+	FrameIndex GELF F 0 5
+	FrameIndex GELF G 0 6
+	FrameIndex GELF H 0 7
+	FrameIndex GELF I 0 8
+	FrameIndex GELF J 0 9
+	FrameIndex GELF K 0 10
+	FrameIndex GELF L 0 11
+	FrameIndex GELF M 0 12
+	// Hit
+	FrameIndex GELH A 0 14
+	FrameIndex GELH B 0 15
+	FrameIndex GELH C 0 16
+	FrameIndex GELH D 0 17
+	FrameIndex GELH E 0 18
+	FrameIndex GELH F 0 19
+	FrameIndex GELH G 0 20
+	FrameIndex GELH H 0 21
+	FrameIndex GELH I 0 22
+	FrameIndex GELH J 0 23
+	// Drip
+	FrameIndex GELD A 0 24
+	FrameIndex GELD B 0 25
+	FrameIndex GELD C 0 26
+	FrameIndex GELD D 0 27
+	FrameIndex GELD E 0 28
+	FrameIndex GELD F 0 29
+	FrameIndex GELD G 0 30
+	FrameIndex GELD H 0 31
+	FrameIndex GELD I 0 32
+	FrameIndex GELD J 0 33
+	FrameIndex GELD K 0 34
+	FrameIndex GELD L 0 35
+	FrameIndex GELD M 0 36
+	// Slide
+	FrameIndex GELS A 0 37
+	FrameIndex GELS B 0 38
+	FrameIndex GELS C 0 39
+	FrameIndex GELS D 0 40
+	FrameIndex GELS E 0 41
+	FrameIndex GELS F 0 42
+	FrameIndex GELS G 0 43
+	// Shrivel
+	FrameIndex GELX A 0 44
+	FrameIndex GELX B 0 45
+	FrameIndex GELX C 0 46
+	FrameIndex GELX D 0 47
+	FrameIndex GELX E 0 48
+	FrameIndex GELX F 0 49
+	FrameIndex GELX G 0 50
+	FrameIndex GELX H 0 51
+	FrameIndex GELX I 0 52
+	FrameIndex GELX J 0 53
+	FrameIndex GELX K 0 54
+	FrameIndex GELX L 0 55
+}
+
+Model "BioSplash"
+{
+	Path "models"
+	Model 0 "BioGelm_d.3d"
+	Skin 0 "Jgreen.png"
+	Scale 0.08 0.08 0.08
+	RollOffset 90
+	USEACTORPITCH
+	USEACTORROLL
+
+	// Flying
+	FrameIndex GELF A 0 0
+	FrameIndex GELF B 0 1
+	FrameIndex GELF C 0 2
+	FrameIndex GELF D 0 3
+	FrameIndex GELF E 0 4
+	FrameIndex GELF F 0 5
+	FrameIndex GELF G 0 6
+	FrameIndex GELF H 0 7
+	FrameIndex GELF I 0 8
+	FrameIndex GELF J 0 9
+	FrameIndex GELF K 0 10
+	FrameIndex GELF L 0 11
+	FrameIndex GELF M 0 12
+	// Hit
+	FrameIndex GELH A 0 14
+	FrameIndex GELH B 0 15
+	FrameIndex GELH C 0 16
+	FrameIndex GELH D 0 17
+	FrameIndex GELH E 0 18
+	FrameIndex GELH F 0 19
+	FrameIndex GELH G 0 20
+	FrameIndex GELH H 0 21
+	FrameIndex GELH I 0 22
+	FrameIndex GELH J 0 23
+	// Drip
+	FrameIndex GELD A 0 24
+	FrameIndex GELD B 0 25
+	FrameIndex GELD C 0 26
+	FrameIndex GELD D 0 27
+	FrameIndex GELD E 0 28
+	FrameIndex GELD F 0 29
+	FrameIndex GELD G 0 30
+	FrameIndex GELD H 0 31
+	FrameIndex GELD I 0 32
+	FrameIndex GELD J 0 33
+	FrameIndex GELD K 0 34
+	FrameIndex GELD L 0 35
+	FrameIndex GELD M 0 36
+	// Slide
+	FrameIndex GELS A 0 37
+	FrameIndex GELS B 0 38
+	FrameIndex GELS C 0 39
+	FrameIndex GELS D 0 40
+	FrameIndex GELS E 0 41
+	FrameIndex GELS F 0 42
+	FrameIndex GELS G 0 43
+	// Shrivel
+	FrameIndex GELX A 0 44
+	FrameIndex GELX B 0 45
+	FrameIndex GELX C 0 46
+	FrameIndex GELX D 0 47
+	FrameIndex GELX E 0 48
+	FrameIndex GELX F 0 49
+	FrameIndex GELX G 0 50
+	FrameIndex GELX H 0 51
+	FrameIndex GELX I 0 52
+	FrameIndex GELX J 0 53
+	FrameIndex GELX K 0 54
+	FrameIndex GELX L 0 55
+}
+
+Model "BioGlob"
+{
+	Path "models"
+	Model 0 "BioGelm_d.3d"
+	Skin 0 "Jgreen.png"
+	Scale 0.08 0.08 0.08
+	RollOffset 90
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -123,6 +266,7 @@ Model "BioRifle"
 	PitchOffset 94.21875
 	Scale 0.125 0.06 0.125
 	Offset 9.8 -17.6 -10.4
+	INTERPOLATEDOUBLEDFRAMES
 
 	// select
 	FrameIndex BIOS A 0 0
@@ -229,7 +373,6 @@ Model "ShockRifleWave"
 	Path "models"
 	Model 0 "shockrwm_d.3d"
 	Skin 0 "shocktt1.png"
-	DONTCULLBACKFACES
 
 	FrameIndex SWAV A 0 0
 	FrameIndex SWAV B 0 1
@@ -284,7 +427,7 @@ Model "ShockRifle"
 	Skin 1 "asmd_t.png"
 	AngleOffset 270
 	PitchOffset 90
-	Scale -0.14 0.14 0.14
+	Scale -0.14 0.18 0.14
 	ZOffset 12
 	ROTATING
 
@@ -297,7 +440,7 @@ Model "ShockRifle"
 	Skin 1 "asmd_t.png"
 	AngleOffset 270
 	PitchOffset 90
-	Scale -0.14 0.14 0.14
+	Scale -0.14 0.18 0.14
 	ZOffset 12
 
 	FrameIndex ASMP B 1 0
@@ -364,6 +507,265 @@ Model "ShockRifle"
 	FrameIndex ASMA H 0 47
 	FrameIndex ASMA I 0 48
 	FrameIndex ASMA J 0 49
+}
+
+//=============================================================================
+// PULSE GUN
+//=============================================================================
+
+Model "PulseAmmo"
+{
+	Path "models"
+	Model 0 "PAmmo_d.3d"
+	Skin 0 "JPammo_01.png"
+	Scale -0.08 0.06 0.06
+	PitchOffset 90
+	ZOffset 6
+
+	FrameIndex PAMO A 0 0
+}
+
+Model "PulseGun"
+{
+	Path "models"
+	Model 1 "PulsePickup_d.3d"
+	Skin 1 "JPulsePickup_01.png"
+	AngleOffset 270
+	PitchOffset 90
+	Scale -0.16 0.2 0.16
+	ZOffset 12
+	ROTATING
+
+	FrameIndex PGNP A 1 0
+}
+Model "PulseGun"
+{
+	Path "models"
+	Model 1 "PulsePickup_d.3d"
+	Skin 1 "JPulsePickup_01.png"
+	AngleOffset 270
+	PitchOffset 90
+	Scale -0.16 0.2 0.16
+	ZOffset 12
+
+	FrameIndex PGNP B 1 0
+}
+
+Model "PulseGun"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "MuzzyPulse.png"
+	PitchOffset 90
+	Scale 0.08 0.08 0.08
+	Offset 8.5 -20.0 -4.5
+
+	FrameIndex PMUZ A 0 0
+}
+
+Model "PulseGun"
+{
+	Path "models"
+	Model 0 "PulseGunR_d.3d"
+	SurfaceSkin 0 0 "AmmoLedBase.png"
+	SurfaceSkin 0 1 "JPulseGun_02.png"
+	SurfaceSkin 0 2 "JPulseGun_03.png"
+	PitchOffset 90
+	Scale 0.26 0.13 0.26
+	Offset 0.0 -10.5 -8.0
+
+	// Select
+	FrameIndex PGNS A 0 2
+	FrameIndex PGNS B 0 3
+	FrameIndex PGNS C 0 4
+	FrameIndex PGNS D 0 5
+	FrameIndex PGNS E 0 6
+	FrameIndex PGNS F 0 7
+	FrameIndex PGNS G 0 8
+	FrameIndex PGNS H 0 9
+	FrameIndex PGNS I 0 10
+	FrameIndex PGNS J 0 11
+	FrameIndex PGNS K 0 12
+	FrameIndex PGNS L 0 13
+	FrameIndex PGNS M 0 14
+	FrameIndex PGNS N 0 15
+	FrameIndex PGNS O 0 16
+	FrameIndex PGNS P 0 17
+	FrameIndex PGNS Q 0 18
+	FrameIndex PGNS R 0 19
+	FrameIndex PGNS S 0 20
+	FrameIndex PGNS T 0 21
+	FrameIndex PGNS U 0 22
+	FrameIndex PGNS V 0 23
+	FrameIndex PGNS W 0 24
+	// Cooldown
+	FrameIndex PGNC A 0 40
+	FrameIndex PGNC B 0 41
+	FrameIndex PGNC C 0 42
+	FrameIndex PGNC D 0 43
+	FrameIndex PGNC E 0 44
+	FrameIndex PGNC F 0 45
+	FrameIndex PGNC G 0 46
+	FrameIndex PGNC H 0 47
+	FrameIndex PGNC I 0 48
+	FrameIndex PGNC J 0 49
+	FrameIndex PGNC K 0 50
+	FrameIndex PGNC L 0 51
+	FrameIndex PGNC M 0 52
+	FrameIndex PGNC N 0 53
+	FrameIndex PGNC O 0 54
+	FrameIndex PGNC P 0 55
+	FrameIndex PGNC Q 0 56
+	FrameIndex PGNC R 0 57
+	FrameIndex PGNC S 0 58
+	FrameIndex PGNC T 0 59
+	FrameIndex PGNC U 0 60
+	FrameIndex PGNC V 0 61
+	FrameIndex PGNC W 0 62
+	FrameIndex PGNC X 0 63
+	FrameIndex PGNC Y 0 64
+	// Reload
+	FrameIndex PGNR A 0 65
+	FrameIndex PGNR B 0 66
+	FrameIndex PGNR C 0 67
+	FrameIndex PGNR D 0 68
+	FrameIndex PGNR E 0 69
+	FrameIndex PGNR F 0 70
+	FrameIndex PGNR G 0 71
+	FrameIndex PGNR H 0 72
+	FrameIndex PGNR I 0 73
+	FrameIndex PGNR J 0 74
+	FrameIndex PGNR K 0 75
+	FrameIndex PGNR L 0 76
+	FrameIndex PGNR M 0 77
+	FrameIndex PGNR N 0 78
+	FrameIndex PGNR O 0 79
+	FrameIndex PGNR P 0 80
+	FrameIndex PGNR Q 0 81
+	FrameIndex PGNR R 0 82
+	FrameIndex PGNR S 0 83
+	FrameIndex PGNR T 0 84
+	FrameIndex PGNR U 0 85
+	FrameIndex PGNR V 0 86
+	FrameIndex PGNR W 0 87
+	FrameIndex PGNR X 0 88
+	FrameIndex PGNR Y 0 89
+	FrameIndex PGNR Z 0 90
+	FrameIndex PGR2 A 0 91
+	FrameIndex PGR2 B 0 92
+	FrameIndex PGR2 C 0 93
+	FrameIndex PGR2 D 0 94
+	FrameIndex PGR2 E 0 95
+	FrameIndex PGR2 F 0 96
+	FrameIndex PGR2 G 0 97
+	FrameIndex PGR2 H 0 98
+	FrameIndex PGR2 I 0 99
+	FrameIndex PGR2 J 0 100
+	FrameIndex PGR2 K 0 101
+	FrameIndex PGR2 L 0 102
+	FrameIndex PGR2 M 0 103
+	FrameIndex PGR2 N 0 104
+	FrameIndex PGR2 O 0 105
+	FrameIndex PGR2 P 0 106
+	FrameIndex PGR2 Q 0 107
+	FrameIndex PGR2 R 0 108
+	FrameIndex PGR2 S 0 109
+	FrameIndex PGR2 T 0 110
+	FrameIndex PGR2 U 0 111
+	FrameIndex PGR2 V 0 112
+	FrameIndex PGR2 W 0 113
+	FrameIndex PGR2 X 0 114
+	// Bolt Start
+	FrameIndex PGBS A 0 115
+	FrameIndex PGBS B 0 116
+	FrameIndex PGBS C 0 117
+	FrameIndex PGBS D 0 118
+	FrameIndex PGBS E 0 119
+	// Bolt Loop
+	FrameIndex PGBL A 0 120
+	FrameIndex PGBL B 0 121
+	FrameIndex PGBL C 0 122
+	FrameIndex PGBL D 0 123
+	FrameIndex PGBL E 0 124
+	FrameIndex PGBL F 0 125
+	FrameIndex PGBL G 0 126
+	FrameIndex PGBL H 0 127
+	FrameIndex PGBL I 0 128
+	FrameIndex PGBL J 0 129
+	// Bolt End
+	FrameIndex PGBE A 0 130
+	FrameIndex PGBE B 0 131
+	FrameIndex PGBE C 0 132
+	FrameIndex PGBE D 0 133
+	FrameIndex PGBE E 0 134
+	// Idle
+	FrameIndex PGNI A 0 135
+	FrameIndex PGNI B 0 138
+	FrameIndex PGNI C 0 141
+	FrameIndex PGNI D 0 144
+	FrameIndex PGNI E 0 147
+	FrameIndex PGNI F 0 150
+	FrameIndex PGNI G 0 153
+	FrameIndex PGNI H 0 156
+	FrameIndex PGNI I 0 159
+	FrameIndex PGNI J 0 162
+	FrameIndex PGNI K 0 165
+	FrameIndex PGNI L 0 168
+	FrameIndex PGNI M 0 171
+	FrameIndex PGNI N 0 174
+	FrameIndex PGNI O 0 177
+	FrameIndex PGNI P 0 180
+	FrameIndex PGNI Q 0 183
+	FrameIndex PGNI R 0 186
+	FrameIndex PGNI S 0 189
+	FrameIndex PGNI T 0 192
+	FrameIndex PGNI U 0 195
+	FrameIndex PGNI V 0 198
+	FrameIndex PGNI W 0 201
+	FrameIndex PGNI X 0 204
+	FrameIndex PGNI Y 0 207
+	FrameIndex PGNI Z 0 210
+	// Fire Loop
+	FrameIndex PGNF A 0 215
+	FrameIndex PGNF B 0 216
+	FrameIndex PGNF C 0 217
+	FrameIndex PGNF D 0 218
+	FrameIndex PGNF E 0 219
+	FrameIndex PGNF F 0 220
+	FrameIndex PGNF G 0 221
+	FrameIndex PGNF H 0 222
+	FrameIndex PGNF I 0 223
+	FrameIndex PGNF J 0 224
+	FrameIndex PGNF K 0 225
+	FrameIndex PGNF L 0 226
+	FrameIndex PGNF M 0 227
+	FrameIndex PGNF N 0 228
+	FrameIndex PGNF O 0 229
+	FrameIndex PGNF P 0 230
+	FrameIndex PGNF Q 0 231
+	FrameIndex PGNF R 0 232
+	FrameIndex PGNF S 0 233
+	FrameIndex PGNF T 0 234
+	FrameIndex PGNF U 0 235
+	FrameIndex PGNF V 0 236
+	FrameIndex PGNF W 0 237
+	FrameIndex PGNF X 0 238
+	FrameIndex PGNF Y 0 239
+	FrameIndex PGNF Z 0 240
+	FrameIndex PGF2 A 0 241
+	FrameIndex PGF2 B 0 242
+	FrameIndex PGF2 C 0 243
+	FrameIndex PGF2 D 0 244
+	FrameIndex PGF2 E 0 245
+	FrameIndex PGF2 F 0 246
+	FrameIndex PGF2 G 0 247
+	FrameIndex PGF2 H 0 248
+	FrameIndex PGF2 I 0 249
+	FrameIndex PGF2 J 0 250
+	FrameIndex PGF2 K 0 251
+	FrameIndex PGF2 L 0 252
+	FrameIndex PGF2 M 0 253
+	FrameIndex PGF2 N 0 254
 }
 
 //=============================================================================
@@ -993,7 +1395,7 @@ Model "FlakCannon"
 	Skin 1 "flak_t.png"
 	AngleOffset 90
 	PitchOffset 90
-	Scale 0.14 0.14 0.14
+	Scale 0.14 0.18 0.14
 	Offset 0 -18.9 0
 	ZOffset 12
 	ROTATING
@@ -1007,11 +1409,23 @@ Model "FlakCannon"
 	Skin 1 "flak_t.png"
 	AngleOffset 90
 	PitchOffset 90
-	Scale 0.14 0.14 0.14
+	Scale 0.14 0.18 0.14
 	Offset 0 -18.9 0
 	ZOffset 12
 
 	FrameIndex FPCK B 1 0
+}
+
+Model "FlakCannon"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "Flakmuz.png"
+	PitchOffset 90
+	Scale 0.08 0.08 0.08
+	Offset 4.0 -20.0 -7.5
+
+	FrameIndex FMUZ A 0 0
 }
 
 Model "FlakCannon"
@@ -1133,7 +1547,6 @@ Model "ShockWave"
 	Path "models"
 	Model 0 "shockwavem_d.3d"
 	Skin 0 "shockt1.png"
-	DONTCULLBACKFACES
 
 	FrameIndex RWAV A 0 0
 	FrameIndex RWAV B 0 1
@@ -1171,7 +1584,7 @@ Model "WarheadLauncher"
 	Path "models"
 	Model 1 "whpick_d.3d"
 	Skin 1 "jwhpick1.png"
-	Scale -0.2 0.2 0.2
+	Scale -0.2 0.24 0.24
 	ZOffset 12
 	AngleOffset 180
 	ROTATING
@@ -1183,7 +1596,7 @@ Model "WarheadLauncher"
 	Path "models"
 	Model 1 "whpick_d.3d"
 	Skin 1 "jwhpick1.png"
-	Scale -0.2 0.2 0.2
+	Scale -0.2 0.24 0.24
 	AngleOffset 180
 	ZOffset 12
 

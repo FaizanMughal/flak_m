@@ -25,6 +25,31 @@ decalgroup WallCrack
 	WallCrack2	1
 }
 
+decal BioSplat1
+{
+	pic biosplat
+	shade "20 80 18"
+	x-scale 0.25
+	y-scale 0.25
+	randomflipx
+	randomflipy
+}
+decal BioSplat2
+{
+	pic biospla2
+	shade "20 80 18"
+	x-scale 0.25
+	y-scale 0.25
+	randomflipx
+	randomflipy
+}
+
+decalgroup BioSplat
+{
+	BioSplat1	1
+	BioSplat2	1
+}
+
 decal RocketBlast
 {
 	pic rcktblst

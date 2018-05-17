@@ -1,7 +1,9 @@
-ut/ammo ammopick
-ut/weapon weaponpk
-$pitchshift ut/ammo 0
-$pitchshift ut/weapon 0
+misc/i_pkup ammopick
+misc/w_pkup weaponpk
+misc/spawn RespSnd2
+$pitchshift misc/i_pkup 0
+$pitchshift misc/w_pkup 0
+$pitchshift misc/spawn 0
 
 flak/select pdown
 flak/load hidraul2
@@ -14,6 +16,7 @@ flak/bounce1 hit1
 flak/bounce2 hit2
 flak/bounce3 hit3
 $random flak/bounce { flak/bounce1 flak/bounce2 flak/bounce3 }
+$limit flak/bounce 64
 flak/explode expl04
 $pitchshift flak/select 0
 $pitchshift flak/load 0
@@ -50,10 +53,27 @@ $pitchshift warhead/fire 0
 ges/hit gelhit
 ges/select gelselec
 ges/fire gelshot
-ges/charge bioaltrep
+ges/charge bioaltrp
 ges/explode explg02
 $pitchshift ges/hit 0
+$limit ges/hit 64
 $pitchshift ges/select 0
 $pitchshift ges/fire 0
 $pitchshift ges/charge 0
 $pitchshift ges/explode 0
+$limit ges/explode 64
+
+pulse/bolt pulseblt
+pulse/down pulsedwn
+pulse/hit pulseexp
+pulse/fire pulsefir
+pulse/fly pulsefly
+pulse/select pulsepck
+pulse/reload pulserel
+$pitchshift pulse/bolt 0
+$pitchshift pulse/down 0
+$pitchshift pulse/hit 0
+$pitchshift pulse/fire 0
+$pitchshift pulse/fly 0
+$pitchshift pulse/select 0
+$pitchshift pulse/reload 0

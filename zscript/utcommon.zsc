@@ -17,11 +17,11 @@ Class UTWeapon : Weapon
 
 	Default
 	{
-		Inventory.PickupSound "ut/weapon";
 		Weapon.BobStyle "Smooth";
 		Weapon.BobSpeed 1.5;
 		Weapon.BobRangeX 0.2;
 		Weapon.BobRangeY 0.4;
+		+WEAPON.NOALERT;
 	}
 }
 

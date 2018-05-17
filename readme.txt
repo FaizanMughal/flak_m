@@ -5,14 +5,14 @@ full UT weapon and item mod.
 
 Currently implemented:
 
- - ASMD Shock Rifle (slot 4)
  - Flak Cannon (slot 8)
+ - ASMD Shock Rifle (slot 4)
  - Redeemer (slot 0)
-
+ - GES Biorifle (slot 3)
 
 In progress:
 
- - GES Biorifle (slot 3)
+ - Pulsegun (slot 5) (with beta animations)
 
 To be done:
 
@@ -21,7 +21,6 @@ To be done:
  - Translocator (slot 1)
  - Enforcer (slot 2)
    - Dual Enforcers (slot 2)
- - Pulsegun (slot 5)
  - Ripper (slot 6)
  - Minigun (slot 7)
  - Rocket Launcher (slot 9)

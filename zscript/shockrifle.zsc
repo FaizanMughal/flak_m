@@ -4,7 +4,6 @@ Class ShockAmmo : Ammo
 	{
 		Tag "ShockCore";
 		Inventory.PickupMessage "You picked up a Shock Core.";
-		Inventory.PickupSound "ut/ammo";
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 50;
@@ -56,6 +55,7 @@ Class ShockRifleWave : Actor
 	override void Tick()
 	{
 		Super.Tick();
+		if ( globalfreeze || level.frozen ) return;
 		alpha -= 1/50.;
 	}
 	States
@@ -83,6 +83,7 @@ Class ShockBeamRing : Actor
 	override void Tick()
 	{
 		Super.Tick();
+		if ( globalfreeze || level.frozen ) return;
 		alpha -= 1./ReactionTime;
 	}
 	States
@@ -139,6 +140,7 @@ Class ShockBeam : Actor
 	override void Tick()
 	{
 		Super.Tick();
+		if ( globalfreeze || level.frozen ) return;
 		if ( !moving ) return;
 		// step trace
 		tracedir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
@@ -147,12 +149,13 @@ Class ShockBeam : Actor
 		// spawn particles
 		for ( int i=0; i<t.Results.Distance; i+=80 )
 			Spawn("ShockBeamLight",Vec3Offset(tracedir.x*i,tracedir.y*i,tracedir.z*i));
-		for ( int i=0; i<t.Results.Distance; i+=8 )
+		for ( int i=0; i<t.Results.Distance; i+=4 )
 		{
-			A_SpawnParticle("F0A0FF",SPF_FULLBRIGHT,15,2,0,tracedir.x*i,tracedir.y*i,tracedir.z*i,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:1,sizestep:-.1);
-			A_SpawnParticle("A040FF",SPF_FULLBRIGHT,20,4,0,tracedir.x*i,tracedir.y*i,tracedir.z*i,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:.75,sizestep:-.1);
-			A_SpawnParticle("8020FF",SPF_FULLBRIGHT,25,6,0,tracedir.x*i,tracedir.y*i,tracedir.z*i,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:.5,sizestep:-.1);
-			A_SpawnParticle("602080",SPF_FULLBRIGHT,30,8,0,tracedir.x*i,tracedir.y*i,tracedir.z*i,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:.25,sizestep:-.1);
+			Vector3 pofs = tracedir*FRandom[ASMD](-4,4)+(FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1));
+			A_SpawnParticle("C0A0FF",SPF_FULLBRIGHT,15,2,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:1,sizestep:-.1);
+			A_SpawnParticle("8040FF",SPF_FULLBRIGHT,20,4,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:.75,sizestep:-.1);
+			A_SpawnParticle("5020FF",SPF_FULLBRIGHT,25,6,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:.5,sizestep:-.1);
+			A_SpawnParticle("402080",SPF_FULLBRIGHT,30,8,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:.25,sizestep:-.1);
 		}
 		if ( totaldist >= 10000.0 )
 		{
@@ -192,6 +195,18 @@ Class ShockBeam : Actor
 				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
 				r.pitch = asin(-t.Results.HitVector.z);
 				A_PlaySound("shock/blast",CHAN_WEAPON,attenuation:0.5);
+				int numpt = Random[ASMD](200,300);
+				for ( int i=0; i<numpt; i++ )
+				{
+					Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](2,8);
+					A_SpawnParticle("C0A0FF",SPF_FULLBRIGHT,Random[ASMD](20,80),FRandom[ASMD](1.6,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.05);
+					pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+					A_SpawnParticle("8040FF",SPF_FULLBRIGHT,Random[ASMD](30,100),FRandom[ASMD](3.2,9.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.75,-1,-.05);
+					pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+					A_SpawnParticle("5020FF",SPF_FULLBRIGHT,Random[ASMD](40,120),FRandom[ASMD](4.8,11.2),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.05);
+					pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+					A_SpawnParticle("402080",SPF_FULLBRIGHT,Random[ASMD](50,140),FRandom[ASMD](5.6,12.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.25,-1,-.05);
+				}
 			}
 			else
 			{
@@ -231,6 +246,19 @@ Class ShockBeam : Actor
 		Spawn("ShockBeamLight",pos);
 		A_QuakeEx(2,2,2,5,0,120,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		A_PlaySound("shock/hit",CHAN_VOICE);
+		A_AlertMonsters();
+		int numpt = Random[ASMD](20,50);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("C0A0FF",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,2.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
+			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("8040FF",SPF_FULLBRIGHT,Random[ASMD](30,50),FRandom[ASMD](3.2,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.75,-1,-.1);
+			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("5020FF",SPF_FULLBRIGHT,Random[ASMD](40,60),FRandom[ASMD](4.8,5.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.1);
+			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("402080",SPF_FULLBRIGHT,Random[ASMD](50,70),FRandom[ASMD](5.6,6.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.25,-1,-.1);
+		}
 	}
 	States
 	{
@@ -313,6 +341,7 @@ Class ShockExplLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
+		if ( globalfreeze || level.frozen ) return;
 		args[LIGHT_RED] = 160*lifetime;
 		args[LIGHT_GREEN] = 128*lifetime;
 		args[LIGHT_BLUE] = 255*lifetime;
@@ -368,6 +397,19 @@ Class ShockBall : Actor
 		A_PlaySound("shock/hit",CHAN_VOICE);
 		A_PlaySound("shock/ball",CHAN_WEAPON);
 		A_QuakeEx(4,4,4,30,0,200,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.15);
+		A_AlertMonsters();
+		int numpt = Random[ASMD](50,100);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("C0A0FF",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,2.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
+			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("8040FF",SPF_FULLBRIGHT,Random[ASMD](30,50),FRandom[ASMD](3.2,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.75,-1,-.1);
+			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("5020FF",SPF_FULLBRIGHT,Random[ASMD](40,60),FRandom[ASMD](4.8,5.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.1);
+			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("402080",SPF_FULLBRIGHT,Random[ASMD](50,70),FRandom[ASMD](5.6,6.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.25,-1,-.1);
+		}
 	}
 	Default
 	{
@@ -398,10 +440,6 @@ Class ShockBall : Actor
 
 Class ShockRifle : UTWeapon
 {
-	action void A_Selecting()
-	{
-		A_PlaySound("shock/select",CHAN_WEAPON);
-	}
 	action void A_ShockFire()
 	{
 		Weapon weap = Weapon(invoker);
@@ -409,9 +447,9 @@ Class ShockRifle : UTWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		A_PlaySound("shock/fire",CHAN_WEAPON);
+		A_AlertMonsters();
 		A_QuakeEx(3,3,3,4,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
-		double a, s;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+3.0*y-4.0*z;
 		Actor p = Spawn("ShockBeam",origin);
@@ -426,9 +464,9 @@ Class ShockRifle : UTWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		A_PlaySound("shock/altfire",CHAN_WEAPON);
+		A_AlertMonsters();
 		A_QuakeEx(3,3,3,8,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
-		double a, s;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+3.0*y-4.0*z;
 		Actor p = Spawn("ShockBall",origin);
@@ -442,6 +480,7 @@ Class ShockRifle : UTWeapon
 	{
 		Tag "Shock Rifle";
 		Inventory.PickupMessage "You got the ASMD Shock Rifle.";
+		Weapon.UpSound "shock/select";
 		Weapon.SlotNumber 4;
 		Weapon.AmmoType "ShockAmmo";
 		Weapon.AmmoUse 1;
@@ -457,8 +496,7 @@ Class ShockRifle : UTWeapon
 		ASMP B -1;
 		Stop;
 	Ready:
-		ASMS A 1 A_Selecting();
-		ASMS BCDEFGHIJKLMNO 1;
+		ASMS ABCDEFGHIJKLMNO 1;
 	Idle:
 		ASMI A 1
 		{
