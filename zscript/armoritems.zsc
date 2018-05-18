@@ -1,0 +1,89 @@
+Class UTArmorBonus : ArmorBonus replaces ArmorBonus
+{
+	Default
+	{
+		Tag "Armor Bonus";
+		Armor.SaveAmount 5;
+		Inventory.PickupMessage "You picked up an Armor Bonus.";
+		Inventory.PickupSound "misc/ut_shard";
+	}
+	States
+	{
+	Spawn:
+		XANH A -1;
+		Stop;
+	}
+}
+
+// TODO system for separating the 4 armor pickups (like Hexen's, but not as strict)
+Class UTArmor : Inventory
+{
+}
+
+Class UTThighPads : BasicArmorPickup replaces GreenArmor
+{
+	Default
+	{
+		Tag "Thigh Pads";
+		Armor.SaveAmount 50;
+		Armor.SavePercent 50;
+		Inventory.PickupMessage "You got the Thigh Pads.";
+		Inventory.PickupSound "misc/ut_armor";
+	}
+	States
+	{
+	Spawn:
+		THIG A -1;
+		Stop;
+	}
+}
+
+Class UTBodyArmor : BasicArmorPickup replaces BlueArmor
+{
+	Default
+	{
+		Tag "Body Armor";
+		Armor.SaveAmount 100;
+		Armor.SavePercent 75;
+		Inventory.PickupMessage "You got the Body Armor.";
+		Inventory.PickupSound "misc/ut_armor";
+	}
+	States
+	{
+	Spawn:
+		UARM A -1;
+		Stop;
+	}
+}
+
+Class UTShieldBelt : Inventory replaces Megasphere
+{
+	override void ModifyDamage( int damage, Name damageType, out int newdamage, bool passive )
+	{
+		if ( !passive || (damage <= 0) ) return;
+		newdamage = max(0,damage-Amount);
+		Owner.A_PlaySound("belt/absorb");
+		if ( amount-damage <= 0 ) Owner.A_Print("The Shield Belt has depleted.");
+		Owner.TakeInventory("UTShieldBelt",min(amount,damage));
+	}
+	Default
+	{
+		Tag "Shield Belt";
+		+COUNTITEM;
+		+INVENTORY.AUTOACTIVATE;
+		+Inventory.UNTOSSABLE;
+		+INVENTORY.ALWAYSPICKUP;
+		+INVENTORY.BIGPOWERUP;
+		Inventory.Amount 150;
+		Inventory.MaxAmount 150;
+		Inventory.InterHubAmount 150;
+		Inventory.PickupMessage "You got the Shield Belt.";
+		Inventory.PickupSound "belt/pickup";
+	}
+	States
+	{
+	Spawn:
+		BELT A -1;
+		Stop;
+	}
+}

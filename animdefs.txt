@@ -5,3 +5,18 @@ texture static1
 	pic static2 tics 1
 	pic static3 tics 1
 	pic static4 tics 1
+texture FIZZHP00
+	pic FIZZHP00 tics 8
+	pic FIZZHP01 tics 8
+	pic FIZZHP02 tics 8
+	pic FIZZHP03 tics 8
+texture FIZZHP10
+	pic FIZZHP10 tics 8
+	pic FIZZHP11 tics 8
+	pic FIZZHP12 tics 8
+	pic FIZZHP13 tics 8
+texture FIZZHP20
+	pic FIZZHP20 tics 8
+	pic FIZZHP21 tics 8
+	pic FIZZHP22 tics 8
+	pic FIZZHP23 tics 8

@@ -1,3 +1,29 @@
+Class Tier5Ammo : RandomSpawner replaces RocketAmmo
+{
+	Default
+	{
+		DropItem "FlakAmmo2", 255, 1;
+		//DropItem "UTRocketAmmo2", 255, 1;
+	}
+}
+Class Tier5Ammo2 : RandomSpawner replaces RocketBox
+{
+	Default
+	{
+		DropItem "FlakAmmo", 255, 1;
+		//DropItem "UTRocketAmmo", 255, 1;
+	}
+}
+
+Class Tier5Weapon : RandomSpawner replaces RocketLauncher
+{
+	Default
+	{
+		DropItem "FlakCannon", 255, 1;
+		//DropItem "UTRocketLauncher", 255, 1;
+	}
+}
+
 Class FlakAmmo : Ammo
 {
 	Default
@@ -400,7 +426,7 @@ Class FlakLight : DynamicLight
 			Destroy();
 			return;
 		}
-		if ( target.player ) SetOrigin(target.pos+(0,0,target.player.viewheight),true);
+		if ( target.player ) SetOrigin(target.Vec3Offset(0,0,target.player.viewz-target.pos.z),true);
 		else SetOrigin(target.pos,true);
 		if ( cnt++ > 2 ) Destroy();
 	}
@@ -425,7 +451,7 @@ Class FlakCannon : UTWeapon
 		Vector3 x, y, z;
 		double a, s;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+2.0*y-3.0*z;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-3.0*z;
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);
@@ -461,7 +487,7 @@ Class FlakCannon : UTWeapon
 		Vector3 x, y, z;
 		double a, s;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+2.0*y-3.0*z;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-3.0*z;
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);

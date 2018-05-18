@@ -2,10 +2,17 @@ Class UTWeapon : Weapon
 {
 	override Inventory CreateTossable( int amt )
 	{
+		if ( Ammo1 && (Ammo1.Amount <= 0) ) return null;
 		Inventory d = Super.CreateTossable(amt);
 		if ( d && (d.GetClass() == GetClass()) )
 			d.SetState(d.ResolveState("Spawn")+1);
 		return d;
+	}
+
+	override bool SpecialDropAction( Actor dropper )
+	{
+		SetState(ResolveState("Spawn")+1);
+		return true;
 	}
 
 	override void Tick()

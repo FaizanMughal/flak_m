@@ -2,6 +2,62 @@ HardwareShader Texture "models/Jgreen.png"
 {
 	Shader "shaders/glsl/MeshEnviroMap.fp"
 }
+Brightmap Texture "FIZZHP00"
+{
+	Map "brightmaps/fullbright.png"
+}
+Brightmap Texture "FIZZHP01"
+{
+	Map "brightmaps/fullbright.png"
+}
+Brightmap Texture "FIZZHP02"
+{
+	Map "brightmaps/fullbright.png"
+}
+Brightmap Texture "FIZZHP03"
+{
+	Map "brightmaps/fullbright.png"
+}
+Brightmap Texture "FIZZHP10"
+{
+	Map "brightmaps/fullbright.png"
+}
+Brightmap Texture "FIZZHP11"
+{
+	Map "brightmaps/fullbright.png"
+}
+Brightmap Texture "FIZZHP12"
+{
+	Map "brightmaps/fullbright.png"
+}
+Brightmap Texture "FIZZHP13"
+{
+	Map "brightmaps/fullbright.png"
+}
+Brightmap Texture "FIZZHP20"
+{
+	Map "brightmaps/fullbright.png"
+}
+Brightmap Texture "FIZZHP21"
+{
+	Map "brightmaps/fullbright.png"
+}
+Brightmap Texture "FIZZHP22"
+{
+	Map "brightmaps/fullbright.png"
+}
+Brightmap Texture "FIZZHP23"
+{
+	Map "brightmaps/fullbright.png"
+}
+Brightmap Texture "models/jhbox1.png"
+{
+	Map "brightmaps/jhbox1.png"
+}
+Brightmap Texture "models/bossheadT.png"
+{
+	Map "brightmaps/bossheadT.png"
+}
 Brightmap Texture "models/JBRifle2.png"
 {
 	Map "brightmaps/JBRifle2.png"
@@ -72,9 +128,9 @@ Brightmap Texture "models/JPulsePickup_01.png"
 }
 Brightmap Texture "models/AmmoLedBase.png"
 {
-	Map "brightmaps/AmmoLedBase.png"
+	Map "brightmaps/fullbright.png"
 }
 Brightmap Texture "models/FlakAmmoLEDBase.png"
 {
-	Map "brightmaps/FlakAmmoLEDBase.png"
+	Map "brightmaps/fullbright.png"
 }

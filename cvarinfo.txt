@@ -1,1 +1,5 @@
 user bool flak_protomenu = false;
+server bool flak_betaudamage = false;
+server bool flak_pulsereload = false;
+server bool flak_enforcerreload = false;
+user bool flak_redeemerreadout = true;

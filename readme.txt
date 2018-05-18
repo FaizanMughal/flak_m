@@ -9,10 +9,23 @@ Currently implemented:
  - ASMD Shock Rifle (slot 4)
  - Redeemer (slot 0)
  - GES Biorifle (slot 3)
+ - Pulsegun (slot 5) (with beta animations)
+ - Big Keg O' Health (soulsphere)
+ - Beta Super Health (medkit)
+ - Health Pack (stimpak)
+ - Health Vial (health bonus)
 
 In progress:
 
- - Pulsegun (slot 5) (with beta animations)
+ - Something to replace armor bonus (armor bonus)
+ - Thigh Pads (green armor)
+ - Body Armor (blue armor)
+ - Shield Belt (megasphere)
+ - Damage Amplifier (invulnerability sphere)
+ - Invisibility (blursphere)
+ - Searchlight (light amplification visor)
+ - Jump Boots (berserk)
+ - Toxin Suit (radsuit)
 
 To be done:
 
@@ -26,15 +39,4 @@ To be done:
  - Rocket Launcher (slot 9)
  - Sniper Rifle (slot 0)
 
- - Health Vial (bonus)
- - Health Pack (stimpak)
- - Beta Super Health (medkit)
- - Big Keg O' Health (soulsphere)
- - Thigh Pads (green armor)
- - Body Armor (blue armor)
- - Shield Belt (megasphere)
- - Damage Amplifier (berserk)
- - Invisibility (blursphere)
- - Jump Boots (light amplification visor)
- - Toxin Suit (radsuit)
  - ... maybe more

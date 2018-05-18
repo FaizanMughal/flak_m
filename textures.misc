@@ -1,1 +1,128 @@
-Sprite "BLOBA0",1,1{}
+Texture "FIZZHP00",256,256
+{
+	Patch "LAVA1",0,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",64,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",128,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",192,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",0,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",64,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",128,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",192,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",0,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",64,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",128,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",192,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",0,192{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",64,192{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",128,192{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",192,192{Translation "0:255=#[0,0,255]"}
+}
+Texture "FIZZHP01",256,256
+{
+	Patch "LAVA2",0,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",64,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",128,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",192,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",0,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",64,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",128,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",192,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",0,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",64,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",128,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",192,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",0,192{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",64,192{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",128,192{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",192,192{Translation "0:255=#[0,0,255]"}
+}
+Texture "FIZZHP02",256,256
+{
+	Patch "LAVA3",0,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",64,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",128,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",192,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",0,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",64,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",128,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",192,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",0,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",64,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",128,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",192,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",0,192{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",64,192{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",128,192{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",192,192{Translation "0:255=#[0,0,255]"}
+}
+Texture "FIZZHP03",256,256
+{
+	Patch "LAVA4",0,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",64,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",128,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",192,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",0,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",64,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",128,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",192,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",0,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",64,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",128,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",192,128{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",0,192{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",64,192{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",128,192{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",192,192{Translation "0:255=#[0,0,255]"}
+}
+Texture "FIZZHP10",128,128
+{
+	Patch "LAVA1",0,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",64,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",0,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA1",64,64{Translation "0:255=#[0,0,255]"}
+}
+Texture "FIZZHP11",128,128
+{
+	Patch "LAVA2",0,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",64,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",0,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA2",64,64{Translation "0:255=#[0,0,255]"}
+}
+Texture "FIZZHP12",128,128
+{
+	Patch "LAVA3",0,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",64,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",0,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA3",64,64{Translation "0:255=#[0,0,255]"}
+}
+Texture "FIZZHP13",128,128
+{
+	Patch "LAVA4",0,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",64,0{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",0,64{Translation "0:255=#[0,0,255]"}
+	Patch "LAVA4",64,64{Translation "0:255=#[0,0,255]"}
+}
+Texture "FIZZHP20",64,64
+{
+	Patch "LAVA1",0,0{Translation "0:255=#[0,0,255]"}
+}
+Texture "FIZZHP21",64,64
+{
+	Patch "LAVA2",0,0{Translation "0:255=#[0,0,255]"}
+}
+Texture "FIZZHP22",64,64
+{
+	Patch "LAVA3",0,0{Translation "0:255=#[0,0,255]"}
+}
+Texture "FIZZHP23",64,64
+{
+	Patch "LAVA4",0,0{Translation "0:255=#[0,0,255]"}
+}
+Sprite "HBOXA0",1,1{}
+Sprite "HBOXB0",1,1{}
+Sprite "HBOXC0",1,1{}
+Sprite "VIALA0",1,1{}
+Sprite "XANHA0",1,1{}
+Sprite "THIGA0",1,1{}
+Sprite "UARMA0",1,1{}
+Sprite "BELTA0",1,1{}

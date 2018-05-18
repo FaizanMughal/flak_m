@@ -1,0 +1,77 @@
+Class UTHealthPack : Health replaces Soulsphere
+{
+	Default
+	{
+		Tag "Big Keg O' Health";
+		+COUNTITEM;
+		+INVENTORY.AUTOACTIVATE;
+		+INVENTORY.ALWAYSPICKUP;
+		+INVENTORY.FANCYPICKUPSOUND;
+		Inventory.Amount 100;
+		Inventory.MaxAmount 200;
+		Inventory.PickupMessage "You picked up the Big Keg O' Health.";
+		Inventory.PickupSound "misc/ut_keg";
+	}
+	States
+	{
+	Spawn:
+		HBOX A -1;
+		Stop;
+	}
+}
+
+Class UTHealthBox : Health replaces Medikit
+{
+	Default
+	{
+		Tag "Health Box";
+		Inventory.Amount 50;
+		Inventory.PickupMessage "You picked up a Health Box.";
+		Health.LowMessage 25,"You picked up a Health Box that you REALLY need!";
+		Inventory.PickupSound "misc/ut_heal";
+	}
+	States
+	{
+	Spawn:
+		HBOX B -1;
+		Stop;
+	}
+}
+
+Class UTMedBox : Health replaces Stimpack
+{
+	Default
+	{
+		Tag "Health Pack";
+		Inventory.Amount 20;
+		Inventory.PickupMessage "You picked up a Health Pack.";
+		Inventory.PickupSound "misc/ut_heal";
+	}
+	States
+	{
+	Spawn:
+		HBOX C -1;
+		Stop;
+	}
+}
+
+Class UTHealthBonus : Health replaces HealthBonus
+{
+	Default
+	{
+		Tag "Health Vial";
+		+COUNTITEM;
+		+INVENTORY.ALWAYSPICKUP;
+		Inventory.Amount 5;
+		Inventory.MaxAmount 200;
+		Inventory.PickupMessage "You picked up a Health Vial.";
+		Inventory.PickupSound "misc/ut_heal";
+		RenderStyle "Add";
+	}
+	States
+	{
+	Spawn:
+		VIAL A -1;
+		Stop;
+	}
+}

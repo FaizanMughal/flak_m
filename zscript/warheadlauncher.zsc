@@ -216,6 +216,8 @@ Class WarShell : Actor
 		b = Spawn("WarheadHitbox",pos);
 		b.target = self;
 		A_PlaySound("warhead/fly",CHAN_VOICE,1.0,true);
+		destangle = angle;
+		destpitch = pitch;
 	}
 	override int SpecialMissileHit( Actor victim )
 	{
@@ -226,19 +228,7 @@ Class WarShell : Actor
 	{
 		Super.Tick();
 		if ( globalfreeze || level.frozen ) return;
-		if ( vel.length() > 0 )
-		{
-			Vector3 dir = vel.unit();
-			destangle = atan2(dir.y,dir.x);
-			destpitch = asin(-dir.z);
-			A_SetAngle(angle*0.9+destangle*0.1,SPF_INTERPOLATE);
-			A_SetPitch(pitch*0.9+destpitch*0.1,SPF_INTERPOLATE);
-			if ( vel.length() < 10 )
-			{
-				Vector3 dir = vel.unit();
-				vel += dir*1;
-			}
-		}
+		if ( vel.length() < 10 ) vel *= 1.1;
 	}
 	action void A_Trail()
 	{
@@ -406,10 +396,11 @@ Class RedeemerHUD : HUDMessageBase
 		// shootable targetting
 		t.Reinit();
 		Actor a;
+		Vector3 vdir = (cos(ViewAngle)*cos(ViewPitch),sin(ViewAngle)*cos(ViewPitch),-sin(ViewPitch));
 		while ( a = Actor(t.Next()) )
 		{
 			Vector3 tdir = Level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
-			if ( !a.bSHOOTABLE || (a.Health <= 0) || ((Camera is 'GuidedWarShell') && (a == GuidedWarShell(Camera).b)) || tr.Trace(ViewPos,Camera.CurSector,tdir.unit(),tdir.length(),0) ) continue;
+			if ( !a.bSHOOTABLE || (a.Health <= 0) || ((Camera is 'GuidedWarShell') && (a == GuidedWarShell(Camera).b)) || (tdir.length() > 2000) || (acos(tdir.unit() dot vdir) > players[consoleplayer].FOV) || tr.Trace(ViewPos,Camera.CurSector,tdir.unit(),tdir.length(),0) ) continue;
 			Vector3 wpos = ViewPos+tdir;
 			Vector3 spos = mkCoordUtil.WorldToScreen(wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
 			if ( spos.z > 1.0 ) continue;
@@ -483,7 +474,7 @@ Class RedeemerHUDHandler : EventHandler
 	}
 }
 
-Class WarheadLauncher : UTWeapon
+Class WarheadLauncher : UTWeapon replaces BFG9000
 {
 	Actor guided;
 	action void A_WarheadFire()
@@ -496,15 +487,29 @@ Class WarheadLauncher : UTWeapon
 		A_AlertMonsters();
 		A_QuakeEx(6,6,6,20,0,100,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
 		Vector3 x, y, z;
-		double a, s;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		vel -= x*10;
-		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+2.0*y-2.0*z;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
 		Actor p = Spawn("WarShell",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
 		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
 		p.target = self;
+	}
+	action void A_WarheadSmoke()
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		Vector3 x, y, z;
+		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		vel -= x*0.2;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
+		int numpt = Random[Warhead](10,20);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (x+(FRandom[Warhead](-.8,.8),FRandom[Warhead](-.8,.8),FRandom[Warhead](-.8,.8))).unit()*FRandom[Warhead](1,2);
+			A_SpawnParticle(Color(1,1,1)*Random[Warhead](32,128),0,Random[Warhead](40,50),FRandom[Warhead](4,12),0,origin.x-pos.x,origin.y-pos.y,origin.z-pos.z,pvel.x,pvel.y,pvel.z,0,0,0.03,0.5,-1,0.5);
+		}
 	}
 	action void A_WarheadAlt()
 	{
@@ -516,10 +521,9 @@ Class WarheadLauncher : UTWeapon
 		A_AlertMonsters();
 		A_QuakeEx(6,6,6,20,0,100,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
 		Vector3 x, y, z;
-		double a, s;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		vel -= x*10;
-		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+2.0*y-2.0*z;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
 		Actor p = Spawn("GuidedWarShell",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
@@ -527,6 +531,13 @@ Class WarheadLauncher : UTWeapon
 		p.target = self;
 		p.master = invoker;
 		invoker.guided = p;
+	}
+
+	// disallow dropping while guiding
+	override Inventory CreateTossable( int amt )
+	{
+		if ( guided ) return null;
+		return Super.CreateTossable();
 	}
 
 	Default
@@ -560,13 +571,13 @@ Class WarheadLauncher : UTWeapon
 	Fire:
 		WARI A 3;
 		WARF A 3 A_WarheadFire();
-		WARF BCDEFG 3;
+		WARF BCDEFG 3 A_WarheadSmoke();
 		WARI A 5;
 		Goto Idle;
 	AltFire:
 		WARI A 3;
 		WARF A 3 A_WarheadAlt();
-		WARF BCDEFG 3;
+		WARF BCDEFG 3 A_WarheadSmoke();
 		WARI A 1 A_JumpIf(!invoker.Guided,1);
 		Wait;
 		WARI A 30;

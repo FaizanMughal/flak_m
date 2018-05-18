@@ -1,3 +1,22 @@
+Class Tier3Ammo : RandomSpawner replaces Shell
+{
+	Default
+	{
+		DropItem "BioAmmo", 255, 1;
+		DropItem "ShockAmmo", 255, 1;
+	}
+}
+Class Tier3Ammo2 : Tier3Ammo replaces ShellBox {}
+Class Tier3Weapon : RandomSpawner replaces Shotgun
+{
+	Default
+	{
+		DropItem "BioRifle", 255, 1;
+		DropItem "ShockRifle", 255, 1;
+	}
+}
+Class Tier3Weapon2 : Tier3Weapon replaces SuperShotgun {}
+
 Class BioAmmo : Ammo
 {
 	Default
@@ -372,7 +391,7 @@ Class BioRifle : UTWeapon
 		Vector3 x, y, z;
 		double a, s;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+8.0*y-5.0*z;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+8.0*y-5.0*z;
 		Actor p;
 		if ( alt )
 		{

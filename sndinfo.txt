@@ -1,9 +1,33 @@
+misc/secret CapSound
 misc/i_pkup ammopick
+misc/k_pkup ammosnd
 misc/w_pkup weaponpk
+misc/p_pkup genpicks
 misc/spawn RespSnd2
+misc/chat  NewBeep
+misc/chat2 NewBeep
+misc/teleport Resp2A
+$pitchshift misc/secret 0
 $pitchshift misc/i_pkup 0
+$pitchshift misc/k_pkup 0
 $pitchshift misc/w_pkup 0
+$pitchshift misc/p_pkup 0
 $pitchshift misc/spawn 0
+$pitchshift misc/chat 0
+$pitchshift misc/chat2 0
+$pitchshift misc/teleport 0
+misc/ut_keg UTSuperH
+misc/ut_heal UTHealth
+misc/ut_shard shardpck
+misc/ut_armor ArmorUT
+belt/pickup BeltSnd
+belt/absorb Sbelthe2
+boot/pickup BootSnd
+boot/jump BootJmp
+$pitchshift misc/ut_keg 0
+$pitchshift misc/ut_heal 0
+$pitchshift misc/ut_shard 0
+$pitchshift misc/ut_armor 0
 
 flak/select pdown
 flak/load hidraul2

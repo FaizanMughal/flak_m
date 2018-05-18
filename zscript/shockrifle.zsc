@@ -119,11 +119,11 @@ Class ShockBeam : Actor
 	Default
 	{
 		Obituary "%k inflicted mortal damage upon %o with the Shock Rifle";
+		DamageType 'jolted';
 		RenderStyle "Add";
 		Radius 0.1;
 		Height 0;
 		Scale 0.4;
-		DamageFunction Random[ASMD](30,45);
 		+NOGRAVITY;
 		+NOCLIP;
 		+DONTSPLASH;
@@ -151,7 +151,7 @@ Class ShockBeam : Actor
 			Spawn("ShockBeamLight",Vec3Offset(tracedir.x*i,tracedir.y*i,tracedir.z*i));
 		for ( int i=0; i<t.Results.Distance; i+=4 )
 		{
-			Vector3 pofs = tracedir*FRandom[ASMD](-4,4)+(FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1));
+			Vector3 pofs = Level.Vec3Diff(pos,pos+tracedir*FRandom[ASMD](-4,4)+(FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)));
 			A_SpawnParticle("C0A0FF",SPF_FULLBRIGHT,15,2,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:1,sizestep:-.1);
 			A_SpawnParticle("8040FF",SPF_FULLBRIGHT,20,4,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:.75,sizestep:-.1);
 			A_SpawnParticle("5020FF",SPF_FULLBRIGHT,25,6,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:.5,sizestep:-.1);
@@ -301,6 +301,7 @@ Class ShockBeamLight : ShockExplLight
 {
 	Default
 	{
+		+DYNAMICLIGHT.ATTENUATE;
 		ReactionTime 15;
 		Args 0,0,0,80;
 	}
@@ -451,7 +452,7 @@ Class ShockRifle : UTWeapon
 		A_QuakeEx(3,3,3,4,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+3.0*y-4.0*z;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
 		Actor p = Spawn("ShockBeam",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
@@ -468,7 +469,7 @@ Class ShockRifle : UTWeapon
 		A_QuakeEx(3,3,3,8,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+3.0*y-4.0*z;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
 		Actor p = Spawn("ShockBall",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
