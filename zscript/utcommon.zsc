@@ -22,6 +22,12 @@ Class UTWeapon : Weapon
 		Owner.player.WeaponState |= WF_WEAPONBOBBING; // UT weapons always bob
 	}
 
+	void FireEffect()
+	{
+		let amp = DamageAmplifier(Owner.FindInventory("DamageAmplifier",true));
+		if ( amp ) amp.FireEffect();
+	}
+
 	Default
 	{
 		Weapon.BobStyle "Smooth";
@@ -29,6 +35,138 @@ Class UTWeapon : Weapon
 		Weapon.BobRangeX 0.2;
 		Weapon.BobRangeY 0.4;
 		+WEAPON.NOALERT;
+	}
+}
+
+Class UTTeleportLight : DynamicLight
+{
+	Default
+	{
+		DynamicLight.Type "Point";
+		Args 128,160,255,80;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( alpha <= 0 )
+		{
+			Destroy();
+			return;
+		}
+		args[LIGHT_RED] = 128*alpha;
+		args[LIGHT_GREEN] = 160*alpha;
+		args[LIGHT_BLUE] = 255*alpha;
+		args[LIGHT_INTENSITY] = Random[Tele](10,14)*8;
+		alpha -= 1./35;
+	}
+}
+
+Class UTTeleportFog : Actor replaces TeleportFog
+{
+	Default
+	{
+		+NOBLOCKMAP;
+		+NOTELEPORT;
+		+NOGRAVITY;
+		RenderStyle "Add";
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		Spawn("UTTeleportLight",pos+(0,0,16));
+		A_PlaySound ("misc/teleport");
+	}
+	States
+	{
+	Spawn:
+		TELE ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 Bright A_FadeOut(1./35);
+		TEL2 ABCDEFGHI 1 Bright A_FadeOut(1./35);
+		Stop;
+	}
+}
+
+Class UTRedSkull : RedSkull replaces RedSkull
+{
+	Default
+	{
+		Tag "Red Skull";
+		Inventory.PickupMessage "You got the Red Skull.";
+	}
+	States
+	{
+	Spawn:
+		USKL A -1;
+		Stop;
+	}
+}
+Class UTGoldSkull : YellowSkull replaces YellowSkull
+{
+	Default
+	{
+		Tag "Gold Skull";
+		Inventory.PickupMessage "You got the Gold Skull.";
+	}
+	States
+	{
+	Spawn:
+		USKL B -1;
+		Stop;
+	}
+}
+Class UTBlueSkull : BlueSkull replaces BlueSkull
+{
+	Default
+	{
+		Tag "Blue Skull";
+		Inventory.PickupMessage "You got the Blue Skull.";
+	}
+	States
+	{
+	Spawn:
+		USKL C -1;
+		Stop;
+	}
+}
+Class UTRedKey : RedCard replaces RedCard
+{
+	Default
+	{
+		Tag "Red Key";
+		Inventory.PickupMessage "You got the Red Key.";
+	}
+	States
+	{
+	Spawn:
+		UKEY A -1;
+		Stop;
+	}
+}
+Class UTGoldKey : YellowCard replaces YellowCard
+{
+	Default
+	{
+		Tag "Gold Key";
+		Inventory.PickupMessage "You got the Gold Key.";
+	}
+	States
+	{
+	Spawn:
+		UKEY B -1;
+		Stop;
+	}
+}
+Class UTBlueKey : BlueCard replaces BlueCard
+{
+	Default
+	{
+		Tag "Blue Key";
+		Inventory.PickupMessage "You got the Blue Key.";
+	}
+	States
+	{
+	Spawn:
+		UKEY C -1;
+		Stop;
 	}
 }
 

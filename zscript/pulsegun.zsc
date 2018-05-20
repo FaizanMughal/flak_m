@@ -42,7 +42,7 @@ Class PulseBallLight : DynamicLight
 	Default
 	{
 		DynamicLight.Type "Point";
-		Args 32,255,0,10;
+		Args 64,255,0,10;
 	}
 	override void PostBeginPlay()
 	{
@@ -69,7 +69,7 @@ Class PulseExplLight : DynamicLight
 	{
 		DynamicLight.Type "Point";
 		ReactionTime 20;
-		Args 32,255,0,30;
+		Args 64,255,0,30;
 	}
 	override void PostBeginPlay()
 	{
@@ -80,7 +80,7 @@ Class PulseExplLight : DynamicLight
 	{
 		Super.Tick();
 		if ( globalfreeze || level.frozen ) return;
-		args[LIGHT_RED] = 16*lifetime;
+		args[LIGHT_RED] = 64*lifetime;
 		args[LIGHT_GREEN] = 255*lifetime;
 		lifetime -= 1./ReactionTime;
 		if ( lifetime <= 0 ) Destroy();
@@ -117,8 +117,8 @@ Class PulseBall : Actor
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (FRandom[Pulse](-1,1),FRandom[Pulse](-1,1),FRandom[Pulse](-1,1)).unit()*FRandom[Pulse](2,4);
-			A_SpawnParticle("A0FFA0",SPF_FULLBRIGHT,Random[Pulse](20,40),FRandom[Pulse](2.4,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
-			A_SpawnParticle("60C040",SPF_FULLBRIGHT,Random[Pulse](30,50),FRandom[Pulse](4.8,7.2),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
+			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[Pulse](20,40),FRandom[Pulse](2.4,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
+			A_SpawnParticle("40FF00",SPF_FULLBRIGHT,Random[Pulse](30,50),FRandom[Pulse](4.8,7.2),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
 		}
 	}
 	action void A_Trail()
@@ -128,8 +128,8 @@ Class PulseBall : Actor
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (FRandom[Pulse](-1,1),FRandom[Pulse](-1,1),FRandom[Pulse](-1,1)).unit()*FRandom[Pulse](2,4);
-			A_SpawnParticle("A0FFA0",SPF_FULLBRIGHT,Random[Pulse](10,20),FRandom[Pulse](1.2,2.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
-			A_SpawnParticle("60C040",SPF_FULLBRIGHT,Random[Pulse](15,25),FRandom[Pulse](2.4,3.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
+			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[Pulse](10,20),FRandom[Pulse](1.2,2.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
+			A_SpawnParticle("40FF00",SPF_FULLBRIGHT,Random[Pulse](15,25),FRandom[Pulse](2.4,3.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
 		}
 	}
 	States
@@ -150,8 +150,7 @@ Class PulseBoltLight : DynamicLight
 	Default
 	{
 		DynamicLight.Type "Point";
-		+DYNAMICLIGHT.ATTENUATE;
-		Args 32,255,0,50;
+		Args 64,255,0,50;
 	}
 	override void PostBeginPlay()
 	{
@@ -244,7 +243,7 @@ Class PulseBolt : Actor
 				+sin(i*0.843-phase)*z*0.1463*min(1,(i*0.1)**.5)
 				+sin(i*0.863-phase)*z*0.1345*min(1,(i*0.1)**.5));
 			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,1,FRandom[Pulse](0.6,1.2),0,origin.x,origin.y,origin.z,0,0,0,0,0,0,2);
-			A_SpawnParticle("60C040",SPF_FULLBRIGHT,1,FRandom[Pulse](2.4,4.8),0,origin.x,origin.y,origin.z,0,0,0,0,0,0,.1);
+			A_SpawnParticle("40FF00",SPF_FULLBRIGHT,1,FRandom[Pulse](2.4,4.8),0,origin.x,origin.y,origin.z,0,0,0,0,0,0,.1);
 		}
 		for ( int i=50; i<beamsize; i+=100 )
 		{
@@ -282,8 +281,8 @@ Class PulseBolt : Actor
 			for ( int i=0; i<numpt; i++ )
 			{
 				Vector3 pvel = ((FRandom[Pulse](-.4,.5),FRandom[Pulse](-.4,.4),FRandom[Pulse](-.4,.4))-x).unit()*FRandom[Pulse](2,4);
-				A_SpawnParticle("A0FFA0",SPF_FULLBRIGHT,Random[Pulse](20,40),FRandom[Pulse](2.4,4.8),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
-				A_SpawnParticle("60C040",SPF_FULLBRIGHT,Random[Pulse](30,50),FRandom[Pulse](4.8,7.2),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
+				A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[Pulse](20,40),FRandom[Pulse](2.4,4.8),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
+				A_SpawnParticle("40FF00",SPF_FULLBRIGHT,Random[Pulse](30,50),FRandom[Pulse](4.8,7.2),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
 			}
 			beamsize = t.Results.Distance;
 			A_SprayDecal("BoltScorch",beamsize+8);
@@ -300,8 +299,8 @@ Class PulseBolt : Actor
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (t.Results.HitVector+(FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5))).unit()*FRandom[Pulse](2,4);
-			A_SpawnParticle("A0FFA0",SPF_FULLBRIGHT,Random[Pulse](20,40),FRandom[Pulse](2.4,4.8),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
-			A_SpawnParticle("60C040",SPF_FULLBRIGHT,Random[Pulse](30,50),FRandom[Pulse](4.8,7.2),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
+			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[Pulse](20,40),FRandom[Pulse](2.4,4.8),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
+			A_SpawnParticle("40FF00",SPF_FULLBRIGHT,Random[Pulse](30,50),FRandom[Pulse](4.8,7.2),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
 		}
 		beamsize = min(400,beamsize+40);
 	}
@@ -345,6 +344,8 @@ Class PulseGun : UTWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.clipcount--;
+		if ( CVar.GetCVar('flak_pulsereload').GetBool() && (invoker.clipcount <=0) ) invoker.clipcount = Min(50,weap.Ammo1.Amount);
+		invoker.FireEffect();
 		A_AlertMonsters();
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
@@ -353,8 +354,8 @@ Class PulseGun : UTWeapon
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (x+(FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5))).unit()*FRandom[Pulse](2,4);
-			A_SpawnParticle("A0FFA0",SPF_FULLBRIGHT,Random[Pulse](10,20),FRandom[Pulse](1.2,2.4),0,origin.x-pos.x,origin.y-pos.y,origin.z-pos.z,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
-			A_SpawnParticle("60C040",SPF_FULLBRIGHT,Random[Pulse](15,25),FRandom[Pulse](2.4,3.6),0,origin.x-pos.x,origin.y-pos.y,origin.z-pos.z,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
+			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[Pulse](10,20),FRandom[Pulse](1.2,2.4),0,origin.x-pos.x,origin.y-pos.y,origin.z-pos.z,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
+			A_SpawnParticle("40FF00",SPF_FULLBRIGHT,Random[Pulse](15,25),FRandom[Pulse](2.4,3.6),0,origin.x-pos.x,origin.y-pos.y,origin.z-pos.z,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
 		}
 	}
 	action void A_PulseRefire( statelabel flash = null )
@@ -377,6 +378,8 @@ Class PulseGun : UTWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.clipcount--;
+		if ( CVar.GetCVar('flak_pulsereload').GetBool() && (invoker.clipcount <=0) ) invoker.clipcount = Min(50,weap.Ammo1.Amount);
+		invoker.FireEffect();
 		A_AlertMonsters();
 		A_QuakeEx(1,1,1,2,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
 		A_Overlay(-2,"MuzzleFlash");
@@ -397,8 +400,8 @@ Class PulseGun : UTWeapon
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (x+(FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5))).unit()*FRandom[Pulse](2,4);
-			A_SpawnParticle("A0FFA0",SPF_FULLBRIGHT,Random[Pulse](10,20),FRandom[Pulse](1.2,2.4),0,origin.x-pos.x,origin.y-pos.y,origin.z-pos.z,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
-			A_SpawnParticle("60C040",SPF_FULLBRIGHT,Random[Pulse](15,25),FRandom[Pulse](2.4,3.6),0,origin.x-pos.x,origin.y-pos.y,origin.z-pos.z,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
+			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[Pulse](10,20),FRandom[Pulse](1.2,2.4),0,origin.x-pos.x,origin.y-pos.y,origin.z-pos.z,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
+			A_SpawnParticle("40FF00",SPF_FULLBRIGHT,Random[Pulse](15,25),FRandom[Pulse](2.4,3.6),0,origin.x-pos.x,origin.y-pos.y,origin.z-pos.z,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
 		}
 	}
 	action void A_StartBeam()
@@ -438,8 +441,12 @@ Class PulseGun : UTWeapon
 		PGNI A 1
 		{
 			A_CheckReload();
-			if ( (invoker.clipcount <= 0) && (invoker.Ammo1.Amount > 0) ) return A_Jump(255,"Reload");
-			A_WeaponReady(WRF_ALLOWRELOAD);
+			if ( CVar.GetCVar('flak_pulsereload').GetBool() )
+			{
+				if ( (invoker.clipcount <= 0) && (invoker.Ammo1.Amount > 0) ) return A_Jump(255,"Reload");
+				A_WeaponReady(WRF_ALLOWRELOAD);
+			}
+			else A_WeaponReady();
 			return A_JumpIf(!Random[Pulse](0,300),1);
 		}
 		Wait;

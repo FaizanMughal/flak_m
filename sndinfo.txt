@@ -1,103 +1,164 @@
-misc/secret CapSound
-misc/i_pkup ammopick
-misc/k_pkup ammosnd
-misc/w_pkup weaponpk
-misc/p_pkup genpicks
-misc/spawn RespSnd2
-misc/chat  NewBeep
-misc/chat2 NewBeep
-misc/teleport Resp2A
-$pitchshift misc/secret 0
-$pitchshift misc/i_pkup 0
-$pitchshift misc/k_pkup 0
-$pitchshift misc/w_pkup 0
-$pitchshift misc/p_pkup 0
-$pitchshift misc/spawn 0
-$pitchshift misc/chat 0
-$pitchshift misc/chat2 0
-$pitchshift misc/teleport 0
-misc/ut_keg UTSuperH
-misc/ut_heal UTHealth
-misc/ut_shard shardpck
-misc/ut_armor ArmorUT
-belt/pickup BeltSnd
-belt/absorb Sbelthe2
-boot/pickup BootSnd
-boot/jump BootJmp
-$pitchshift misc/ut_keg 0
-$pitchshift misc/ut_heal 0
-$pitchshift misc/ut_shard 0
-$pitchshift misc/ut_armor 0
+$pitchshiftrange 0
 
-flak/select pdown
-flak/load hidraul2
-flak/reload load1
-flak/fire shot1
-flak/altfire explode1
-flak/hit ricochet
-flak/meat chunkhit
-flak/bounce1 hit1
-flak/bounce2 hit2
-flak/bounce3 hit3
+// player sounds
+ut/maledie1	deathc1
+ut/maledie2	deathc3
+ut/maledie3	deathc4
+$random ut/maledie { ut/maledie1 ut/maledie2 ut/maledie3 }
+ut/malexdie1	deathc51
+ut/malexdie2	deathc52
+ut/malexdie3	deathc53
+$random ut/malexdie { ut/malexdie1 ut/malexdie2 ut/malexdie3 }
+ut/gibp		newgib
+ut/malepain1	injurl2
+ut/malepain2	injurl04
+ut/malepain3	injurm04
+ut/malepain4	injurh5
+ut/land		land1
+ut/malegrunt	land10
+ut/malejump	jump1
+ut/malehump	land01
+ut/malesurf	gasp02
+ut/malegasp	hgasp1
+ut/maledrowned1	uwinjr41
+ut/drowned	uwinjr42
+$random ut/maledrowned { ut/maledrowned1 ut/drowned }
+ut/maledrowning	drownm02
+
+$playeralias	player	male	*death		ut/maledie
+$playeralias	player	male	*xdeath		ut/malexdie
+$playeralias	player	male	*gibbed		ut/gibp
+$playeralias	player	male	*pain100	ut/malepain1
+$playeralias	player	male	*pain75		ut/malepain2
+$playeralias	player	male	*pain50		ut/malepain3
+$playeralias	player	male	*pain25		ut/malepain4
+$playeralias	player	male	*grunt		ut/malegrunt
+$playeralias	player	male	*land		ut/land
+$playeralias	player	male	*jump		ut/malejump
+$playeralias	player	male	*usefail	ut/malehump
+$playeralias	player	male	*surface	ut/malesurface
+$playeralias	player	male	*gasp		ut/malegasp
+
+$playeralias	player	male	*death-drowning		ut/maledrowned
+$playeralias	player	male	*xdeath-drowning	ut/maledrowned
+$playeralias	player	male	*pain100-drowning	ut/maledrowning
+$playeralias	player	male	*pain75-drowning	ut/maledrowning
+$playeralias	player	male	*pain50-drowning	ut/maledrowning
+$playeralias	player	male	*pain25-drowning	ut/maledrowning
+
+ut/femaledie1	decap01
+ut/femaledie2	death1d
+ut/femaledie3	death2a
+ut/femaledie4	death3c
+$random ut/femaledie { ut/femaledie1 ut/femaledie2 ut/femaledie3 }
+ut/femalexdie1	death41
+ut/femalexdie2	death42
+$random ut/femalexdie { ut/femalexdie1 ut/femalexdie2 }
+ut/femalepain1	linjur2
+ut/femalepain2	linjur3
+ut/femalepain3	linjur4
+ut/femalepain4	hinjur4
+ut/femalegrunt	lland1
+ut/femalejump	fjump1
+ut/femalesurf	lgasp1
+ut/femalegasp	hgasp3
+ut/femaledrowned1	uwhit01
+$random ut/femaledrowned { ut/femaledroenwd1 ut/drowned }
+ut/femaledrowning	mdrown2f
+
+$playeralias	player	female	*death		ut/femaledie
+$playeralias	player	female	*xdeath		ut/femalexdie
+$playeralias	player	female	*gibbed		ut/gibp
+$playeralias	player	female	*pain100	ut/femalepain1
+$playeralias	player	female	*pain75		ut/femalepain2
+$playeralias	player	female	*pain50		ut/femalepain3
+$playeralias	player	female	*pain25		ut/femalepain4
+$playeralias	player	female	*grunt		ut/femalegrunt
+$playeralias	player	female	*land		ut/land
+$playeralias	player	female	*jump		ut/femalejump
+$playeralias	player	female	*usefail	ut/femalegrunt
+$playeralias	player	female	*surface	ut/femalesurf
+$playeralias	player	female	*gasp		ut/femalegasp
+
+$playeralias	player	female	*death-drowning		ut/femaledrowned
+$playeralias	player	female	*xdeath-drowning	ut/femaledrowned
+$playeralias	player	female	*pain100-drowning	ut/femaledrowning
+$playeralias	player	female	*pain75-drowning	ut/femaledrowning
+$playeralias	player	female	*pain50-drowning	ut/femaledrowning
+$playeralias	player	female	*pain25-drowning	ut/femaledrowning
+
+// everything else
+
+misc/secret	capsound
+misc/i_pkup	ammopick
+misc/k_pkup	ammosnd
+misc/w_pkup	weaponpk
+misc/p_pkup	genpicks
+misc/spawn	respsnd2
+misc/chat	newbeep
+misc/chat2	newbeep
+misc/teleport	resp2a
+misc/ut_keg	utsuperh
+misc/ut_heal	uthealth
+misc/ut_shard	shardpck
+misc/ut_armor	armorut
+belt/pickup	beltsnd
+belt/absorb	sbelthe2
+boot/pickup	bootsnd
+boot/jump	bootjmp
+invis/pickup	invisibl
+udamage/pickup	amppckup
+udamage/fire1	ampfire
+udamage/fire2	ampfire2
+udamage/drain	ampout
+misc/gibbed1	gib1
+misc/gibbed2	gib2
+misc/gibbed3	gib3
+misc/gibbed4	gib4
+misc/gibbed5	gib5
+$random misc/gibbed { misc/gibbed1 misc/gibbed2 misc/gibbed3 misc/gibbed4 misc/gibbed5 }
+
+flak/select	pdown
+flak/load	hidraul2
+flak/reload	load1
+flak/fire	shot1
+flak/altfire	explode1
+flak/hit	ricochet
+flak/meat	chunkhit
+flak/bounce1	hit1
+flak/bounce2	hit2
+flak/bounce3	hit3
 $random flak/bounce { flak/bounce1 flak/bounce2 flak/bounce3 }
 $limit flak/bounce 64
-flak/explode expl04
-$pitchshift flak/select 0
-$pitchshift flak/load 0
-$pitchshift flak/reload 0
-$pitchshift flak/fire 0
-$pitchshift flak/altfire 0
-$pitchshift flak/hit 0
-$pitchshift flak/meat 0
-$pitchshift flak/bounce 0
-$pitchshift flak/explode 0
+flak/explode	expl04
 
-shock/select tazersel
-shock/fire tazefire
-shock/altfire tazealtf
-shock/hit expl03
-shock/ball expla02
-shock/blast specexpl
-$pitchshift shock/select 0
-$pitchshift shock/fire 0
-$pitchshift shock/altfire 0
-$pitchshift shock/hit 0
+shock/select	tazersel
+shock/fire	tazefire
+shock/altfire	tazealtf
+shock/hit	expl03
+shock/blast	specexpl
+$pitchshiftrange 5
+shock/ball	expla02
 $pitchshift shock/ball 5
-$pitchshift shock/blast 0
+$pitchshiftrange 0
 
-warhead/explode warexplo
-warhead/fly warfly
-warhead/select warhpick
-warhead/fire warhshot
-$pitchshift warhead/explode 0
-$pitchshift warhead/fly 0
-$pitchshift warhead/select 0
-$pitchshift warhead/fire 0
+warhead/explode	warexplo
+warhead/fly	warfly
+warhead/select	warhpick
+warhead/fire	warhshot
 
-ges/hit gelhit
-ges/select gelselec
-ges/fire gelshot
-ges/charge bioaltrp
-ges/explode explg02
-$pitchshift ges/hit 0
+ges/hit		gelhit
+ges/select	gelselec
+ges/fire	gelshot
+ges/charge	bioaltrp
+ges/explode	explg02
 $limit ges/hit 64
-$pitchshift ges/select 0
-$pitchshift ges/fire 0
-$pitchshift ges/charge 0
-$pitchshift ges/explode 0
 $limit ges/explode 64
 
-pulse/bolt pulseblt
-pulse/down pulsedwn
-pulse/hit pulseexp
-pulse/fire pulsefir
-pulse/fly pulsefly
-pulse/select pulsepck
-pulse/reload pulserel
-$pitchshift pulse/bolt 0
-$pitchshift pulse/down 0
-$pitchshift pulse/hit 0
-$pitchshift pulse/fire 0
-$pitchshift pulse/fly 0
-$pitchshift pulse/select 0
-$pitchshift pulse/reload 0
+pulse/bolt	pulseblt
+pulse/down	pulsedwn
+pulse/hit	pulseexp
+pulse/fire	pulsefir
+pulse/fly	pulsefly
+pulse/select	pulsepck
+pulse/reload	pulserel

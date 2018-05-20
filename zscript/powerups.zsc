@@ -1,0 +1,94 @@
+Class UDamage : PowerupGiver replaces InvulnerabilitySphere
+{
+	Default
+	{
+		Tag "Damage Amplifier";
+		Inventory.PickupMessage "You got the Damage Amplifier!";
+		+COUNTITEM;
+		+INVENTORY.AUTOACTIVATE;
+		+INVENTORY.ALWAYSPICKUP;
+		+INVENTORY.BIGPOWERUP;
+		Inventory.MaxAmount 0;
+		Powerup.Type "DamageAmplifier";
+		Inventory.PickupSound "udamage/pickup";
+	}
+	action void A_CheckSkin()
+	{
+		bool isbeta = CVar.GetCVar('flak_betaudamage').GetBool();
+		if ( isbeta && (CurState == ResolveState("Spawn")) ) SetState(ResolveState("Spawn")+1);
+		else if ( !isbeta && (CurState == ResolveState("Spawn")+1) ) SetState(ResolveState("Spawn"));
+	}
+	States
+	{
+	Spawn:
+		UDAM A 5 A_CheckSkin();
+		Loop;
+		UDAM B 5 A_CheckSkin();
+		Loop;
+	}
+}
+
+Class DamageAmpLight : DynamicLight
+{
+	Default
+	{
+		DynamicLight.Type "Point";
+		Args 238,0,255,80;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target || !master )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.pos+(0,0,target.height*0.5),true);
+		args[LIGHT_INTENSITY] = Random[ASMD](10,12)*8;
+		bDORMANT = Powerup(master).isBlinking();
+	}
+}
+
+Class DamageAmplifier : Powerup
+{
+	Actor l;
+
+	Default
+	{
+		Powerup.Duration -30;
+		Powerup.Color "EE00FF", 0.25;
+	}
+
+	override void InitEffect()
+	{
+		Super.InitEffect();
+		l = Spawn("DamageAmpLight",Owner.pos);
+		l.target = Owner;
+		l.master = self;
+	}
+
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if ( (EffectTics == 175) || (EffectTics == 140) || (EffectTics == 105) || (EffectTics == 70) || (EffectTics == 35) )
+			Owner.A_PlaySound("udamage/drain",CHAN_6,1.0,false,0.25);
+	}
+
+	override bool isBlinking()
+	{
+		return ((EffectTics <= 175) && (EffectTics%35 >= 30));
+	}
+
+	void FireEffect()
+	{
+		if ( EffectTics < 350 ) Owner.A_PlaySound("udamage/fire2",CHAN_5,1.0,false,0.25);
+		else Owner.A_PlaySound("udamage/fire1",CHAN_5,1.0,false,0.25);
+	}
+
+	override void ModifyDamage( int damage, Name damageType, out int newdamage, bool passive )
+	{
+		if ( passive || (damage <= 0) ) return;
+		newdamage = max(1,ApplyDamageFactors(GetClass(),damageType,damage,damage*3));
+		if ( !(Owner.player.ReadyWeapon is 'UTWeapon') ) FireEffect();
+	}
+}

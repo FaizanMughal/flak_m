@@ -14,17 +14,19 @@ Currently implemented:
  - Beta Super Health (medkit)
  - Health Pack (stimpak)
  - Health Vial (health bonus)
+ - Some configuration options
+ - Damage Amplifier (invulnerability sphere)
+ - Mesh replacements for the keys
 
 In progress:
 
- - Something to replace armor bonus (armor bonus)
- - Thigh Pads (green armor)
- - Body Armor (blue armor)
- - Shield Belt (megasphere)
- - Damage Amplifier (invulnerability sphere)
+ - Armor system
+  - Something to replace armor bonus (armor bonus)
+  - Thigh Pads (green armor)
+  - Body Armor (blue armor)
+  - Shield Belt (megasphere)
  - Invisibility (blursphere)
  - Searchlight (light amplification visor)
- - Jump Boots (berserk)
  - Toxin Suit (radsuit)
 
 To be done:
@@ -39,4 +41,10 @@ To be done:
  - Rocket Launcher (slot 9)
  - Sniper Rifle (slot 0)
 
+ - UT HUD
+
+ - An alternate invulnerability sphere replacement that actually is invulnerability
+ - Something to replace berserk (candidates: make it spawn another enforcer, with a small chance of a limited ammo instagib shockrifle instead)
+ - Something to replace computer map (just a mesh replacement maybe)
+ - Replace the barrels (there are perfect candidates in Unreal 1)
  - ... maybe more

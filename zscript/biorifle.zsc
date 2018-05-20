@@ -160,6 +160,13 @@ Class BioGel : Actor
 			A_SetRoll(roll+rollvel,SPF_INTERPOLATE);
 			A_SetPitch(pitch+pitchvel,SPF_INTERPOLATE);
 			A_SetPitch(pitch+yawvel,SPF_INTERPOLATE);
+			if ( waterlevel > 0 )
+			{
+				vel.xy *= 0.98;
+				rollvel *= 0.98;
+				pitchvel *= 0.98;
+				yawvel *= 0.98;
+			}
 		}
 		if ( !InStateSequence(CurState,FindState("XDeath")) && ((!bNOGRAVITY && !Random[GES](0,2)) || !Random[GES](0,10)) )
 		{
@@ -211,7 +218,8 @@ Class BioGel : Actor
 			roll = 0;
 			LineTrace(angle+180,172,0,TRF_THRUACTORS,data:d);
 			SetOrigin(d.HitLocation+normal*0.5,false);
-			hittype = HIT_WALL;
+			if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+			else hittype = HIT_WALL;
 		}
 		else if ( pos.z <= floorz+4 )
 		{
@@ -229,7 +237,8 @@ Class BioGel : Actor
 			angle = atan2(normal.y,normal.x);
 			roll = FRandom[GES](0,360);
 			SetOrigin((pos.x,pos.y,ceilingz)+normal*0.5,false);
-			if ( normal dot (0,0,-1) > 0.7 )
+			if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+			else if ( normal dot (0,0,-1) > 0.7 )
 				hittype = HIT_CEILING;
 			else hittype = HIT_FLOOR;
 		}
@@ -385,6 +394,7 @@ Class BioRifle : UTWeapon
 			if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		}
 		A_PlaySound("ges/fire",CHAN_WEAPON);
+		invoker.FireEffect();
 		A_AlertMonsters();
 		if ( alt ) A_QuakeEx(1+0.5*invoker.charge,1+0.5*invoker.charge,1+0.5*invoker.charge,5+1.2*invoker.charge,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05+0.01*invoker.charge);
 		else A_QuakeEx(1,1,1,5,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);

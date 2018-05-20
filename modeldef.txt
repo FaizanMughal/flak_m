@@ -1,3 +1,50 @@
+Model "UTTeleportFog"
+{
+	Path "models"
+	Model 0 "Tele2_d.3d"
+	Skin 0 "JTele2_01.png"
+	Scale 0.24 0.2 0.2
+	PitchOffset 90
+	ZOffset 10
+	DONTCULLBACKFACES
+
+	FrameIndex TELE A 0 0
+	FrameIndex TELE B 0 2
+	FrameIndex TELE C 0 4
+	FrameIndex TELE D 0 6
+	FrameIndex TELE E 0 8
+	FrameIndex TELE F 0 10
+	FrameIndex TELE G 0 12
+	FrameIndex TELE H 0 14
+	FrameIndex TELE I 0 16
+	FrameIndex TELE J 0 18
+	FrameIndex TELE K 0 20
+	FrameIndex TELE L 0 22
+	FrameIndex TELE M 0 24
+	FrameIndex TELE N 0 26
+	FrameIndex TELE O 0 28
+	FrameIndex TELE P 0 30
+	FrameIndex TELE Q 0 32
+	FrameIndex TELE R 0 34
+	FrameIndex TELE S 0 36
+	FrameIndex TELE T 0 38
+	FrameIndex TELE U 0 40
+	FrameIndex TELE V 0 42
+	FrameIndex TELE W 0 44
+	FrameIndex TELE X 0 46
+	FrameIndex TELE Y 0 48
+	FrameIndex TELE Z 0 50
+	FrameIndex TEL2 A 0 52
+	FrameIndex TEL2 B 0 54
+	FrameIndex TEL2 C 0 56
+	FrameIndex TEL2 D 0 58
+	FrameIndex TEL2 E 0 60
+	FrameIndex TEL2 F 0 62
+	FrameIndex TEL2 G 0 64
+	FrameIndex TEL2 H 0 66
+	FrameIndex TEL2 I 0 68
+}
+
 //=============================================================================
 // ITEMS
 //=============================================================================
@@ -106,6 +153,104 @@ Model "UTShieldBelt"
 	ZOffset 4
 
 	FrameIndex BELT A 0 0
+}
+
+Model "UDamage"
+{
+	Path "models"
+	Model 0 "UDamage_d.3d"
+	Skin 0 "GoldSkin2.png"
+	Scale 0.192 0.16 0.16
+	PitchOffset 90
+	ZOffset 24
+	ROTATING
+
+	FrameIndex UDAM A 0 0
+}
+Model "UDamage"
+{
+	Path "models"
+	Model 1 "UDamageB_d.3d"
+	Skin 1 "Judamage1.png"
+	Scale 0.192 0.16 0.16
+	PitchOffset 90
+	ZOffset 24
+	ROTATING
+
+	FrameIndex UDAM B 1 0
+}
+
+Model "UTRedSkull"
+{
+	Path "models"
+	Model 0 "RelicSkull_d.3d"
+	Skin 0 "JRelicSkull_01r.png"
+	Scale 0.12 0.1 0.1
+	PitchOffset 90
+	ZOffset 12
+	ROTATING
+
+	FrameIndex USKL A 0 15
+}
+Model "UTGoldSkull"
+{
+	Path "models"
+	Model 0 "RelicSkull_d.3d"
+	Skin 0 "JRelicSkull_01g.png"
+	Scale 0.12 0.1 0.1
+	PitchOffset 90
+	ZOffset 12
+	ROTATING
+
+	FrameIndex USKL B 0 15
+}
+Model "UTBlueSkull"
+{
+	Path "models"
+	Model 0 "RelicSkull_d.3d"
+	Skin 0 "JRelicSkull_01b.png"
+	Scale 0.12 0.1 0.1
+	PitchOffset 90
+	ZOffset 12
+	ROTATING
+
+	FrameIndex USKL C 0 15
+}
+Model "UTRedKey"
+{
+	Path "models"
+	Model 0 "DomR_d.3d"
+	Skin 0 "RedSkin2.png"
+	Scale 0.048 0.04 0.04
+	PitchOffset 90
+	ZOffset 16
+	ROTATING
+
+	FrameIndex UKEY A 0 0
+}
+Model "UTGoldKey"
+{
+	Path "models"
+	Model 0 "MercSymbol_d.3d"
+	Skin 0 "GoldSkin2.png"
+	Scale 0.096 0.08 0.08
+	PitchOffset 90
+	ZOffset 16
+	ROTATING
+
+	FrameIndex UKEY B 0 0
+}
+Model "UTBlueKey"
+{
+	Path "models"
+	Model 0 "DomB_d.3d"
+	Skin 0 "BlueSkin2.png"
+	Scale 0.048 0.04 0.04
+	PitchOffset 90
+	ZOffset 16
+	ROTATING
+
+	FrameIndex UKEY C 0 0
 }
 
 //=============================================================================
@@ -901,7 +1046,7 @@ Model "FlakAmmo2"
 {
 	Path "models"
 	Model 0 "flakslugm_d.3d"
-	Skin 0 "jflakslugel1.png"
+	Skin 0 "jflakslugel1_.png"
 	PitchOffset 90
 	Scale 0.048 0.04 0.04
 	ZOffset 2
@@ -1647,7 +1792,7 @@ Model "WarheadAmmo"
 {
 	Path "models"
 	Model 0 "missile_d.3d"
-	Skin 0 "jmissile_01.png"
+	Skin 0 "jmissile_01_.png"
 	Scale -0.21 0.2 0.2
 	PitchOffset 90
 	ZOffset 21

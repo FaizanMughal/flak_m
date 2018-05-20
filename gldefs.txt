@@ -50,17 +50,29 @@ Brightmap Texture "FIZZHP23"
 {
 	Map "brightmaps/fullbright.png"
 }
-Brightmap Texture "models/jhbox1.png"
+/*Brightmap Texture "models/jhbox1.png"
 {
 	Map "brightmaps/jhbox1.png"
+}*/
+HardwareShader Texture "models/jhbox1.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
-Brightmap Texture "models/bossheadT.png"
+/*Brightmap Texture "models/bossheadT.png"
 {
 	Map "brightmaps/bossheadT.png"
+}*/
+HardwareShader Texture "models/bossheadT.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
-Brightmap Texture "models/JBRifle2.png"
+/*Brightmap Texture "models/JBRifle2.png"
 {
 	Map "brightmaps/JBRifle2.png"
+}*/
+HardwareShader Texture "models/JBRifle2.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
 Brightmap Texture "models/JBRifle21.png"
 {
@@ -78,13 +90,21 @@ Brightmap Texture "models/JBRifle24.png"
 {
 	Map "brightmaps/JBRifle24.png"
 }
-Brightmap Texture "models/JBammo1.png"
+/*Brightmap Texture "models/JBammo1.png"
 {
 	Map "brightmaps/JBammo1.png"
+}*/
+HardwareShader Texture "models/JBammo1.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
-Brightmap Texture "models/ASMD_t.png"
+/*Brightmap Texture "models/ASMD_t.png"
 {
 	Map "brightmaps/ASMD_t.png"
+}*/
+HardwareShader Texture "models/ASMD_t.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
 Brightmap Texture "models/ASMD_t1.png"
 {
@@ -98,9 +118,13 @@ Brightmap Texture "models/ASMD_t4.png"
 {
 	Map "brightmaps/ASMD_t4.png"
 }
-Brightmap Texture "models/JShockCore.png"
+/*Brightmap Texture "models/JShockCore.png"
 {
 	Map "brightmaps/JShockCore.png"
+}*/
+HardwareShader Texture "models/JShockCore.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
 Brightmap Texture "models/Jwarhead2.png"
 {
@@ -110,21 +134,33 @@ Brightmap Texture "models/Jwarhead4.png"
 {
 	Map "brightmaps/Jwarhead4.png"
 }
-Brightmap Texture "models/Jwhpick1.png"
+/*Brightmap Texture "models/Jwhpick1.png"
 {
 	Map "brightmaps/Jwhpick1.png"
+}*/
+HardwareShader Texture "models/Jwhpick1.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
-Brightmap Texture "models/JPammo_01.png"
+/*Brightmap Texture "models/JPammo_01.png"
 {
 	Map "brightmaps/JPammo_01.png"
+}*/
+HardwareShader Texture "models/JPammo_01.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
 Brightmap Texture "models/JPulseGun_02.png"
 {
 	Map "brightmaps/JPulseGun_02.png"
 }
-Brightmap Texture "models/JPulsePickup_01.png"
+/*Brightmap Texture "models/JPulsePickup_01.png"
 {
 	Map "brightmaps/JPulseGun_02.png"
+}*/
+HardwareShader Texture "models/JPulsePickup_01.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
 Brightmap Texture "models/AmmoLedBase.png"
 {
@@ -133,4 +169,156 @@ Brightmap Texture "models/AmmoLedBase.png"
 Brightmap Texture "models/FlakAmmoLEDBase.png"
 {
 	Map "brightmaps/fullbright.png"
+}
+HardwareShader Texture "models/AToxSuit1.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/GoldSkin2.png"
+{
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
+HardwareShader Texture "models/JFA1.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/JMedBox1.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/JThighPads_01.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/JVial0.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/Jarmor2.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/Jflakslugel1_.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/Jhboxbeta1.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/Jmissile_01_.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+/*Brightmap Texture "models/AUbelt1.png"
+{
+	Map "brightmaps/AUbelt1.png"
+}*/
+HardwareShader Texture "models/AUbelt1.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+/*Brightmap Texture "models/jinvis.png"
+{
+	Map "brightmaps/jinvis.png"
+}*/
+HardwareShader Texture "models/jinvis.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+/*Brightmap Texture "models/Judamage1.png"
+{
+	Map "brightmaps/Judamage1.png"
+}*/
+HardwareShader Texture "models/Judamage1.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+/*Brightmap Texture "models/Jlboot2.png"
+{
+	Map "brightmaps/Jlboot2.png"
+}*/
+HardwareShader Texture "models/Jlboot2.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+/*Brightmap Texture "models/JRelicSkull_01b.png"
+{
+	Map "brightmaps/JRelicSkull_01b.png"
+}*/
+HardwareShader Texture "models/JRelicSkull_01b.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+/*Brightmap Texture "models/JRelicSkull_01g.png"
+{
+	Map "brightmaps/JRelicSkull_01g.png"
+}*/
+HardwareShader Texture "models/JRelicSkull_01g.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+/*Brightmap Texture "models/JRelicSkull_01r.png"
+{
+	Map "brightmaps/JRelicSkull_01r.png"
+}*/
+HardwareShader Texture "models/JRelicSkull_01r.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+HardwareShader Texture "models/BlueSkin2.png"
+{
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
+HardwareShader Texture "models/RedSkin2.png"
+{
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
+PulseLight "UTRedKeyLight"
+{
+	Color 1.0 0.0 0.0
+	Size 15
+	SecondarySize 20
+	Interval 2.0
+	Offset 0 16 0
+}
+PulseLight "UTBlueKeyLight"
+{
+	Color 0.0 0.0 1.0
+	Size 15
+	SecondarySize 20
+	Interval 2.0
+	Offset 0 16 0
+}
+PulseLight "UTGoldKeyLight"
+{
+	Color 1.0 0.8 0.0
+	Size 15
+	SecondarySize 20
+	Interval 2.0
+	Offset 0 16 0
+}
+Object "UTRedSkull"
+{
+	Frame "USKL" { light "UTRedKeyLight" }
+}
+Object "UTBlueSkull"
+{
+	Frame "USKL" { light "UTBlueKeyLight" }
+}
+Object "UTGoldSkull"
+{
+	Frame "USKL" { light "UTGoldKeyLight" }
+}
+Object "UTRedKey"
+{
+	Frame "UKEY" { light "UTRedKeyLight" }
+}
+Object "UTBlueKey"
+{
+	Frame "UKEY" { light "UTBlueKeyLight" }
+}
+Object "UTGoldKey"
+{
+	Frame "UKEY" { light "UTGoldKeyLight" }
 }

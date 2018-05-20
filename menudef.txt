@@ -1,16 +1,23 @@
-OptionValue "UTMenuType"
+OptionValue "BetaToggle"
 {
-	0, "Final"
+	0, "Normal"
 	1, "Beta"
 }
-
 OptionMenu "UTOptionMenu"
 {
 	Title "UT Options"
 
 	StaticText "Menu Options", "Gold"
-	Option "Menu Type", "flak_protomenu", "UTMenuType"
+	Option "Menu Type", "flak_protomenu", "BetaToggle"
 	Command "Apply Changes", "event refreshmenu"
+	StaticText " "
+	StaticText "Item Options", "Gold"
+	Option "UDamage Style", "flak_betaudamage", "BetaToggle"
+	StaticText " "
+	StaticText "Weapon Options", "Gold"
+	Option "Enforcer Reloading", "flak_enforcerreload", "YesNo"
+	Option "Pulsegun Reloading", "flak_pulsereload", "YesNo"
+	Option "Redeemer Target Visuals", "flak_redeemerreadout", "YesNo"
 }
 
 AddOptionMenu "OptionsMenu"

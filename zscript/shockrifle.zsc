@@ -149,19 +149,17 @@ Class ShockBeam : Actor
 		// spawn particles
 		for ( int i=0; i<t.Results.Distance; i+=80 )
 			Spawn("ShockBeamLight",Vec3Offset(tracedir.x*i,tracedir.y*i,tracedir.z*i));
-		for ( int i=0; i<t.Results.Distance; i+=4 )
+		for ( int i=0; i<t.Results.Distance; i+=2 )
 		{
-			Vector3 pofs = Level.Vec3Diff(pos,pos+tracedir*FRandom[ASMD](-4,4)+(FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)));
-			A_SpawnParticle("C0A0FF",SPF_FULLBRIGHT,15,2,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:1,sizestep:-.1);
-			A_SpawnParticle("8040FF",SPF_FULLBRIGHT,20,4,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:.75,sizestep:-.1);
-			A_SpawnParticle("5020FF",SPF_FULLBRIGHT,25,6,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:.5,sizestep:-.1);
-			A_SpawnParticle("402080",SPF_FULLBRIGHT,30,8,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),FRandom[ASMD](-.1,.1),startalphaf:.25,sizestep:-.1);
+			Vector3 pofs = Level.Vec3Diff(pos,pos+tracedir*FRandom[ASMD](0,2)+(FRandom[ASMD](-.5,.5),FRandom[ASMD](-.5,.5),FRandom[ASMD](-.5,.5)));
+			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,30,2,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),startalphaf:1,sizestep:-.1);
+			A_SpawnParticle("5020FF",SPF_FULLBRIGHT,45,4,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),startalphaf:.5,sizestep:-.1);
+			A_SpawnParticle("402080",SPF_FULLBRIGHT,60,8,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),startalphaf:.25,sizestep:-.1);
 		}
 		if ( totaldist >= 10000.0 )
 		{
 			// reposition and explode on air
 			SetOrigin(t.Results.HitPos-t.Results.HitVector*4,true);
-			A_SprayDecal("ShockMark",16);
 			ExplodeMissile(t.Results.HitLine,null);
 			moving = false;
 			let r = Spawn("ShockBeamRing",pos);
@@ -199,9 +197,7 @@ Class ShockBeam : Actor
 				for ( int i=0; i<numpt; i++ )
 				{
 					Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](2,8);
-					A_SpawnParticle("C0A0FF",SPF_FULLBRIGHT,Random[ASMD](20,80),FRandom[ASMD](1.6,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.05);
-					pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
-					A_SpawnParticle("8040FF",SPF_FULLBRIGHT,Random[ASMD](30,100),FRandom[ASMD](3.2,9.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.75,-1,-.05);
+					A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[ASMD](20,80),FRandom[ASMD](1.6,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.05);
 					pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 					A_SpawnParticle("5020FF",SPF_FULLBRIGHT,Random[ASMD](40,120),FRandom[ASMD](4.8,11.2),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.05);
 					pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
@@ -251,9 +247,7 @@ Class ShockBeam : Actor
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
-			A_SpawnParticle("C0A0FF",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,2.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
-			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
-			A_SpawnParticle("8040FF",SPF_FULLBRIGHT,Random[ASMD](30,50),FRandom[ASMD](3.2,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.75,-1,-.1);
+			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,2.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
 			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 			A_SpawnParticle("5020FF",SPF_FULLBRIGHT,Random[ASMD](40,60),FRandom[ASMD](4.8,5.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.1);
 			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
@@ -403,9 +397,7 @@ Class ShockBall : Actor
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
-			A_SpawnParticle("C0A0FF",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,2.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
-			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
-			A_SpawnParticle("8040FF",SPF_FULLBRIGHT,Random[ASMD](30,50),FRandom[ASMD](3.2,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.75,-1,-.1);
+			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,2.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
 			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 			A_SpawnParticle("5020FF",SPF_FULLBRIGHT,Random[ASMD](40,60),FRandom[ASMD](4.8,5.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.1);
 			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
@@ -448,6 +440,7 @@ Class ShockRifle : UTWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		A_PlaySound("shock/fire",CHAN_WEAPON);
+		invoker.FireEffect();
 		A_AlertMonsters();
 		A_QuakeEx(3,3,3,4,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
@@ -465,6 +458,7 @@ Class ShockRifle : UTWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		A_PlaySound("shock/altfire",CHAN_WEAPON);
+		invoker.FireEffect();
 		A_AlertMonsters();
 		A_QuakeEx(3,3,3,8,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
