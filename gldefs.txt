@@ -126,6 +126,34 @@ HardwareShader Texture "models/JShockCore.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
+/*Brightmap Texture "models/SASMD_t.png"
+{
+	Map "brightmaps/ASMD_t.png"
+}*/
+HardwareShader Texture "models/SASMD_t.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+Brightmap Texture "models/SASMD_t1.png"
+{
+	Map "brightmaps/ASMD_t1.png"
+}
+Brightmap Texture "models/SASMD_t3.png"
+{
+	Map "brightmaps/ASMD_t3.png"
+}
+Brightmap Texture "models/SASMD_t4.png"
+{
+	Map "brightmaps/ASMD_t4.png"
+}
+/*Brightmap Texture "models/JSShockCore.png"
+{
+	Map "brightmaps/JShockCore.png"
+}*/
+HardwareShader Texture "models/JSShockCore.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
 Brightmap Texture "models/Jwarhead2.png"
 {
 	Map "brightmaps/Jwarhead2.png"
@@ -273,6 +301,246 @@ HardwareShader Texture "models/BlueSkin2.png"
 HardwareShader Texture "models/RedSkin2.png"
 {
 	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
+HardwareShader Texture "models/bpak.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/JEClip.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/BladeHopperT.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/JM21.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/JRocketPack1.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/JuRocket1_.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/BulletBoxT.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/RifleR1.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/JRifle2.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+/*Brightmap Texture "models/JRazorw.png"
+{
+	Map "brightmaps/JRazorw.png"
+}*/
+HardwareShader Texture "models/JRazorw.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+Brightmap Texture "models/JRazor2.png"
+{
+	Map "brightmaps/JRazor2.png"
+}
+Brightmap Texture "models/JRazor4.png"
+{
+	Map "brightmaps/JRazor4.png"
+}
+Brightmap Texture "models/JRazor5.png"
+{
+	Map "brightmaps/JRazor5.png"
+}
+Brightmap Texture "models/RazSkin.png"
+{
+	Map "brightmaps/RazSkin.png"
+}
+Brightmap Texture "models/RazTrail.png"
+{
+	Map "brightmaps/fullbright.png"
+}
+Brightmap Texture "models/JImpactHammer4.png"
+{
+	Map "brightmaps/JImpactHammer4.png"
+}
+Brightmap Texture "models/tloc1.png"
+{
+	Map "brightmaps/tloc1.png"
+}
+Brightmap Texture "models/tloc2.png"
+{
+	Map "brightmaps/tloc2.png"
+}
+Brightmap Texture "models/Eight_t1.png"
+{
+	Map "brightmaps/Eight_t1.png"
+}
+Brightmap Texture "models/Eight_t4.png"
+{
+	Map "brightmaps/Eight_t4.png"
+}
+Brightmap Texture "models/miniammoledbase.png"
+{
+	Map "brightmaps/fullbright.png"
+}
+HardwareShader Texture "models/tloc1_.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+HardwareShader Texture "invis00"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis01"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis02"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis03"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis04"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis05"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis06"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis07"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis08"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis09"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis10"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis11"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis12"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis13"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis14"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis15"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis16"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis17"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis18"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis19"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis20"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis21"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis22"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis23"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis24"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis25"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis26"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis27"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis28"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis29"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis30"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+HardwareShader Texture "invis31"
+{
+	Shader "shaders/glsl/MeshEnviroMap.fp"
+}
+/*Brightmap Texture "models/JTranslator1.png"
+{
+	Map "brightmaps/JTranslator1.png"
+}*/
+HardwareShader Texture "models/JTranslator1.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+HardwareShader Texture "models/ShieldSuit.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+/*Brightmap Texture "models/JBigFlash1.png"
+{
+	Map "brightmaps/JBigFlash1.png"
+}*/
+HardwareShader Texture "models/JBigFlash1.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
 PulseLight "UTRedKeyLight"
 {

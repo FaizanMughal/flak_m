@@ -1,0 +1,61 @@
+Class EClip : MiniAmmo replaces Clip
+{
+	Default
+	{
+		Tag "Clip";	// "Large Bullets" in UT, but I think that's an oversight, since it's the same as the Minigun ammo
+		Inventory.PickupMessage "You picked up a Clip.";
+		Inventory.Amount 20;
+		Ammo.DropAmount 20;
+	}
+	States
+	{
+	Spawn:
+		ECLP A -1;
+		Stop;
+	}
+}
+
+Class Enforcer : UTWeapon replaces Pistol
+{
+	bool Akimbo;
+
+	override string PickupMessage()
+	{
+		if ( Owner.CountInv(GetClass()) ) return "You picked up another Enforcer!";
+		else return PickupMsg;
+	}
+
+	override bool HandlePickup (Inventory item)
+	{
+		if (item.GetClass() == GetClass())
+		{
+			if ( !Enforcer(item).Akimbo )
+			{
+				Enforcer(item).Akimbo = true;
+				item.bPickupGood = true;
+				item.SetTag("Dual Enforcers");
+			}
+			return Super.HandlePickup(item);
+		}
+		return false;
+	}
+
+	override Inventory CreateTossable( int amt )
+	{
+		// TODO separate drops
+		return Super.CreateTossable(amt);
+	}
+
+	Default
+	{
+		Tag "Enforcer";
+		Inventory.PickupMessage "You picked up an Enforcer.";
+		Weapon.UpSound "";
+		Weapon.SlotNumber 2;
+		Weapon.AmmoType "MiniAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "MiniAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 30;
+	}
+}

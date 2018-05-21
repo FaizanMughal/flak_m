@@ -1,5 +1,5 @@
 // shouldn't be placed in the world (it wasn't in UT99)
-Class WarheadAmmo : Ammo
+Class WarheadAmmo : UTAmmo
 {
 	Default
 	{
@@ -10,6 +10,8 @@ Class WarheadAmmo : Ammo
 		Ammo.BackpackAmount 0;
 		Ammo.BackpackMaxAmount 2;
 		Ammo.DropAmount 1;
+		Inventory.RespawnTics 2100;
+		UTAmmo.UsedInSlot AMMO_SLOT10;
 	}
 	States
 	{
@@ -379,6 +381,12 @@ Class MidTracer : LineTracer
 	}
 }
 
+Class TargetActor
+{
+	Vector2 vpos;
+	String diststr;
+}
+
 Class RedeemerHUD : HUDMessageBase
 {
 	Actor Camera;
@@ -388,6 +396,7 @@ Class RedeemerHUD : HUDMessageBase
 	Font whfont;
 	ThinkerIterator t;
 	MidTracer tr;
+	Array<TargetActor> ta;
 
 	RedeemerHUD Init()
 	{
@@ -401,16 +410,11 @@ Class RedeemerHUD : HUDMessageBase
 	}
 	override bool Tick()
 	{
-		return !Camera;
-	}
-	override void Draw( int bottom, int visibility )
-	{
-		if ( visibility != StatusBar.HUDMSGLayer_UnderHUD ) return;
-		Screen.Dim("Red",0.5,0,0,Screen.GetWidth(),Screen.GetHeight());
 		// shootable targetting
 		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() )
 		{
 			t.Reinit();
+			ta.Clear();
 			Actor a;
 			Vector3 vdir = (cos(ViewAngle)*cos(ViewPitch),sin(ViewAngle)*cos(ViewPitch),-sin(ViewPitch));
 			while ( a = Actor(t.Next()) )
@@ -420,11 +424,26 @@ Class RedeemerHUD : HUDMessageBase
 				Vector3 wpos = ViewPos+tdir;
 				Vector3 spos = mkCoordUtil.WorldToScreen(wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
 				if ( spos.z > 1.0 ) continue;
-				Vector2 vpos = mkCoordUtil.ToViewport(spos);
-				Screen.DrawTexture(mark,false,vpos.x,vpos.y);
-				String diststr = String.Format("%f",tdir.length());
-				diststr.Replace(".","");
-				Screen.DrawText(whfont,Font.CR_UNTRANSLATED,(vpos.x-whfont.StringWidth(diststr)/2)-12,vpos.y+8,diststr);
+				TargetActor te = new("TargetActor");
+				te.vpos = mkCoordUtil.ToViewport(spos);
+				te.diststr = String.Format("%f",tdir.length());
+				te.diststr.Replace(".","");
+				ta.Push(te);
+			}
+		}
+		return !Camera;
+	}
+	override void Draw( int bottom, int visibility )
+	{
+		if ( visibility != StatusBar.HUDMSGLayer_UnderHUD ) return;
+		Screen.Dim("Red",0.5,0,0,Screen.GetWidth(),Screen.GetHeight());
+		// shootable targetting
+		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() )
+		{
+			for ( int i=0; i<ta.Size(); i++ )
+			{
+				Screen.DrawTexture(mark,false,ta[i].vpos.x,ta[i].vpos.y);
+				Screen.DrawText(whfont,Font.CR_UNTRANSLATED,(ta[i].vpos.x-whfont.StringWidth(ta[i].diststr)/2)-12,ta[i].vpos.y+8,ta[i].diststr);
 			}
 		}
 		// other stuff
@@ -570,6 +589,8 @@ Class WarheadLauncher : UTWeapon replaces BFG9000
 		Weapon.AmmoType2 "WarheadAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 1;
+		Inventory.RespawnTics 2100;
+		+INVENTORY.ALWAYSPICKUP;
 	}
 	States
 	{

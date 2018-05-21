@@ -1,0 +1,10 @@
+Class Translocator : UTWeapon
+{
+	Default
+	{
+		Tag "Translocator";
+		Inventory.PickupMessage "You got the Translocator Source Module.";
+		Weapon.SlotNumber 1;
+		+INVENTORY.UNTOSSABLE;
+	}
+}

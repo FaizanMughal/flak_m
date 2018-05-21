@@ -1,4 +1,4 @@
-Class UDamage : PowerupGiver replaces InvulnerabilitySphere
+Class UDamage : PowerupGiver replaces Berserk
 {
 	Default
 	{
@@ -11,6 +11,7 @@ Class UDamage : PowerupGiver replaces InvulnerabilitySphere
 		Inventory.MaxAmount 0;
 		Powerup.Type "DamageAmplifier";
 		Inventory.PickupSound "udamage/pickup";
+		Inventory.RespawnTics 4200;
 	}
 	action void A_CheckSkin()
 	{
@@ -74,6 +75,12 @@ Class DamageAmplifier : Powerup
 			Owner.A_PlaySound("udamage/drain",CHAN_6,1.0,false,0.25);
 	}
 
+	override void EndEffect()
+	{
+		Super.EndEffect();
+		PrintPickupMessage(true,"Damage Amplifier has worn off.");
+	}
+
 	override bool isBlinking()
 	{
 		return ((EffectTics <= 175) && (EffectTics%35 >= 30));
@@ -90,5 +97,375 @@ Class DamageAmplifier : Powerup
 		if ( passive || (damage <= 0) ) return;
 		newdamage = max(1,ApplyDamageFactors(GetClass(),damageType,damage,damage*3));
 		if ( !(Owner.player.ReadyWeapon is 'UTWeapon') ) FireEffect();
+	}
+}
+
+// Backpack that handles UT ammo types
+Class UTBackpack : BackpackItem replaces Backpack
+{
+	override Inventory CreateCopy( Actor other )
+	{
+		// Find every unique type of ammoitem. Give it to the player if
+		// he doesn't have it already, and double its maximum capacity.
+		for ( int i=0; i<AllActorClasses.Size(); i++ )
+		{
+			let type = (class<Ammo>)(AllActorClasses[i]);
+			if ( !type || ((type.GetParentClass() != 'Ammo') && (type.GetParentClass() != 'UTAmmo')) ) continue;
+			// check that it's for a valid weapon
+			bool isvalid = false;
+			for ( int j=0; j<AllActorClasses.Size(); j++ )
+			{
+				let type2 = (class<Weapon>)(AllActorClasses[j]);
+				if ( !type2 ) continue;
+				let rep = GetReplacement(type2);
+				if ( (rep != type2) && !(rep is "DehackedPickup") ) continue;
+				readonly<Weapon> weap = GetDefaultByType(type2);
+				if ( !other.player || !other.player.weapons.LocateWeapon(type2) || weap.bCheatNotWeapon ) continue;
+				if ( (weap.AmmoType1 == type) || (weap.AmmoType2 == type) )
+				{
+					isvalid = true;
+					break;
+				}
+			}
+			if ( !isvalid ) continue;
+			let ammoitem = Ammo(other.FindInventory(type));
+			int amount = GetDefaultByType(type).BackpackAmount;
+			// extra ammo in baby mode and nightmare mode
+			if ( !bIgnoreSkill ) amount = int(amount*G_SkillPropertyFloat(SKILLP_AmmoFactor));
+			if ( amount < 0 ) amount = 0;
+			if ( !ammoitem )
+			{
+				// The player did not have the ammoitem. Add it.
+				ammoitem = Ammo(Spawn(type));
+				ammoitem.Amount = bDepleted?0:amount;
+				if ( ammoitem.BackpackMaxAmount > ammoitem.MaxAmount )
+					ammoitem.MaxAmount = ammoitem.BackpackMaxAmount;
+				if ( ammoitem.Amount > ammoitem.MaxAmount )
+					ammoitem.Amount = ammoitem.MaxAmount;
+				ammoitem.AttachToOwner(other);
+			}
+			else
+			{
+				// The player had the ammoitem. Give some more.
+				if ( ammoitem.MaxAmount < ammoitem.BackpackMaxAmount )
+					ammoitem.MaxAmount = ammoitem.BackpackMaxAmount;
+				if ( !bDepleted && (ammoitem.Amount < ammoitem.MaxAmount) )
+				{
+					ammoitem.Amount += amount;
+					if ( ammoitem.Amount > ammoitem.MaxAmount )
+						ammoitem.Amount = ammoitem.MaxAmount;
+				}
+			}
+		}
+		return Inventory.CreateCopy(other);
+	}
+	override bool HandlePickup (Inventory item)
+	{
+		// Since you already have a backpack, that means you already have every
+		// kind of ammo in your inventory, so we don't need to look at the
+		// entire PClass list to discover what kinds of ammo exist, and we don't
+		// have to alter the MaxAmount either.
+		if ( item is 'BackpackItem' )
+		{
+			for ( let probe = Owner.Inv; probe; probe = probe.Inv )
+			{
+				if ( (probe.GetParentClass() != 'Ammo') && (probe.GetParentClass() != 'UTAmmo') ) continue;
+				if ( probe.Amount >= probe.MaxAmount && !sv_unlimited_pickup ) continue;
+				int amount = Ammo(probe).Default.BackpackAmount;
+				// extra ammo in baby mode and nightmare mode
+				if ( !bIgnoreSkill )
+					amount = int(amount*G_SkillPropertyFloat(SKILLP_AmmoFactor));
+				probe.Amount += amount;
+				if ( (probe.Amount > probe.MaxAmount) && !sv_unlimited_pickup )
+					probe.Amount = probe.MaxAmount;
+			}
+			// The pickup always succeeds, even if you didn't get anything
+			item.bPickupGood = true;
+			return true;
+		}
+		return false;
+	}
+	Default
+	{
+		Tag "Backpack";
+		Inventory.PickupMessage "You got a Backpack.";
+		Inventory.RespawnTics 2100;
+	}
+	States
+	{
+	Spawn:
+		BPAK A -1;
+		Stop;
+	}
+}
+
+Class PowerUTInvisibility : PowerInvisibility
+{
+	Default
+	{
+		Powerup.Duration -50;
+		Powerup.Strength 95;
+		Powerup.Mode "Translucent";
+		Powerup.Color "FFFFFF", 0.15;
+	}
+	override void EndEffect()
+	{
+		Super.EndEffect();
+		PrintPickupMessage(true,"Invisibility has worn off.");
+	}
+}
+
+Class UTInvisibility : PowerupGiver replaces BlurSphere
+{
+	Default
+	{
+		Tag "Invisibility";
+		+COUNTITEM;
+		+INVENTORY.AUTOACTIVATE;
+		+INVENTORY.ALWAYSPICKUP;
+		+INVENTORY.BIGPOWERUP;
+		Inventory.MaxAmount 0;
+		Powerup.Type "PowerUTInvisibility";
+		Inventory.PickupMessage "You have Invisibility.";
+		Inventory.PickupSound "invis/pickup";
+		Inventory.RespawnTics 4200;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		tracer = Spawn("UTInvisibilityX",pos);
+		tracer.angle = angle;
+		tracer.target = self;
+	}
+	States
+	{
+	Spawn:
+		INVS A -1 Bright;
+		Stop;
+	}
+}
+
+Class UTInvisibilityX : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.pos,true);
+		A_SetAngle(target.angle,SPF_INTERPOLATE);
+		bInvisible = target.bInvisible;
+	}
+	States
+	{
+	Spawn:
+		INVS A -1 Bright;
+		Stop;
+	}
+}
+
+Class UTMapRevealer : MapRevealer replaces Allmap
+{
+	Default
+	{
+		+COUNTITEM;
+		+INVENTORY.FANCYPICKUPSOUND;
+		+INVENTORY.ALWAYSPICKUP;
+		Inventory.MaxAmount 0;
+		Inventory.PickupSound "trans/pickup";
+		Inventory.PickupMessage "You got the Computer Map.";
+	}
+	States
+	{
+	Spawn:
+		TRNS A -1;
+		Stop;
+	}
+}
+
+
+Class ShieldingSuit : PowerupGiver replaces RadSuit
+{
+	Default
+	{
+		Tag "Shielding Suit";
+		+INVENTORY.AUTOACTIVATE;
+		+INVENTORY.ALWAYSPICKUP;
+		Inventory.MaxAmount 0;
+		Powerup.Type "PowerShieldingSuit";
+		Inventory.PickupMessage "You got the Shielding Suit.";
+		Inventory.PickupSound "suit/pickup";
+		Inventory.RespawnTics 2100;
+	}
+	States
+	{
+	Spawn:
+		SSUT A -1;
+		Stop;
+	}
+}
+
+Class PowerShieldingSuit : PowerIronFeet
+{
+	Default
+	{
+		Powerup.Duration -60;
+		Powerup.Color "C0FFEE", 0.35;
+	}
+	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
+	{
+		if ( (damageType == 'Slime') || (damageType == 'Fire') || (damageType == 'Ice') || (damageType == 'Poison') )
+			newdamage = 0;
+	}
+	override void EndEffect()
+	{
+		PrintPickupMessage(true,"Air supply in the Shielding Suit has expired.");
+	}
+}
+
+Class Searchlight : Inventory replaces Infrared
+{
+	Actor lt[3];
+	int ticcnt;
+	Default
+	{
+		Tag "Searchligh";
+		+COUNTITEM;
+		+INVENTORY.UNTOSSABLE;
+		+INVENTORY.FANCYPICKUPSOUND;
+		+INVENTORY.AUTOACTIVATE;
+		+INVENTORY.ALWAYSPICKUP;
+		Inventory.Amount 200;
+		Inventory.MaxAmount 200;
+		Inventory.InterHubAmount 0;
+		Inventory.PickupMessage "You picked up the Searchlight.";
+	}
+
+	override bool Use( bool pickup )
+	{
+		if ( !lt[0] ) lt[0] = Spawn("mkLight");
+		lt[0].target = owner;
+		lt[0].master = self;
+		if ( !lt[1] ) lt[1] = Spawn("mkLight2");
+		lt[1].target = owner;
+		lt[1].master = self;
+		if ( !lt[2] ) lt[2] = Spawn("mkLight3");
+		lt[2].target = owner;
+		lt[2].master = self;
+		return Super.Use(pickup);
+	}
+	override void DetachFromOwner()
+	{
+		Super.DetachFromOwner();
+		if ( lt[0] ) lt[0].Destroy();
+		if ( lt[1] ) lt[1].Destroy();
+		if ( lt[2] ) lt[2].Destroy();
+	}
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if ( !Owner ) return;
+		if ( ticcnt++ < TICRATE ) return;
+		ticcnt = 0;
+		if ( --Amount <= 0 )
+		{
+			PrintPickupMessage(true,"Searchlight batteries have died.");
+			DepleteOrDestroy();
+		}
+	}
+	States
+	{
+	Spawn:
+		SLIT A -1;
+		Stop;
+	}
+}
+
+/* hello, Soundless Mound copypasted lights */
+Class mkLight : DynamicLight
+{
+	Default
+	{
+		DynamicLight.Type "Point";
+		+DynamicLight.SPOT;
+		+DynamicLight.ATTENUATE;
+		+DynamicLight.DONTLIGHTSELF;
+		args 255,224,160,350;
+		DynamicLight.SpotInnerAngle 20;
+		DynamicLight.SpotOuterAngle 35;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target || !Inventory(master) )
+		{
+			Destroy();
+			return;
+		}
+		if ( target.player ) SetOrigin((target.pos.x,target.pos.y,target.player.viewz),true);
+		else SetOrigin(target.vec3Offset(0,0,target.height*0.75),true);
+		A_SetAngle(target.angle,SPF_INTERPOLATE);
+		A_SetPitch(target.pitch,SPF_INTERPOLATE);
+		args[LIGHT_RED] = GetDefaultByType(GetClass()).args[LIGHT_RED]*clamp(Inventory(master).amount/40.,0.,1.);
+		args[LIGHT_GREEN] = GetDefaultByType(GetClass()).args[LIGHT_GREEN]*clamp(Inventory(master).amount/40.,0.,1.);
+		args[LIGHT_BLUE] = GetDefaultByType(GetClass()).args[LIGHT_BLUE]*clamp(Inventory(master).amount/40.,0.,1.);
+		bDORMANT = (target.health <= 0);
+		if ( Inventory(target) && target.bInvisible ) bDORMANT = true;
+		// alert monsters hit by the light
+		if ( GetClass() != "mkLight" ) return;
+		if ( !bDORMANT && target.player && (target.health > 0) )
+		{
+			BlockThingsIterator bt = BlockThingsIterator.Create(target,args[LIGHT_INTENSITY]);
+			while ( bt.Next() )
+			{
+				if ( !bt.Thing || (Distance3D(bt.Thing) > args[LIGHT_INTENSITY]) ) continue;
+				Vector3 aimdir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+				Vector3 reldir = Vec3To(bt.Thing).unit();
+				if ( (acos(aimdir dot reldir) < SpotOuterAngle+5) && bt.Thing.CheckSight(target) ) bt.Thing.LastHeard = target;
+			}
+		}
+	}
+}
+
+Class mkLight2 : mkLight
+{
+	Default
+	{
+		args 128,112,96,450;
+		DynamicLight.SpotInnerAngle 0;
+		DynamicLight.SpotOuterAngle 50;
+	}
+}
+
+Class mkLight3 : DynamicLight
+{
+	Default
+	{
+		DynamicLight.Type "Point";
+		+DynamicLight.ATTENUATE;
+		args 32,28,24,0;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target || Inventory(target) || !Inventory(master) )
+		{
+			Destroy();
+			return;
+		}
+		args[LIGHT_RED] = GetDefaultByType(GetClass()).args[LIGHT_RED]*clamp(Inventory(master).amount/40,0.,1.);
+		args[LIGHT_GREEN] = GetDefaultByType(GetClass()).args[LIGHT_GREEN]*clamp(Inventory(master).amount/40,0.,1.);
+		args[LIGHT_BLUE] = GetDefaultByType(GetClass()).args[LIGHT_BLUE]*clamp(Inventory(master).amount/40,0.,1.);
+		SetOrigin(target.vec3Offset(0,0,target.height*0.5),true);
 	}
 }

@@ -1,0 +1,54 @@
+Class UTRocketAmmo : UTAmmo
+{
+	Default
+	{
+		Tag "Rocket Pack";
+		Inventory.PickupMessage "You picked up a Rocket Pack.";
+		Inventory.Amount 12;
+		Inventory.MaxAmount 48;
+		Ammo.BackpackAmount 12;
+		Ammo.BackpackMaxAmount 96;
+		Ammo.DropAmount 12;
+		UTAmmo.UsedInSlot AMMO_SLOT9;
+	}
+	States
+	{
+	Spawn:
+		RPAK A -1;
+		Stop;
+	}
+}
+
+// There was no single rocket ammo in UT, so this one is also just improvised like the Redeemer ammo pickup
+Class UTRocketAmmo2 : UTRocketAmmo
+{
+	Default
+	{
+		Tag "Single Rocket";
+		Inventory.PickupMessage "You picked up a Single Rocket.";
+		Inventory.Amount 1;
+		Ammo.DropAmount 1;
+	}
+	States
+	{
+	Spawn:
+		RCKT A -1;
+		Stop;
+	}
+}
+
+Class UTRocketLauncher : UTWeapon
+{
+	Default
+	{
+		Tag "Rocket Launcher";
+		Inventory.PickupMessage "You got the Rocket Launcher.";
+		Weapon.UpSound "";
+		Weapon.SlotNumber 9;
+		Weapon.AmmoType "UTRocketAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "UTRocketAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 6;
+	}
+}

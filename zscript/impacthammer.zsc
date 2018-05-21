@@ -1,0 +1,12 @@
+Class ImpactHammer : UTWeapon replaces Fist
+{
+	Default
+	{
+		Tag "Impact Hammer";
+		Inventory.PickupMessage "You got the Impact Hammer.";
+		Weapon.UpSound "";
+		Weapon.SlotNumber 1;
+		+WEAPON.MELEEWEAPON;
+		+INVENTORY.UNTOSSABLE;
+	}
+}

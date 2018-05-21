@@ -3,7 +3,7 @@ Class Tier4Ammo : RandomSpawner replaces ClipBox
 	Default
 	{
 		DropItem "PulseAmmo", 255, 1;
-		//DropItem "RipperAmmo", 255, 1;
+		DropItem "RipperAmmo", 255, 1;
 	}
 }
 
@@ -12,11 +12,11 @@ Class Tier4Weapon : RandomSpawner replaces Chaingun
 	Default
 	{
 		DropItem "PulseGun", 255, 1;
-		//DropItem "Ripper", 255, 1;
+		DropItem "Ripper2", 255, 1;
 	}
 }
 
-Class PulseAmmo : Ammo
+Class PulseAmmo : UTAmmo
 {
 	Default
 	{
@@ -27,6 +27,7 @@ Class PulseAmmo : Ammo
 		Ammo.BackpackAmount 50;
 		Ammo.BackpackMaxAmount 400;
 		Ammo.DropAmount 25;
+		UTAmmo.UsedInSlot AMMO_SLOT5;
 	}
 	States
 	{
@@ -486,7 +487,7 @@ Class PulseGun : UTWeapon
 	Release:
 		PGNC A 0 A_PlaySound("pulse/down",CHAN_WEAPON);
 		PGNC ABCDEFGHIJKLMNOPQRSTUVWXY 1;
-		PGNI A 1;
+		PGNC Y 0;
 		Goto Idle;
 	AltFire:
 		PGBS ABCDE 1;
@@ -526,7 +527,8 @@ Class PulseGun : UTWeapon
 		PGBE ABCDE 1;
 		Goto Idle;
 	Reload:
-		PGNI A 1 A_JumpIf(invoker.clipcount >= 50,"Idle");
+		PGNI A 1;
+		PGNI A 0 A_JumpIf(invoker.clipcount >= 50,"Idle");
 		PGNR A 1 A_Reloading();
 		PGNR BCDEFGHIJKLMNOPQRSTUVWXYZ 1;
 		PGR2 ABCDEFGHIJKLMNOPQRSTUVWX 1;

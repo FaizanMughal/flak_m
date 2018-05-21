@@ -111,6 +111,8 @@ udamage/pickup	amppckup
 udamage/fire1	ampfire
 udamage/fire2	ampfire2
 udamage/drain	ampout
+trans/pickup	voicesnd
+suit/pickup	suitsnd
 misc/gibbed1	gib1
 misc/gibbed2	gib2
 misc/gibbed3	gib3
@@ -141,6 +143,7 @@ $pitchshiftrange 5
 shock/ball	expla02
 $pitchshift shock/ball 5
 $pitchshiftrange 0
+sshock/blast	expl2
 
 warhead/explode	warexplo
 warhead/fly	warfly

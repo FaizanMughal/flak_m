@@ -10,24 +10,29 @@ Currently implemented:
  - Redeemer (slot 0)
  - GES Biorifle (slot 3)
  - Pulsegun (slot 5) (with beta animations)
- - Big Keg O' Health (soulsphere)
- - Beta Super Health (medkit)
- - Health Pack (stimpak)
- - Health Vial (health bonus)
+ - Health
+  - Big Keg O' Health (soulsphere)
+  - Beta Super Health (medkit)
+  - Health Pack (stimpak)
+  - Health Vial (health bonus)
  - Some configuration options
- - Damage Amplifier (invulnerability sphere)
- - Mesh replacements for the keys
-
-In progress:
-
- - Armor system
-  - Something to replace armor bonus (armor bonus)
+ - Damage Amplifier (berserk)
+ - Keys
+ - Backpack
+ - Armor
+  - Armor Bonus (armor bonus)
   - Thigh Pads (green armor)
   - Body Armor (blue armor)
   - Shield Belt (megasphere)
  - Invisibility (blursphere)
+ - Computer Map (computer area map)
+ - Shielding Suit (hybrid of U1 asbestos/toxin suits, radsuit)
  - Searchlight (light amplification visor)
- - Toxin Suit (radsuit)
+ - Enhanced Shock Rifle (slot 4, limited ammo, invulnerability sphere)
+
+In progress:
+
+ - UT HUD
 
 To be done:
 
@@ -40,11 +45,3 @@ To be done:
  - Minigun (slot 7)
  - Rocket Launcher (slot 9)
  - Sniper Rifle (slot 0)
-
- - UT HUD
-
- - An alternate invulnerability sphere replacement that actually is invulnerability
- - Something to replace berserk (candidates: make it spawn another enforcer, with a small chance of a limited ammo instagib shockrifle instead)
- - Something to replace computer map (just a mesh replacement maybe)
- - Replace the barrels (there are perfect candidates in Unreal 1)
- - ... maybe more

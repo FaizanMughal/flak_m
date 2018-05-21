@@ -1,14 +1,15 @@
-Class ShockAmmo : Ammo
+Class ShockAmmo : UTAmmo
 {
 	Default
 	{
-		Tag "ShockCore";
+		Tag "Shock Core";
 		Inventory.PickupMessage "You picked up a Shock Core.";
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
-		Ammo.BackpackAmount 50;
+		Ammo.BackpackAmount 20;
 		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 10;
+		UTAmmo.UsedInSlot AMMO_SLOT4;
 	}
 	States
 	{
@@ -20,13 +21,13 @@ Class ShockAmmo : Ammo
 
 Class ShockBeamTracer : LineTracer
 {
-	Actor owner, ignore;
+	Actor owner, ignore, lasthit;
 
 	override ETraceStatus TraceCallback()
 	{
 		if ( Results.HitType == TRACE_HitActor )
 		{
-			if ( (Results.HitActor == owner) || (Results.HitActor == ignore) ) return TRACE_Skip;
+			if ( (Results.HitActor == owner) || (Results.HitActor == ignore) || (Results.HitActor == lasthit) ) return TRACE_Skip;
 			if ( Results.HitActor.bSHOOTABLE || Results.HitActor is 'ShockHitbox' ) return TRACE_Stop;
 			return TRACE_Skip;
 		}
@@ -48,6 +49,33 @@ Class ShockRifleWave : Actor
 		Radius 0.1;
 		Height 0;
 		Scale 0.7;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+DONTSPLASH;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( globalfreeze || level.frozen ) return;
+		alpha -= 1/50.;
+	}
+	States
+	{
+	Spawn:
+		SWAV A 50 Bright;
+		SWAV B 0 Bright;
+		Stop;
+	}
+}
+
+Class SuperShockRifleWave : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		Scale 1.2;
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+DONTSPLASH;
@@ -94,11 +122,53 @@ Class ShockBeamRing : Actor
 	}
 }
 
+Class SuperShockBeamRing : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		Scale 0.9;
+		ReactionTime 18;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+DONTSPLASH;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( globalfreeze || level.frozen ) return;
+		alpha -= 1./ReactionTime;
+	}
+	States
+	{
+	Spawn:
+		SRNG ABCDEFGHI 2 Bright;
+		Stop;
+	}
+}
+
 Class ShockBlastRing : ShockBeamRing
 {
 	Default
 	{
 		Scale 3.0;
+		ReactionTime 45;
+	}
+	States
+	{
+	Spawn:
+		SRNG ABCDEFGHI 5 Bright;
+		Stop;
+	}
+}
+
+Class SuperShockBlastRing : ShockBeamRing
+{
+	Default
+	{
+		Scale 5.0;
 		ReactionTime 45;
 	}
 	States
@@ -267,6 +337,168 @@ Class ShockBeam : Actor
 	}
 }
 
+Class SuperShockBeam : Actor
+{
+	ShockBeamTracer t;
+	Vector3 tracedir;
+	bool moving;
+	double totaldist;
+
+	Default
+	{
+		Obituary "%k electrified %o with the Enhanced Shock Rifle.";
+		DamageType 'jolted';
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		Scale 0.7;
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+		+FORCEXYBILLBOARD;
+		+EXTREMEDEATH;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		t = new("ShockBeamTracer");
+		t.owner = target;
+		t.ignore = self;
+		moving = true;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( globalfreeze || level.frozen ) return;
+		if ( !moving ) return;
+		// step trace
+		tracedir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		t.Trace(pos,cursector,tracedir,2000,0);
+		totaldist += t.Results.Distance;
+		// spawn particles
+		for ( int i=0; i<t.Results.Distance; i+=80 )
+			Spawn("SuperShockBeamLight",Vec3Offset(tracedir.x*i,tracedir.y*i,tracedir.z*i));
+		for ( int i=0; i<t.Results.Distance; i++ )
+		{
+			Vector3 pofs = Level.Vec3Diff(pos,pos+tracedir*FRandom[ASMD](0,1)+(FRandom[ASMD](-.5,.5),FRandom[ASMD](-.5,.5),FRandom[ASMD](-.5,.5)));
+			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,30,2,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),startalphaf:1,sizestep:-.1);
+			A_SpawnParticle("FF5020",SPF_FULLBRIGHT,45,4,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),startalphaf:.5,sizestep:-.1);
+			A_SpawnParticle("804020",SPF_FULLBRIGHT,60,8,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),startalphaf:.25,sizestep:-.1);
+		}
+		if ( totaldist >= 10000.0 )
+		{
+			// reposition and explode on air
+			SetOrigin(t.Results.HitPos-t.Results.HitVector*4,true);
+			ExplodeMissile(t.Results.HitLine,null);
+			moving = false;
+			let r = Spawn("SuperShockBeamRing",pos);
+			r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
+			r.pitch = asin(-t.Results.HitVector.z);
+		}
+		else if ( t.Results.HitType == TRACE_HitNone )
+		{
+			// reposition
+			SetOrigin(t.Results.HitPos+t.Results.HitVector,true);
+			angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
+			pitch = asin(-t.Results.HitVector.z);
+		}
+		else if ( t.Results.HitType == TRACE_HitActor )
+		{
+			// reposition and explode on actor
+			SetOrigin(t.Results.HitPos-t.Results.HitVector*4,true);
+			ExplodeMissile(null,t.Results.HitActor);
+			if ( t.Results.HitActor is 'ShockHitbox' )
+			{
+				if ( target ) target.TakeInventory('EnhancedShockAmmo',2);
+				let b = t.Results.HitActor.target;
+				b.ExplodeMissile(null,self);
+				b.A_Explode(Random[ASMD](15000,16000),400);
+				b.A_QuakeEx(9,9,9,60,0,2400,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.4);
+				b.A_SprayDecal("BigShockMark1",100);
+				b.A_SprayDecal("SBigShockMark2",100);
+				Spawn("SuperShockRifleWave",b.pos);
+				Spawn("SuperShockBlastLight",b.pos);
+				let r = Spawn("SuperShockBlastRing",b.pos);
+				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
+				r.pitch = asin(-t.Results.HitVector.z);
+				A_PlaySound("shock/blast",CHAN_WEAPON,attenuation:0.5);
+				A_PlaySound("sshock/blast",CHAN_6,attenuation:0.5);
+				int numpt = Random[ASMD](400,600);
+				for ( int i=0; i<numpt; i++ )
+				{
+					Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](2,8);
+					A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[ASMD](20,80),FRandom[ASMD](1.6,9.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.05);
+					pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+					A_SpawnParticle("FF5020",SPF_FULLBRIGHT,Random[ASMD](40,120),FRandom[ASMD](4.8,22.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.05);
+					pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+					A_SpawnParticle("804020",SPF_FULLBRIGHT,Random[ASMD](50,140),FRandom[ASMD](5.6,25.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.25,-1,-.05);
+				}
+			}
+			else
+			{
+				t.Results.HitActor.DamageMobj(self,target,Random[ASMD](3500,5000),'jolted');
+				let r = Spawn("SuperShockBeamRing",pos);
+				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
+				r.pitch = asin(-t.Results.HitVector.z);
+			}
+			t.lasthit = t.Results.HitActor;
+		}
+		else
+		{
+			// reposition and explode on wall
+			SetOrigin(t.Results.HitPos-t.Results.HitVector*4,true);
+			A_SprayDecal("ShockMark",16);
+			ExplodeMissile(t.Results.HitLine,null);
+			moving = false;
+			Vector3 HitNormal = t.Results.HitVector;
+			if ( t.Results.HitType == TRACE_HitWall )
+			{
+				t.Results.HitLine.RemoteActivate(target,t.Results.Side,SPAC_Impact,pos);
+				// calculate normal
+				HitNormal = (-t.Results.HitLine.delta.y,t.Results.HitLine.delta.x,0).unit();
+				if ( t.Results.Side == 1 ) HitNormal *= -1;
+			}
+			else if ( t.Results.HitType == TRACE_HitFloor )
+				HitNormal = t.Results.HitSector.floorplane.Normal;
+			else if ( t.Results.HitType == TRACE_HitCeiling )
+				HitNormal = t.Results.HitSector.ceilingplane.Normal;
+			let r = Spawn("SuperShockBeamRing",pos);
+			r.angle = atan2(HitNormal.y,HitNormal.x);
+			r.pitch = asin(-HitNormal.z);
+		}
+	}
+	action void A_BeamExplode()
+	{
+		Spawn("SuperShockBeamLight",pos);
+		A_Explode(Random[ASMD](500,800),120);
+		A_QuakeEx(6,6,6,5,0,200,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
+		A_PlaySound("shock/hit",CHAN_VOICE,attenuation:0.5);
+		A_PlaySound("sshock/blast",CHAN_6,attenuation:0.5);
+		A_AlertMonsters();
+		int numpt = Random[ASMD](40,100);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
+			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("FF5020",SPF_FULLBRIGHT,Random[ASMD](40,60),FRandom[ASMD](4.8,11.2),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.1);
+			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("804020",SPF_FULLBRIGHT,Random[ASMD](50,70),FRandom[ASMD](5.6,12.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.25,-1,-.1);
+		}
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 1;
+		Wait;
+	Death:
+		TNT1 A 0 A_BeamExplode();
+		SEXP ABCDEFGHIJKL 1 Bright;
+		TNT1 A 100;
+		Stop;
+	}
+}
+
 Class ShockBallLight : DynamicLight
 {
 	Default
@@ -291,6 +523,15 @@ Class ShockBallLight : DynamicLight
 	}
 }
 
+Class SuperShockBallLight : ShockBallLight
+{
+	Default
+	{
+		DynamicLight.Type "Point";
+		Args 255,160,128,120;
+	}
+}
+
 Class ShockBeamLight : ShockExplLight
 {
 	Default
@@ -298,6 +539,16 @@ Class ShockBeamLight : ShockExplLight
 		+DYNAMICLIGHT.ATTENUATE;
 		ReactionTime 15;
 		Args 0,0,0,80;
+	}
+}
+
+Class SuperShockBeamLight : SuperShockExplLight
+{
+	Default
+	{
+		+DYNAMICLIGHT.ATTENUATE;
+		ReactionTime 15;
+		Args 0,0,0,100;
 	}
 }
 
@@ -310,12 +561,30 @@ Class ShockBeamHitLight : ShockExplLight
 	}
 }
 
+Class SuperShockBeamHitLight : SuperShockExplLight
+{
+	Default
+	{
+		ReactionTime 24;
+		Args 0,0,0,150;
+	}
+}
+
 Class ShockBlastLight : ShockExplLight
 {
 	Default
 	{
 		ReactionTime 50;
 		Args 0,0,0,300;
+	}
+}
+
+Class SuperShockBlastLight : SuperShockExplLight
+{
+	Default
+	{
+		ReactionTime 50;
+		Args 0,0,0,400;
 	}
 }
 
@@ -345,12 +614,38 @@ Class ShockExplLight : DynamicLight
 	}
 }
 
+Class SuperShockExplLight : DynamicLight
+{
+	double lifetime;
+	Default
+	{
+		DynamicLight.Type "Point";
+		ReactionTime 30;
+		Args 255,160,128,200;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		lifetime = 1.0;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( globalfreeze || level.frozen ) return;
+		args[LIGHT_RED] = 255*lifetime;
+		args[LIGHT_GREEN] = 160*lifetime;
+		args[LIGHT_BLUE] = 128*lifetime;
+		lifetime -= 1./ReactionTime;
+		if ( lifetime <= 0 ) Destroy();
+	}
+}
+
 Class ShockHitbox : Actor
 {
 	Default
 	{
-		Radius 16;
-		Height 16;
+		Radius 24;
+		Height 24;
 		+NOGRAVITY;
 		+NOCLIP;
 		+DONTSPLASH;
@@ -431,6 +726,72 @@ Class ShockBall : Actor
 	}
 }
 
+Class SuperShockBall : Actor
+{
+	Actor l, b;
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		l = Spawn("SuperShockBallLight",pos);
+		l.target = self;
+		b = Spawn("ShockHitbox",pos);
+		b.target = self;
+	}
+	action void A_BallExplode()
+	{
+		A_Explode(Random[ASMD](5000,6000),120);
+		A_SprayDecal("ShockMarkBig",16);
+		Spawn("SuperShockExplLight",pos);
+		A_SetScale(1.5);
+		let r = Spawn("SuperShockBeamRing",pos);
+		r.angle = angle;
+		r.pitch = pitch;
+		r.scale *= 1.5;
+		A_PlaySound("shock/hit",CHAN_VOICE,attenuation:0.5);
+		A_PlaySound("shock/ball",CHAN_WEAPON,attenuation:0.5);
+		A_PlaySound("sshock/blast",CHAN_6,attenuation:0.5);
+		A_QuakeEx(8,8,8,30,0,300,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
+		A_AlertMonsters();
+		int numpt = Random[ASMD](100,200);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
+			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("FF5020",SPF_FULLBRIGHT,Random[ASMD](40,60),FRandom[ASMD](4.8,11.2),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.1);
+			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("804020",SPF_FULLBRIGHT,Random[ASMD](50,70),FRandom[ASMD](5.6,12.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.25,-1,-.1);
+		}
+	}
+	Default
+	{
+		Obituary "%k electrified %o with the Enhanced Shock Rifle.";
+		RenderStyle "Add";
+		DamageType 'jolted';
+		Radius 4;
+		Height 4;
+		Scale 0.5;
+		Speed 25;
+		PROJECTILE;
+		+FORCEXYBILLBOARD;
+		+SKYEXPLODE;
+		+FORCERADIUSDMG;
+		+EXTREMEDEATH;
+	}
+	States
+	{
+	Spawn:
+		SBAL ABCD 2 Bright;
+		Loop;
+	Death:
+		TNT1 A 0 A_BallExplode();
+		SEXP ABCDEFGHIJKL 2 Bright;
+		TNT1 A 300;
+		Stop;
+	}
+}
+
 Class ShockRifle : UTWeapon
 {
 	action void A_ShockFire()
@@ -505,6 +866,113 @@ Class ShockRifle : UTWeapon
 		Goto Idle;
 	AltFire:
 		ASMA A 1 A_ShockAlt();
+		ASMA BCDEFGHIJ 2;
+		Goto Idle;
+	Deselect:
+		ASMD ABCDEFG 1;
+		ASMD G 1 A_Lower(int.max);
+		Wait;
+	Select:
+		ASMS A 1 A_Raise(int.max);
+		Wait;
+	}
+}
+
+Class EnhancedShockAmmo : UTAmmo
+{
+	Default
+	{
+		Tag "Enhanced Shock Core";
+		Inventory.PickupMessage "You picked up an Enhanced Shock Core.";
+		Inventory.Amount 5;
+		Inventory.MaxAmount 25;
+		Ammo.BackpackAmount 0;
+		Ammo.BackpackMaxAmount 25;
+		Ammo.DropAmount 5;
+		UTAmmo.UsedInSlot AMMO_SLOT4;
+	}
+	States
+	{
+	Spawn:
+		SHOA A -1;
+		Stop;
+	}
+}
+
+Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
+{
+	action void A_SShockFire()
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		if ( weap.Ammo1.Amount <= 0 ) return;
+		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
+		A_PlaySound("shock/fire",CHAN_WEAPON);
+		invoker.FireEffect();
+		A_AlertMonsters();
+		A_QuakeEx(8,8,8,12,0,96,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
+		Vector3 x, y, z;
+		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
+		Actor p = Spawn("SuperShockBeam",origin);
+		p.angle = angle;
+		p.pitch = BulletSlope();
+		p.target = self;
+	}
+	action void A_SShockAlt()
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		if ( weap.Ammo1.Amount <= 0 ) return;
+		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
+		A_PlaySound("shock/altfire",CHAN_WEAPON);
+		invoker.FireEffect();
+		A_AlertMonsters();
+		A_QuakeEx(8,8,8,16,0,96,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
+		Vector3 x, y, z;
+		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
+		Actor p = Spawn("SuperShockBall",origin);
+		p.angle = angle;
+		p.pitch = BulletSlope();
+		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
+		p.target = self;
+	}
+	Default
+	{
+		Tag "Enhanced Shock Rifle";
+		Inventory.PickupMessage "You got an Enhanced Shock Rifle!";
+		Weapon.UpSound "shock/select";
+		Weapon.SlotNumber 4;
+		+INVENTORY.ALWAYSPICKUP;
+		Weapon.AmmoType "EnhancedShockAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "EnhancedShockAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 25;
+	}
+	States
+	{
+	Spawn:
+		ASMP A -1;
+		Stop;
+		ASMP B -1;
+		Stop;
+	Ready:
+		ASMS ABCDEFGHIJKLMNO 1;
+	Idle:
+		ASMI A 1
+		{
+			A_CheckReload();
+			A_WeaponReady();
+		}
+		Wait;
+	Fire:
+		ASMF A 1 A_SShockFire();
+		ASMF BCDEFGHIJ 2;
+		Goto Idle;
+	AltFire:
+		ASMA A 1 A_SShockAlt();
 		ASMA BCDEFGHIJ 2;
 		Goto Idle;
 	Deselect:

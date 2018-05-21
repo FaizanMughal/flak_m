@@ -11,6 +11,7 @@ Class UTHealthPack : Health replaces Soulsphere
 		Inventory.MaxAmount 200;
 		Inventory.PickupMessage "You picked up the Big Keg O' Health.";
 		Inventory.PickupSound "misc/ut_keg";
+		Inventory.RespawnTics 3500;
 	}
 	States
 	{
@@ -46,6 +47,7 @@ Class UTMedBox : Health replaces Stimpack
 		Inventory.Amount 20;
 		Inventory.PickupMessage "You picked up a Health Pack.";
 		Inventory.PickupSound "misc/ut_heal";
+		Inventory.RespawnTics 700;
 	}
 	States
 	{

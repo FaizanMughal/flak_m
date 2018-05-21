@@ -1,3 +1,11 @@
+// shrunk version of -noflat- for Kinsie's test map, looks better
+Texture "-kinsie-",128,128
+{
+	XScale 8
+	YScale 8
+	WorldPanning
+	Patch "-noflat-",0,0{}
+}
 Texture "FIZZHP00",256,256
 {
 	Patch "LAVA1",0,0{Translation "0:255=#[0,0,255]"}
@@ -134,4 +142,8 @@ Sprite "USKLC0",1,1{}
 Sprite "UKEYA0",1,1{}
 Sprite "UKEYB0",1,1{}
 Sprite "UKEYC0",1,1{}
-
+Sprite "BPAKA0",1,1{}
+Sprite "INVSA0",1,1{}
+Sprite "TRNSA0",1,1{}
+Sprite "SSUTA0",1,1{}
+Sprite "SLITA0",1,1{}

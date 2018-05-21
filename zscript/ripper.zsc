@@ -1,0 +1,36 @@
+Class RipperAmmo : UTAmmo
+{
+	Default
+	{
+		Tag "Razor Blades";
+		Inventory.PickupMessage "You picked up Razor Blades.";
+		Inventory.Amount 25;
+		Inventory.MaxAmount 75;
+		Ammo.BackpackAmount 50;
+		Ammo.BackpackMaxAmount 150;
+		Ammo.DropAmount 25;
+		UTAmmo.UsedInSlot AMMO_SLOT6;
+	}
+	States
+	{
+	Spawn:
+		BHOP A -1;
+		Stop;
+	}
+}
+
+Class Ripper2 : UTWeapon
+{
+	Default
+	{
+		Tag "Ripper";
+		Inventory.PickupMessage "You got the Ripper.";
+		Weapon.UpSound "";
+		Weapon.SlotNumber 6;
+		Weapon.AmmoType "RipperAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "RipperAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 15;
+	}
+}

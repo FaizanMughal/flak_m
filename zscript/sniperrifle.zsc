@@ -1,0 +1,53 @@
+Class RifleAmmo : UTAmmo
+{
+	Default
+	{
+		Tag "Box of Rifle Rounds";
+		Inventory.PickupMessage "You picked up a Box of Rifle Rounds.";
+		Inventory.Amount 10;
+		Inventory.MaxAmount 50;
+		Ammo.BackpackAmount 20;
+		Ammo.BackpackMaxAmount 100;
+		Ammo.DropAmount 10;
+		UTAmmo.UsedInSlot AMMO_SLOT10;
+	}
+	States
+	{
+	Spawn:
+		SBOX A -1;
+		Stop;
+	}
+}
+
+Class RifleAmmo2 : RifleAmmo
+{
+	Default
+	{
+		Tag "Rifle Round";
+		Inventory.PickupMessage "You got a Rifle Round.";
+		Inventory.Amount 1;
+		Ammo.DropAmount 1;
+	}
+	States
+	{
+	Spawn:
+		SRND A -1;
+		Stop;
+	}
+}
+
+Class SniperRifle : UTWeapon
+{
+	Default
+	{
+		Tag "Sniper Rifle";
+		Inventory.PickupMessage "You got the Sniper Rifle.";
+		Weapon.UpSound "";
+		Weapon.SlotNumber 0;
+		Weapon.AmmoType "RifleAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "RifleAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 8;
+	}
+}

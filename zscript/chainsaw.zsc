@@ -1,0 +1,11 @@
+Class UTChainsaw : Weapon replaces Chainsaw
+{
+	Default
+	{
+		Tag "Chainsaw";
+		Inventory.PickupMessage "It's been twenty five years since I've seen one of these.";	// was five years in UT99
+		Weapon.UpSound "";
+		Weapon.SlotNumber 1;
+		+WEAPON.MELEEWEAPON;
+	}
+}

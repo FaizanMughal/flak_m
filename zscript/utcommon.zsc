@@ -1,3 +1,189 @@
+Class UTPlayer : DoomPlayer
+{
+	Default
+	{
+		Player.StartItem "ImpactHammer";
+		Player.StartItem "Translocator";
+		Player.StartItem "Enforcer";
+	}
+
+	// Have to modify the give cheat to recognize UT ammo and handle UT armor
+	override void CheatGive( String name, int amount )
+	{
+		if ( PlayerNumber() != consoleplayer )
+			A_Log(String.Format("%s is a cheater: give %s\n",player.GetUserName(),name));
+		if ( !player.mo || (player.health <= 0) ) return;
+		int giveall = ALL_NO;
+		if ( name ~== "all" ) giveall = ALL_YES;
+		else if (name ~== "everything") giveall = ALL_YESYES;
+		if ( name ~== "health" )
+		{
+			if ( amount > 0 )
+			{
+				health += amount;
+				player.health = health;
+			}
+			else player.health = health = GetMaxHealth(true);
+		}
+		if ( giveall || (name ~== "backpack") )
+		{
+			// Select the correct type of backpack based on the game
+			let type = (class<Inventory>)(gameinfo.backpacktype);
+			if ( type ) GiveInventory(type,1,true);
+			if ( !giveall ) return;
+		}
+		if ( giveall || (name ~== "ammo") )
+		{
+			// Find every unique type of ammo. Give it to the player if
+			// he doesn't have it already, and set each to its maximum.
+			for ( int i=0; i<AllActorClasses.Size(); i++ )
+			{
+				let type = (class<Ammo>)(AllActorClasses[i]);
+				if ( !type || ((type.GetParentClass() != "Ammo") && (type.GetParentClass() != "UTAmmo")) )
+					continue;
+				// Only give if it's for a valid weapon, unless using "give everything"
+				bool isvalid = false;
+				for ( int j=0; j<AllActorClasses.Size(); j++ )
+				{
+					let type2 = (class<Weapon>)(AllActorClasses[j]);
+					if ( !type2 ) continue;
+					let rep = GetReplacement(type2);
+					if ( (rep != type2) && !(rep is "DehackedPickup") ) continue;
+					readonly<Weapon> weap = GetDefaultByType(type2);
+					if ( !player.weapons.LocateWeapon(type2) || (weap.bCheatNotWeapon && (giveall != ALL_YESYES)) ) continue;
+					if ( (weap.AmmoType1 == type) || (weap.AmmoType2 == type) )
+					{
+						isvalid = true;
+						break;
+					}
+				}
+				if ( !isvalid ) continue;
+				let ammoitem = FindInventory(type);
+				if ( !ammoitem )
+				{
+					ammoitem = Inventory(Spawn(type));
+					ammoitem.AttachToOwner(self);
+					ammoitem.Amount = ammoitem.MaxAmount;
+				}
+				else if ( ammoitem.Amount < ammoitem.MaxAmount )
+					ammoitem.Amount = ammoitem.MaxAmount;
+			}
+			if ( !giveall ) return;
+		}
+		if ( giveall || (name ~== "armor") )
+		{
+			// Doom Tournament just gives the player a shield belt and maximum bonuses
+			let belt = Inventory(Spawn("UTShieldBelt"));
+			if ( !belt.CallTryPickup(self) ) belt.Destroy();
+			let bonus = Inventory(Spawn("UTArmorBonus"));
+			bonus.Amount = bonus.MaxAmount;
+			if ( !bonus.CallTryPickup(self) ) bonus.Destroy();
+			level.total_items -= 2; // spawning them in raises item count
+			if ( !giveall ) return;
+		}
+		if ( giveall || (name ~== "keys") )
+		{
+			for ( int i=0; i<AllActorClasses.Size(); i++ )
+			{
+				if ( !(AllActorClasses[i] is "Key") ) continue;
+				let keyitem = GetDefaultByType(AllActorClasses[i]);
+				if ( keyitem.special1 )
+				{
+					let item = Inventory(Spawn(AllActorClasses[i]));
+					if ( !item.CallTryPickup(self) ) item.Destroy();
+				}
+			}
+			if ( !giveall ) return;
+		}
+		if ( giveall || (name ~== "weapons") )
+		{
+			let savedpending = player.PendingWeapon;
+			for ( int i=0; i<AllActorClasses.Size(); i++ )
+			{
+				let type = (class<Weapon>)(AllActorClasses[i]);
+				if ( !type || (type == "Weapon") ) continue;
+				// Don't give replaced weapons unless the replacement was done by Dehacked.
+				let rep = GetReplacement(type);
+				if ( (rep == type) || (rep is "DehackedPickup") )
+				{
+					// Give the weapon only if it is set in a weapon slot.
+					if ( !player.weapons.LocateWeapon(type) ) continue;
+					readonly<Weapon> def = GetDefaultByType(type);
+					if ( (giveall == ALL_YESYES) || !def.bCheatNotWeapon )
+						GiveInventory(type,1,true);
+				}
+			}
+			player.PendingWeapon = savedpending;
+			if ( !giveall ) return;
+		}
+		if ( giveall || (name ~== "artifacts") )
+		{
+			for ( int i=0; i<AllActorClasses.Size(); i++ )
+			{
+				let type = (class<Inventory>)(AllActorClasses[i]);
+				if ( !type ) continue;
+				let def = GetDefaultByType (type);
+				if ( def.Icon.isValid() && (def.MaxAmount > 1) &&
+					!(type is "PuzzleItem") && !(type is "Powerup") && !(type is "Ammo") &&	!(type is "Armor"))
+				{
+					// Do not give replaced items unless using "give everything"
+					if ( (giveall == ALL_YESYES) || (GetReplacement(type) == type) )
+						GiveInventory(type,(amount<=0)?def.MaxAmount:amount,true);
+				}
+			}
+			if ( !giveall ) return;
+		}
+		if ( giveall || (name ~== "puzzlepieces") )
+		{
+			for ( int i=0; i<AllActorClasses.Size(); i++ )
+			{
+				let type = (class<PuzzleItem>)(AllActorClasses[i]);
+				if ( !type ) continue;
+				let def = GetDefaultByType(type);
+				if ( !def.Icon.isValid() ) continue;
+				// Do not give replaced items unless using "give everything"
+				if ( (giveall == ALL_YESYES) || (GetReplacement(type) == type) )
+					GiveInventory(type,(amount<=0)?def.MaxAmount:amount,true);
+			}
+			if ( !giveall ) return;
+		}
+		if ( giveall ) return;
+		let type = name;
+		if ( !type )
+		{
+			if ( PlayerNumber() == consoleplayer )
+				A_Log(String.Format("Unknown item \"%s\"\n",name));
+		}
+		else GiveInventory(type,amount,true);
+	}
+}
+
+enum EAmmoSlot
+{
+	AMMO_SLOT10 = 1,
+	AMMO_SLOT1 = 2,
+	AMMO_SLOT2 = 4,
+	AMMO_SLOT3 = 8,
+	AMMO_SLOT4 = 16,
+	AMMO_SLOT5 = 32,
+	AMMO_SLOT6 = 64,
+	AMMO_SLOT7 = 128,
+	AMMO_SLOT8 = 256,
+	AMMO_SLOT9 = 512,
+};
+
+Class UTAmmo : Ammo
+{
+	int usedinslot;	// bitfield indicating which weapon slots use this ammo
+
+	Property UsedInSlot : usedinslot;
+
+	Default
+	{
+		UTAmmo.UsedInSlot 0;
+	}
+}
+
 Class UTWeapon : Weapon
 {
 	override Inventory CreateTossable( int amt )
@@ -61,6 +247,29 @@ Class UTTeleportLight : DynamicLight
 	}
 }
 
+Class UTItemLight : DynamicLight
+{
+	Default
+	{
+		DynamicLight.Type "Point";
+		Args 255,224,160,48;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( alpha <= 0 )
+		{
+			Destroy();
+			return;
+		}
+		args[LIGHT_RED] = 255*alpha;
+		args[LIGHT_GREEN] = 224*alpha;
+		args[LIGHT_BLUE] = 160*alpha;
+		args[LIGHT_INTENSITY] = Random[Tele](6,8)*8;
+		alpha -= 3./35;
+	}
+}
+
 Class UTTeleportFog : Actor replaces TeleportFog
 {
 	Default
@@ -81,6 +290,28 @@ Class UTTeleportFog : Actor replaces TeleportFog
 	Spawn:
 		TELE ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 Bright A_FadeOut(1./35);
 		TEL2 ABCDEFGHI 1 Bright A_FadeOut(1./35);
+		Stop;
+	}
+}
+
+Class UTItemFog : Actor replaces ItemFog
+{
+	Default
+	{
+		+NOBLOCKMAP;
+		+NOTELEPORT;
+		+NOGRAVITY;
+		RenderStyle "Add";
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		Spawn("UTItemLight",pos+(0,0,16));
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 1;
 		Stop;
 	}
 }
@@ -173,6 +404,17 @@ Class UTBlueKey : BlueCard replaces BlueCard
 Class UTMenuHandler : StaticEventHandler
 {
 	ui TextureID tex;
+
+	override void WorldLoaded( WorldEvent e )
+	{
+		if ( gamestate != GS_LEVEL || e.IsSaveGame ) return;
+		if ( level.levelname ~== "Modder Test Map" )
+		{
+			TexMan.ReplaceTextures("-noflat-","-kinsie-",0);
+			TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
+			level.ChangeSky(skytx,skytx);
+		}
+	}
 
 	ui void StartMenu()
 	{
