@@ -7,7 +7,7 @@ Class RipperAmmo : UTAmmo
 		Inventory.Amount 25;
 		Inventory.MaxAmount 75;
 		Ammo.BackpackAmount 50;
-		Ammo.BackpackMaxAmount 150;
+		Ammo.BackpackMaxAmount 75;
 		Ammo.DropAmount 25;
 		UTAmmo.UsedInSlot AMMO_SLOT6;
 	}
@@ -27,10 +27,19 @@ Class Ripper2 : UTWeapon
 		Inventory.PickupMessage "You got the Ripper.";
 		Weapon.UpSound "";
 		Weapon.SlotNumber 6;
+		Weapon.SelectionOrder 4;
 		Weapon.AmmoType "RipperAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "RipperAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 15;
+	}
+	States
+	{
+	Spawn:
+		RZRP A -1;
+		Stop;
+		RZRP B -1;
+		Stop;
 	}
 }

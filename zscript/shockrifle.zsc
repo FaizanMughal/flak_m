@@ -7,7 +7,7 @@ Class ShockAmmo : UTAmmo
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
-		Ammo.BackpackMaxAmount 100;
+		Ammo.BackpackMaxAmount 50;
 		Ammo.DropAmount 10;
 		UTAmmo.UsedInSlot AMMO_SLOT4;
 	}
@@ -838,6 +838,7 @@ Class ShockRifle : UTWeapon
 		Inventory.PickupMessage "You got the ASMD Shock Rifle.";
 		Weapon.UpSound "shock/select";
 		Weapon.SlotNumber 4;
+		Weapon.SelectionOrder 6;
 		Weapon.AmmoType "ShockAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "ShockAmmo";
@@ -944,6 +945,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		Inventory.PickupMessage "You got an Enhanced Shock Rifle!";
 		Weapon.UpSound "shock/select";
 		Weapon.SlotNumber 4;
+		Weapon.SelectionOrder 6;
 		+INVENTORY.ALWAYSPICKUP;
 		Weapon.AmmoType "EnhancedShockAmmo";
 		Weapon.AmmoUse 1;

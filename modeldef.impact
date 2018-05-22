@@ -1,0 +1,21 @@
+Model "ImpactHammer"
+{
+	Path "models"
+	Model 1 "ImpPick_d.3d"
+	Skin 1 "JImpPick1.png"
+	Scale -0.24 0.2 0.2
+	ZOffset 12
+	ROTATING
+
+	FrameIndex IMPP A 1 0
+}
+Model "ImpactHammer"
+{
+	Path "models"
+	Model 1 "ImpPick_d.3d"
+	Skin 1 "JImpPick1.png"
+	Scale -0.24 0.2 0.2
+	ZOffset 6
+
+	FrameIndex IMPP B 1 0
+}

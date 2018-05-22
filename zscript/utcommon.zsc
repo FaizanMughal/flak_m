@@ -184,21 +184,43 @@ Class UTAmmo : Ammo
 	}
 }
 
+// Random Spawner that passes through dropped status to items
+Class RandomSpawner2 : RandomSpawner
+{
+	override void PostSpawn( Actor spawned )
+	{
+		if ( !bDROPPED ) return;
+		if ( spawned is 'Inventory' ) Inventory(spawned).bTOSSED = bDROPPED;
+		if ( spawned is 'UTWeapon' )
+		{
+			spawned.SetState(spawned.ResolveState("Spawn")+1);
+			Inventory(spawned).bALWAYSPICKUP = true;
+		}
+	}
+}
+
 Class UTWeapon : Weapon
 {
+	virtual ui void PreRender() {}
+	virtual ui void PostRender() {}
+
 	override Inventory CreateTossable( int amt )
 	{
 		if ( Ammo1 && (Ammo1.Amount <= 0) ) return null;
 		Inventory d = Super.CreateTossable(amt);
 		if ( d && (d.GetClass() == GetClass()) )
+		{
 			d.SetState(d.ResolveState("Spawn")+1);
+			d.bALWAYSPICKUP = true;
+		}
 		return d;
 	}
 
 	override bool SpecialDropAction( Actor dropper )
 	{
 		SetState(ResolveState("Spawn")+1);
-		return true;
+		bALWAYSPICKUP = true;
+		return false;
 	}
 
 	override void Tick()
@@ -401,12 +423,14 @@ Class UTBlueKey : BlueCard replaces BlueCard
 	}
 }
 
-Class UTMenuHandler : StaticEventHandler
+Class UTMainHandler : StaticEventHandler
 {
 	ui TextureID tex;
+	transient int lastfrag;
 
 	override void WorldLoaded( WorldEvent e )
 	{
+		lastfrag = int.min;
 		if ( gamestate != GS_LEVEL || e.IsSaveGame ) return;
 		if ( level.levelname ~== "Modder Test Map" )
 		{
@@ -439,6 +463,8 @@ Class UTMenuHandler : StaticEventHandler
 	override void PostUiTick()
 	{
 		if ( gametic <= 0 ) StartMenu();
+		if ( !(StatusBar is 'UTHUD') ) return;
+		UTHUD(StatusBar).lastfrag = lastfrag;
 	}
 
 	override void RenderOverlay( RenderEvent e )
@@ -447,5 +473,11 @@ Class UTMenuHandler : StaticEventHandler
 		if ( tex.IsNull() || !tex.IsValid() ) return;
 		Screen.Dim("Black",1.0,0,0,Screen.GetWidth(),Screen.GetHeight());
 		Screen.DrawTexture(tex,true,0,0,DTA_VirtualWidth,1024,DTA_VirtualHeight,768);
+	}
+
+	override void WorldThingDamaged( WorldEvent e )
+	{
+		if ( (e.Thing.Health <= 0) && e.DamageSource && (e.DamageSource != e.Thing) && e.DamageSource.player && (e.DamageSource.player == players[consoleplayer]) )
+			lastfrag = gametic;
 	}
 }

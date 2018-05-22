@@ -584,6 +584,7 @@ Class WarheadLauncher : UTWeapon replaces BFG9000
 		Inventory.PickupMessage "You got the Redeemer.";
 		Weapon.UpSound "warhead/select";
 		Weapon.SlotNumber 0;
+		Weapon.SelectionOrder 0;
 		Weapon.AmmoType "WarheadAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "WarheadAmmo";
@@ -591,6 +592,7 @@ Class WarheadLauncher : UTWeapon replaces BFG9000
 		Weapon.AmmoGive 1;
 		Inventory.RespawnTics 2100;
 		+INVENTORY.ALWAYSPICKUP;
+		+WEAPON.NOAUTOFIRE;
 	}
 	States
 	{
@@ -609,15 +611,13 @@ Class WarheadLauncher : UTWeapon replaces BFG9000
 		}
 		Wait;
 	Fire:
-		WARI A 3;
-		WARF A 3 A_WarheadFire();
-		WARF BCDEFG 3 A_WarheadSmoke();
+		WARF A 4 A_WarheadFire();
+		WARF BCDEFG 4 A_WarheadSmoke();
 		WARI A 5;
 		Goto Idle;
 	AltFire:
-		WARI A 3;
-		WARF A 3 A_WarheadAlt();
-		WARF BCDEFG 3 A_WarheadSmoke();
+		WARF A 4 A_WarheadAlt();
+		WARF BCDEFG 4 A_WarheadSmoke();
 		WARI A 1 A_JumpIf(!invoker.Guided,1);
 		Wait;
 		WARI A 30;

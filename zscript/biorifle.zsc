@@ -1,4 +1,4 @@
-Class Tier3Ammo : RandomSpawner replaces Shell
+Class Tier3Ammo : RandomSpawner2 replaces Shell
 {
 	Default
 	{
@@ -7,7 +7,7 @@ Class Tier3Ammo : RandomSpawner replaces Shell
 	}
 }
 Class Tier3Ammo2 : Tier3Ammo replaces ShellBox {}
-Class Tier3Weapon : RandomSpawner replaces Shotgun
+Class Tier3Weapon : RandomSpawner2 replaces Shotgun
 {
 	Default
 	{
@@ -26,7 +26,7 @@ Class BioAmmo : UTAmmo
 		Inventory.Amount 25;
 		Inventory.MaxAmount 100;
 		Ammo.BackpackAmount 50;
-		Ammo.BackpackMaxAmount 200;
+		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 25;
 		UTAmmo.UsedInSlot AMMO_SLOT3;
 	}
@@ -437,6 +437,7 @@ Class BioRifle : UTWeapon
 		Inventory.PickupMessage "You got the GES BioRifle.";
 		Weapon.UpSound "ges/select";
 		Weapon.SlotNumber 3;
+		Weapon.SelectionOrder 7;
 		Weapon.AmmoType "BioAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "BioAmmo";

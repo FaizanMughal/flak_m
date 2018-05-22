@@ -52,10 +52,19 @@ Class Enforcer : UTWeapon replaces Pistol
 		Inventory.PickupMessage "You picked up an Enforcer.";
 		Weapon.UpSound "";
 		Weapon.SlotNumber 2;
+		Weapon.SelectionOrder 8;
 		Weapon.AmmoType "MiniAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "MiniAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 30;
+	}
+	States
+	{
+	Spawn:
+		ENFP A -1;
+		Stop;
+		ENFP B -1;
+		Stop;
 	}
 }

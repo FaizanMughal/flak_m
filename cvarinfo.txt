@@ -3,3 +3,7 @@ server bool flak_betaudamage = false;
 server bool flak_pulsereload = false;
 server bool flak_enforcerreload = false;
 user bool flak_redeemerreadout = true;
+user int flak_colorprefs = 0;
+user color flak_colorcustom = "ff ff ff";
+user float flak_opacity = 0.8;
+user color flak_bgcolor = "00 00 00";

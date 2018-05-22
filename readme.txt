@@ -29,12 +29,9 @@ Currently implemented:
  - Shielding Suit (hybrid of U1 asbestos/toxin suits, radsuit)
  - Searchlight (light amplification visor)
  - Enhanced Shock Rifle (slot 4, limited ammo, invulnerability sphere)
-
-In progress:
-
  - UT HUD
 
-To be done:
+In progress:
 
  - Impact Hammer (slot 1)
  - Chainsaw (slot 1)

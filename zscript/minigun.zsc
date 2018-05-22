@@ -1,4 +1,4 @@
-Class Tier6Ammo : RandomSpawner replaces Cell
+Class Tier6Ammo : RandomSpawner2 replaces Cell
 {
 	Default
 	{
@@ -6,7 +6,7 @@ Class Tier6Ammo : RandomSpawner replaces Cell
 		DropItem "RifleAmmo2", 255, 1;
 	}
 }
-Class Tier6Ammo2 : RandomSpawner replaces CellPack
+Class Tier6Ammo2 : RandomSpawner2 replaces CellPack
 {
 	Default
 	{
@@ -15,7 +15,7 @@ Class Tier6Ammo2 : RandomSpawner replaces CellPack
 	}
 }
 
-Class Tier6Weapon : RandomSpawner replaces PlasmaRifle
+Class Tier6Weapon : RandomSpawner2 replaces PlasmaRifle
 {
 	Default
 	{
@@ -31,9 +31,9 @@ Class MiniAmmo : UTAmmo
 		Tag "Large Bullets";
 		Inventory.PickupMessage "You picked up 50 bullets.";
 		Inventory.Amount 50;
-		Inventory.MaxAmount 200;
+		Inventory.MaxAmount 199;
 		Ammo.BackpackAmount 100;
-		Ammo.BackpackMaxAmount 400;
+		Ammo.BackpackMaxAmount 199;
 		Ammo.DropAmount 50;
 		UTAmmo.UsedInSlot AMMO_SLOT2|AMMO_SLOT7;
 	}
@@ -53,10 +53,19 @@ Class Minigun : UTWeapon
 		Inventory.PickupMessage "You got the Minigun.";
 		Weapon.UpSound "";
 		Weapon.SlotNumber 7;
+		Weapon.SelectionOrder 3;
 		Weapon.AmmoType "MiniAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "MiniAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 50;
+	}
+	States
+	{
+	Spawn:
+		MGNP A -1;
+		Stop;
+		MGNP B -1;
+		Stop;
 	}
 }

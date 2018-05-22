@@ -394,6 +394,10 @@ HardwareShader Texture "models/tloc1_.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
+HardwareShader Texture "models/tloc2_.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
 HardwareShader Texture "invis00"
 {
 	Shader "shaders/glsl/MeshEnviroMap.fp"

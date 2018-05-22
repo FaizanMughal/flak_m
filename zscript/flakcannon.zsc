@@ -1,4 +1,4 @@
-Class Tier5Ammo : RandomSpawner replaces RocketAmmo
+Class Tier5Ammo : RandomSpawner2 replaces RocketAmmo
 {
 	Default
 	{
@@ -6,7 +6,7 @@ Class Tier5Ammo : RandomSpawner replaces RocketAmmo
 		DropItem "UTRocketAmmo2", 255, 1;
 	}
 }
-Class Tier5Ammo2 : RandomSpawner replaces RocketBox
+Class Tier5Ammo2 : RandomSpawner2 replaces RocketBox
 {
 	Default
 	{
@@ -15,7 +15,7 @@ Class Tier5Ammo2 : RandomSpawner replaces RocketBox
 	}
 }
 
-Class Tier5Weapon : RandomSpawner replaces RocketLauncher
+Class Tier5Weapon : RandomSpawner2 replaces RocketLauncher
 {
 	Default
 	{
@@ -33,7 +33,7 @@ Class FlakAmmo : UTAmmo
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
-		Ammo.BackpackMaxAmount 100;
+		Ammo.BackpackMaxAmount 50;
 		Ammo.DropAmount 10;
 		UTAmmo.UsedInSlot AMMO_SLOT8;
 	}
@@ -456,7 +456,7 @@ Class FlakCannon : UTWeapon
 	action void A_Loading( bool first = false )
 	{
 		if ( first ) A_PlaySound("flak/load",CHAN_WEAPON);
-		else A_PlaySound("flak/reload",CHAN_WEAPON);
+		else A_PlaySound("flak/reload",CHAN_5);
 	}
 	action void A_FireChunks()
 	{
@@ -531,6 +531,7 @@ Class FlakCannon : UTWeapon
 		Inventory.PickupMessage "You got the Flak Cannon.";
 		Weapon.UpSound "flak/select";
 		Weapon.SlotNumber 8;
+		Weapon.SelectionOrder 2;
 		Weapon.AmmoType "FlakAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "FlakAmmo";
@@ -564,12 +565,12 @@ Class FlakCannon : UTWeapon
 	Fire:
 		FLKF A 1 A_FireChunks();
 		FLKF BCDEFGHIJ 1;
-		FLKF JJ 4;
+		FLKF J 4;
 		Goto Loading;
 	AltFire:
 		FLKA A 1 A_FireSlug();
 		FLKA BCDEFGHIJK 2;
-		FLKA KKK 4;
+		FLKA K 4;
 		Goto Loading;
 	Select:
 		FLKS A 1 A_Raise(int.max);

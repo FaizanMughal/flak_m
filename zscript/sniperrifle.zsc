@@ -7,7 +7,7 @@ Class RifleAmmo : UTAmmo
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
-		Ammo.BackpackMaxAmount 100;
+		Ammo.BackpackMaxAmount 50;
 		Ammo.DropAmount 10;
 		UTAmmo.UsedInSlot AMMO_SLOT10;
 	}
@@ -44,10 +44,19 @@ Class SniperRifle : UTWeapon
 		Inventory.PickupMessage "You got the Sniper Rifle.";
 		Weapon.UpSound "";
 		Weapon.SlotNumber 0;
+		Weapon.SelectionOrder 5;
 		Weapon.AmmoType "RifleAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "RifleAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 8;
+	}
+	States
+	{
+	Spawn:
+		SRFP A -1;
+		Stop;
+		SRFP B -1;
+		Stop;
 	}
 }

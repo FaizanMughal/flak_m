@@ -6,7 +6,16 @@ Class ImpactHammer : UTWeapon replaces Fist
 		Inventory.PickupMessage "You got the Impact Hammer.";
 		Weapon.UpSound "";
 		Weapon.SlotNumber 1;
+		Weapon.SelectionOrder 9;
 		+WEAPON.MELEEWEAPON;
 		+INVENTORY.UNTOSSABLE;
+	}
+	States
+	{
+	Spawn:
+		IMPP A -1;
+		Stop;
+		IMPP B -1;
+		Stop;
 	}
 }

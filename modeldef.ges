@@ -1,0 +1,350 @@
+Model "BioAmmo"
+{
+	Path "models"
+	Model 0 "BioAmmoM_d.3d"
+	Skin 0 "Jbammo1.png"
+	Scale -0.08 0.096 0.08
+	AngleOffset 270
+	ZOffset 4
+
+	FrameIndex BIOA A 0 0
+}
+
+Model "BioGel"
+{
+	Path "models"
+	Model 0 "BioGelm_d.3d"
+	Skin 0 "Jgreen.png"
+	Scale 0.08 0.096 0.08
+	RollOffset 90
+	USEACTORPITCH
+	USEACTORROLL
+
+	// Flying
+	FrameIndex GELF A 0 0
+	FrameIndex GELF B 0 1
+	FrameIndex GELF C 0 2
+	FrameIndex GELF D 0 3
+	FrameIndex GELF E 0 4
+	FrameIndex GELF F 0 5
+	FrameIndex GELF G 0 6
+	FrameIndex GELF H 0 7
+	FrameIndex GELF I 0 8
+	FrameIndex GELF J 0 9
+	FrameIndex GELF K 0 10
+	FrameIndex GELF L 0 11
+	FrameIndex GELF M 0 12
+	// Hit
+	FrameIndex GELH A 0 14
+	FrameIndex GELH B 0 15
+	FrameIndex GELH C 0 16
+	FrameIndex GELH D 0 17
+	FrameIndex GELH E 0 18
+	FrameIndex GELH F 0 19
+	FrameIndex GELH G 0 20
+	FrameIndex GELH H 0 21
+	FrameIndex GELH I 0 22
+	FrameIndex GELH J 0 23
+	// Drip
+	FrameIndex GELD A 0 24
+	FrameIndex GELD B 0 25
+	FrameIndex GELD C 0 26
+	FrameIndex GELD D 0 27
+	FrameIndex GELD E 0 28
+	FrameIndex GELD F 0 29
+	FrameIndex GELD G 0 30
+	FrameIndex GELD H 0 31
+	FrameIndex GELD I 0 32
+	FrameIndex GELD J 0 33
+	FrameIndex GELD K 0 34
+	FrameIndex GELD L 0 35
+	FrameIndex GELD M 0 36
+	// Slide
+	FrameIndex GELS A 0 37
+	FrameIndex GELS B 0 38
+	FrameIndex GELS C 0 39
+	FrameIndex GELS D 0 40
+	FrameIndex GELS E 0 41
+	FrameIndex GELS F 0 42
+	FrameIndex GELS G 0 43
+	// Shrivel
+	FrameIndex GELX A 0 44
+	FrameIndex GELX B 0 45
+	FrameIndex GELX C 0 46
+	FrameIndex GELX D 0 47
+	FrameIndex GELX E 0 48
+	FrameIndex GELX F 0 49
+	FrameIndex GELX G 0 50
+	FrameIndex GELX H 0 51
+	FrameIndex GELX I 0 52
+	FrameIndex GELX J 0 53
+	FrameIndex GELX K 0 54
+	FrameIndex GELX L 0 55
+}
+
+Model "BioSplash"
+{
+	Path "models"
+	Model 0 "BioGelm_d.3d"
+	Skin 0 "Jgreen.png"
+	Scale 0.08 0.096 0.08
+	RollOffset 90
+	USEACTORPITCH
+	USEACTORROLL
+
+	// Flying
+	FrameIndex GELF A 0 0
+	FrameIndex GELF B 0 1
+	FrameIndex GELF C 0 2
+	FrameIndex GELF D 0 3
+	FrameIndex GELF E 0 4
+	FrameIndex GELF F 0 5
+	FrameIndex GELF G 0 6
+	FrameIndex GELF H 0 7
+	FrameIndex GELF I 0 8
+	FrameIndex GELF J 0 9
+	FrameIndex GELF K 0 10
+	FrameIndex GELF L 0 11
+	FrameIndex GELF M 0 12
+	// Hit
+	FrameIndex GELH A 0 14
+	FrameIndex GELH B 0 15
+	FrameIndex GELH C 0 16
+	FrameIndex GELH D 0 17
+	FrameIndex GELH E 0 18
+	FrameIndex GELH F 0 19
+	FrameIndex GELH G 0 20
+	FrameIndex GELH H 0 21
+	FrameIndex GELH I 0 22
+	FrameIndex GELH J 0 23
+	// Drip
+	FrameIndex GELD A 0 24
+	FrameIndex GELD B 0 25
+	FrameIndex GELD C 0 26
+	FrameIndex GELD D 0 27
+	FrameIndex GELD E 0 28
+	FrameIndex GELD F 0 29
+	FrameIndex GELD G 0 30
+	FrameIndex GELD H 0 31
+	FrameIndex GELD I 0 32
+	FrameIndex GELD J 0 33
+	FrameIndex GELD K 0 34
+	FrameIndex GELD L 0 35
+	FrameIndex GELD M 0 36
+	// Slide
+	FrameIndex GELS A 0 37
+	FrameIndex GELS B 0 38
+	FrameIndex GELS C 0 39
+	FrameIndex GELS D 0 40
+	FrameIndex GELS E 0 41
+	FrameIndex GELS F 0 42
+	FrameIndex GELS G 0 43
+	// Shrivel
+	FrameIndex GELX A 0 44
+	FrameIndex GELX B 0 45
+	FrameIndex GELX C 0 46
+	FrameIndex GELX D 0 47
+	FrameIndex GELX E 0 48
+	FrameIndex GELX F 0 49
+	FrameIndex GELX G 0 50
+	FrameIndex GELX H 0 51
+	FrameIndex GELX I 0 52
+	FrameIndex GELX J 0 53
+	FrameIndex GELX K 0 54
+	FrameIndex GELX L 0 55
+}
+
+Model "BioGlob"
+{
+	Path "models"
+	Model 0 "BioGelm_d.3d"
+	Skin 0 "Jgreen.png"
+	Scale 0.08 0.096 0.08
+	RollOffset 90
+	USEACTORPITCH
+	USEACTORROLL
+
+	// Flying
+	FrameIndex GELF A 0 0
+	FrameIndex GELF B 0 1
+	FrameIndex GELF C 0 2
+	FrameIndex GELF D 0 3
+	FrameIndex GELF E 0 4
+	FrameIndex GELF F 0 5
+	FrameIndex GELF G 0 6
+	FrameIndex GELF H 0 7
+	FrameIndex GELF I 0 8
+	FrameIndex GELF J 0 9
+	FrameIndex GELF K 0 10
+	FrameIndex GELF L 0 11
+	FrameIndex GELF M 0 12
+	// Hit
+	FrameIndex GELH A 0 14
+	FrameIndex GELH B 0 15
+	FrameIndex GELH C 0 16
+	FrameIndex GELH D 0 17
+	FrameIndex GELH E 0 18
+	FrameIndex GELH F 0 19
+	FrameIndex GELH G 0 20
+	FrameIndex GELH H 0 21
+	FrameIndex GELH I 0 22
+	FrameIndex GELH J 0 23
+	// Drip
+	FrameIndex GELD A 0 24
+	FrameIndex GELD B 0 25
+	FrameIndex GELD C 0 26
+	FrameIndex GELD D 0 27
+	FrameIndex GELD E 0 28
+	FrameIndex GELD F 0 29
+	FrameIndex GELD G 0 30
+	FrameIndex GELD H 0 31
+	FrameIndex GELD I 0 32
+	FrameIndex GELD J 0 33
+	FrameIndex GELD K 0 34
+	FrameIndex GELD L 0 35
+	FrameIndex GELD M 0 36
+	// Slide
+	FrameIndex GELS A 0 37
+	FrameIndex GELS B 0 38
+	FrameIndex GELS C 0 39
+	FrameIndex GELS D 0 40
+	FrameIndex GELS E 0 41
+	FrameIndex GELS F 0 42
+	FrameIndex GELS G 0 43
+	// Shrivel
+	FrameIndex GELX A 0 44
+	FrameIndex GELX B 0 45
+	FrameIndex GELX C 0 46
+	FrameIndex GELX D 0 47
+	FrameIndex GELX E 0 48
+	FrameIndex GELX F 0 49
+	FrameIndex GELX G 0 50
+	FrameIndex GELX H 0 51
+	FrameIndex GELX I 0 52
+	FrameIndex GELX J 0 53
+	FrameIndex GELX K 0 54
+	FrameIndex GELX L 0 55
+}
+
+Model "BioRifle"
+{
+	Path "models"
+	Model 1 "BRifle2Pick_d.3d"
+	Skin 1 "JBRifle2.png"
+	Scale -0.1 0.12 0.1
+	PitchOffset 90
+	AngleOffset 270
+	ZOffset 12
+	ROTATING
+
+	FrameIndex BIOP A 1 0
+}
+Model "BioRifle"
+{
+	Path "models"
+	Model 1 "BRifle2Pick_d.3d"
+	Skin 1 "JBRifle2.png"
+	Scale -0.1 0.12 0.1
+	PitchOffset 90
+	AngleOffset 270
+	ZOffset 10
+
+	FrameIndex BIOP B 1 0
+}
+
+Model "BioRifle"
+{
+	Path "models"
+	Model 0 "BRifle2_d.3d"
+	SurfaceSkin 0 0 "JBRifle21.png"
+	SurfaceSkin 0 1 "JBRifle22.png"
+	SurfaceSkin 0 2 "JBRifle23.png"
+	SurfaceSkin 0 3 "JBRifle24.png"
+	RollOffset -8.4375
+	PitchOffset 94.21875
+	Scale 0.125 0.06 0.125
+	Offset 9.8 -17.6 -10.4
+
+	// select
+	FrameIndex BIOS A 0 0
+	FrameIndex BIOS B 0 1
+	FrameIndex BIOS C 0 2
+	FrameIndex BIOS D 0 3
+	FrameIndex BIOS E 0 4
+	FrameIndex BIOS F 0 5
+	FrameIndex BIOS G 0 6
+	FrameIndex BIOS H 0 7
+	FrameIndex BIOS I 0 8
+	FrameIndex BIOS J 0 9
+	FrameIndex BIOS K 0 10
+	FrameIndex BIOS L 0 11
+	FrameIndex BIOS M 0 12
+	FrameIndex BIOS N 0 13
+	FrameIndex BIOS O 0 14
+	FrameIndex BIOS P 0 15
+	FrameIndex BIOS Q 0 16
+	FrameIndex BIOS R 0 17
+	FrameIndex BIOS S 0 18
+	FrameIndex BIOS T 0 19
+	FrameIndex BIOS U 0 20
+	FrameIndex BIOS V 0 21
+	// idle
+	FrameIndex BIOI A 0 22
+	// charging
+	FrameIndex BIOC A 0 41
+	FrameIndex BIOC B 0 42
+	FrameIndex BIOC C 0 43
+	FrameIndex BIOC D 0 44
+	FrameIndex BIOC E 0 45
+	FrameIndex BIOC F 0 46
+	FrameIndex BIOC G 0 47
+	FrameIndex BIOC H 0 48
+	FrameIndex BIOC I 0 49
+	FrameIndex BIOC J 0 50
+	FrameIndex BIOC K 0 51
+	FrameIndex BIOC L 0 52
+	FrameIndex BIOC M 0 53
+	FrameIndex BIOC N 0 54
+	FrameIndex BIOC O 0 55
+	FrameIndex BIOC P 0 56
+	FrameIndex BIOC Q 0 57
+	FrameIndex BIOC R 0 58
+	FrameIndex BIOC S 0 59
+	FrameIndex BIOC T 0 60
+	FrameIndex BIOC U 0 61
+	FrameIndex BIOC V 0 62
+	FrameIndex BIOC W 0 63
+	FrameIndex BIOC X 0 64
+	FrameIndex BIOC Y 0 65
+	FrameIndex BIOC Z 0 66
+	FrameIndex BIC2 A 0 67
+	FrameIndex BIC2 B 0 68
+	FrameIndex BIC2 C 0 69
+	FrameIndex BIC2 D 0 70
+	FrameIndex BIC2 E 0 71
+	// full
+	FrameIndex BIOM A 0 70
+	// empty
+	FrameIndex BIOE A 0 71
+	// fire
+	FrameIndex BIOF A 0 72
+	FrameIndex BIOF B 0 73
+	FrameIndex BIOF C 0 74
+	FrameIndex BIOF D 0 75
+	FrameIndex BIOF E 0 76
+	FrameIndex BIOF F 0 77
+	FrameIndex BIOF G 0 78
+	FrameIndex BIOF H 0 79
+	FrameIndex BIOF I 0 80
+	// deselect
+	FrameIndex BIOD A 0 80
+	FrameIndex BIOD B 0 81
+	FrameIndex BIOD C 0 82
+	FrameIndex BIOD D 0 83
+	FrameIndex BIOD E 0 84
+	FrameIndex BIOD F 0 85
+	FrameIndex BIOD G 0 86
+	FrameIndex BIOD H 0 87
+	FrameIndex BIOD I 0 88
+	FrameIndex BIOD J 0 89
+}

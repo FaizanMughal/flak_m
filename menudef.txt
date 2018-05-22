@@ -3,6 +3,12 @@ OptionValue "BetaToggle"
 	0, "Normal"
 	1, "Beta"
 }
+OptionValue "ColorPrefs"
+{
+	0, "Team"
+	1, "Player"
+	2, "Custom"
+}
 OptionMenu "UTOptionMenu"
 {
 	Title "UT Options"
@@ -18,6 +24,12 @@ OptionMenu "UTOptionMenu"
 	Option "Enforcer Reloading", "flak_enforcerreload", "YesNo"
 	Option "Pulsegun Reloading", "flak_pulsereload", "YesNo"
 	Option "Redeemer Target Visuals", "flak_redeemerreadout", "YesNo"
+	StaticText " "
+	StaticText "HUD Options", "Gold"
+	Option "Color Choice", "flak_colorprefs", "ColorPrefs"
+	ColorPicker "Custom Color", "flak_colorcustom"
+	Slider "HUD Opacity", "flak_opacity", 0.5, 1, 0.05, 2
+	ColorPicker "Background Color", "flak_bgcolor"
 }
 
 AddOptionMenu "OptionsMenu"

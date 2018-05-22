@@ -1,0 +1,305 @@
+Model "ShockAmmo"
+{
+	Path "models"
+	Model 0 "ShockCoreM_d.3d"
+	Skin 0 "JShockCore.png"
+	PitchOffset 90
+	Scale -0.132 0.11 0.11
+	ZOffset 12
+
+	FrameIndex SHOA A 0 0
+}
+
+Model "EnhancedShockAmmo"
+{
+	Path "models"
+	Model 0 "ShockCoreM_d.3d"
+	Skin 0 "JSShockCore.png"
+	PitchOffset 90
+	Scale -0.132 0.11 0.11
+	ZOffset 12
+
+	FrameIndex SHOA A 0 0
+}
+
+Model "ShockRifleWave"
+{
+	Path "models"
+	Model 0 "shockrwm_d.3d"
+	Skin 0 "shocktt1.png"
+
+	FrameIndex SWAV A 0 0
+	FrameIndex SWAV B 0 1
+}
+
+Model "SuperShockRifleWave"
+{
+	Path "models"
+	Model 0 "shockrwm_d.3d"
+	Skin 0 "sshocktt1.png"
+
+	FrameIndex SWAV A 0 0
+	FrameIndex SWAV B 0 1
+}
+
+Model "ShockBeamRing"
+{
+	Path "models"
+	Model 0 "utringex_d.3d"
+	Skin 0 "asaring.png"
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+	Scale 1.2 1.0 1.0
+
+	FrameIndex SRNG A 0 0
+	FrameIndex SRNG B 0 1
+	FrameIndex SRNG C 0 2
+	FrameIndex SRNG D 0 3
+	FrameIndex SRNG E 0 4
+	FrameIndex SRNG F 0 5
+	FrameIndex SRNG G 0 6
+	FrameIndex SRNG H 0 7
+	FrameIndex SRNG I 0 8
+}
+
+Model "SuperShockBeamRing"
+{
+	Path "models"
+	Model 0 "utringex_d.3d"
+	Skin 0 "ASasRing.png"
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+	Scale 1.2 1.0 1.0
+
+	FrameIndex SRNG A 0 0
+	FrameIndex SRNG B 0 1
+	FrameIndex SRNG C 0 2
+	FrameIndex SRNG D 0 3
+	FrameIndex SRNG E 0 4
+	FrameIndex SRNG F 0 5
+	FrameIndex SRNG G 0 6
+	FrameIndex SRNG H 0 7
+	FrameIndex SRNG I 0 8
+}
+
+Model "ShockBlastRing"
+{
+	Path "models"
+	Model 0 "utringex_d.3d"
+	Skin 0 "ppurplering.png"
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+	Scale 1.2 1.0 1.0
+
+	FrameIndex SRNG A 0 0
+	FrameIndex SRNG B 0 1
+	FrameIndex SRNG C 0 2
+	FrameIndex SRNG D 0 3
+	FrameIndex SRNG E 0 4
+	FrameIndex SRNG F 0 5
+	FrameIndex SRNG G 0 6
+	FrameIndex SRNG H 0 7
+	FrameIndex SRNG I 0 8
+}
+
+Model "SuperShockBlastRing"
+{
+	Path "models"
+	Model 0 "utringex_d.3d"
+	Skin 0 "ASasRing.png"
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+	Scale 1.2 1.0 1.0
+
+	FrameIndex SRNG A 0 0
+	FrameIndex SRNG B 0 1
+	FrameIndex SRNG C 0 2
+	FrameIndex SRNG D 0 3
+	FrameIndex SRNG E 0 4
+	FrameIndex SRNG F 0 5
+	FrameIndex SRNG G 0 6
+	FrameIndex SRNG H 0 7
+	FrameIndex SRNG I 0 8
+}
+
+Model "ShockRifle"
+{
+	Path "models"
+	Model 1 "asmd2pick_d.3d"
+	Skin 1 "asmd_t.png"
+	AngleOffset 270
+	PitchOffset 90
+	Scale -0.14 0.18 0.14
+	ZOffset 12
+	ROTATING
+
+	FrameIndex ASMP A 1 0
+}
+Model "ShockRifle"
+{
+	Path "models"
+	Model 1 "asmd2pick_d.3d"
+	Skin 1 "asmd_t.png"
+	AngleOffset 270
+	PitchOffset 90
+	Scale -0.14 0.18 0.14
+	ZOffset 4
+
+	FrameIndex ASMP B 1 0
+}
+
+Model "ShockRifle"
+{
+	Path "models"
+	Model 0 "asmd2m_d.3d"
+	SurfaceSkin 0 0 "asmd_t1.png"
+	SurfaceSkin 0 1 "asmd_t2.png"
+	SurfaceSkin 0 2 "asmd_t3.png"
+	SurfaceSkin 0 3 "asmd_t3.png"
+	SurfaceSkin 0 4 "asmd_t4.png"
+	PitchOffset 90
+	Scale 0.15 0.12 0.15
+	Offset 4.9 -16.6 -7.1
+
+	// select
+	FrameIndex ASMS A 0 0
+	FrameIndex ASMS B 0 1
+	FrameIndex ASMS C 0 2
+	FrameIndex ASMS D 0 3
+	FrameIndex ASMS E 0 4
+	FrameIndex ASMS F 0 5
+	FrameIndex ASMS G 0 6
+	FrameIndex ASMS H 0 7
+	FrameIndex ASMS I 0 8
+	FrameIndex ASMS J 0 9
+	FrameIndex ASMS K 0 10
+	FrameIndex ASMS L 0 11
+	FrameIndex ASMS M 0 12
+	FrameIndex ASMS N 0 13
+	FrameIndex ASMS O 0 14
+	// idle
+	FrameIndex ASMI A 0 15
+	// deselect
+	FrameIndex ASMD A 0 17
+	FrameIndex ASMD B 0 18
+	FrameIndex ASMD C 0 19
+	FrameIndex ASMD D 0 20
+	FrameIndex ASMD E 0 21
+	FrameIndex ASMD F 0 22
+	FrameIndex ASMD G 0 23
+	// fire
+	FrameIndex ASMF A 0 30
+	FrameIndex ASMF B 0 31
+	FrameIndex ASMF C 0 32
+	FrameIndex ASMF D 0 33
+	FrameIndex ASMF E 0 34
+	FrameIndex ASMF F 0 35
+	FrameIndex ASMF G 0 36
+	FrameIndex ASMF H 0 37
+	FrameIndex ASMF I 0 38
+	FrameIndex ASMF J 0 39
+	// altfire
+	FrameIndex ASMA A 0 40
+	FrameIndex ASMA B 0 41
+	FrameIndex ASMA C 0 42
+	FrameIndex ASMA D 0 43
+	FrameIndex ASMA E 0 44
+	FrameIndex ASMA F 0 45
+	FrameIndex ASMA G 0 46
+	FrameIndex ASMA H 0 47
+	FrameIndex ASMA I 0 48
+	FrameIndex ASMA J 0 49
+}
+
+Model "EnhancedShockRifle"
+{
+	Path "models"
+	Model 1 "asmd2pick_d.3d"
+	Skin 1 "sasmd_t.png"
+	AngleOffset 270
+	PitchOffset 90
+	Scale -0.14 0.18 0.14
+	ZOffset 12
+	ROTATING
+
+	FrameIndex ASMP A 1 0
+}
+Model "EnhancedShockRifle"
+{
+	Path "models"
+	Model 1 "asmd2pick_d.3d"
+	Skin 1 "sasmd_t.png"
+	AngleOffset 270
+	PitchOffset 90
+	Scale -0.14 0.18 0.14
+	ZOffset 4
+
+	FrameIndex ASMP B 1 0
+}
+
+Model "EnhancedShockRifle"
+{
+	Path "models"
+	Model 0 "asmd2m_d.3d"
+	SurfaceSkin 0 0 "sasmd_t1.png"
+	SurfaceSkin 0 1 "sasmd_t2.png"
+	SurfaceSkin 0 2 "sasmd_t3.png"
+	SurfaceSkin 0 3 "sasmd_t3.png"
+	SurfaceSkin 0 4 "sasmd_t4.png"
+	PitchOffset 90
+	Scale 0.15 0.12 0.15
+	Offset 4.9 -16.6 -7.1
+
+	// select
+	FrameIndex ASMS A 0 0
+	FrameIndex ASMS B 0 1
+	FrameIndex ASMS C 0 2
+	FrameIndex ASMS D 0 3
+	FrameIndex ASMS E 0 4
+	FrameIndex ASMS F 0 5
+	FrameIndex ASMS G 0 6
+	FrameIndex ASMS H 0 7
+	FrameIndex ASMS I 0 8
+	FrameIndex ASMS J 0 9
+	FrameIndex ASMS K 0 10
+	FrameIndex ASMS L 0 11
+	FrameIndex ASMS M 0 12
+	FrameIndex ASMS N 0 13
+	FrameIndex ASMS O 0 14
+	// idle
+	FrameIndex ASMI A 0 15
+	// deselect
+	FrameIndex ASMD A 0 17
+	FrameIndex ASMD B 0 18
+	FrameIndex ASMD C 0 19
+	FrameIndex ASMD D 0 20
+	FrameIndex ASMD E 0 21
+	FrameIndex ASMD F 0 22
+	FrameIndex ASMD G 0 23
+	// fire
+	FrameIndex ASMF A 0 30
+	FrameIndex ASMF B 0 31
+	FrameIndex ASMF C 0 32
+	FrameIndex ASMF D 0 33
+	FrameIndex ASMF E 0 34
+	FrameIndex ASMF F 0 35
+	FrameIndex ASMF G 0 36
+	FrameIndex ASMF H 0 37
+	FrameIndex ASMF I 0 38
+	FrameIndex ASMF J 0 39
+	// altfire
+	FrameIndex ASMA A 0 40
+	FrameIndex ASMA B 0 41
+	FrameIndex ASMA C 0 42
+	FrameIndex ASMA D 0 43
+	FrameIndex ASMA E 0 44
+	FrameIndex ASMA F 0 45
+	FrameIndex ASMA G 0 46
+	FrameIndex ASMA H 0 47
+	FrameIndex ASMA I 0 48
+	FrameIndex ASMA J 0 49
+}

@@ -5,6 +5,16 @@ Class Translocator : UTWeapon
 		Tag "Translocator";
 		Inventory.PickupMessage "You got the Translocator Source Module.";
 		Weapon.SlotNumber 1;
+		Weapon.SelectionOrder 10;
 		+INVENTORY.UNTOSSABLE;
+		+WEAPON.NO_AUTO_SWITCH;
+	}
+	States
+	{
+	Spawn:
+		TLCP A -1;
+		Stop;
+		TLCP B -1;
+		Stop;
 	}
 }

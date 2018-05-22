@@ -1,4 +1,4 @@
-Class Tier4Ammo : RandomSpawner replaces ClipBox
+Class Tier4Ammo : RandomSpawner2 replaces ClipBox
 {
 	Default
 	{
@@ -7,7 +7,7 @@ Class Tier4Ammo : RandomSpawner replaces ClipBox
 	}
 }
 
-Class Tier4Weapon : RandomSpawner replaces Chaingun
+Class Tier4Weapon : RandomSpawner2 replaces Chaingun
 {
 	Default
 	{
@@ -23,9 +23,9 @@ Class PulseAmmo : UTAmmo
 		Tag "Pulse Cell";
 		Inventory.PickupMessage "You picked up a Pulse Cell.";
 		Inventory.Amount 25;
-		Inventory.MaxAmount 200;
+		Inventory.MaxAmount 199;
 		Ammo.BackpackAmount 50;
-		Ammo.BackpackMaxAmount 400;
+		Ammo.BackpackMaxAmount 199;
 		Ammo.DropAmount 25;
 		UTAmmo.UsedInSlot AMMO_SLOT5;
 	}
@@ -422,6 +422,7 @@ Class PulseGun : UTWeapon
 		Inventory.PickupMessage "You got a Pulse Gun";
 		Weapon.UpSound "pulse/select";
 		Weapon.SlotNumber 5;
+		Weapon.SelectionOrder 5;
 		Weapon.AmmoType "PulseAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "PulseAmmo";

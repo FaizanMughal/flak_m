@@ -1,0 +1,125 @@
+Model "WarheadAmmo"
+{
+	Path "models"
+	Model 0 "missile_d.3d"
+	Skin 0 "jmissile_01_.png"
+	Scale -0.21 0.2 0.2
+	PitchOffset 90
+	ZOffset 21
+
+	FrameIndex WMIS A 0 0
+}
+
+Model "ShockWave"
+{
+	Path "models"
+	Model 0 "shockwavem_d.3d"
+	Skin 0 "shockt1.png"
+
+	FrameIndex RWAV A 0 0
+	FrameIndex RWAV B 0 1
+}
+
+Model "WarShell"
+{
+	Path "models"
+	Model 0 "missile_d.3d"
+	Skin 0 "jmissile_01.png"
+	Scale -0.21 0.2 0.2
+	Offset -13 0 0
+	AngleOffset 180
+	USEACTORPITCH
+	USEACTORROLL
+
+	FrameIndex WMIS A 0 0
+}
+Model "GuidedWarShell"
+{
+	Path "models"
+	Model 0 "missile_d.3d"
+	Skin 0 "jmissile_01.png"
+	Scale -0.21 0.2 0.2
+	Offset -13 0 0
+	AngleOffset 180
+	USEACTORPITCH
+	USEACTORROLL
+
+	FrameIndex WMIS A 0 0
+}
+
+Model "WarheadLauncher"
+{
+	Path "models"
+	Model 1 "whpick_d.3d"
+	Skin 1 "jwhpick1.png"
+	Scale -0.2 0.24 0.24
+	ZOffset 12
+	AngleOffset 180
+	ROTATING
+
+	FrameIndex RDMP A 1 0
+}
+Model "WarheadLauncher"
+{
+	Path "models"
+	Model 1 "whpick_d.3d"
+	Skin 1 "jwhpick1.png"
+	Scale -0.2 0.24 0.24
+	AngleOffset 180
+	ZOffset 11
+
+	FrameIndex RDMP B 1 0
+}
+
+Model "WarheadLauncher"
+{
+	Path "models"
+	Model 0 "warhead_d.3d"
+	SurfaceSkin 0 0 "jwarhead1.png"
+	SurfaceSkin 0 1 "jwarhead2.png"
+	SurfaceSkin 0 2 "jwarhead3.png"
+	SurfaceSkin 0 3 "jwarhead4.png"
+	Scale 0.1 0.06 0.1
+	PitchOffset 2.8125
+	RollOffset 22.5
+	Offset 4.5 -7.8 -4.2
+
+	// select
+	FrameIndex WARS A 0 0
+	FrameIndex WARS B 0 1
+	FrameIndex WARS C 0 2
+	FrameIndex WARS D 0 3
+	FrameIndex WARS E 0 4
+	FrameIndex WARS F 0 5
+	FrameIndex WARS G 0 6
+	FrameIndex WARS H 0 7
+	FrameIndex WARS I 0 8
+	FrameIndex WARS J 0 9
+	FrameIndex WARS K 0 10
+	FrameIndex WARS L 0 11
+	FrameIndex WARS M 0 12
+	FrameIndex WARS N 0 13
+	FrameIndex WARS O 0 14
+	// idle
+	FrameIndex WARI A 0 15
+	FrameIndex WARI B 0 16
+	FrameIndex WARI C 0 17
+	FrameIndex WARI D 0 18
+	FrameIndex WARI E 0 19
+	// deselect
+	FrameIndex WARD A 0 20
+	FrameIndex WARD B 0 21
+	FrameIndex WARD C 0 22
+	FrameIndex WARD D 0 23
+	FrameIndex WARD E 0 24
+	FrameIndex WARD F 0 25
+	FrameIndex WARD G 0 26
+	// fire
+	FrameIndex WARF A 0 28
+	FrameIndex WARF B 0 29
+	FrameIndex WARF C 0 30
+	FrameIndex WARF D 0 31
+	FrameIndex WARF E 0 32
+	FrameIndex WARF F 0 33
+	FrameIndex WARF G 0 34
+}
