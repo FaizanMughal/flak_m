@@ -396,6 +396,7 @@ Class BioRifle : UTWeapon
 		}
 		A_PlaySound("ges/fire",CHAN_WEAPON);
 		invoker.FireEffect();
+		UTMainHandler.DoFlash(self,Color(48,0,255,0),1);
 		A_AlertMonsters();
 		if ( alt ) A_QuakeEx(1+0.5*invoker.charge,1+0.5*invoker.charge,1+0.5*invoker.charge,5+1.2*invoker.charge,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05+0.01*invoker.charge);
 		else A_QuakeEx(1,1,1,5,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);

@@ -421,6 +421,57 @@ Class UTHud : BaseStatusBar
 		}
 	}
 
+	private void DrawKeys()
+	{
+		bool locks[6];
+		for ( int i=0; i<6; i++ ) locks[i] = CPlayer.mo.CheckKeys(i+1,false,true);
+		int nrows = 0, nrowss = 0;
+		for ( int i=0; i<3; i++ ) if ( locks[i] ) nrows++;
+		for ( int i=3; i<6; i++ ) if ( locks[i] ) nrowss++;
+		CurX = (Screen.GetWidth()-64*HScale);
+		CurY = (Screen.GetHeight()-nrows*64*HScale)*0.5;
+		CurY -= max(0,nrows-1)*4*HScale;
+		if ( locks[0] )
+		{
+			DrawColor = "Red";
+			UTDrawColorTex(Keys[0]);
+			CurY += 72*HScale;
+		}
+		if ( locks[1] )
+		{
+			DrawColor = "Blue";
+			UTDrawColorTex(Keys[1]);
+			CurY += 72*HScale;
+		}
+		if ( locks[2] )
+		{
+			DrawColor = "Gold";
+			UTDrawColorTex(Keys[2]);
+			CurY += 72*HScale;
+		}
+		if ( nrows ) CurX -= 56*HScale;
+		CurY = (Screen.GetHeight()-nrowss*64*HScale)*0.5;
+		CurY += max(0,nrowss-1)*2*HScale;
+		if ( locks[3] )
+		{
+			DrawColor = "Red";
+			UTDrawColorTex(Keys[3]);
+			CurY += 60*HScale;
+		}
+		if ( locks[4] )
+		{
+			DrawColor = "Blue";
+			UTDrawColorTex(Keys[3]);
+			CurY += 60*HScale;
+		}
+		if ( locks[5] )
+		{
+			DrawColor = "Gold";
+			UTDrawColorTex(Keys[3]);
+			CurY += 60*HScale;
+		}
+	}
+
 	override void Tick()
 	{
 		Super.Tick();
@@ -459,6 +510,8 @@ Class UTHud : BaseStatusBar
 		DrawAmmo();
 		// Draw Health/Armor status
 		DrawStatus();
+		// Display Keys
+		DrawKeys();
 		// Display Identification Info
 		if ( CPlayer == players[consoleplayer] ) DrawIdentifyInfo();
 	}

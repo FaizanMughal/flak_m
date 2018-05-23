@@ -57,7 +57,7 @@ Class DamageAmplifier : Powerup
 	Default
 	{
 		Powerup.Duration -30;
-		Powerup.Color "EE00FF", 0.25;
+		Powerup.Color "EE00FF", 0.15;
 	}
 
 	override void InitEffect()
@@ -90,6 +90,7 @@ Class DamageAmplifier : Powerup
 	{
 		if ( EffectTics < 350 ) Owner.A_PlaySound("udamage/fire2",CHAN_5,1.0,false,0.25);
 		else Owner.A_PlaySound("udamage/fire1",CHAN_5,1.0,false,0.25);
+		UTMainHandler.DoFlash(Owner,Color(96,238,0,255),10);
 	}
 
 	override void ModifyDamage( int damage, Name damageType, out int newdamage, bool passive )

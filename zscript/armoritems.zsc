@@ -93,7 +93,11 @@ Class UTShieldBelt : UTArmor replaces Megasphere
 {
 	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
 	{
-		if ( (amount > 0) && !DamageTypeDefinition.IgnoreArmor(damageType) ) Owner.A_PlaySound("belt/absorb");
+		if ( (amount > 0) && !DamageTypeDefinition.IgnoreArmor(damageType) )
+		{
+			Owner.A_PlaySound("belt/absorb");
+			UTMainHandler.DoFlash(Owner,Color(80,255,224,0),5);
+		}
 		Super.AbsorbDamage(damage,damageType,newdamage);
 	}
 	override void OnDestroy()

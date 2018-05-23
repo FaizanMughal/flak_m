@@ -268,9 +268,7 @@ Class ShockBeam : Actor
 				{
 					Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](2,8);
 					A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[ASMD](20,80),FRandom[ASMD](1.6,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.05);
-					pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 					A_SpawnParticle("5020FF",SPF_FULLBRIGHT,Random[ASMD](40,120),FRandom[ASMD](4.8,11.2),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.05);
-					pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 					A_SpawnParticle("402080",SPF_FULLBRIGHT,Random[ASMD](50,140),FRandom[ASMD](5.6,12.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.25,-1,-.05);
 				}
 			}
@@ -318,9 +316,7 @@ Class ShockBeam : Actor
 		{
 			Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,2.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
-			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 			A_SpawnParticle("5020FF",SPF_FULLBRIGHT,Random[ASMD](40,60),FRandom[ASMD](4.8,5.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.1);
-			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 			A_SpawnParticle("402080",SPF_FULLBRIGHT,Random[ASMD](50,70),FRandom[ASMD](5.6,6.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.25,-1,-.1);
 		}
 	}
@@ -381,7 +377,7 @@ Class SuperShockBeam : Actor
 		for ( int i=0; i<t.Results.Distance; i++ )
 		{
 			Vector3 pofs = Level.Vec3Diff(pos,pos+tracedir*FRandom[ASMD](0,1)+(FRandom[ASMD](-.5,.5),FRandom[ASMD](-.5,.5),FRandom[ASMD](-.5,.5)));
-			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,30,2,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),startalphaf:1,sizestep:-.1);
+			A_SpawnParticle("FFF080",SPF_FULLBRIGHT,30,2,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),startalphaf:1,sizestep:-.1);
 			A_SpawnParticle("FF5020",SPF_FULLBRIGHT,45,4,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),startalphaf:.5,sizestep:-.1);
 			A_SpawnParticle("804020",SPF_FULLBRIGHT,60,8,0,tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z,FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),FRandom[ASMD](-.03,.03),startalphaf:.25,sizestep:-.1);
 		}
@@ -427,10 +423,8 @@ Class SuperShockBeam : Actor
 				for ( int i=0; i<numpt; i++ )
 				{
 					Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](2,8);
-					A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[ASMD](20,80),FRandom[ASMD](1.6,9.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.05);
-					pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+					A_SpawnParticle("FFF080",SPF_FULLBRIGHT,Random[ASMD](20,80),FRandom[ASMD](1.6,9.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.05);
 					A_SpawnParticle("FF5020",SPF_FULLBRIGHT,Random[ASMD](40,120),FRandom[ASMD](4.8,22.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.05);
-					pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 					A_SpawnParticle("804020",SPF_FULLBRIGHT,Random[ASMD](50,140),FRandom[ASMD](5.6,25.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.25,-1,-.05);
 				}
 			}
@@ -479,10 +473,8 @@ Class SuperShockBeam : Actor
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
-			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
-			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("FFF080",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
 			A_SpawnParticle("FF5020",SPF_FULLBRIGHT,Random[ASMD](40,60),FRandom[ASMD](4.8,11.2),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.1);
-			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 			A_SpawnParticle("804020",SPF_FULLBRIGHT,Random[ASMD](50,70),FRandom[ASMD](5.6,12.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.25,-1,-.1);
 		}
 	}
@@ -693,9 +685,7 @@ Class ShockBall : Actor
 		{
 			Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,2.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
-			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 			A_SpawnParticle("5020FF",SPF_FULLBRIGHT,Random[ASMD](40,60),FRandom[ASMD](4.8,5.6),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.1);
-			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 			A_SpawnParticle("402080",SPF_FULLBRIGHT,Random[ASMD](50,70),FRandom[ASMD](5.6,6.4),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.25,-1,-.1);
 		}
 	}
@@ -757,10 +747,8 @@ Class SuperShockBall : Actor
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
-			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
-			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
+			A_SpawnParticle("FFF080",SPF_FULLBRIGHT,Random[ASMD](20,40),FRandom[ASMD](1.6,4.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-.1);
 			A_SpawnParticle("FF5020",SPF_FULLBRIGHT,Random[ASMD](40,60),FRandom[ASMD](4.8,11.2),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-.1);
-			pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](3,12);
 			A_SpawnParticle("804020",SPF_FULLBRIGHT,Random[ASMD](50,70),FRandom[ASMD](5.6,12.8),0,0,0,0,pvel.x,pvel.y,pvel.z,0,0,0,.25,-1,-.1);
 		}
 	}
@@ -802,6 +790,7 @@ Class ShockRifle : UTWeapon
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		A_PlaySound("shock/fire",CHAN_WEAPON);
 		invoker.FireEffect();
+		UTMainHandler.DoFlash(self,Color(128,128,0,255),1);
 		A_AlertMonsters();
 		A_QuakeEx(3,3,3,4,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
@@ -820,6 +809,7 @@ Class ShockRifle : UTWeapon
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		A_PlaySound("shock/altfire",CHAN_WEAPON);
 		invoker.FireEffect();
+		UTMainHandler.DoFlash(self,Color(128,128,0,255),1);
 		A_AlertMonsters();
 		A_QuakeEx(3,3,3,8,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
@@ -910,6 +900,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		A_PlaySound("shock/fire",CHAN_WEAPON);
 		invoker.FireEffect();
+		UTMainHandler.DoFlash(self,Color(128,255,128,0),1);
 		A_AlertMonsters();
 		A_QuakeEx(8,8,8,12,0,96,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
 		Vector3 x, y, z;
@@ -928,6 +919,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		A_PlaySound("shock/altfire",CHAN_WEAPON);
 		invoker.FireEffect();
+		UTMainHandler.DoFlash(self,Color(128,255,128,0),1);
 		A_AlertMonsters();
 		A_QuakeEx(8,8,8,16,0,96,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
 		Vector3 x, y, z;

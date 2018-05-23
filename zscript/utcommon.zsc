@@ -423,10 +423,46 @@ Class UTBlueKey : BlueCard replaces BlueCard
 	}
 }
 
+Class GenericFlash : HUDMessageBase
+{
+	Color col;
+	int duration;
+	double alpha;
+	Actor cam;
+	GenericFlash Setup( Actor camera, Color c, int d )
+	{
+		alpha = 1.0;
+		col = c;
+		duration = d;
+		cam = camera;
+		return self;
+	}
+	override bool Tick()
+	{
+		alpha -= 1./duration;
+		return (alpha<=0);
+	}
+	override void Draw( int bottom, int visibility )
+	{
+		if ( automapactive || (visibility != BaseStatusBar.HUDMSGLayer_UnderHUD) ) return;
+		if ( cam && (players[consoleplayer].camera != cam) ) return;
+		Screen.Dim(col,(col.a/255.)*alpha,0,0,Screen.GetWidth(),Screen.GetHeight());
+	}
+}
+
+Class QueuedFlash
+{
+	Color c;
+	int duration;
+	int tic;
+	Actor cam;
+}
+
 Class UTMainHandler : StaticEventHandler
 {
 	ui TextureID tex;
 	transient int lastfrag;
+	Array<QueuedFlash> flashes;
 
 	override void WorldLoaded( WorldEvent e )
 	{
@@ -460,8 +496,24 @@ Class UTMainHandler : StaticEventHandler
 		if ( e.Name ~== "refreshmenu" ) StartMenu();
 	}
 
+	override void WorldTick()
+	{
+		for ( int i=0; i<flashes.size(); i++ )
+		{
+			if ( flashes[i].tic >= gametic ) continue;
+			flashes.Delete(i);
+			i--;
+		}
+	}
+
 	override void PostUiTick()
 	{
+		for ( int i=0; i<flashes.size(); i++ )
+		{
+			if ( flashes[i].tic < gametic ) continue;
+			GenericFlash gf = new("GenericFlash").Setup(flashes[i].cam,flashes[i].c,flashes[i].duration);
+			StatusBar.AttachMessage(gf,0,BaseStatusBar.HUDMSGLayer_UnderHUD);
+		}
 		if ( gametic <= 0 ) StartMenu();
 		if ( !(StatusBar is 'UTHUD') ) return;
 		UTHUD(StatusBar).lastfrag = lastfrag;
@@ -479,5 +531,16 @@ Class UTMainHandler : StaticEventHandler
 	{
 		if ( (e.Thing.Health <= 0) && e.DamageSource && (e.DamageSource != e.Thing) && e.DamageSource.player && (e.DamageSource.player == players[consoleplayer]) )
 			lastfrag = gametic;
+	}
+
+	static void DoFlash( Actor camera, Color c, int duration )
+	{
+		QueuedFlash qf = new("QueuedFlash");
+		qf.duration = duration;
+		qf.c = c;
+		qf.tic = gametic;
+		qf.cam = camera;
+		let hnd = UTMainHandler(StaticEventHandler.Find("UTMainHandler"));
+		hnd.flashes.push(qf);
 	}
 }
