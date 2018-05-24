@@ -4,4 +4,6 @@ GameInfo
 	PlayerClasses = "UTPlayer"
 	StatusBarClass = "UTHud"
 	BackpackType = "UTBackpack"
+	BorderFlat = "TEMPBG"
+	Border = 0,0,"","","","","","","",""
 }
