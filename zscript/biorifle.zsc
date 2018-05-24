@@ -17,7 +17,7 @@ Class Tier3Weapon : RandomSpawner2 replaces Shotgun
 }
 Class Tier3Weapon2 : Tier3Weapon replaces SuperShotgun {}
 
-Class BioAmmo : UTAmmo
+Class BioAmmo : Ammo
 {
 	Default
 	{
@@ -28,7 +28,6 @@ Class BioAmmo : UTAmmo
 		Ammo.BackpackAmount 50;
 		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 25;
-		UTAmmo.UsedInSlot AMMO_SLOT3;
 	}
 	States
 	{

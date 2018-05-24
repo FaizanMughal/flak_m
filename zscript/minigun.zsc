@@ -24,7 +24,7 @@ Class Tier6Weapon : RandomSpawner2 replaces PlasmaRifle
 	}
 }
 
-Class MiniAmmo : UTAmmo
+Class MiniAmmo : Ammo
 {
 	Default
 	{
@@ -35,7 +35,6 @@ Class MiniAmmo : UTAmmo
 		Ammo.BackpackAmount 100;
 		Ammo.BackpackMaxAmount 199;
 		Ammo.DropAmount 50;
-		UTAmmo.UsedInSlot AMMO_SLOT2|AMMO_SLOT7;
 	}
 	States
 	{

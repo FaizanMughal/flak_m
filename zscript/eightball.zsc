@@ -1,4 +1,4 @@
-Class UTRocketAmmo : UTAmmo
+Class UTRocketAmmo : Ammo
 {
 	Default
 	{
@@ -9,7 +9,6 @@ Class UTRocketAmmo : UTAmmo
 		Ammo.BackpackAmount 12;
 		Ammo.BackpackMaxAmount 48;
 		Ammo.DropAmount 12;
-		UTAmmo.UsedInSlot AMMO_SLOT9;
 	}
 	States
 	{

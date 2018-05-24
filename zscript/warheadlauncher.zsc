@@ -1,5 +1,5 @@
 // shouldn't be placed in the world (it wasn't in UT99)
-Class WarheadAmmo : UTAmmo
+Class WarheadAmmo : Ammo
 {
 	Default
 	{
@@ -11,7 +11,6 @@ Class WarheadAmmo : UTAmmo
 		Ammo.BackpackMaxAmount 2;
 		Ammo.DropAmount 1;
 		Inventory.RespawnTics 2100;
-		UTAmmo.UsedInSlot AMMO_SLOT10;
 	}
 	States
 	{

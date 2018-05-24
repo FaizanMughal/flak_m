@@ -1,4 +1,4 @@
-Class RipperAmmo : UTAmmo
+Class RipperAmmo : Ammo
 {
 	Default
 	{
@@ -9,7 +9,6 @@ Class RipperAmmo : UTAmmo
 		Ammo.BackpackAmount 50;
 		Ammo.BackpackMaxAmount 75;
 		Ammo.DropAmount 25;
-		UTAmmo.UsedInSlot AMMO_SLOT6;
 	}
 	States
 	{

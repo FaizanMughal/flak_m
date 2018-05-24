@@ -24,7 +24,7 @@ Class Tier5Weapon : RandomSpawner2 replaces RocketLauncher
 	}
 }
 
-Class FlakAmmo : UTAmmo
+Class FlakAmmo : Ammo
 {
 	Default
 	{
@@ -35,7 +35,6 @@ Class FlakAmmo : UTAmmo
 		Ammo.BackpackAmount 20;
 		Ammo.BackpackMaxAmount 50;
 		Ammo.DropAmount 10;
-		UTAmmo.UsedInSlot AMMO_SLOT8;
 	}
 	States
 	{

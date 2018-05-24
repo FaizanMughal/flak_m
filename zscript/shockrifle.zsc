@@ -1,4 +1,4 @@
-Class ShockAmmo : UTAmmo
+Class ShockAmmo : Ammo
 {
 	Default
 	{
@@ -9,7 +9,6 @@ Class ShockAmmo : UTAmmo
 		Ammo.BackpackAmount 20;
 		Ammo.BackpackMaxAmount 50;
 		Ammo.DropAmount 10;
-		UTAmmo.UsedInSlot AMMO_SLOT4;
 	}
 	States
 	{
@@ -869,7 +868,7 @@ Class ShockRifle : UTWeapon
 	}
 }
 
-Class EnhancedShockAmmo : UTAmmo
+Class EnhancedShockAmmo : Ammo
 {
 	Default
 	{
@@ -880,7 +879,6 @@ Class EnhancedShockAmmo : UTAmmo
 		Ammo.BackpackAmount 0;
 		Ammo.BackpackMaxAmount 25;
 		Ammo.DropAmount 5;
-		UTAmmo.UsedInSlot AMMO_SLOT4;
 	}
 	States
 	{

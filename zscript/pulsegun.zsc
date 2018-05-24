@@ -16,7 +16,7 @@ Class Tier4Weapon : RandomSpawner2 replaces Chaingun
 	}
 }
 
-Class PulseAmmo : UTAmmo
+Class PulseAmmo : Ammo
 {
 	Default
 	{
@@ -27,7 +27,6 @@ Class PulseAmmo : UTAmmo
 		Ammo.BackpackAmount 50;
 		Ammo.BackpackMaxAmount 199;
 		Ammo.DropAmount 25;
-		UTAmmo.UsedInSlot AMMO_SLOT5;
 	}
 	States
 	{

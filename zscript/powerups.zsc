@@ -101,7 +101,7 @@ Class DamageAmplifier : Powerup
 	}
 }
 
-// Backpack that handles UT ammo types
+// Backpack that only gives ammo for valid weapons
 Class UTBackpack : BackpackItem replaces Backpack
 {
 	override Inventory CreateCopy( Actor other )
@@ -111,7 +111,7 @@ Class UTBackpack : BackpackItem replaces Backpack
 		for ( int i=0; i<AllActorClasses.Size(); i++ )
 		{
 			let type = (class<Ammo>)(AllActorClasses[i]);
-			if ( !type || ((type.GetParentClass() != 'Ammo') && (type.GetParentClass() != 'UTAmmo')) ) continue;
+			if ( !type || (type.GetParentClass() != 'Ammo') ) continue;
 			// check that it's for a valid weapon
 			bool isvalid = false;
 			for ( int j=0; j<AllActorClasses.Size(); j++ )
@@ -170,7 +170,7 @@ Class UTBackpack : BackpackItem replaces Backpack
 		{
 			for ( let probe = Owner.Inv; probe; probe = probe.Inv )
 			{
-				if ( (probe.GetParentClass() != 'Ammo') && (probe.GetParentClass() != 'UTAmmo') ) continue;
+				if ( probe.GetParentClass() != 'Ammo' ) continue;
 				if ( probe.Amount >= probe.MaxAmount && !sv_unlimited_pickup ) continue;
 				int amount = Ammo(probe).Default.BackpackAmount;
 				// extra ammo in baby mode and nightmare mode

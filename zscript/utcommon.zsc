@@ -7,7 +7,7 @@ Class UTPlayer : DoomPlayer
 		Player.StartItem "Enforcer";
 	}
 
-	// Have to modify the give cheat to recognize UT ammo and handle UT armor
+	// Have to modify the give cheat to handle UT armor
 	override void CheatGive( String name, int amount )
 	{
 		if ( PlayerNumber() != consoleplayer )
@@ -39,7 +39,7 @@ Class UTPlayer : DoomPlayer
 			for ( int i=0; i<AllActorClasses.Size(); i++ )
 			{
 				let type = (class<Ammo>)(AllActorClasses[i]);
-				if ( !type || ((type.GetParentClass() != "Ammo") && (type.GetParentClass() != "UTAmmo")) )
+				if ( !type || (type.GetParentClass() != "Ammo") )
 					continue;
 				// Only give if it's for a valid weapon, unless using "give everything"
 				bool isvalid = false;
@@ -155,32 +155,6 @@ Class UTPlayer : DoomPlayer
 				A_Log(String.Format("Unknown item \"%s\"\n",name));
 		}
 		else GiveInventory(type,amount,true);
-	}
-}
-
-enum EAmmoSlot
-{
-	AMMO_SLOT10 = 1,
-	AMMO_SLOT1 = 2,
-	AMMO_SLOT2 = 4,
-	AMMO_SLOT3 = 8,
-	AMMO_SLOT4 = 16,
-	AMMO_SLOT5 = 32,
-	AMMO_SLOT6 = 64,
-	AMMO_SLOT7 = 128,
-	AMMO_SLOT8 = 256,
-	AMMO_SLOT9 = 512,
-};
-
-Class UTAmmo : Ammo
-{
-	int usedinslot;	// bitfield indicating which weapon slots use this ammo
-
-	Property UsedInSlot : usedinslot;
-
-	Default
-	{
-		UTAmmo.UsedInSlot 0;
 	}
 }
 
