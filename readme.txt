@@ -30,10 +30,10 @@ Currently implemented:
  - Searchlight (light amplification visor)
  - Enhanced Shock Rifle (slot 4, limited ammo, invulnerability sphere)
  - UT HUD
+ - Impact Hammer (slot 1)
 
 In progress:
 
- - Impact Hammer (slot 1)
  - Chainsaw (slot 1)
  - Translocator (slot 1)
  - Enforcer (slot 2)

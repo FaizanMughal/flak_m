@@ -66,7 +66,7 @@ Class ImpactHammer : UTWeapon replaces Fist
 		if ( d.HitType == TRACE_HitActor )
 		{
 			d.HitActor.DamageMobj(invoker,self,60*realcharge,'impact');
-			d.HitActor.vel += x*(1000/d.HitActor.mass)*realcharge;
+			d.HitActor.vel = x*(1000/d.HitActor.mass)*realcharge;
 			if ( d.HitActor.bNOBLOOD )
 			{
 				let p = Spawn("HammerImpact",d.HitLocation-d.HitDir*4);
@@ -81,7 +81,7 @@ Class ImpactHammer : UTWeapon replaces Fist
 		}
 		else if ( d.HitType != TRACE_HitNone )
 		{
-			realcharge = max(1.0,invoker.chargesize);
+			realcharge = max(1.0,realcharge);
 			DamageMobj(invoker,self,24*realcharge,'impact');	// It's a flat damage of 36 on UT, but I think it's more fair for it to scale
 			TraceBleed(24*realcharge,invoker);
 			vel -= x*(1200/mass)*realcharge;
@@ -90,8 +90,8 @@ Class ImpactHammer : UTWeapon replaces Fist
 			p.pitch = asin(-d.HitDir.z);
 			if ( d.HitType == TRACE_HitWall ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation-d.HitDir*4);
 		}
-		A_QuakeEx(realcharge*4,realcharge*4,realcharge*4,12,0,96,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:realcharge*0.2);
-		realcharge = max(1.0,invoker.chargesize);
+		A_QuakeEx(realcharge*6,realcharge*6,realcharge*6,16,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:realcharge*0.2);
+		realcharge = max(1.0,realcharge);
 		int numpt = Random[Impact](20,40);
 		for ( int i=0; i<numpt; i++ )
 		{
@@ -112,7 +112,7 @@ Class ImpactHammer : UTWeapon replaces Fist
 		A_PlaySound("impact/fire",CHAN_WEAPON);
 		invoker.FireEffect();
 		A_AlertMonsters();
-		A_QuakeEx(2,2,2,6,0,96,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+		A_QuakeEx(2,2,2,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
@@ -122,7 +122,7 @@ Class ImpactHammer : UTWeapon replaces Fist
 		if ( d.HitType == TRACE_HitActor )
 		{
 			d.HitActor.DamageMobj(invoker,self,20*dscale,'impact');
-			d.HitActor.vel += x*(500/d.HitActor.mass)*dscale;
+			d.HitActor.vel = x*(500/d.HitActor.mass)*dscale;
 		}
 		else if ( d.HitType != TRACE_HitNone )
 		{

@@ -348,6 +348,7 @@ Class PulseGun : UTWeapon
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,128,255,128),1);
 		A_AlertMonsters();
+		A_QuakeEx(1,1,1,2,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+4.5*y-2.4*z;
@@ -383,7 +384,7 @@ Class PulseGun : UTWeapon
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,128,255,128),1);
 		A_AlertMonsters();
-		A_QuakeEx(1,1,1,2,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
+		A_QuakeEx(1,1,1,2,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);

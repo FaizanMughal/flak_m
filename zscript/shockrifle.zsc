@@ -791,7 +791,7 @@ Class ShockRifle : UTWeapon
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,128,0,255),1);
 		A_AlertMonsters();
-		A_QuakeEx(3,3,3,4,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+		A_QuakeEx(3,3,3,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
@@ -810,7 +810,7 @@ Class ShockRifle : UTWeapon
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,128,0,255),1);
 		A_AlertMonsters();
-		A_QuakeEx(3,3,3,8,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+		A_QuakeEx(3,3,3,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
@@ -859,7 +859,7 @@ Class ShockRifle : UTWeapon
 		ASMA BCDEFGHIJ 2;
 		Goto Idle;
 	Deselect:
-		ASMD ABCDEFG 1;
+		ASMD ABCDEFG 2;
 		ASMD G 1 A_Lower(int.max);
 		Wait;
 	Select:
@@ -900,7 +900,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,0),1);
 		A_AlertMonsters();
-		A_QuakeEx(8,8,8,12,0,96,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
+		A_QuakeEx(8,8,8,12,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
@@ -919,7 +919,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,0),1);
 		A_AlertMonsters();
-		A_QuakeEx(8,8,8,16,0,96,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
+		A_QuakeEx(8,8,8,16,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
@@ -968,7 +968,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		ASMA BCDEFGHIJ 2;
 		Goto Idle;
 	Deselect:
-		ASMD ABCDEFG 1;
+		ASMD ABCDEFG 2;
 		ASMD G 1 A_Lower(int.max);
 		Wait;
 	Select:

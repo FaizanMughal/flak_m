@@ -126,6 +126,11 @@ impact/loop	imploop
 impact/release	impaltrl
 impact/fire	impfire
 
+chainsaw/select	chainpck
+chainsaw/idle	chainidl
+chainsaw/lower	chainpdn
+chainsaw/fire	sawhit
+
 ges/hit		gelhit
 ges/select	gelselec
 ges/fire	gelshot
