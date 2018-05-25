@@ -42,3 +42,10 @@ In progress:
  - Minigun (slot 7)
  - Rocket Launcher (slot 9)
  - Sniper Rifle (slot 0)
+
+Things to do eventually:
+
+ - Trim out unused animations.
+ - Add some more effects, maybe some nicer recoil on guns too.
+ - Unreal 1 weapons?
+ - Think of what item(s) the jump boots can replace.
