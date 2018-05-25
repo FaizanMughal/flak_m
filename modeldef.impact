@@ -3,7 +3,8 @@ Model "ImpactHammer"
 	Path "models"
 	Model 1 "ImpPick_d.3d"
 	Skin 1 "JImpPick1.png"
-	Scale -0.24 0.2 0.2
+	Scale -0.2 0.24 0.2
+	AngleOffset 270
 	ZOffset 12
 	ROTATING
 
@@ -14,8 +15,83 @@ Model "ImpactHammer"
 	Path "models"
 	Model 1 "ImpPick_d.3d"
 	Skin 1 "JImpPick1.png"
-	Scale -0.24 0.2 0.2
-	ZOffset 6
+	Scale -0.2 0.24 0.2
+	AngleOffset 270
+	ZOffset 9
 
 	FrameIndex IMPP B 1 0
+}
+
+Model "ImpactHammer"
+{
+	Path "models"
+	Model 0 "ImpactHammer_d.3d"
+	SurfaceSkin 0 0 "JImpactHammer1.png"
+	SurfaceSkin 0 1 "JImpactHammer2.png"
+	SurfaceSkin 0 2 "JImpactHammer3.png"
+	SurfaceSkin 0 3 "JImpactHammer4.png"
+	PitchOffset 5
+	Scale 0.1 0.05 0.1
+	Offset 5.8 -12.8 -7.7
+
+	// select
+	FrameIndex IMPS A 0 0
+	FrameIndex IMPS B 0 1
+	FrameIndex IMPS C 0 2
+	FrameIndex IMPS D 0 3
+	FrameIndex IMPS E 0 4
+	FrameIndex IMPS F 0 5
+	FrameIndex IMPS G 0 6
+	FrameIndex IMPS H 0 7
+	FrameIndex IMPS I 0 8
+	FrameIndex IMPS J 0 9
+	FrameIndex IMPS K 0 10
+	FrameIndex IMPS L 0 11
+	FrameIndex IMPS M 0 12
+	FrameIndex IMPS N 0 13
+	FrameIndex IMPS O 0 14
+	FrameIndex IMPS P 0 15
+	FrameIndex IMPS Q 0 16
+	// idle
+	FrameIndex IMPI A 0 17
+	// pull
+	FrameIndex IMPL A 0 17
+	FrameIndex IMPL B 0 18
+	FrameIndex IMPL C 0 19
+	FrameIndex IMPL D 0 20
+	FrameIndex IMPL E 0 21
+	// shake
+	FrameIndex IMPR A 0 22
+	FrameIndex IMPR B 0 23
+	FrameIndex IMPR C 0 24
+	FrameIndex IMPR D 0 25
+	FrameIndex IMPR E 0 26
+	FrameIndex IMPR F 0 27
+	FrameIndex IMPR G 0 28
+	FrameIndex IMPR H 0 29
+	FrameIndex IMPR I 0 30
+	FrameIndex IMPR J 0 31
+	// fire
+	FrameIndex IMPF A 0 35
+	FrameIndex IMPF B 0 36
+	FrameIndex IMPF C 0 37
+	FrameIndex IMPF D 0 38
+	FrameIndex IMPF E 0 39
+	FrameIndex IMPF F 0 40
+	FrameIndex IMPF G 0 41
+	FrameIndex IMPF H 0 42
+	FrameIndex IMPF I 0 43
+	FrameIndex IMPF J 0 44
+	FrameIndex IMPF K 0 45
+	FrameIndex IMPF L 0 46
+	FrameIndex IMPF M 0 47
+	FrameIndex IMPF N 0 48
+	FrameIndex IMPF O 0 49
+	FrameIndex IMPF P 0 50
+	// down
+	FrameIndex IMPD A 0 51
+	FrameIndex IMPD B 0 52
+	FrameIndex IMPD C 0 53
+	FrameIndex IMPD D 0 54
+	FrameIndex IMPD E 0 55
 }

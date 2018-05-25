@@ -120,6 +120,39 @@ misc/gibbed4	gib4
 misc/gibbed5	gib5
 $random misc/gibbed { misc/gibbed1 misc/gibbed2 misc/gibbed3 misc/gibbed4 misc/gibbed5 }
 
+impact/select	imppick
+impact/pull	impaltst
+impact/loop	imploop
+impact/release	impaltrl
+impact/fire	impfire
+
+ges/hit		gelhit
+ges/select	gelselec
+ges/fire	gelshot
+ges/charge	bioaltrp
+ges/explode	explg02
+$limit ges/hit 64
+$limit ges/explode 64
+
+shock/select	tazersel
+shock/fire	tazefire
+shock/altfire	tazealtf
+shock/hit	expl03
+shock/blast	specexpl
+$pitchshiftrange 5
+shock/ball	expla02
+$pitchshift shock/ball 5
+$pitchshiftrange 0
+sshock/blast	expl2
+
+pulse/bolt	pulseblt
+pulse/down	pulsedwn
+pulse/hit	pulseexp
+pulse/fire	pulsefir
+pulse/fly	pulsefly
+pulse/select	pulsepck
+pulse/reload	pulserel
+
 flak/select	pdown
 flak/load	hidraul2
 flak/reload	load1
@@ -134,34 +167,7 @@ $random flak/bounce { flak/bounce1 flak/bounce2 flak/bounce3 }
 $limit flak/bounce 64
 flak/explode	expl04
 
-shock/select	tazersel
-shock/fire	tazefire
-shock/altfire	tazealtf
-shock/hit	expl03
-shock/blast	specexpl
-$pitchshiftrange 5
-shock/ball	expla02
-$pitchshift shock/ball 5
-$pitchshiftrange 0
-sshock/blast	expl2
-
 warhead/explode	warexplo
 warhead/fly	warfly
 warhead/select	warhpick
 warhead/fire	warhshot
-
-ges/hit		gelhit
-ges/select	gelselec
-ges/fire	gelshot
-ges/charge	bioaltrp
-ges/explode	explg02
-$limit ges/hit 64
-$limit ges/explode 64
-
-pulse/bolt	pulseblt
-pulse/down	pulsedwn
-pulse/hit	pulseexp
-pulse/fire	pulsefir
-pulse/fly	pulsefly
-pulse/select	pulsepck
-pulse/reload	pulserel

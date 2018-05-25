@@ -79,7 +79,7 @@ Class UTHud : BaseStatusBar
 		Slots[7] = TexMan.CheckForTexture("SlotFlak",TexMan.Type_Any);
 		Slots[8] = TexMan.CheckForTexture("Slot8bal",TexMan.Type_Any);
 		Slots[9] = TexMan.CheckForTexture("SlotRifl",TexMan.Type_Any);
-		Icons[0] = TexMan.CheckForTexture("IconImp",TexMan.Type_Any);
+		Icons[0] = TexMan.CheckForTexture("IconImpH",TexMan.Type_Any);
 		Icons[1] = TexMan.CheckForTexture("IconAuto",TexMan.Type_Any);
 		Icons[2] = TexMan.CheckForTexture("IconBio",TexMan.Type_Any);
 		Icons[3] = TexMan.CheckForTexture("IconASMD",TexMan.Type_Any);
@@ -93,7 +93,7 @@ Class UTHud : BaseStatusBar
 		Icons[11] = TexMan.CheckForTexture("IconTrns",TexMan.Type_Any);
 		Icons[12] = TexMan.CheckForTexture("IconWarH",TexMan.Type_Any);
 		Icons[13] = TexMan.CheckForTexture("IconASMD",TexMan.Type_Any);
-		Uses[0] = TexMan.CheckForTexture("UseImp",TexMan.Type_Any);
+		Uses[0] = TexMan.CheckForTexture("UseImpH",TexMan.Type_Any);
 		Uses[1] = TexMan.CheckForTexture("UseAuto",TexMan.Type_Any);
 		Uses[2] = TexMan.CheckForTexture("UseBio",TexMan.Type_Any);
 		Uses[3] = TexMan.CheckForTexture("UseASMD",TexMan.Type_Any);
@@ -360,18 +360,14 @@ Class UTHud : BaseStatusBar
 			CurY = BaseY+4*WeapScale;
 			DrawColor = GoldColor;
 			UTDrawColorTex(BigNum[(i==9)?0:(i+1)],0.6);
-			if ( !wslots[i].Ammo1 ) return;
+			if ( !wslots[i].Ammo1 ) continue;
 			CurY = BaseY+52*WeapScale;
 			Vector2 ss = (0.6875,0.5)*WeapScale;
 			double dw = (Screen.GetWidth()/ss.x), dh = (Screen.GetHeight()/ss.y);
 			double dx = CurX/ss.x, dy = CurY/ss.y;
 			Vector2 bs = TexMan.GetScaledSize(AmmoBar);
 			double ddw = bs.x*(wslots[i].Ammo1.Amount/double(wslots[i].Ammo1.MaxAmount));
-			int cx, cy, cw, ch;
-			[cx,cy,cw,ch] = Screen.GetClipRect();
-			Screen.SetClipRect(CurX,CurY,ddw*ss.x,bs.y*ss.y);
-			Screen.DrawTexture(AmmoBar,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true);
-			Screen.SetClipRect(cx,cy,cw,ch);
+			Screen.DrawTexture(AmmoBar,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_WindowRightF,ddw);
 		}
 	}
 	private void DrawFragCount()

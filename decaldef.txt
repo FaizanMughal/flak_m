@@ -125,3 +125,13 @@ decal BoltScorch
 	x-scale 0.15
 	y-scale 0.15
 }
+
+decal ImpactMark
+{
+	pic impcrack
+	shade "00 00 00"
+	randomflipx
+	randomflipy
+	x-scale 0.25
+	y-scale 0.25
+}
