@@ -543,6 +543,102 @@ Class UTSmoke : Actor
 	}
 }
 
+Class UTRedSkull : RedSkull replaces RedSkull
+{
+	Default
+	{
+		Tag "Red Skull";
+		Species "RedSkull";
+		Inventory.PickupMessage "You got the Red Skull.";
+	}
+	States
+	{
+	Spawn:
+		USKL A -1;
+		Stop;
+	}
+}
+
+Class UTGoldSkull : YellowSkull replaces YellowSkull
+{
+	Default
+	{
+		Tag "Gold Skull";
+		Species "YellowSkull";
+		Inventory.PickupMessage "You got the Gold Skull.";
+	}
+	States
+	{
+	Spawn:
+		USKL B -1;
+		Stop;
+	}
+}
+
+Class UTBlueSkull : BlueSkull replaces BlueSkull
+{
+	Default
+	{
+		Tag "Blue Skull";
+		Species "BlueSkull";
+		Inventory.PickupMessage "You got the Blue Skull.";
+	}
+	States
+	{
+	Spawn:
+		USKL C -1;
+		Stop;
+	}
+}
+
+Class UTRedKey : RedCard replaces RedCard
+{
+	Default
+	{
+		Tag "Red Key";
+		Species "RedCard";
+		Inventory.PickupMessage "You got the Red Key.";
+	}
+	States
+	{
+	Spawn:
+		UKEY A -1;
+		Stop;
+	}
+}
+
+Class UTGoldKey : YellowCard replaces YellowCard
+{
+	Default
+	{
+		Tag "Gold Key";
+		Species "YellowCard";
+		Inventory.PickupMessage "You got the Gold Key.";
+	}
+	States
+	{
+	Spawn:
+		UKEY B -1;
+		Stop;
+	}
+}
+
+Class UTBlueKey : BlueCard replaces BlueCard
+{
+	Default
+	{
+		Tag "Blue Key";
+		Species "BlueCard";
+		Inventory.PickupMessage "You got the Blue Key.";
+	}
+	States
+	{
+	Spawn:
+		UKEY C -1;
+		Stop;
+	}
+}
+
 Class GenericFlash : HUDMessageBase
 {
 	Color col;

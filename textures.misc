@@ -145,3 +145,9 @@ Sprite "CHIPA0",1,1{}
 Sprite "CHIPB0",1,1{}
 Sprite "CHIPC0",1,1{}
 Sprite "CHIPD0",1,1{}
+Sprite "USKLA0",1,1{}
+Sprite "USKLB0",1,1{}
+Sprite "USKLC0",1,1{}
+Sprite "UKEYA0",1,1{}
+Sprite "UKEYB0",1,1{}
+Sprite "UKEYC0",1,1{}
