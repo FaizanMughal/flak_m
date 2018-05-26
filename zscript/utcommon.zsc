@@ -690,6 +690,11 @@ Class UTMainHandler : StaticEventHandler
 		}
 	}
 
+	override void WorldThingSpawned( WorldEvent e )
+	{
+		if ( e.Thing.bBOSS ) e.Thing.bNOTELEFRAG = true;
+	}
+
 	ui void StartMenu()
 	{
 		if ( gamestate != GS_TITLELEVEL ) return;

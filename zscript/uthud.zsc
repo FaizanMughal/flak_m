@@ -179,13 +179,12 @@ Class UTHud : BaseStatusBar
 		Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha);
 	}
 
-	private bool UTDrawWeaponIcon( Weapon w, bool use, bool pending, double sx = 1.0 )
+	private bool UTDrawWeaponIcon( Weapon w, bool use, double sx = 1.0 )
 	{
 		for ( int i=0; i<14; i++ )
 		{
 			if ( !(w is IconClasses[i]) ) continue;
 			if ( use ) UTDrawTintedTex(Uses[i],sx);
-			else if ( pending ) UTDrawTintedTex(Icons[i],sx);
 			else UTDrawTintedTex(Icons[i],sx,tintcolor/2);
 			return true;
 		}
@@ -317,7 +316,7 @@ Class UTHud : BaseStatusBar
 			int slot = cw.SlotNumber?(cw.SlotNumber-1):9;
 			CurX = BaseX+slot*WeaponOffset;
 			CurY = BaseY;
-			UTDrawWeaponIcon(cw,true,false,0.8);
+			UTDrawWeaponIcon(cw,true,0.8);
 			CurX = BaseX+slot*WeaponOffset;
 			CurY = BaseY;
 			UTDrawPlainTex(WeaponBox,0.8);
@@ -329,6 +328,9 @@ Class UTHud : BaseStatusBar
 			CurY = BaseY-32*WeapScale;
 			DrawColor = GoldColor;
 			UTDrawColorTex(Flash,0.8);
+			CurX = BaseX+slot*WeaponOffset;
+			CurY = BaseY;
+			UTDrawWeaponIcon(pw,true,0.8);
 		}
 		Weapon wslots[10];
 		for ( Inventory i = CPlayer.mo.Inv; i; i=i.Inv )
@@ -348,8 +350,8 @@ Class UTHud : BaseStatusBar
 			CurY = BaseY;
 			if ( !wslots[i] )
 				UTDrawTintedTex(Slots[i],1.6,tintcolor/2);
-			else if ( wslots[i] != cw )
-				if ( !UTDrawWeaponIcon(wslots[i],false,wslots[i]==pw,0.8) )
+			else if ( (wslots[i] != cw) && (wslots[i] != pw) )
+				if ( !UTDrawWeaponIcon(wslots[i],false,0.8) )
 					UTDrawTintedTex(Slots[i],1.6,tintcolor/2);
 		}
 		for ( int i=0; i<10; i++ )

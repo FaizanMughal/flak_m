@@ -32,10 +32,10 @@ Currently implemented:
  - UT HUD
  - Impact Hammer (slot 1)
  - Chainsaw (slot 1)
+ - Translocator (slot 1)
 
 In progress:
 
- - Translocator (slot 1)
  - Enforcer (slot 2)
    - Dual Enforcers (slot 2)
  - Ripper (slot 6)

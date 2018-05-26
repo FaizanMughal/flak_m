@@ -133,6 +133,12 @@ chainsaw/idle	chainidl
 chainsaw/lower	chainpdn
 chainsaw/fire	sawhit
 
+transloc/throw	throwtgt
+transloc/return	rtarget
+transloc/spark	tdisrupt
+transloc/bounce	hit1
+transloc/hum	targeth
+
 ges/hit		gelhit
 ges/select	gelselec
 ges/fire	gelshot

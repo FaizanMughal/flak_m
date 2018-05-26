@@ -1,3 +1,18 @@
+Model "TranslocatorModule"
+{
+	Path "models"
+	Model 0 "Module_d.3d"
+	Skin 0 "tloc2_.png"
+	Scale -0.0672 0.056 0.056
+	PitchOffset 90
+	ZOffset 6
+	USEACTORPITCH
+
+	FrameIndex TMOD A 0 0
+	FrameIndex TMOD B 0 1
+	FrameIndex TMOD C 0 2
+}
+
 Model "Translocator"
 {
 	Path "models"
@@ -24,4 +39,108 @@ Model "Translocator"
 	ZOffset 6
 
 	FrameIndex TLCP B 1 0
+}
+
+Model "Translocator"
+{
+	Path "models"
+	Model 0 "Transloc_d.3d"
+	SurfaceSkin 0 0 "tloc1.png"
+	SurfaceSkin 0 1 "tloc2.png"
+	SurfaceSkin 0 2 "tloc3.png"
+	SurfaceSkin 0 3 "tloc4.png"
+	Scale 0.11 0.055 0.11
+	Offset -17.8 -22.8 -33.2
+	PitchOffset 87
+	RollOffset 5
+	AngleOffset 183
+
+	// select
+	FrameIndex TLCS A 0 18
+	FrameIndex TLCS B 0 19
+	FrameIndex TLCS C 0 20
+	FrameIndex TLCS D 0 21
+	FrameIndex TLCS E 0 22
+	FrameIndex TLCS F 0 23
+	FrameIndex TLCS G 0 24
+	FrameIndex TLCS H 0 25
+	FrameIndex TLCS I 0 26
+	FrameIndex TLCS J 0 27
+	FrameIndex TLCS K 0 28
+	FrameIndex TLCS L 0 29
+	// throw
+	FrameIndex TLCF A 0 32
+	FrameIndex TLCF B 0 33
+	FrameIndex TLCF C 0 34
+	FrameIndex TLCF D 0 35
+	FrameIndex TLCF E 0 36
+	FrameIndex TLCF F 0 37
+	FrameIndex TLCF G 0 38
+	FrameIndex TLCF H 0 39
+	FrameIndex TLCF I 0 40
+	FrameIndex TLCF J 0 41
+	FrameIndex TLCF K 0 42
+	FrameIndex TLCF L 0 43
+	FrameIndex TLCF M 0 44
+	FrameIndex TLCF N 0 45
+	// pre reset
+	FrameIndex TLCF O 0 46
+	FrameIndex TLCF P 0 47
+	FrameIndex TLCF Q 0 48
+	FrameIndex TLCF R 0 49
+	FrameIndex TLCF S 0 50
+	// idle
+	FrameIndex TLCI A 0 51
+	FrameIndex TLCI B 0 52
+	// down
+	FrameIndex TLCD A 0 66
+	FrameIndex TLCD B 0 67
+	FrameIndex TLCD C 0 68
+	FrameIndex TLCD D 0 69
+	FrameIndex TLCD E 0 70
+	FrameIndex TLCD F 0 71
+	FrameIndex TLCD G 0 72
+	// thrown frame
+	FrameIndex TLCT A 0 52
+	// thrown
+	FrameIndex TLCT B 0 53
+	FrameIndex TLCT C 0 54
+	FrameIndex TLCT D 0 55
+	FrameIndex TLCT E 0 56
+	FrameIndex TLCT F 0 57
+	FrameIndex TLCT G 0 58
+	FrameIndex TLCT H 0 59
+	FrameIndex TLCT I 0 60
+	FrameIndex TLCT J 0 61
+	FrameIndex TLCT K 0 62
+	FrameIndex TLCT L 0 63
+	FrameIndex TLCT M 0 64
+	// down 2
+	FrameIndex TLD2 A 0 77
+	FrameIndex TLD2 B 0 78
+	FrameIndex TLD2 C 0 79
+	FrameIndex TLD2 D 0 80
+	FrameIndex TLD2 E 0 81
+	FrameIndex TLD2 F 0 82
+	FrameIndex TLD2 G 0 83
+	// idle 2
+	FrameIndex TLI2 A 0 88
+	FrameIndex TLI2 B 0 89
+	FrameIndex TLI2 C 0 90
+	FrameIndex TLI2 D 0 91
+	FrameIndex TLI2 E 0 92
+	FrameIndex TLI2 F 0 93
+	FrameIndex TLI2 G 0 94
+	FrameIndex TLI2 H 0 95
+	FrameIndex TLI2 I 0 96
+	FrameIndex TLI2 J 0 97
+	FrameIndex TLI2 K 0 98
+	FrameIndex TLI2 L 0 99
+	FrameIndex TLI2 M 0 100
+	FrameIndex TLI2 N 0 101
+	FrameIndex TLI2 O 0 102
+	FrameIndex TLI2 P 0 103
+	FrameIndex TLI2 Q 0 104
+	FrameIndex TLI2 R 0 105
+	FrameIndex TLI2 S 0 106
 }
