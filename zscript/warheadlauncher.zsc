@@ -192,6 +192,48 @@ Class WarheadLight : DynamicLight
 	}
 }
 
+Class WarheadTrail : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+		+FORCEXYBILLBOARD;
+		+ROLLSPRITE;
+		+ROLLCENTER;
+		Scale 0.2;
+	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		double ang, pt;
+		scale *= FRandom[Puff](0.5,1.5);
+		alpha *= FRandom[Puff](0.5,1.5);
+		ang = FRandom[Puff](0,360);
+		pt = FRandom[Puff](-90,90);
+		vel += (cos(pt)*cos(ang),cos(pt)*sin(ang),-sin(pt))*FRandom[Puff](0.2,0.8);
+		roll = FRandom[Puff](0,360);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( level.frozen || globalfreeze ) return;
+		vel *= 0.99;
+		A_FadeOut(0.1);
+	}
+	States
+	{
+	Spawn:
+		RTRL A -1 Bright;
+		Stop;
+	}
+}
+
 Class WarShell : Actor
 {
 	double destangle, destpitch;
@@ -245,14 +287,24 @@ Class WarShell : Actor
 		Vector3 taildir = -(cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
 		if ( waterlevel > 0 )
 		{
-			for ( int i=0; i<8; i++ )
-				A_SpawnParticle("6060FF",0,Random[Warhead](10,30),FRandom[Warhead](2,4),0,taildir.x*32,taildir.y*32,taildir.z*32,taildir.x*2+FRandom[Warhead](-.5,.5),taildir.y*2+FRandom[Warhead](-.5,.5),taildir.z*2+FRandom[Warhead](-.5,.5),accelz:0.2,fadestepf:0);
+			for ( int i=0; i<4; i++ )
+			{
+				let s = Spawn("UTBubble",pos+taildir*32+(FRandom[Warhead](-.5,.5),FRandom[Warhead](-.5,.5),FRandom[Warhead](-.5,.5)));
+				s.vel = taildir*2;
+			}
 			return;
 		}
-		for ( int i=0; i<8; i++ )
-			A_SpawnParticle("404040",0,20,2,0,taildir.x*32,taildir.y*32,taildir.z*32,taildir.x*2+FRandom[Warhead](-.5,.5),taildir.y*2+FRandom[Warhead](-.5,.5),taildir.z*2+FRandom[Warhead](-.5,.5),accelz:0.1,sizestep:1);
-		for ( int i=0; i<8; i++ )
-			A_SpawnParticle("FFA020",SPF_FULLBRIGHT,10,6,0,taildir.x*35+FRandom[Warhead](-1,1),taildir.y*35+FRandom[Warhead](-1,1),taildir.z*35+FRandom[Warhead](-1,1),taildir.x*4+FRandom[Warhead](-.25,.25),taildir.y*4+FRandom[Warhead](-.25,.25),taildir.z*4+FRandom[Warhead](-.25,.25));
+		for ( int i=0; i<4; i++ )
+		{
+			let s = Spawn("UTSmoke",pos+taildir*32+(FRandom[Warhead](-.5,.5),FRandom[Warhead](-.5,.5),FRandom[Warhead](-.5,.5)));
+			s.vel = taildir*2;
+			s.SetShade("404040");
+		}
+		for ( int i=0; i<4; i++ )
+		{
+			let s = Spawn("WarheadTrail",pos+taildir*35+(FRandom[Warhead](-1,1),FRandom[Warhead](-1,1),FRandom[Warhead](-1,1)));
+			s.vel = taildir*4;
+		}
 	}
 	action void A_Vaporize()
 	{
@@ -545,7 +597,9 @@ Class WarheadLauncher : UTWeapon replaces BFG9000
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (x+(FRandom[Warhead](-.8,.8),FRandom[Warhead](-.8,.8),FRandom[Warhead](-.8,.8))).unit()*FRandom[Warhead](1,2);
-			A_SpawnParticle(Color(1,1,1)*Random[Warhead](32,128),0,Random[Warhead](40,50),FRandom[Warhead](4,12),0,origin.x-pos.x,origin.y-pos.y,origin.z-pos.z,pvel.x,pvel.y,pvel.z,0,0,0.03,0.5,-1,0.5);
+			let s = Spawn("UTSmoke",origin);
+			s.vel = pvel;
+			s.SetShade(Color(1,1,1)*Random[Warhead](32,128));
 		}
 	}
 	action void A_WarheadAlt()

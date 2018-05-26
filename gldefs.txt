@@ -570,27 +570,27 @@ PulseLight "UTGoldKeyLight"
 	Interval 2.0
 	Offset 0 16 0
 }
-Object "UTRedSkull"
+Object "RedSkull"
 {
-	Frame "USKL" { light "UTRedKeyLight" }
+	Frame "RSKU" { light "UTRedKeyLight" }
 }
-Object "UTBlueSkull"
+Object "BlueSkull"
 {
-	Frame "USKL" { light "UTBlueKeyLight" }
+	Frame "BSKU" { light "UTBlueKeyLight" }
 }
-Object "UTGoldSkull"
+Object "YellowSkull"
 {
-	Frame "USKL" { light "UTGoldKeyLight" }
+	Frame "YSKU" { light "UTGoldKeyLight" }
 }
-Object "UTRedKey"
+Object "RedCard"
 {
-	Frame "UKEY" { light "UTRedKeyLight" }
+	Frame "RKEY" { light "UTRedKeyLight" }
 }
-Object "UTBlueKey"
+Object "BlueCard"
 {
-	Frame "UKEY" { light "UTBlueKeyLight" }
+	Frame "BKEY" { light "UTBlueKeyLight" }
 }
-Object "UTGoldKey"
+Object "YellowCard"
 {
-	Frame "UKEY" { light "UTGoldKeyLight" }
+	Frame "YKEY" { light "UTGoldKeyLight" }
 }

@@ -176,7 +176,7 @@ Model "UDamage"
 	FrameIndex UDAM B 1 0
 }
 
-Model "UTRedSkull"
+Model "RedSkull"
 {
 	Path "models"
 	Model 0 "RelicSkull_d.3d"
@@ -186,9 +186,10 @@ Model "UTRedSkull"
 	ZOffset 12
 	ROTATING
 
-	FrameIndex USKL A 0 15
+	FrameIndex RSKU A 0 15
+	FrameIndex RSKU B 0 15
 }
-Model "UTGoldSkull"
+Model "YellowSkull"
 {
 	Path "models"
 	Model 0 "RelicSkull_d.3d"
@@ -198,9 +199,10 @@ Model "UTGoldSkull"
 	ZOffset 12
 	ROTATING
 
-	FrameIndex USKL B 0 15
+	FrameIndex YSKU A 0 15
+	FrameIndex YSKU B 0 15
 }
-Model "UTBlueSkull"
+Model "BlueSkull"
 {
 	Path "models"
 	Model 0 "RelicSkull_d.3d"
@@ -210,9 +212,10 @@ Model "UTBlueSkull"
 	ZOffset 12
 	ROTATING
 
-	FrameIndex USKL C 0 15
+	FrameIndex BSKU A 0 15
+	FrameIndex BSKU B 0 15
 }
-Model "UTRedKey"
+Model "RedCard"
 {
 	Path "models"
 	Model 0 "DomR_d.3d"
@@ -222,9 +225,10 @@ Model "UTRedKey"
 	ZOffset 16
 	ROTATING
 
-	FrameIndex UKEY A 0 0
+	FrameIndex RKEY A 0 0
+	FrameIndex RKEY B 0 0
 }
-Model "UTGoldKey"
+Model "YellowCard"
 {
 	Path "models"
 	Model 0 "MercSymbol_d.3d"
@@ -234,9 +238,10 @@ Model "UTGoldKey"
 	ZOffset 16
 	ROTATING
 
-	FrameIndex UKEY B 0 0
+	FrameIndex YKEY A 0 0
+	FrameIndex YKEY B 0 0
 }
-Model "UTBlueKey"
+Model "BlueCard"
 {
 	Path "models"
 	Model 0 "DomB_d.3d"
@@ -246,7 +251,8 @@ Model "UTBlueKey"
 	ZOffset 16
 	ROTATING
 
-	FrameIndex UKEY C 0 0
+	FrameIndex BKEY A 0 0
+	FrameIndex BKEY B 0 0
 }
 
 Model "UTBackpack"
@@ -320,4 +326,22 @@ Model "Searchlight"
 	ZOffset 9
 
 	FrameIndex SLIT A 0 0
+}
+
+Model "UTChip"
+{
+	Path "models"
+	Model 0 "ChipM_d.3d"
+	Skin 0 "Chip1.png"
+	Scale -0.134 0.12 0.12
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 0.5
+	ZOffset 2
+
+	FrameIndex CHIP A 0 0
+	FrameIndex CHIP B 0 1
+	FrameIndex CHIP C 0 2
+	FrameIndex CHIP D 0 3
 }

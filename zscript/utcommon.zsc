@@ -312,87 +312,233 @@ Class UTItemFog : Actor replaces ItemFog
 	}
 }
 
-Class UTRedSkull : RedSkull replaces RedSkull
+Class UTSpark : Actor
 {
 	Default
 	{
-		Tag "Red Skull";
-		Inventory.PickupMessage "You got the Red Skull.";
+		RenderStyle "Add";
+		Radius 2;
+		Height 0;
+		+NOBLOCKMAP;
+		+FORCEXYBILLBOARD;
+		+MISSILE;
+		+MOVEWITHSECTOR;
+		+THRUACTORS;
+		+NOTELEPORT;
+		BounceType "Doom";
+		BounceFactor 0.4;
+		Gravity 0.5;
+		Scale 0.05;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( waterlevel > 0 )
+		{
+			let b = Spawn("UTBubble",pos);
+			b.vel = vel;
+			b.scale *= 0.3;
+			Destroy();
+		}
 	}
 	States
 	{
 	Spawn:
-		USKL A -1;
+		SPRK A 1 Bright A_FadeOut(0.01);
+		Wait;
+	Death:
+		SPRK A 1 Bright A_FadeOut(0.05);
+		Wait;
+	}
+}
+
+Class UTChip : Actor
+{
+	int deadtimer;
+	double rollvel, anglevel, pitchvel;
+
+	Default
+	{
+		Radius 2;
+		Height 0;
+		+NOBLOCKMAP;
+		+MISSILE;
+		+MOVEWITHSECTOR;
+		+THRUACTORS;
+		+NOTELEPORT;
+		BounceType "Doom";
+		BounceFactor 0.3;
+		Gravity 0.7;
+		Scale 0.2;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		deadtimer = 0;
+		anglevel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
+		pitchvel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
+		rollvel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
+		frame = Random[Junk](0,3);
+		scale *= Frandom[Junk](0.8,1.2);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( level.frozen || globalfreeze ) return;
+		if ( InStateSequence(CurState,ResolveState("Death")) )
+		{
+			deadtimer++;
+			if ( deadtimer > 300 ) A_FadeOut(0.05);
+			return;
+		}
+	}
+	States
+	{
+	Spawn:
+		CHIP # 1
+		{
+			A_SetAngle(angle+anglevel,SPF_INTERPOLATE);
+			A_SetPitch(pitch+pitchvel,SPF_INTERPOLATE);
+			A_SetRoll(roll+rollvel,SPF_INTERPOLATE);
+		}
+		Loop;
+	Bounce:
+		CHIP # 0
+		{
+			anglevel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
+			pitchvel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
+			rollvel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
+		}
+		Goto Spawn;
+	Death:
+		CHIP # -1;
+		Stop;
+	Dummy:
+		CHIP ABCD -1;
 		Stop;
 	}
 }
-Class UTGoldSkull : YellowSkull replaces YellowSkull
+
+Class UTBubble : Actor
 {
 	Default
 	{
-		Tag "Gold Skull";
-		Inventory.PickupMessage "You got the Gold Skull.";
+		RenderStyle "Add";
+		Radius 2;
+		Height 0;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+DONTSPLASH;
+		+FORCEXYBILLBOARD;
+		+NOTELEPORT;
+		Scale 0.05;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		double ang, pt;
+		scale *= FRandom[Puff](0.5,1.5);
+		ang = FRandom[Puff](0,360);
+		pt = FRandom[Puff](-90,90);
+		vel += (cos(pt)*cos(ang),cos(pt)*sin(ang),-sin(pt))*FRandom[Puff](0.2,0.8);
+		if ( waterlevel <= 0 ) Destroy();
+		SetState(ResolveState("Spawn")+Random[Puff](0,2));
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( level.frozen || globalfreeze ) return;
+		vel *= 0.96;
+		vel.z += 0.05;
+		if ( (waterlevel <= 0) || !Random[Puff](0,100) ) Destroy();
 	}
 	States
 	{
 	Spawn:
-		USKL B -1;
+		BUBL ABC -1;
 		Stop;
 	}
 }
-Class UTBlueSkull : BlueSkull replaces BlueSkull
+
+Class UTSmoke : Actor
 {
 	Default
 	{
-		Tag "Blue Skull";
-		Inventory.PickupMessage "You got the Blue Skull.";
+		RenderStyle "Shaded";
+		StencilColor "FFFFFF";
+		Radius 2;
+		Height 0;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+DONTSPLASH;
+		+FORCEXYBILLBOARD;
+		+THRUACTORS;
+		+NOTELEPORT;
+		BounceType "Hexen";
+		BounceFactor 1.0;
+		WallBounceFactor 1.0;
+		Scale 0.5;
 	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		double ang, pt;
+		scale *= FRandom[Puff](0.5,1.5);
+		alpha *= FRandom[Puff](0.5,1.5);
+		ang = FRandom[Puff](0,360);
+		pt = FRandom[Puff](-90,90);
+		vel += (cos(pt)*cos(ang),cos(pt)*sin(ang),-sin(pt))*FRandom[Puff](0.2,0.8);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( level.frozen || globalfreeze ) return;
+		vel *= 0.96;
+		vel.z += 0.01;
+		A_FadeOut(1/32.);
+		if ( waterlevel > 0 )
+		{
+			let b = Spawn("UTBubble",pos);
+			b.vel = vel;
+			Destroy();
+		}
+	}
+
 	States
 	{
 	Spawn:
-		USKL C -1;
+		TNT1 A 0 NoDelay A_Jump(255,"US1","US2","US3","US4","US5","US6","US7","US8","US9","US10");
 		Stop;
-	}
-}
-Class UTRedKey : RedCard replaces RedCard
-{
-	Default
-	{
-		Tag "Red Key";
-		Inventory.PickupMessage "You got the Red Key.";
-	}
-	States
-	{
-	Spawn:
-		UKEY A -1;
+	US1:
+		US1_ ABCDEFGHIJKLMNOP 2;
 		Stop;
-	}
-}
-Class UTGoldKey : YellowCard replaces YellowCard
-{
-	Default
-	{
-		Tag "Gold Key";
-		Inventory.PickupMessage "You got the Gold Key.";
-	}
-	States
-	{
-	Spawn:
-		UKEY B -1;
+	US2:
+		US2_ ABCDEFGHIJKLMNOP 2;
 		Stop;
-	}
-}
-Class UTBlueKey : BlueCard replaces BlueCard
-{
-	Default
-	{
-		Tag "Blue Key";
-		Inventory.PickupMessage "You got the Blue Key.";
-	}
-	States
-	{
-	Spawn:
-		UKEY C -1;
+	US3:
+		US3_ ABCDEFGHIJKLMNOP 2;
+		Stop;
+	US4:
+		US4_ ABCDEFGHIJKLMNO 2;
+		Stop;
+	US5:
+		US5_ ABCDEFGHIJKLMNO 2;
+		Stop;
+	US6:
+		US6_ ABCDEFGHIJKLMNOP 2;
+		Stop;
+	US7:
+		US7_ ABCDEFGHIJKLMNOP 2;
+		Stop;
+	US8:
+		US8_ ABCDEFGHIJKLMNOP 2;
+		Stop;
+	US9:
+		US9_ ABCDEFGHIJKLMNOP 2;
+		Stop;
+	US10:
+		US10 ABCDEFGHIJKLMNOP 2;
 		Stop;
 	}
 }
@@ -435,12 +581,10 @@ Class QueuedFlash
 Class UTMainHandler : StaticEventHandler
 {
 	ui TextureID tex;
-	transient int lastfrag;
 	Array<QueuedFlash> flashes;
 
 	override void WorldLoaded( WorldEvent e )
 	{
-		lastfrag = int.min;
 		if ( gamestate != GS_LEVEL || e.IsSaveGame ) return;
 		if ( level.levelname ~== "Modder Test Map" )
 		{
@@ -489,8 +633,6 @@ Class UTMainHandler : StaticEventHandler
 			StatusBar.AttachMessage(gf,0,BaseStatusBar.HUDMSGLayer_UnderHUD);
 		}
 		if ( gametic <= 0 ) StartMenu();
-		if ( !(StatusBar is 'UTHUD') ) return;
-		UTHUD(StatusBar).lastfrag = lastfrag;
 	}
 
 	override void RenderOverlay( RenderEvent e )
@@ -499,12 +641,6 @@ Class UTMainHandler : StaticEventHandler
 		if ( tex.IsNull() || !tex.IsValid() ) return;
 		Screen.Dim("Black",1.0,0,0,Screen.GetWidth(),Screen.GetHeight());
 		Screen.DrawTexture(tex,true,0,0,DTA_VirtualWidth,1024,DTA_VirtualHeight,768);
-	}
-
-	override void WorldThingDamaged( WorldEvent e )
-	{
-		if ( (e.Thing.Health <= 0) && e.DamageSource && (e.DamageSource != e.Thing) && e.DamageSource.player && (e.DamageSource.player == players[consoleplayer]) )
-			lastfrag = gametic;
 	}
 
 	static void DoFlash( Actor camera, Color c, int duration )

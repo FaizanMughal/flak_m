@@ -28,7 +28,7 @@ Class UTHud : BaseStatusBar
 	double HScale;
 	Color tintcolor, bgcolor;
 	double opacity;
-	int lastfrag, lastpickup, lastslot;
+	int lastfrag, lastfragcnt, lastpickup, lastslot;
 	ViewTracer vtracer;
 	Actor lastseen;
 	int lastseentic;
@@ -42,6 +42,8 @@ Class UTHud : BaseStatusBar
 	{
 		Super.Init();
 		SetSize(0,320,200);
+		lastfrag = int.min;
+		lastfragcnt = 0;
 		vtracer = new("ViewTracer");
 		// Set defaults
 		DrawColor = WhiteColor = "White";
@@ -310,7 +312,7 @@ Class UTHud : BaseStatusBar
 		double WeaponOffset = 128*WeapScale;
 		let cw = CPlayer.ReadyWeapon;
 		let pw = CPlayer.PendingWeapon;
-		if ( cw )
+		if ( cw && (cw.SlotNumber != -1) )
 		{
 			int slot = cw.SlotNumber?(cw.SlotNumber-1):9;
 			CurX = BaseX+slot*WeaponOffset;
@@ -320,7 +322,7 @@ Class UTHud : BaseStatusBar
 			CurY = BaseY;
 			UTDrawPlainTex(WeaponBox,0.8);
 		}
-		if ( pw && (pw != WP_NOCHANGE) )
+		if ( pw && (pw.SlotNumber != -1) && (pw != WP_NOCHANGE) )
 		{
 			int slot = pw.SlotNumber?(pw.SlotNumber-1):9;
 			CurX = BaseX+slot*WeaponOffset-64*WeapScale;
@@ -333,6 +335,7 @@ Class UTHud : BaseStatusBar
 		{
 			if ( !(i is 'Weapon') ) continue;
 			let w = Weapon(i);
+			if ( w.SlotNumber == -1 ) continue;
 			int slot = w.SlotNumber?(w.SlotNumber-1):9;
 			if ( !wslots[slot] ) wslots[slot] = w;
 			else if ( (wslots[slot] != cw) && ((wslots[slot] != pw)
@@ -344,14 +347,10 @@ Class UTHud : BaseStatusBar
 			CurX = BaseX+i*WeaponOffset;
 			CurY = BaseY;
 			if ( !wslots[i] )
-			{
 				UTDrawTintedTex(Slots[i],1.6,tintcolor/2);
-			}
 			else if ( wslots[i] != cw )
-			{
 				if ( !UTDrawWeaponIcon(wslots[i],false,wslots[i]==pw,0.8) )
 					UTDrawTintedTex(Slots[i],1.6,tintcolor/2);
-			}
 		}
 		for ( int i=0; i<10; i++ )
 		{
@@ -471,6 +470,16 @@ Class UTHud : BaseStatusBar
 	override void Tick()
 	{
 		Super.Tick();
+		if ( deathmatch||teamplay )
+		{
+			if ( CPlayer.fragcount != lastfragcnt ) lastfrag = gametic;
+			lastfragcnt = CPlayer.fragcount;
+		}
+		else
+		{
+			if ( CPlayer.killcount != lastfragcnt ) lastfrag = gametic;
+			lastfragcnt = CPlayer.killcount;
+		}
 		vtracer.ignore = CPlayer.mo;
 		vtracer.trace(CPlayer.mo.Vec2OffsetZ(0,0,CPlayer.viewz),CPlayer.mo.CurSector,(cos(CPlayer.mo.angle)*cos(CPlayer.mo.pitch),sin(CPlayer.mo.angle)*cos(CPlayer.mo.pitch),-sin(CPlayer.mo.pitch)),1000,0);
 		if ( vtracer.Results.HitType != TRACE_HitActor ) return;

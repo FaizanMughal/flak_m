@@ -44,7 +44,7 @@ Class DamageAmpLight : DynamicLight
 			Destroy();
 			return;
 		}
-		SetOrigin(target.pos+(0,0,target.height*0.5),true);
+		SetOrigin(target.pos,true);
 		args[LIGHT_INTENSITY] = Random[ASMD](10,12)*8;
 		bDORMANT = Powerup(master).isBlinking();
 	}
