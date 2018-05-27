@@ -42,6 +42,7 @@ In progress:
  - Minigun (slot 7)
  - Rocket Launcher (slot 9)
  - Sniper Rifle (slot 0)
+ - Jump Boots (radsuit, has "iron boots" powerup effect to compensate, will full replace Shielding Suit when implemented)
 
 Things to do eventually:
 

@@ -170,3 +170,13 @@ decalgroup Pock
 	Pock2	1
 	Pock3	1
 }
+
+decal RazorBlast
+{
+	pic ripblast
+	shade "00 00 00"
+	randomflipx
+	randomflipy
+	x-scale 0.45
+	y-scale 0.45
+}

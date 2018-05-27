@@ -176,6 +176,14 @@ pulse/fly	pulsefly
 pulse/select	pulsepck
 pulse/reload	pulserel
 
+ripper/select	beam
+ripper/fire	stblade
+ripper/altfire	razoralt
+ripper/hum	razorhum
+ripper/hit	bladehit
+ripper/flesh	bladethk
+ripper/althit	expl03
+
 flak/select	pdown
 flak/load	hidraul2
 flak/reload	load1

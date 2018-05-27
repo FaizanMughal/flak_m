@@ -362,10 +362,6 @@ Brightmap Texture "models/RazSkin.png"
 {
 	Map "brightmaps/RazSkin.png"
 }
-Brightmap Texture "models/RazTrail.png"
-{
-	Map "brightmaps/fullbright.png"
-}
 Brightmap Texture "models/JImpactHammer4.png"
 {
 	Map "brightmaps/JImpactHammer4.png"
