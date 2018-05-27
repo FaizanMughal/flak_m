@@ -75,7 +75,8 @@ Class ImpactHammer : UTWeapon replaces Fist
 		LineTrace(angle,80,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			d.HitActor.DamageMobj(invoker,self,60*realcharge,'impact');
+			int dmg = Random[Impact](50,60)*realcharge;
+			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact');
 			d.HitActor.vel = x*(1000/d.HitActor.mass)*realcharge;
 			if ( d.HitActor.bNOBLOOD )
 			{
@@ -85,15 +86,16 @@ Class ImpactHammer : UTWeapon replaces Fist
 			}
 			else
 			{
-				d.HitActor.TraceBleed(60*realcharge,invoker);
-				d.HitActor.SpawnBlood(d.HitLocation,atan2(-d.HitDir.y,-d.HitDir.x),60*realcharge);
+				d.HitActor.TraceBleed(dmg,invoker);
+				d.HitActor.SpawnBlood(d.HitLocation,atan2(d.HitDir.y,d.HitDir.x)+180,dmg);
 			}
 		}
 		else if ( d.HitType != TRACE_HitNone )
 		{
 			realcharge = max(1.0,realcharge);
-			DamageMobj(invoker,self,24*realcharge,'impact');	// It's a flat damage of 36 on UT, but I think it's more fair for it to scale
-			TraceBleed(24*realcharge,invoker);
+			int dmg = Random[Impact](16,24)*realcharge;	// It's a flat damage of 36 on UT, but I think it's more fair for it to scale
+			dmg = DamageMobj(invoker,self,dmg,'impact');
+			TraceBleed(dmg,invoker);
 			vel -= x*(1200/mass)*realcharge;
 			let p = Spawn("HammerImpact",d.HitLocation-d.HitDir*4);
 			p.angle = atan2(d.HitDir.y,d.HitDir.x);
@@ -135,12 +137,14 @@ Class ImpactHammer : UTWeapon replaces Fist
 		double dscale = d.Distance/180.;
 		if ( d.HitType == TRACE_HitActor )
 		{
-			d.HitActor.DamageMobj(invoker,self,20*dscale,'impact');
+			int dmg = Random[Impact](16,20)*dscale;
+			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact');
 			d.HitActor.vel = x*(500/d.HitActor.mass)*dscale;
 		}
 		else if ( d.HitType != TRACE_HitNone )
 		{
-			DamageMobj(invoker,self,24*dscale,'impact');
+			int dmg = Random[Impact](16,24)*dscale;
+			dmg = DamageMobj(invoker,self,dmg,'impact');
 			vel -= x*(600/mass)*dscale;
 			if ( d.HitType == TRACE_HitWall ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation-d.HitDir*4);
 		}

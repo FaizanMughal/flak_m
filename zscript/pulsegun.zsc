@@ -330,6 +330,12 @@ Class PulseGun : UTWeapon
 
 	Property ClipCount : clipcount;
 
+	override void PostRender()
+	{
+		if ( !CVar.GetCVar('flak_pulsereload').GetBool() ) return;
+		Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,Screen.GetHeight()*0.88,String.Format("Clip: % 2d / 50",clipcount));
+	}
+
 	action void A_Reloading()
 	{
 		Weapon weap = Weapon(invoker);

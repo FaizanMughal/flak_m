@@ -45,7 +45,7 @@ Model "PulseGun"
 	Scale 0.08 0.08 0.08
 	Offset 8.5 -25.0 -4.5
 
-	FrameIndex PMUZ A 0 0
+	FrameIndex PMUZ A 2 0
 }
 
 Model "PulseGun"

@@ -139,6 +139,16 @@ transloc/spark	tdisrupt
 transloc/bounce	hit1
 transloc/hum	targeth
 
+enforcer/select	cocking
+enforcer/shoot	e_shot
+enforcer/reload	reload
+enforcer/click	click
+
+bullet/casing	shell2
+bullet/hit1	impact1
+bullet/hit2	impact2
+$random bullet/hit { bullet/hit1 bullet/hit2 }
+
 ges/hit		gelhit
 ges/select	gelselec
 ges/fire	gelshot

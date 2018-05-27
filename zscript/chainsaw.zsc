@@ -58,7 +58,8 @@ Class UTChainsaw : UTWeapon replaces Chainsaw
 		LineTrace(angle,90,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			d.HitActor.DamageMobj(invoker,self,20,'slashed');
+			int dmg = Random[Chainsaw](16,22);
+			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed');
 			d.HitActor.vel -= x*(500/d.HitActor.mass);
 			vel += x*(100/mass);
 			if ( d.HitActor.player ) d.HitActor.A_QuakeEx(5,5,5,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
@@ -70,8 +71,8 @@ Class UTChainsaw : UTWeapon replaces Chainsaw
 			}
 			else
 			{
-				d.HitActor.TraceBleed(20,invoker);
-				d.HitActor.SpawnBlood(d.HitLocation,atan2(-d.HitDir.y,-d.HitDir.x),20);
+				d.HitActor.TraceBleed(dmg,invoker);
+				d.HitActor.SpawnBlood(d.HitLocation,atan2(d.HitDir.y,d.HitDir.x)+180,dmg);
 			}
 		}
 		else if ( d.HitType != TRACE_HitNone )
@@ -94,7 +95,8 @@ Class UTChainsaw : UTWeapon replaces Chainsaw
 		LineTrace(angle,90,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			d.HitActor.DamageMobj(invoker,self,110,'Decapitated');
+			int dmg = Random[Chainsaw](100,110);
+			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'Decapitated');
 			d.HitActor.vel = -y*(1200/d.HitActor.mass);
 			vel += x*(100/mass);
 			if ( d.HitActor.player ) d.HitActor.A_QuakeEx(5,5,5,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
@@ -106,8 +108,8 @@ Class UTChainsaw : UTWeapon replaces Chainsaw
 			}
 			else
 			{
-				d.HitActor.TraceBleed(110,invoker);
-				d.HitActor.SpawnBlood(d.HitLocation,atan2(-d.HitDir.y,-d.HitDir.x),110);
+				d.HitActor.TraceBleed(dmg,invoker);
+				d.HitActor.SpawnBlood(d.HitLocation,atan2(d.HitDir.y,d.HitDir.x)+180,dmg);
 			}
 		}
 		else if ( d.HitType != TRACE_HitNone )

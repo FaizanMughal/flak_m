@@ -135,3 +135,38 @@ decal ImpactMark
 	x-scale 0.25
 	y-scale 0.25
 }
+
+decal Pock1
+{
+	pic pock0_t
+	shade "00 00 00"
+	x-scale 0.1
+	y-scale 0.1
+	randomflipx
+	randomflipy
+}
+decal Pock2
+{
+	pic pock2_t
+	shade "00 00 00"
+	x-scale 0.1
+	y-scale 0.1
+	randomflipx
+	randomflipy
+}
+decal Pock3
+{
+	pic pock4_t
+	shade "00 00 00"
+	x-scale 0.1
+	y-scale 0.1
+	randomflipx
+	randomflipy
+}
+
+decalgroup Pock
+{
+	Pock1	1
+	Pock2	1
+	Pock3	1
+}

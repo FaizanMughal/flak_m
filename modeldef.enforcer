@@ -10,6 +10,22 @@ Model "EClip"
 	FrameIndex ECLP A 0 0
 }
 
+Model "UTCasing"
+{
+	Path "models"
+	Model 0 "Shellc_d.3d"
+	Skin 0 "Shellcase1.png"
+	Scale -0.014 0.014 0.0168
+	ZOffset 1
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex PCAS A 0 0
+}
+
 Model "Enforcer"
 {
 	Path "models"
@@ -34,4 +50,343 @@ Model "Enforcer"
 	ZOffset 6
 
 	FrameIndex ENFP B 1 0
+}
+
+Model "Enforcer"
+{
+	Path "models"
+	Model 3 "Flat_d.3d"
+	Skin 3 "EMuz1.png"
+	PitchOffset 90
+	Scale 0.04 0.04 0.04
+	Offset 10.4 -25.0 -2.9
+
+	FrameIndex EMUZ A 3 0
+}
+Model "Enforcer"
+{
+	Path "models"
+	Model 3 "Flat_d.3d"
+	Skin 3 "EMuz1.png"
+	PitchOffset 90
+	Scale 0.04 0.04 0.04
+	Offset 1.9 -25.0 -9.3
+
+	FrameIndex EMUZ B 3 0
+}
+Model "Enforcer"
+{
+	Path "models"
+	Model 3 "Flat_d.3d"
+	Skin 3 "EMuz1.png"
+	PitchOffset 90
+	Scale 0.04 0.04 0.04
+	Offset -10.4 -25.0 -2.9
+
+	FrameIndex EMUZ C 3 0
+}
+Model "Enforcer"
+{
+	Path "models"
+	Model 3 "Flat_d.3d"
+	Skin 3 "EMuz1.png"
+	PitchOffset 90
+	Scale 0.04 0.04 0.04
+	Offset -1.9 -25.0 -9.3
+
+	FrameIndex EMUZ D 3 0
+}
+
+Model "Enforcer"
+{
+	Path "models"
+	Model 0 "AutoMR_d.3d"
+	SurfaceSkin 0 0 "Jtutot1.png"
+	SurfaceSkin 0 1 "Jtutot2.png"
+	SurfaceSkin 0 2 "Jtutot3.png"
+	SurfaceSkin 0 3 "Jtutot4.png"
+	Scale 0.14 0.08 0.12
+	Offset 8.6 -12.8 -13.5
+	PitchOffset 90
+
+	// Fire
+	FrameIndex ENFF A 0 6
+	FrameIndex ENFF B 0 7
+	FrameIndex ENFF C 0 8
+	FrameIndex ENFF D 0 9
+	FrameIndex ENFF E 0 10
+	FrameIndex ENFF F 0 11
+	FrameIndex ENFF G 0 12
+	FrameIndex ENFF H 0 13
+	FrameIndex ENFF I 0 14
+	FrameIndex ENFF J 0 15
+	// Reload
+	FrameIndex ENFR A 0 22
+	FrameIndex ENFR B 0 23
+	FrameIndex ENFR C 0 24
+	FrameIndex ENFR D 0 25
+	FrameIndex ENFR E 0 26
+	FrameIndex ENFR F 0 27
+	FrameIndex ENFR G 0 28
+	FrameIndex ENFR H 0 29
+	FrameIndex ENFR I 0 30
+	FrameIndex ENFR J 0 31
+	FrameIndex ENFR K 0 32
+	FrameIndex ENFR L 0 33
+	FrameIndex ENFR M 0 34
+	FrameIndex ENFR N 0 35
+	FrameIndex ENFR O 0 36
+	FrameIndex ENFR P 0 37
+	FrameIndex ENFR Q 0 38
+	FrameIndex ENFR R 0 39
+	FrameIndex ENFR S 0 40
+	FrameIndex ENFR T 0 41
+	FrameIndex ENFR U 0 42
+	FrameIndex ENFR V 0 43
+	FrameIndex ENFR W 0 44
+	FrameIndex ENFR X 0 45
+	FrameIndex ENFR Y 0 46
+	FrameIndex ENFR Z 0 47
+	FrameIndex ENR2 A 0 48
+	FrameIndex ENR2 B 0 49
+	// Select
+	FrameIndex ENFS A 0 60
+	FrameIndex ENFS B 0 61
+	FrameIndex ENFS C 0 62
+	FrameIndex ENFS D 0 63
+	FrameIndex ENFS E 0 64
+	FrameIndex ENFS F 0 65
+	FrameIndex ENFS G 0 66
+	FrameIndex ENFS H 0 67
+	FrameIndex ENFS I 0 68
+	FrameIndex ENFS J 0 69
+	FrameIndex ENFS K 0 70
+	FrameIndex ENFS L 0 71
+	FrameIndex ENFS M 0 72
+	FrameIndex ENFS N 0 73
+	FrameIndex ENFS O 0 74
+	FrameIndex ENFS P 0 75
+	FrameIndex ENFS Q 0 76
+	FrameIndex ENFS R 0 77
+	FrameIndex ENFS S 0 78
+	FrameIndex ENFS T 0 79
+	FrameIndex ENFS U 0 80
+	FrameIndex ENFS V 0 81
+	FrameIndex ENFS W 0 82
+	FrameIndex ENFS X 0 83
+	FrameIndex ENFS Y 0 84
+	FrameIndex ENFS Z 0 85
+	// Idle
+	FrameIndex ENFI A 0 86
+	FrameIndex ENFI B 0 87
+	// Twiddle
+	FrameIndex ENFT A 0 87
+	FrameIndex ENFT B 0 88
+	FrameIndex ENFT C 0 89
+	FrameIndex ENFT D 0 90
+	FrameIndex ENFT E 0 91
+	FrameIndex ENFT F 0 92
+	FrameIndex ENFT G 0 93
+	FrameIndex ENFT H 0 94
+	FrameIndex ENFT I 0 95
+	FrameIndex ENFT J 0 96
+	FrameIndex ENFT K 0 97
+	FrameIndex ENFT L 0 98
+	FrameIndex ENFT M 0 99
+	FrameIndex ENFT N 0 100
+	FrameIndex ENFT O 0 101
+	FrameIndex ENFT P 0 102
+	FrameIndex ENFT Q 0 103
+	FrameIndex ENFT R 0 104
+	FrameIndex ENFT S 0 105
+	FrameIndex ENFT T 0 106
+	FrameIndex ENFT U 0 107
+	FrameIndex ENFT V 0 108
+	FrameIndex ENFT W 0 109
+	FrameIndex ENFT X 0 110
+	FrameIndex ENFT Y 0 111
+	// Down
+	FrameIndex ENFD A 0 115
+	FrameIndex ENFD B 0 116
+	FrameIndex ENFD C 0 117
+	FrameIndex ENFD D 0 118
+	FrameIndex ENFD E 0 119
+	FrameIndex ENFD F 0 120
+	FrameIndex ENFD G 0 121
+	FrameIndex ENFD H 0 122
+	FrameIndex ENFD I 0 123
+	FrameIndex ENFD J 0 124
+	FrameIndex ENFD K 0 125
+	FrameIndex ENFD L 0 126
+	// T1
+	FrameIndex ENFA A 0 130
+	FrameIndex ENFA B 0 131
+	FrameIndex ENFA C 0 132
+	FrameIndex ENFA D 0 133
+	FrameIndex ENFA E 0 134
+	FrameIndex ENFA F 0 135
+	// Alt Fire
+	FrameIndex ENFA G 0 136
+	FrameIndex ENFA H 0 137
+	FrameIndex ENFA I 0 138
+	FrameIndex ENFA J 0 139
+	FrameIndex ENFA K 0 140
+	FrameIndex ENFA L 0 141
+	FrameIndex ENFA M 0 142
+	FrameIndex ENFA N 0 143
+	// T2
+	FrameIndex ENFA O 0 144
+	FrameIndex ENFA P 0 145
+	FrameIndex ENFA Q 0 146
+	FrameIndex ENFA R 0 147
+	FrameIndex ENFA S 0 148
+	FrameIndex ENFA T 0 149
+	FrameIndex ENFA U 0 150
+}
+
+Model "Enforcer"
+{
+	Path "models"
+	Model 2 "AutoML_d.3d"
+	SurfaceSkin 2 0 "Jtutot1.png"
+	SurfaceSkin 2 1 "Jtutot2.png"
+	SurfaceSkin 2 2 "Jtutot3.png"
+	SurfaceSkin 2 3 "Jtutot4.png"
+	Scale 0.14 0.08 0.12
+	Offset -8.8 -12.8 -13.5
+	PitchOffset 90
+
+	// Fire
+	FrameIndex 2NFF A 2 6
+	FrameIndex 2NFF B 2 7
+	FrameIndex 2NFF C 2 8
+	FrameIndex 2NFF D 2 9
+	FrameIndex 2NFF E 2 10
+	FrameIndex 2NFF F 2 11
+	FrameIndex 2NFF G 2 12
+	FrameIndex 2NFF H 2 13
+	FrameIndex 2NFF I 2 14
+	FrameIndex 2NFF J 2 15
+	// Reload
+	FrameIndex 2NFR A 2 22
+	FrameIndex 2NFR B 2 23
+	FrameIndex 2NFR C 2 24
+	FrameIndex 2NFR D 2 25
+	FrameIndex 2NFR E 2 26
+	FrameIndex 2NFR F 2 27
+	FrameIndex 2NFR G 2 28
+	FrameIndex 2NFR H 2 29
+	FrameIndex 2NFR I 2 30
+	FrameIndex 2NFR J 2 31
+	FrameIndex 2NFR K 2 32
+	FrameIndex 2NFR L 2 33
+	FrameIndex 2NFR M 2 34
+	FrameIndex 2NFR N 2 35
+	FrameIndex 2NFR O 2 36
+	FrameIndex 2NFR P 2 37
+	FrameIndex 2NFR Q 2 38
+	FrameIndex 2NFR R 2 39
+	FrameIndex 2NFR S 2 40
+	FrameIndex 2NFR T 2 41
+	FrameIndex 2NFR U 2 42
+	FrameIndex 2NFR V 2 43
+	FrameIndex 2NFR W 2 44
+	FrameIndex 2NFR X 2 45
+	FrameIndex 2NFR Y 2 46
+	FrameIndex 2NFR Z 2 47
+	FrameIndex 2NR2 A 2 48
+	FrameIndex 2NR2 B 2 49
+	// Select
+	FrameIndex 2NFS A 2 60
+	FrameIndex 2NFS B 2 61
+	FrameIndex 2NFS C 2 62
+	FrameIndex 2NFS D 2 63
+	FrameIndex 2NFS E 2 64
+	FrameIndex 2NFS F 2 65
+	FrameIndex 2NFS G 2 66
+	FrameIndex 2NFS H 2 67
+	FrameIndex 2NFS I 2 68
+	FrameIndex 2NFS J 2 69
+	FrameIndex 2NFS K 2 70
+	FrameIndex 2NFS L 2 71
+	FrameIndex 2NFS M 2 72
+	FrameIndex 2NFS N 2 73
+	FrameIndex 2NFS O 2 74
+	FrameIndex 2NFS P 2 75
+	FrameIndex 2NFS Q 2 76
+	FrameIndex 2NFS R 2 77
+	FrameIndex 2NFS S 2 78
+	FrameIndex 2NFS T 2 79
+	FrameIndex 2NFS U 2 80
+	FrameIndex 2NFS V 2 81
+	FrameIndex 2NFS W 2 82
+	FrameIndex 2NFS X 2 83
+	FrameIndex 2NFS Y 2 84
+	FrameIndex 2NFS Z 2 85
+	// Idle
+	FrameIndex 2NFI A 2 86
+	FrameIndex 2NFI B 2 87
+	// Twiddle
+	FrameIndex 2NFT A 2 87
+	FrameIndex 2NFT B 2 88
+	FrameIndex 2NFT C 2 89
+	FrameIndex 2NFT D 2 90
+	FrameIndex 2NFT E 2 91
+	FrameIndex 2NFT F 2 92
+	FrameIndex 2NFT G 2 93
+	FrameIndex 2NFT H 2 94
+	FrameIndex 2NFT I 2 95
+	FrameIndex 2NFT J 2 96
+	FrameIndex 2NFT K 2 97
+	FrameIndex 2NFT L 2 98
+	FrameIndex 2NFT M 2 99
+	FrameIndex 2NFT N 2 100
+	FrameIndex 2NFT O 2 101
+	FrameIndex 2NFT P 2 102
+	FrameIndex 2NFT Q 2 103
+	FrameIndex 2NFT R 2 104
+	FrameIndex 2NFT S 2 105
+	FrameIndex 2NFT T 2 106
+	FrameIndex 2NFT U 2 107
+	FrameIndex 2NFT V 2 108
+	FrameIndex 2NFT W 2 109
+	FrameIndex 2NFT X 2 110
+	FrameIndex 2NFT Y 2 111
+	// Down
+	FrameIndex 2NFD A 2 115
+	FrameIndex 2NFD B 2 116
+	FrameIndex 2NFD C 2 117
+	FrameIndex 2NFD D 2 118
+	FrameIndex 2NFD E 2 119
+	FrameIndex 2NFD F 2 120
+	FrameIndex 2NFD G 2 121
+	FrameIndex 2NFD H 2 122
+	FrameIndex 2NFD I 2 123
+	FrameIndex 2NFD J 2 124
+	FrameIndex 2NFD K 2 125
+	FrameIndex 2NFD L 2 126
+	// T1
+	FrameIndex 2NFA A 2 130
+	FrameIndex 2NFA B 2 131
+	FrameIndex 2NFA C 2 132
+	FrameIndex 2NFA D 2 133
+	FrameIndex 2NFA E 2 134
+	FrameIndex 2NFA F 2 135
+	// Alt Fire
+	FrameIndex 2NFA G 2 136
+	FrameIndex 2NFA H 2 137
+	FrameIndex 2NFA I 2 138
+	FrameIndex 2NFA J 2 139
+	FrameIndex 2NFA K 2 140
+	FrameIndex 2NFA L 2 141
+	FrameIndex 2NFA M 2 142
+	FrameIndex 2NFA N 2 143
+	// T2
+	FrameIndex 2NFA O 2 144
+	FrameIndex 2NFA P 2 145
+	FrameIndex 2NFA Q 2 146
+	FrameIndex 2NFA R 2 147
+	FrameIndex 2NFA S 2 148
+	FrameIndex 2NFA T 2 149
+	FrameIndex 2NFA U 2 150
 }

@@ -331,8 +331,8 @@ Model "UTChip"
 	USEACTORPITCH
 	USEACTORROLL
 	USEROTATIONCENTER
-	Rotation-Center 0 0 0.5
-	ZOffset 2
+	Rotation-Center 0 0 0
+	ZOffset 1
 
 	FrameIndex CHIP A 0 0
 	FrameIndex CHIP B 0 1

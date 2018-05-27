@@ -33,11 +33,11 @@ Currently implemented:
  - Impact Hammer (slot 1)
  - Chainsaw (slot 1)
  - Translocator (slot 1)
+ - Enforcer (slot 2)
+   - Dual Enforcers (slot 2)
 
 In progress:
 
- - Enforcer (slot 2)
-   - Dual Enforcers (slot 2)
  - Ripper (slot 6)
  - Minigun (slot 7)
  - Rocket Launcher (slot 9)
