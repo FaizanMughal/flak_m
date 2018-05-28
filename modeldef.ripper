@@ -3,8 +3,7 @@ Model "RipperAmmo"
 	Path "models"
 	Model 0 "BladeHopperM_d.3d"
 	Skin 0 "BladeHopperT.png"
-	PitchOffset 90
-	Scale -0.12 0.1 0.1
+	Scale 0.1 0.1 0.12
 	ZOffset 10
 
 	FrameIndex BHOP A 0 0
@@ -15,8 +14,8 @@ Model "Ripper2"
 	Path "models"
 	Model 1 "RazPick2_d.3d"
 	Skin 1 "JRazorw.png"
-	Scale -0.24 0.2 0.2
-	PitchOffset 90
+	Scale 0.2 0.2 0.24
+	AngleOffset 90
 	ZOffset 12
 	ROTATING
 
@@ -27,8 +26,8 @@ Model "Ripper2"
 	Path "models"
 	Model 1 "RazPick2_d.3d"
 	Skin 1 "JRazorw.png"
-	Scale -0.24 0.2 0.2
-	PitchOffset 90
+	Scale 0.2 0.2 0.24
+	AngleOffset 90
 	ZOffset 6
 
 	FrameIndex RZRP B 1 0
@@ -40,9 +39,8 @@ Model "Razor2"
 	Model 0 "RazorBlade_d.3d"
 	SurfaceSkin 0 0 "RazSkin.png"
 	Offset -9.5 0 0
-	Scale 0.216 0.18 0.18
-	PitchOffset 90
-	AngleOffset 180
+	Scale 0.18 0.18 0.216
+	AngleOffset 90
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -55,9 +53,8 @@ Model "Razor2Trail"
 	Model 0 "RazorBlade_d.3d"
 	SurfaceSkin 0 1 "RazTrail.png"
 	Offset -19 0 0
-	Scale 0.432 0.18 0.18
-	PitchOffset 90
-	AngleOffset 180
+	Scale 0.36 0.18 0.216
+	AngleOffset 90
 	USEACTORPITCH
 	USEACTORROLL
 	DONTCULLBACKFACES
@@ -71,9 +68,8 @@ Model "Razor2Alt"
 	Model 0 "RazorBlade_d.3d"
 	SurfaceSkin 0 0 "RazSkin.png"
 	Offset -9.5 0 0
-	Scale 0.216 0.18 0.18
-	PitchOffset 90
-	AngleOffset 180
+	Scale 0.18 0.18 0.216
+	AngleOffset 90
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -89,9 +85,9 @@ Model "Ripper2"
 	SurfaceSkin 0 2 "JRazor4.png"
 	SurfaceSkin 0 3 "JRazor5.png"
 	SurfaceSkin 0 4 "JRazor3.png"
-	Scale 0.16 0.08 0.16
+	Scale 0.16 -0.08 0.16
 	Offset 7.4 -10.8 -8.9
-	PitchOffset 90
+	AngleOffset 90
 
 	// Select
 	FrameIndex RZRS A 0 0

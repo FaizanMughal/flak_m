@@ -1,11 +1,10 @@
 Model "FlakAmmo"
 {
 	Path "models"
-	Model 0 "flakammom_d.3d"
+	Model 0 "FlakAmmoM_d.3d"
 	Skin 0 "jfa1.png"
-	PitchOffset 90
-	Scale 0.12 0.1 0.1
-	ZOffset 4
+	Scale 0.1 0.1 0.12
+	ZOffset 4.5
 
 	FrameIndex FAMO A 0 0
 }
@@ -15,8 +14,8 @@ Model "FlakAmmo2"
 	Path "models"
 	Model 0 "flakslugm_d.3d"
 	Skin 0 "jflakslugel1_.png"
-	PitchOffset 90
-	Scale 0.048 0.04 0.04
+	Scale 0.04 0.04 0.048
+	AngleOffset 180
 	ZOffset 2
 
 	FrameIndex FSLG A 0 0
@@ -27,8 +26,9 @@ Model "FlakSlug"
 	Path "models"
 	Model 0 "flakslugm_d.3d"
 	Skin 0 "jflakslugel1.png"
-	RollOffset 90
-	Scale 0.048 0.04 0.04
+	Scale 0.048 0.048 0.04
+	AngleOffset 180
+	PitchOffset 90
 	PITCHFROMMOMENTUM
 
 	FrameIndex FSLG A 0 0
@@ -39,7 +39,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a00.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -53,7 +53,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a01.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -67,7 +67,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a02.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -81,7 +81,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a03.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -95,7 +95,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a04.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -109,7 +109,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a05.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -123,7 +123,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a06.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -137,7 +137,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a07.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -151,7 +151,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a08.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -165,7 +165,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a09.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -179,7 +179,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a10.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -193,7 +193,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 0 "chunkm_d.3d"
 	Skin 0 "chunk_a11.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -208,7 +208,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a00.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -222,7 +222,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a01.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -236,7 +236,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a02.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -250,7 +250,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a03.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -264,7 +264,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a04.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -278,7 +278,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a05.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -292,7 +292,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a06.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -306,7 +306,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a07.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -320,7 +320,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a08.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -334,7 +334,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a09.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -348,7 +348,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a10.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -362,7 +362,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a11.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -377,7 +377,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a00.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -391,7 +391,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a01.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -405,7 +405,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a02.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -419,7 +419,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a03.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -433,7 +433,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a04.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -447,7 +447,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a05.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -461,7 +461,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a06.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -475,7 +475,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a07.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -489,7 +489,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a08.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -503,7 +503,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a09.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -517,7 +517,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a10.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -531,7 +531,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a11.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -546,7 +546,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a00.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -560,7 +560,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a01.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -574,7 +574,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a02.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -588,7 +588,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a03.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -602,7 +602,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a04.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -616,7 +616,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a05.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -630,7 +630,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a06.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -644,7 +644,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a07.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -658,7 +658,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a08.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -672,7 +672,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a09.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -686,7 +686,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a10.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -700,7 +700,7 @@ Model "FlakChunk"
 	Path "models"
 	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a11.png"
-	Scale 0.06 0.06 0.06
+	Scale 0.06 0.06 0.072
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -716,10 +716,8 @@ Model "FlakCannon"
 	Model 1 "flak2pick_d.3d"
 	Skin 1 "flak_t.png"
 	AngleOffset 90
-	PitchOffset 90
-	Scale 0.14 0.168 0.14
-	Offset 0 -18.9 0
-	ZOffset 12
+	Scale 0.14 0.14 0.168
+	Offset 18.9 0 12
 	ROTATING
 
 	FrameIndex FPCK A 1 0
@@ -730,10 +728,8 @@ Model "FlakCannon"
 	Model 1 "flak2pick_d.3d"
 	Skin 1 "flak_t.png"
 	AngleOffset 90
-	PitchOffset 90
-	Scale 0.14 0.168 0.14
-	Offset 0 -18.9 0
-	ZOffset 11
+	Scale 0.14 0.14 0.168
+	Offset 18.9 0 12
 
 	FrameIndex FPCK B 1 0
 }
@@ -743,9 +739,10 @@ Model "FlakCannon"
 	Path "models"
 	Model 2 "Flat_d.3d"
 	Skin 2 "Flakmuz.png"
+	AngleOffset 90
 	PitchOffset 90
 	Scale 0.08 0.08 0.08
-	Offset 4.0 -25.0 -7.5
+	Offset 7.4 -25.0 -7.5
 
 	FrameIndex FMUZ A 2 0
 }
@@ -759,10 +756,11 @@ Model "FlakCannon"
 	SurfaceSkin 0 2 "flak_t3.png"
 	SurfaceSkin 0 3 "flak_t4.png"
 	SurfaceSkin 0 4 "flakammoledbase.png"
-	AngleOffset 180
-	PitchOffset 90
-	Scale 0.2 0.1 0.2
-	Offset 5.6 -7.6 -10.4
+	AngleOffset 90
+	PitchOffset 180
+	RollOffset 174.35
+	Scale 0.28 -0.12 0.28
+	Offset 8.6 -10.4 -12.8
 
 	// select
 	FrameIndex FLKS A 0 0

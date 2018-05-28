@@ -3,9 +3,7 @@ Model "RifleAmmo"
 	Path "models"
 	Model 0 "BulletBoxM_d.3d"
 	Skin 0 "BulletBoxT.png"
-	Scale -0.084 0.07 0.07
-	PitchOffset 90
-	AngleOffset 180
+	Scale 0.07 0.07 0.084
 	ZOffset 3
 
 	FrameIndex SBOX A 0 0
@@ -16,8 +14,7 @@ Model "RifleAmmo2"
 	Path "models"
 	Model 0 "RifleRoundM_d.3d"
 	Skin 0 "RifleR1.png"
-	Scale -0.024 0.02 0.02
-	PitchOffset 90
+	Scale 0.02 0.02 0.024
 	ZOffset 4
 
 	FrameIndex SRND A 0 0
@@ -28,9 +25,8 @@ Model "SniperRifle"
 	Path "models"
 	Model 1 "RiflePick_d.3d"
 	Skin 1 "JRifle2.png"
-	Scale -0.2 0.24 0.2
-	PitchOffset 90
-	AngleOffset 270
+	Scale 0.2 0.2 0.24
+	AngleOffset 90
 	ZOffset 12
 	ROTATING
 
@@ -41,9 +37,8 @@ Model "SniperRifle"
 	Path "models"
 	Model 1 "RiflePick_d.3d"
 	Skin 1 "JRifle2.png"
-	Scale -0.2 0.24 0.2
-	PitchOffset 90
-	AngleOffset 270
+	Scale 0.2 0.2 0.24
+	AngleOffset 90
 	ZOffset 6
 
 	FrameIndex SRFP B 1 0

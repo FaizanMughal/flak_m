@@ -3,8 +3,9 @@ Model "BioAmmo"
 	Path "models"
 	Model 0 "BioAmmoM_d.3d"
 	Skin 0 "Jbammo1.png"
-	Scale -0.08 0.096 0.08
-	AngleOffset 270
+	Scale 0.08 0.096 0.08
+	PitchOffset 180
+	RollOffset 90
 	ZOffset 4
 
 	FrameIndex BIOA A 0 0
@@ -16,7 +17,7 @@ Model "BioGel"
 	Model 0 "BioGelm_d.3d"
 	Skin 0 "Jgreen.png"
 	Scale 0.08 0.096 0.08
-	RollOffset 90
+	PitchOffset -90
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -88,7 +89,7 @@ Model "BioSplash"
 	Model 0 "BioGelm_d.3d"
 	Skin 0 "Jgreen.png"
 	Scale 0.08 0.096 0.08
-	RollOffset 90
+	PitchOffset -90
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -160,7 +161,7 @@ Model "BioGlob"
 	Model 0 "BioGelm_d.3d"
 	Skin 0 "Jgreen.png"
 	Scale 0.08 0.096 0.08
-	RollOffset 90
+	PitchOffset -90
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -231,9 +232,8 @@ Model "BioRifle"
 	Path "models"
 	Model 1 "BRifle2Pick_d.3d"
 	Skin 1 "JBRifle2.png"
-	Scale -0.1 0.12 0.1
-	PitchOffset 90
-	AngleOffset 270
+	Scale 0.1 0.1 0.12
+	AngleOffset 90
 	ZOffset 12
 	ROTATING
 
@@ -244,9 +244,8 @@ Model "BioRifle"
 	Path "models"
 	Model 1 "BRifle2Pick_d.3d"
 	Skin 1 "JBRifle2.png"
-	Scale -0.1 0.12 0.1
-	PitchOffset 90
-	AngleOffset 270
+	Scale 0.1 0.1 0.12
+	AngleOffset 90
 	ZOffset 10
 
 	FrameIndex BIOP B 1 0
@@ -260,9 +259,9 @@ Model "BioRifle"
 	SurfaceSkin 0 1 "JBRifle22.png"
 	SurfaceSkin 0 2 "JBRifle23.png"
 	SurfaceSkin 0 3 "JBRifle24.png"
-	RollOffset -8.4375
-	PitchOffset 94.21875
-	Scale 0.125 0.06 0.125
+	AngleOffset 94.21875
+	RollOffset 8.4375
+	Scale 0.125 -0.06 0.125
 	Offset 9.8 -17.6 -10.4
 
 	// select

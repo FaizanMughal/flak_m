@@ -3,8 +3,7 @@ Model "UTTeleportFog"
 	Path "models"
 	Model 0 "Tele2_d.3d"
 	Skin 0 "JTele2_01.png"
-	Scale 0.24 0.2 0.2
-	PitchOffset 90
+	Scale 0.2 0.2 0.24
 	ZOffset 10
 	DONTCULLBACKFACES
 
@@ -51,9 +50,9 @@ Model "UTHealthPack"
 	Model 0 "hbox_d.3d"
 	SurfaceSkin 0 0 "jhbox1.png"
 	SurfaceSkin 0 1 "FIZZHP00"
-	Scale -0.2 0.2 0.2
-	AngleOffset 90
-	ZOffset 14
+	Scale 0.2 0.24 0.2
+	RollOffset -90
+	ZOffset 16
 
 	FrameIndex HBOX A 0 0
 }
@@ -65,8 +64,7 @@ Model "UTHealthBox"
 	SurfaceSkin 0 0 "jhboxbeta1.png"
 	SurfaceSkin 0 1 "FIZZHP10"
 	SurfaceSkin 0 2 "FIZZHP10"
-	Scale -0.096 0.08 0.08
-	PitchOffset 90
+	Scale 0.08 0.08 0.096
 	ZOffset 4
 
 	FrameIndex HBOX B 0 0
@@ -78,8 +76,7 @@ Model "UTMedBox"
 	Model 0 "MedBox_d.3d"
 	SurfaceSkin 0 0 "JMedBox1.png"
 	SurfaceSkin 0 1 "FIZZHP10"
-	Scale -0.072 0.06 0.06
-	PitchOffset 90
+	Scale 0.06 0.06 0.072
 	ZOffset 5
 
 	FrameIndex HBOX C 0 0
@@ -92,8 +89,7 @@ Model "UTHealthBonus"
 	SurfaceSkin 0 0 "JVial0.png"
 	SurfaceSkin 0 1 "FIZZHP20"
 	SurfaceSkin 0 2 "FIZZHP20"
-	Scale -0.048 0.04 0.04
-	PitchOffset 90
+	Scale 0.04 0.04 0.048
 	ZOffset 8
 	DONTCULLBACKFACES
 
@@ -105,10 +101,10 @@ Model "UTArmorBonus"
 	Path "models"
 	Model 0 "bossheadm_d.3d"
 	Skin 0 "bossheadT.png"
-	Scale -0.072 0.072 0.06
-	AngleOffset 180
-	PitchOffset 110
-	ZOffset 6
+	Scale 0.06 0.06 0.072
+	AngleOffset -90
+	RollOffset 12
+	ZOffset 5.5
 
 	FrameIndex XANH A 0 0
 }
@@ -118,8 +114,7 @@ Model "UTThighPads"
 	Path "models"
 	Model 0 "ThighPads_d.3d"
 	Skin 0 "JThighPads_01.png"
-	Scale -0.096 0.08 0.08
-	PitchOffset 90
+	Scale 0.08 0.08 0.096
 	ZOffset 12
 	ROTATING
 
@@ -131,8 +126,7 @@ Model "UTBodyArmor"
 	Path "models"
 	Model 0 "Armor2M_d.3d"
 	Skin 0 "Jarmor2.png"
-	Scale -0.134 0.134 0.12
-	PitchOffset 90
+	Scale 0.12 0.12 0.134
 	ZOffset 12
 
 	FrameIndex UARM A 0 0
@@ -143,9 +137,8 @@ Model "UTShieldBelt"
 	Path "models"
 	Model 0 "ShieldBeltMeshM_d.3d"
 	Skin 0 "AUbelt1.png"
-	Scale -0.12 0.1 0.1
-	AngleOffset 180
-	PitchOffset 90
+	Scale 0.1 0.1 0.12
+	AngleOffset -90
 	ZOffset 4
 
 	FrameIndex BELT A 0 0
@@ -156,8 +149,7 @@ Model "UDamage"
 	Path "models"
 	Model 0 "UDamage_d.3d"
 	Skin 0 "GoldSkin2.png"
-	Scale 0.192 0.16 0.16
-	PitchOffset 90
+	Scale 0.16 0.16 0.192
 	ZOffset 24
 	ROTATING
 
@@ -168,8 +160,7 @@ Model "UDamage"
 	Path "models"
 	Model 1 "UDamageB_d.3d"
 	Skin 1 "Judamage1.png"
-	Scale 0.192 0.16 0.16
-	PitchOffset 90
+	Scale 0.16 0.16 0.192
 	ZOffset 24
 	ROTATING
 
@@ -181,8 +172,8 @@ Model "UTRedSkull"
 	Path "models"
 	Model 0 "RelicSkull_d.3d"
 	Skin 0 "JRelicSkull_01r.png"
-	Scale 0.12 0.1 0.1
-	PitchOffset 90
+	Scale 0.1 0.1 0.12
+	AngleOffset -90	// relic of death faces to the side originally
 	ZOffset 12
 	ROTATING
 
@@ -193,8 +184,8 @@ Model "UTGoldSkull"
 	Path "models"
 	Model 0 "RelicSkull_d.3d"
 	Skin 0 "JRelicSkull_01g.png"
-	Scale 0.12 0.1 0.1
-	PitchOffset 90
+	Scale 0.1 0.1 0.12
+	AngleOffset -90	// relic of death faces to the side originally
 	ZOffset 12
 	ROTATING
 
@@ -205,8 +196,8 @@ Model "UTBlueSkull"
 	Path "models"
 	Model 0 "RelicSkull_d.3d"
 	Skin 0 "JRelicSkull_01b.png"
-	Scale 0.12 0.1 0.1
-	PitchOffset 90
+	Scale 0.1 0.1 0.12
+	AngleOffset -90	// relic of death faces to the side originally
 	ZOffset 12
 	ROTATING
 
@@ -217,8 +208,7 @@ Model "UTRedKey"
 	Path "models"
 	Model 0 "DomR_d.3d"
 	Skin 0 "RedSkin2.png"
-	Scale 0.048 0.04 0.04
-	PitchOffset 90
+	Scale 0.04 0.04 0.048
 	ZOffset 16
 	ROTATING
 
@@ -229,8 +219,7 @@ Model "UTGoldKey"
 	Path "models"
 	Model 0 "MercSymbol_d.3d"
 	Skin 0 "GoldSkin2.png"
-	Scale 0.096 0.08 0.08
-	PitchOffset 90
+	Scale 0.08 0.08 0.096
 	ZOffset 16
 	ROTATING
 
@@ -241,8 +230,7 @@ Model "UTBlueKey"
 	Path "models"
 	Model 0 "DomB_d.3d"
 	Skin 0 "BlueSkin2.png"
-	Scale 0.048 0.04 0.04
-	PitchOffset 90
+	Scale 0.04 0.04 0.048
 	ZOffset 16
 	ROTATING
 
@@ -252,10 +240,12 @@ Model "UTBlueKey"
 Model "UTBackpack"
 {
 	Path "models"
-	Model 0 "Backpack2_d.3d"	// cheaply edited out of SelectionMale1 (offsets weren't even readjusted)
+	Model 0 "Backpack2_d.3d"	// cheaply edited out of SelectionMale1 (offsets weren't even readjusted, so I have to do it here)
 	Skin 0 "bpak.png"
-	Offset -20 12 -16
-	Scale -0.36 0.3 0.3
+	Offset -15.795 13.1625 -16	// calculating the X and Y offsets was hard, but I'm glad I added the "estimated center" feature in umeshinfo now
+	Scale 0.36 0.3 0.3
+	AngleOffset 90
+	RollOffset -90
 	ROTATING
 
 	FrameIndex BPAK A 0 0
@@ -266,8 +256,7 @@ Model "UTInvisibility"
 	Path "models"
 	Model 0 "invis2M_d.3d"
 	SurfaceSkin 0 0 "jinvis.png"
-	Scale -0.12 0.1 0.1
-	PitchOffset 90
+	Scale 0.1 0.1 0.12
 	ZOffset 9
 
 	FrameIndex INVS A 0 0
@@ -277,8 +266,7 @@ Model "UTInvisibilityX"
 	Path "models"
 	Model 0 "invis2M_d.3d"
 	SurfaceSkin 0 1 "invis00"
-	Scale -0.12 0.1 0.1
-	PitchOffset 90
+	Scale 0.1 0.1 0.12
 	ZOffset 9
 
 	FrameIndex INVS A 0 0
@@ -289,24 +277,21 @@ Model "UTMapRevealer"
 	Path "models"
 	Model 0 "TranslatorMesh_d.3d"
 	Skin 0 "JTranslator1.png"
-	Scale -0.096 0.08 0.08
-	PitchOffset 90
+	Scale 0.08 0.08 0.096
 	ZOffset 4
 
 	FrameIndex TRNS A 0 0
 }
 
-Model "ShieldingSuit"
+Model "UTJumpBoots"
 {
 	Path "models"
-	Model 0 "ToxSuit_d.3d"
-	Skin 0 "ShieldSuit.png"
-	Scale -0.12 0.12 0.134
-	PitchOffset 180
-	ZOffset 24
-	ROTATING
+	Model 0 "jboot_d.3d"
+	Skin 0 "Jlboot2.png"
+	Scale 0.09 0.09 0.108
+	ZOffset 7
 
-	FrameIndex SSUT A 0 0
+	FrameIndex JBUT A 0 0
 }
 
 Model "Searchlight"
@@ -314,9 +299,8 @@ Model "Searchlight"
 	Path "models"
 	Model 0 "BigFlash_d.3d"
 	Skin 0 "JBigFlash1.png"
-	Scale -0.084 0.084 0.07
-	PitchOffset 90
-	AngleOffset 180
+	Scale 0.07 0.07 0.084
+	AngleOffset -90
 	ZOffset 9
 
 	FrameIndex SLIT A 0 0
@@ -327,7 +311,7 @@ Model "UTChip"
 	Path "models"
 	Model 0 "ChipM_d.3d"
 	Skin 0 "Chip1.png"
-	Scale -0.134 0.12 0.12
+	Scale 0.12 0.12 0.134
 	USEACTORPITCH
 	USEACTORROLL
 	USEROTATIONCENTER

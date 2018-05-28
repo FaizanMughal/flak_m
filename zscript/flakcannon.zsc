@@ -145,8 +145,8 @@ Class FlakChunk : Actor
 	Default
 	{
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
-		Radius 4;
-		Height 4;
+		Radius 2;
+		Height 2;
 		Speed 50;
 		DamageFunction Random[Flak](12,18);
 		DamageType 'Shredded';

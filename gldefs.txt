@@ -530,10 +530,6 @@ HardwareShader Texture "models/JTranslator1.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
-HardwareShader Texture "models/ShieldSuit.png"
-{
-	Shader "shaders/glsl/AmbientGlow.fp"
-}
 /*Brightmap Texture "models/JBigFlash1.png"
 {
 	Map "brightmaps/JBigFlash1.png"

@@ -3,9 +3,9 @@ Model "UTRocketAmmo"
 	Path "models"
 	Model 0 "RocketPackMesh_d.3d"
 	Skin 0 "JRocketPack1.png"
-	Scale 0.072 -0.0864 0.072
-	AngleOffset 270
-	ZOffset 6
+	Scale 0.072 0.0864 0.072
+	RollOffset -90
+	ZOffset 7
 
 	FrameIndex RPAK A 0 0
 }
@@ -15,8 +15,9 @@ Model "UTRocketAmmo2"
 	Path "models"
 	Model 0 "UTRocket_d.3d"
 	Skin 0 "JuRocket1_.png"
-	Scale -0.0822 0.0685 0.07
+	Scale 0.0822 0.09864 0.07
 	ZOffset 6
+	RollOffset -90
 
 	FrameIndex RCKT A 0 0
 }
@@ -26,10 +27,9 @@ Model "UTRocketLauncher"
 	Path "models"
 	Model 1 "Eight2Pick_d.3d"
 	Skin 1 "Eight_t.png"
-	Offset 0 4 12
-	Scale -0.24 0.288 0.24
-	PitchOffset 90
+	Scale 0.24 0.24 0.288
 	AngleOffset 90
+	ZOffset 12
 	ROTATING
 
 	FrameIndex EBLP A 1 0
@@ -39,10 +39,9 @@ Model "UTRocketLauncher"
 	Path "models"
 	Model 1 "Eight2Pick_d.3d"
 	Skin 1 "Eight_t.png"
-	Offset 0 4 6
-	Scale -0.24 0.288 0.24
-	PitchOffset 90
+	Scale 0.24 0.24 0.288
 	AngleOffset 90
+	ZOffset 6
 
 	FrameIndex EBLP B 1 0
 }

@@ -3,8 +3,7 @@ Model "PulseAmmo"
 	Path "models"
 	Model 0 "PAmmo_d.3d"
 	Skin 0 "JPammo_01.png"
-	Scale -0.072 0.06 0.06
-	PitchOffset 90
+	Scale 0.06 0.06 0.072
 	ZOffset 6
 
 	FrameIndex PAMO A 0 0
@@ -15,9 +14,7 @@ Model "PulseGun"
 	Path "models"
 	Model 1 "PulsePickup_d.3d"
 	Skin 1 "JPulsePickup_01.png"
-	AngleOffset 270
-	PitchOffset 90
-	Scale -0.16 0.192 0.16
+	Scale 0.16 0.16 0.192
 	ZOffset 12
 	ROTATING
 
@@ -28,9 +25,7 @@ Model "PulseGun"
 	Path "models"
 	Model 1 "PulsePickup_d.3d"
 	Skin 1 "JPulsePickup_01.png"
-	AngleOffset 270
-	PitchOffset 90
-	Scale -0.16 0.192 0.16
+	Scale 0.16 0.16 0.192
 	ZOffset 8
 
 	FrameIndex PGNP B 1 0
@@ -41,6 +36,7 @@ Model "PulseGun"
 	Path "models"
 	Model 2 "Flat_d.3d"
 	Skin 2 "MuzzyPulse.png"
+	AngleOffset 90
 	PitchOffset 90
 	Scale 0.08 0.08 0.08
 	Offset 8.5 -25.0 -4.5
@@ -55,8 +51,8 @@ Model "PulseGun"
 	SurfaceSkin 0 0 "AmmoLedBase.png"
 	SurfaceSkin 0 1 "JPulseGun_02.png"
 	SurfaceSkin 0 2 "JPulseGun_03.png"
-	PitchOffset 90
-	Scale 0.26 0.195 0.26
+	AngleOffset 90
+	Scale 0.26 -0.195 0.26
 	Offset 0.0 -7.5 -8.0
 
 	// Select

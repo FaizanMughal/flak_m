@@ -3,8 +3,7 @@ Model "EClip"
 	Path "models"
 	Model 0 "EClipM_d.3d"
 	Skin 0 "JEClip.png"
-	Scale -0.0864 0.072 0.072
-	PitchOffset 90
+	Scale 0.072 0.072 0.0864
 	ZOffset 2.5
 
 	FrameIndex ECLP A 0 0
@@ -15,7 +14,9 @@ Model "UTCasing"
 	Path "models"
 	Model 0 "Shellc_d.3d"
 	Skin 0 "Shellcase1.png"
-	Scale -0.014 0.014 0.0168
+	Scale 0.0168 0.014 0.014
+	AngleOffset 270
+	RollOffset 90
 	ZOffset 1
 	USEACTORPITCH
 	USEACTORROLL
@@ -31,9 +32,8 @@ Model "Enforcer"
 	Path "models"
 	Model 1 "MagPick_d.3d"
 	Skin 1 "Jautot1.png"
-	Scale -0.1 0.12 0.1
-	PitchOffset 90
-	AngleOffset 270
+	Scale 0.1 0.1 0.12
+	AngleOffset 90
 	ZOffset 12
 	ROTATING
 
@@ -44,9 +44,8 @@ Model "Enforcer"
 	Path "models"
 	Model 1 "MagPick_d.3d"
 	Skin 1 "Jautot1.png"
-	Scale -0.1 0.12 0.1
-	PitchOffset 90
-	AngleOffset 270
+	Scale 0.1 0.1 0.12
+	AngleOffset 90
 	ZOffset 6
 
 	FrameIndex ENFP B 1 0
@@ -57,6 +56,7 @@ Model "Enforcer"
 	Path "models"
 	Model 3 "Flat_d.3d"
 	Skin 3 "EMuz1.png"
+	AngleOffset 90
 	PitchOffset 90
 	Scale 0.04 0.04 0.04
 	Offset 10.4 -25.0 -2.9
@@ -68,6 +68,7 @@ Model "Enforcer"
 	Path "models"
 	Model 3 "Flat_d.3d"
 	Skin 3 "EMuz1.png"
+	AngleOffset 90
 	PitchOffset 90
 	Scale 0.04 0.04 0.04
 	Offset 1.9 -25.0 -9.3
@@ -79,6 +80,7 @@ Model "Enforcer"
 	Path "models"
 	Model 3 "Flat_d.3d"
 	Skin 3 "EMuz1.png"
+	AngleOffset 90
 	PitchOffset 90
 	Scale 0.04 0.04 0.04
 	Offset -10.4 -25.0 -2.9
@@ -90,6 +92,7 @@ Model "Enforcer"
 	Path "models"
 	Model 3 "Flat_d.3d"
 	Skin 3 "EMuz1.png"
+	AngleOffset 90
 	PitchOffset 90
 	Scale 0.04 0.04 0.04
 	Offset -1.9 -25.0 -9.3
@@ -105,9 +108,9 @@ Model "Enforcer"
 	SurfaceSkin 0 1 "Jtutot2.png"
 	SurfaceSkin 0 2 "Jtutot3.png"
 	SurfaceSkin 0 3 "Jtutot4.png"
-	Scale 0.14 0.08 0.12
+	Scale 0.14 -0.08 0.12
 	Offset 8.6 -12.8 -13.5
-	PitchOffset 90
+	AngleOffset 90
 
 	// Fire
 	FrameIndex ENFF A 0 6
@@ -252,9 +255,9 @@ Model "Enforcer"
 	SurfaceSkin 2 1 "Jtutot2.png"
 	SurfaceSkin 2 2 "Jtutot3.png"
 	SurfaceSkin 2 3 "Jtutot4.png"
-	Scale 0.14 0.08 0.12
+	Scale 0.14 -0.08 0.12
 	Offset -8.8 -12.8 -13.5
-	PitchOffset 90
+	AngleOffset 90
 
 	// Fire
 	FrameIndex 2NFF A 2 6

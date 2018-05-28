@@ -294,43 +294,78 @@ Class UTMapRevealer : MapRevealer replaces Allmap
 	}
 }
 
-
-Class ShieldingSuit : PowerupGiver replaces RadSuit
+Class UTJumpBoots : Inventory replaces RadSuit
 {
 	Default
 	{
-		Tag "Shielding Suit";
+		Tag "AntiGrav Boots";
 		+INVENTORY.AUTOACTIVATE;
 		+INVENTORY.ALWAYSPICKUP;
-		Inventory.MaxAmount 0;
-		Powerup.Type "PowerShieldingSuit";
-		Inventory.PickupMessage "You got the Shielding Suit.";
-		Inventory.PickupSound "suit/pickup";
-		Inventory.RespawnTics 2100;
+		Inventory.Amount 3;
+		Inventory.MaxAmount 3;
+		Inventory.PickupMessage "You picked up the AntiGrav boots.";
+		Inventory.PickupSound "boot/pickup";
+		Inventory.RespawnTics 1050;
+	}
+	override bool Use( bool pickup )
+	{
+		if ( pickup )
+		{
+			Owner.GiveInventory("PowerJumpBoots_HighJump",1);
+			Owner.GiveInventory("PowerJumpBoots_IronFeet",1);
+		}
+		return false;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !Owner || !Owner.player ) return;
+		if ( owner.player.jumptics == -1 )
+		{
+			Amount--;
+			Owner.A_PlaySound("boot/jump",CHAN_BODY);
+			if ( Amount <= 0 )
+			{
+				PrintPickupMessage(true,"The AntiGrav Boots have drained.");
+				DepleteOrDestroy();
+			}
+		}
+	}
+	override void DetachFromOwner()
+	{
+		Super.DetachFromOwner();
+		Owner.TakeInventory("PowerJumpBoots_HighJump",1);
+		Owner.TakeInventory("PowerJumpBoots_IronFeet",1);
 	}
 	States
 	{
 	Spawn:
-		SSUT A -1;
+		JBUT A -1;
 		Stop;
 	}
 }
 
-Class PowerShieldingSuit : PowerIronFeet
+Class PowerJumpBoots_HighJump : PowerHighJump
 {
 	Default
 	{
-		Powerup.Duration -60;
-		Powerup.Color "C0FFEE", 0.35;
+		Powerup.Strength 3;
+		Powerup.Duration int.max;
+	}
+}
+Class PowerJumpBoots_IronFeet : PowerIronFeet
+{
+	Default
+	{
+		Powerup.Duration int.max;
+		Powerup.Color "00 00 00", 0.0;
 	}
 	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
 	{
-		if ( (damageType == 'Slime') || (damageType == 'Fire') || (damageType == 'Ice') || (damageType == 'Poison') )
-			newdamage = 0;
 	}
-	override void EndEffect()
+	override void DoEffect()
 	{
-		PrintPickupMessage(true,"Air supply in the Shielding Suit has expired.");
+		Powerup.DoEffect();
 	}
 }
 

@@ -3,8 +3,7 @@ Model "WarheadAmmo"
 	Path "models"
 	Model 0 "missile_d.3d"
 	Skin 0 "jmissile_01_.png"
-	Scale -0.21 0.2 0.2
-	PitchOffset 90
+	Scale 0.2 0.2 0.24
 	ZOffset 21
 
 	FrameIndex WMIS A 0 0
@@ -15,6 +14,8 @@ Model "ShockWave"
 	Path "models"
 	Model 0 "shockwavem_d.3d"
 	Skin 0 "shockt1.png"
+	Scale 1.2 1.0 1.0
+	PitchOffset 90
 
 	FrameIndex RWAV A 0 0
 	FrameIndex RWAV B 0 1
@@ -25,9 +26,9 @@ Model "WarShell"
 	Path "models"
 	Model 0 "missile_d.3d"
 	Skin 0 "jmissile_01.png"
-	Scale -0.21 0.2 0.2
+	Scale 0.24 0.2 0.2
 	Offset -13 0 0
-	AngleOffset 180
+	PitchOffset -90
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -38,9 +39,9 @@ Model "GuidedWarShell"
 	Path "models"
 	Model 0 "missile_d.3d"
 	Skin 0 "jmissile_01.png"
-	Scale -0.21 0.2 0.2
+	Scale 0.24 0.2 0.2
 	Offset -13 0 0
-	AngleOffset 180
+	PitchOffset -90
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -52,9 +53,9 @@ Model "WarheadLauncher"
 	Path "models"
 	Model 1 "whpick_d.3d"
 	Skin 1 "jwhpick1.png"
-	Scale -0.2 0.24 0.24
+	Scale 0.2 0.24 0.2
 	ZOffset 12
-	AngleOffset 180
+	RollOffset -90
 	ROTATING
 
 	FrameIndex RDMP A 1 0
@@ -64,8 +65,8 @@ Model "WarheadLauncher"
 	Path "models"
 	Model 1 "whpick_d.3d"
 	Skin 1 "jwhpick1.png"
-	Scale -0.2 0.24 0.24
-	AngleOffset 180
+	Scale 0.2 0.24 0.2
+	RollOffset -90
 	ZOffset 11
 
 	FrameIndex RDMP B 1 0
@@ -79,9 +80,10 @@ Model "WarheadLauncher"
 	SurfaceSkin 0 1 "jwarhead2.png"
 	SurfaceSkin 0 2 "jwarhead3.png"
 	SurfaceSkin 0 3 "jwarhead4.png"
-	Scale 0.2 0.12 0.2
-	PitchOffset 2.8125
-	RollOffset 22.5
+	Scale 0.2 -0.12 0.2
+	AngleOffset 90
+	PitchOffset 22.5
+	RollOffset -87.1875
 	Offset 7.9 -15.6 -9.2
 
 	// select

@@ -157,15 +157,11 @@ Class Enforcer : UTWeapon replaces Pistol
 		else Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,Screen.GetHeight()*0.88,String.Format("Clip: % 2d / 20",clipcount));
 	}
 
-	override bool HandlePickup (Inventory item)
+	override bool HandlePickup( Inventory item )
 	{
 		if ( item.GetClass() == GetClass() )
 		{
-			if ( item.Amount == 1 )
-			{
-				item.bPickupGood = true;
-				item.SetTag("Dual Enforcers");
-			}
+			SetTag("Dual Enforcers");
 			return Super.HandlePickup(item);
 		}
 		return false;
@@ -199,7 +195,7 @@ Class Enforcer : UTWeapon replaces Pistol
 		if ( !weap || !player ) return;
 		if ( slave )
 		{
-			if ( invoker.slaveclipcount < 5 ) A_PlaySound("enforcer/click",CHAN_7);
+			if ( CVar.GetCVar('flak_enforcerreload').GetBool() && (invoker.slaveclipcount < 5) ) A_PlaySound("enforcer/click",CHAN_7);
 			if ( (invoker.slaveclipcount <= 0) || (weap.Ammo1.Amount <= 0) )
 			{
 				invoker.slaverefire = 0;
@@ -226,7 +222,7 @@ Class Enforcer : UTWeapon replaces Pistol
 		}
 		else
 		{
-			if ( invoker.clipcount < 5 ) A_PlaySound("enforcer/click",CHAN_WEAPON);
+			if ( CVar.GetCVar('flak_enforcerreload').GetBool() && (invoker.clipcount < 5) ) A_PlaySound("enforcer/click",CHAN_WEAPON);
 			if ( (invoker.clipcount <= 0) || (weap.Ammo1.Amount <= 0) )
 			{
 				A_ClearRefire();

@@ -3,8 +3,7 @@ Model "TranslocatorModule"
 	Path "models"
 	Model 0 "Module_d.3d"
 	Skin 0 "tloc2_.png"
-	Scale -0.0672 0.056 0.056
-	PitchOffset 90
+	Scale 0.056 0.056 0.0672
 	ZOffset 6
 	USEACTORPITCH
 
@@ -19,9 +18,8 @@ Model "Translocator"
 	Model 1 "Trans3loc_d.3d"
 	SurfaceSkin 1 0 "tloc1_.png"
 	SurfaceSkin 1 1 "tloc2_.png"
-	Scale -0.0552 0.046 0.046
-	AngleOffset 180
-	PitchOffset 90
+	Scale 0.046 0.046 0.0552
+	AngleOffset -90
 	ZOffset 12
 	ROTATING
 
@@ -33,9 +31,8 @@ Model "Translocator"
 	Model 1 "Trans3loc_d.3d"
 	SurfaceSkin 1 0 "tloc1_.png"
 	SurfaceSkin 1 1 "tloc2_.png"
-	Scale -0.0552 0.046 0.046
-	AngleOffset 180
-	PitchOffset 90
+	Scale 0.046 0.046 0.0552
+	AngleOffset -90
 	ZOffset 6
 
 	FrameIndex TLCP B 1 0
@@ -49,11 +46,10 @@ Model "Translocator"
 	SurfaceSkin 0 1 "tloc2.png"
 	SurfaceSkin 0 2 "tloc3.png"
 	SurfaceSkin 0 3 "tloc4.png"
-	Scale 0.11 0.055 0.11
-	Offset -17.8 -22.8 -33.2
-	PitchOffset 87
-	RollOffset 5
-	AngleOffset 183
+	Scale 0.11 -0.055 0.11
+	Offset -19.8 -22.8 -33.2
+	AngleOffset -94.21875
+	PitchOffset 3.55555555556
 
 	// select
 	FrameIndex TLCS A 0 18

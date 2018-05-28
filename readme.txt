@@ -26,7 +26,6 @@ Currently implemented:
   - Shield Belt (megasphere)
  - Invisibility (blursphere)
  - Computer Map (computer area map)
- - Shielding Suit (hybrid of U1 asbestos/toxin suits, radsuit)
  - Searchlight (light amplification visor)
  - Enhanced Shock Rifle (slot 4, limited ammo, invulnerability sphere)
  - UT HUD
@@ -35,14 +34,14 @@ Currently implemented:
  - Translocator (slot 1)
  - Enforcer (slot 2)
    - Dual Enforcers (slot 2)
+ - Ripper (slot 6)
+ - Jump Boots (radsuit, has "iron boots" powerup effect to compensate)
 
 In progress:
 
- - Ripper (slot 6)
  - Minigun (slot 7)
  - Rocket Launcher (slot 9)
  - Sniper Rifle (slot 0)
- - Jump Boots (radsuit, has "iron boots" powerup effect to compensate, will full replace Shielding Suit when implemented)
 
 Things to do eventually:
 

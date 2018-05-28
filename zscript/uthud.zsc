@@ -242,12 +242,12 @@ Class UTHud : BaseStatusBar
 		Color dollcolor = tintcolor;
 		DamageAmplifier d;
 		UTArmor b, a, t, s;
-		//UTJumpBoots j;
+		UTJumpBoots j;
 		d = DamageAmplifier(CPlayer.mo.FindInventory("DamageAmplifier"));
 		b = UTArmor(CPlayer.mo.FindInventory("UTArmorBonus"));
 		a = UTArmor(CPlayer.mo.FindInventory("UTBodyArmor"));
 		t = UTArmor(CPlayer.mo.FindInventory("UTThighPads"));
-		//b = CPlayer.mo.FindInventory("UTJumpBoots"));
+		j = UTJumpBoots(CPlayer.mo.FindInventory("UTJumpBoots"));
 		s = UTArmor(CPlayer.mo.FindInventory("UTShieldBelt"));
 		if ( d && !d.isBlinking() ) dollcolor = d.BlendColor;
 		if ( CPlayer.GetGender() == 1 )
@@ -256,7 +256,7 @@ Class UTHud : BaseStatusBar
 			DrawColor = dollcolor;
 			if ( a ) UTDrawColorTex(Woman[1],1.0,a.Amount/double(a.MaxAmount));
 			if ( t ) UTDrawColorTex(Woman[2],1.0,t.Amount/double(t.MaxAmount));
-			//if ( j ) UTDrawColorTex(Woman[3],1.0,b.Amount/double(b.MaxAmount));
+			if ( j ) UTDrawColorTex(Woman[3],1.0,j.Amount/double(j.MaxAmount));
 			DrawColor = GoldColor;
 			if ( s ) UTDrawColorTex(Woman[4],1.0,s.Amount/double(s.MaxAmount));
 		}
@@ -266,7 +266,7 @@ Class UTHud : BaseStatusBar
 			DrawColor = dollcolor;
 			if ( a ) UTDrawColorTex(Man[1],1.0,a.Amount/double(a.MaxAmount));
 			if ( t ) UTDrawColorTex(Man[2],1.0,t.Amount/double(t.MaxAmount));
-			//if ( j ) UTDrawColorTex(Man[3],1.0,b.Amount/double(b.MaxAmount));
+			if ( j ) UTDrawColorTex(Man[3],1.0,j.Amount/double(j.MaxAmount));
 			DrawColor = GoldColor;
 			if ( s ) UTDrawColorTex(Man[4],1.0,s.Amount/double(s.MaxAmount));
 		}

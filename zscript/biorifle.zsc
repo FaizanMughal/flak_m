@@ -257,7 +257,7 @@ Class BioGel : Actor
 			}
 			angle = atan2(normal.y,normal.x);
 			pitch = 0;
-			roll = 0;
+			roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
 			LineTrace(angle+180,172,0,TRF_THRUACTORS,data:d);
 			SetOrigin(d.HitLocation+normal*0.5,false);
 			if ( waterlevel > 0 ) hittype = HIT_FLOOR;
