@@ -10,6 +10,19 @@ Model "MiniAmmo"
 	FrameIndex MAMO A 0 0
 }
 
+Model "MinigunTracer"
+{
+	Path "models"
+	Model 0 "MiniTrace_d.3d"
+	Skin 0 "JUT_Tracer_01.png"
+	Scale 0.6 0.2 0.24
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+
+	FrameIndex TRAC A 0 0
+}
+
 Model "Minigun"
 {
 	Path "models"
@@ -32,4 +45,240 @@ Model "Minigun"
 	ZOffset 6
 
 	FrameIndex MGNP B 1 0
+}
+
+Model "Minigun"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "Muz1.png"
+	Scale 0.08 0.08 0.08
+	Offset 5.0 -32.0 -8.0
+	AngleOffset 90
+	PitchOffset 90
+
+	FrameIndex MMUZ A 2 0
+}
+Model "Minigun"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "Muz2.png"
+	Scale 0.08 0.08 0.08
+	Offset 5.0 -32.0 -8.0
+	AngleOffset 90
+	PitchOffset 90
+
+	FrameIndex MMUZ B 2 0
+}
+Model "Minigun"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "Muz3.png"
+	Scale 0.08 0.08 0.08
+	Offset 5.0 -32.0 -8.0
+	AngleOffset 90
+	PitchOffset 90
+
+	FrameIndex MMUZ C 2 0
+}
+Model "Minigun"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "Muz4.png"
+	Scale 0.08 0.08 0.08
+	Offset 5.0 -32.0 -8.0
+	AngleOffset 90
+	PitchOffset 90
+
+	FrameIndex MMUZ D 2 0
+}
+Model "Minigun"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "Muz5.png"
+	Scale 0.08 0.08 0.08
+	Offset 5.0 -32.0 -8.0
+	AngleOffset 90
+	PitchOffset 90
+
+	FrameIndex MMUZ E 2 0
+}
+Model "Minigun"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "Muz6.png"
+	Scale 0.08 0.08 0.08
+	Offset 5.0 -32.0 -8.0
+	AngleOffset 90
+	PitchOffset 90
+
+	FrameIndex MMUZ F 2 0
+}
+Model "Minigun"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "Muz7.png"
+	Scale 0.08 0.08 0.08
+	Offset 5.0 -32.0 -8.0
+	AngleOffset 90
+	PitchOffset 90
+
+	FrameIndex MMUZ G 2 0
+}
+Model "Minigun"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "Muz8.png"
+	Scale 0.08 0.08 0.08
+	Offset 5.0 -32.0 -8.0
+	AngleOffset 90
+	PitchOffset 90
+
+	FrameIndex MMUZ H 2 0
+}
+Model "Minigun"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "Muz9.png"
+	Scale 0.08 0.08 0.08
+	Offset 5.0 -32.0 -8.0
+	AngleOffset 90
+	PitchOffset 90
+
+	FrameIndex MMUZ I 2 0
+}
+
+Model "Minigun"
+{
+	Path "models"
+	Model 0 "Minigun2m_d.3d"
+	SurfaceSkin 0 0 "Mini_t1.png"
+	SurfaceSkin 0 1 "Mini_t2.png"
+	SurfaceSkin 0 2 "Mini_t3.png"
+	SurfaceSkin 0 3 "Mini_t4.png"
+	SurfaceSkin 0 4 "miniammoledbase.png"
+	Scale 0.12 -0.06 0.12
+	Offset 0.0 -15.5 -12.8
+	AngleOffset 90
+
+	// Select
+	FrameIndex MGNS A 0 0
+	FrameIndex MGNS B 0 1
+	FrameIndex MGNS C 0 2
+	FrameIndex MGNS D 0 3
+	FrameIndex MGNS E 0 4
+	FrameIndex MGNS F 0 5
+	FrameIndex MGNS G 0 6
+	FrameIndex MGNS H 0 7
+	FrameIndex MGNS I 0 8
+	FrameIndex MGNS J 0 9
+	FrameIndex MGNS K 0 10
+	FrameIndex MGNS L 0 11
+	FrameIndex MGNS M 0 12
+	FrameIndex MGNS N 0 13
+	FrameIndex MGNS O 0 14
+	FrameIndex MGNS P 0 15
+	FrameIndex MGNS Q 0 16
+	FrameIndex MGNS R 0 17
+	FrameIndex MGNS S 0 18
+	FrameIndex MGNS T 0 19
+	// Fire
+	FrameIndex MGNF A 0 61
+	FrameIndex MGNF B 0 62
+	FrameIndex MGNF C 0 63
+	FrameIndex MGNF D 0 64
+	FrameIndex MGNF E 0 65
+	FrameIndex MGNF F 0 66
+	FrameIndex MGNF G 0 67
+	FrameIndex MGNF H 0 68
+	FrameIndex MGNF I 0 69
+	FrameIndex MGNF J 0 70
+	FrameIndex MGNF K 0 71
+	FrameIndex MGNF L 0 72
+	FrameIndex MGNF M 0 73
+	FrameIndex MGNF N 0 74
+	FrameIndex MGNF O 0 75
+	FrameIndex MGNF P 0 76
+	FrameIndex MGNF Q 0 77
+	FrameIndex MGNF R 0 78
+	FrameIndex MGNF S 0 79
+	// Unwind
+	FrameIndex MGNU A 0 80
+	FrameIndex MGNU B 0 81
+	FrameIndex MGNU C 0 82
+	FrameIndex MGNU D 0 83
+	FrameIndex MGNU E 0 84
+	FrameIndex MGNU F 0 85
+	FrameIndex MGNU G 0 86
+	FrameIndex MGNU H 0 87
+	FrameIndex MGNU I 0 88
+	FrameIndex MGNU J 0 89
+	FrameIndex MGNU K 0 90
+	FrameIndex MGNU L 0 91
+	FrameIndex MGNU M 0 92
+	FrameIndex MGNU N 0 93
+	FrameIndex MGNU O 0 94
+	FrameIndex MGNU P 0 95
+	FrameIndex MGNU Q 0 96
+	FrameIndex MGNU R 0 97
+	FrameIndex MGNU S 0 98
+	FrameIndex MGNU T 0 99
+	FrameIndex MGNU U 0 100
+	FrameIndex MGNU V 0 101
+	FrameIndex MGNU W 0 102
+	FrameIndex MGNU X 0 103
+	FrameIndex MGNU Y 0 104
+	FrameIndex MGNU Z 0 105
+	FrameIndex MGU2 A 0 106
+	FrameIndex MGU2 B 0 107
+	FrameIndex MGU2 C 0 108
+	FrameIndex MGU2 D 0 109
+	FrameIndex MGU2 E 0 110
+	FrameIndex MGU2 F 0 111
+	FrameIndex MGU2 G 0 112
+	FrameIndex MGU2 H 0 113
+	FrameIndex MGU2 I 0 114
+	FrameIndex MGU2 J 0 115
+	FrameIndex MGU2 K 0 116
+	FrameIndex MGU2 L 0 117
+	FrameIndex MGU2 M 0 118
+	// Idle
+	FrameIndex MGNI A 0 121
+	FrameIndex MGNI B 0 122
+	FrameIndex MGNI C 0 123
+	FrameIndex MGNI D 0 124
+	FrameIndex MGNI E 0 125
+	FrameIndex MGNI F 0 126
+	FrameIndex MGNI G 0 127
+	FrameIndex MGNI H 0 128
+	FrameIndex MGNI I 0 129
+	FrameIndex MGNI J 0 130
+	FrameIndex MGNI K 0 131
+	FrameIndex MGNI L 0 132
+	FrameIndex MGNI M 0 133
+	FrameIndex MGNI N 0 134
+	FrameIndex MGNI O 0 135
+	FrameIndex MGNI P 0 136
+	FrameIndex MGNI Q 0 137
+	FrameIndex MGNI R 0 138
+	FrameIndex MGNI S 0 139
+	// Down
+	FrameIndex MGND A 0 141
+	FrameIndex MGND B 0 142
+	FrameIndex MGND C 0 143
+	FrameIndex MGND D 0 144
+	FrameIndex MGND E 0 145
+	FrameIndex MGND F 0 146
+	FrameIndex MGND G 0 147
+	FrameIndex MGND H 0 148
+	FrameIndex MGND I 0 149
+	FrameIndex MGND J 0 150
 }

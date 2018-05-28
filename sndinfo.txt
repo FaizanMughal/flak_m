@@ -183,6 +183,11 @@ ripper/hit	bladehit
 ripper/flesh	bladethk
 ripper/althit	expl03
 
+minigun/select	minisel
+minigun/fire	m2regf
+minigun/altfire	m2altf
+minigun/unwind	m2wdown
+
 flak/select	pdown
 flak/load	hidraul2
 flak/reload	load1

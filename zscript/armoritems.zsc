@@ -31,8 +31,6 @@ Class UTArmorBonus : UTArmor replaces ArmorBonus
 	{
 		Tag "Armor Bonus";
 		+COUNTITEM;
-		+INVENTORY.AUTOACTIVATE;
-		+INVENTORY.UNTOSSABLE;
 		+INVENTORY.ALWAYSPICKUP;
 		Inventory.Amount 5;
 		Inventory.MaxAmount 50;
@@ -114,14 +112,21 @@ Class UTShieldBelt : UTArmor replaces Megasphere
 	}
 	override bool HandlePickup( Inventory item )
 	{
-		if ( (item is 'UTThighPads') || (item is 'UTBodyArmor') ) return true;
+		if ( (item is 'UTThighPads') || (item is 'UTBodyArmor') )
+		{
+			if ( amount < maxamount )
+			{
+				DepleteOrDestroy();
+				return Super.HandlePickup(item);
+			}
+			else return true;
+		}
 		return Super.HandlePickup(item);
 	}
 	Default
 	{
 		Tag "Shield Belt";
 		+COUNTITEM;
-		+INVENTORY.ALWAYSPICKUP;
 		+INVENTORY.BIGPOWERUP;
 		Inventory.Amount 150;
 		Inventory.MaxAmount 150;

@@ -82,9 +82,9 @@ Model "WarheadLauncher"
 	SurfaceSkin 0 3 "jwarhead4.png"
 	Scale 0.2 -0.12 0.2
 	AngleOffset 90
-	PitchOffset 22.5
+	PitchOffset 33.5
 	RollOffset -87.1875
-	Offset 7.9 -15.6 -9.2
+	Offset 6.2 -15.6 -6.2
 
 	// select
 	FrameIndex WARS A 0 0

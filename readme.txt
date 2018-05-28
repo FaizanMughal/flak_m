@@ -36,10 +36,10 @@ Currently implemented:
    - Dual Enforcers (slot 2)
  - Ripper (slot 6)
  - Jump Boots (radsuit, has "iron boots" powerup effect to compensate)
+ - Minigun (slot 7)
 
 In progress:
 
- - Minigun (slot 7)
  - Rocket Launcher (slot 9)
  - Sniper Rifle (slot 0)
 

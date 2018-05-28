@@ -86,7 +86,7 @@ Model "Ripper2"
 	SurfaceSkin 0 3 "JRazor5.png"
 	SurfaceSkin 0 4 "JRazor3.png"
 	Scale 0.16 -0.08 0.16
-	Offset 7.4 -10.8 -8.9
+	Offset 6.4 -9.8 -7.9
 	AngleOffset 90
 
 	// Select

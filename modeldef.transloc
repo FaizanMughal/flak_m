@@ -47,7 +47,7 @@ Model "Translocator"
 	SurfaceSkin 0 2 "tloc3.png"
 	SurfaceSkin 0 3 "tloc4.png"
 	Scale 0.11 -0.055 0.11
-	Offset -19.8 -22.8 -33.2
+	Offset -19.8 -22.8 -31.2
 	AngleOffset -94.21875
 	PitchOffset 3.55555555556
 
