@@ -1,3 +1,12 @@
+Class Tier1Weapon : RandomSpawner2 replaces Chainsaw
+{
+	Default
+	{
+		DropItem "UTChainsaw", 255, 1;
+		DropItem "Enforcer", 255, 1;
+	}
+}
+
 Class SawImpact : Actor
 {
 	Default
@@ -39,7 +48,7 @@ Class SawImpact : Actor
 	}
 }
 
-Class UTChainsaw : UTWeapon replaces Chainsaw
+Class UTChainsaw : UTWeapon
 {
 	double sawcnt;
 

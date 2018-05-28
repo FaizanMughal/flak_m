@@ -34,7 +34,7 @@ Class FlakAmmo : Ammo
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
 		Ammo.BackpackMaxAmount 50;
-		Ammo.DropAmount 10;
+		Ammo.DropAmount 5;
 	}
 	States
 	{

@@ -8,7 +8,7 @@ Class ShockAmmo : Ammo
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
 		Ammo.BackpackMaxAmount 50;
-		Ammo.DropAmount 10;
+		Ammo.DropAmount 5;
 	}
 	States
 	{
@@ -998,7 +998,7 @@ Class EnhancedShockAmmo : Ammo
 		Inventory.MaxAmount 25;
 		Ammo.BackpackAmount 0;
 		Ammo.BackpackMaxAmount 25;
-		Ammo.DropAmount 5;
+		Ammo.DropAmount 2;
 	}
 	States
 	{

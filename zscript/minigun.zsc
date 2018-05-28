@@ -34,7 +34,7 @@ Class MiniAmmo : Ammo
 		Inventory.MaxAmount 199;
 		Ammo.BackpackAmount 100;
 		Ammo.BackpackMaxAmount 199;
-		Ammo.DropAmount 50;
+		Ammo.DropAmount 20;
 	}
 	States
 	{

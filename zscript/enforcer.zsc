@@ -5,7 +5,7 @@ Class EClip : MiniAmmo replaces Clip
 		Tag "Clip";	// "Large Bullets" in UT, but I think that's an oversight, since it's the same as the Minigun ammo
 		Inventory.PickupMessage "You picked up a Clip.";
 		Inventory.Amount 20;
-		Ammo.DropAmount 20;
+		Ammo.DropAmount 5;
 	}
 	States
 	{

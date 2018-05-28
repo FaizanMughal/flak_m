@@ -8,7 +8,7 @@ Class UTRocketAmmo : Ammo
 		Inventory.MaxAmount 48;
 		Ammo.BackpackAmount 12;
 		Ammo.BackpackMaxAmount 48;
-		Ammo.DropAmount 12;
+		Ammo.DropAmount 3;
 	}
 	States
 	{

@@ -8,7 +8,7 @@ Class RipperAmmo : Ammo
 		Inventory.MaxAmount 75;
 		Ammo.BackpackAmount 50;
 		Ammo.BackpackMaxAmount 75;
-		Ammo.DropAmount 25;
+		Ammo.DropAmount 10;
 	}
 	States
 	{

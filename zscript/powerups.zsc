@@ -214,6 +214,11 @@ Class PowerUTInvisibility : PowerInvisibility
 		Super.EndEffect();
 		PrintPickupMessage(true,"Invisibility has worn off.");
 	}
+	override bool isBlinking()
+	{
+		// don't cause blinking, it bugs out models
+		return false;
+	}
 }
 
 Class UTInvisibility : PowerupGiver replaces BlurSphere

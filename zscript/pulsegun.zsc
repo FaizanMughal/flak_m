@@ -26,7 +26,7 @@ Class PulseAmmo : Ammo
 		Inventory.MaxAmount 199;
 		Ammo.BackpackAmount 50;
 		Ammo.BackpackMaxAmount 199;
-		Ammo.DropAmount 25;
+		Ammo.DropAmount 10;
 	}
 	States
 	{
@@ -150,19 +150,18 @@ Class PulseBoltLight : DynamicLight
 	Default
 	{
 		DynamicLight.Type "Point";
-		Args 64,255,0,50;
-	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		args[LIGHT_INTENSITY] = Random[Pulse](50,60);
+		Args 32,128,0,40;
 	}
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
-		if ( lived ) Destroy();
-		lived = true;
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.pos,true);
+		args[LIGHT_INTENSITY] = Random[Pulse](30,50);
 	}
 }
 
@@ -188,19 +187,62 @@ Class PulseBoltTracer : LineTracer
 	}
 }
 
+Class PulseBoltCap : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+		Scale 0.25;
+	}
+	States
+	{
+	Spawn:
+		PCAP ABCD 1 Bright;
+		Loop;
+	}
+}
+
+Class PulseBoltHit : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+		Scale 0.25;
+	}
+	States
+	{
+	Spawn:
+		PHIT ABCD 1 Bright;
+		Loop;
+	}
+}
+
 Class PulseBolt : Actor
 {
+	const beamsize = 40.5;
+
 	PulseBoltTracer t;
 	double accdamage;
 	int lasthit;
 	Actor damagedactor;
-	double beamsize;
 	Actor weffect;
-	double phase;
+	int position;
+	PulseBolt next;
 
 	override void OnDestroy()
 	{
 		Super.OnDestroy();
+		if ( next ) next.Destroy();
 		if ( weffect ) weffect.Destroy();
 	}
 	override void PostBeginPlay()
@@ -208,49 +250,11 @@ Class PulseBolt : Actor
 		Super.PostBeginPlay();
 		t = new("PulseBoltTracer");
 		t.ignore = target;
-		beamsize = 40;
+		let l = Spawn("PulseBoltLight",pos);
+		l.target = self;
 	}
-	override void Tick()
+	void CheckBeam( Vector3 x )
 	{
-		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
-		if ( !target )
-		{
-			Destroy();
-			return;
-		}
-		phase += 10;
-		// update beam
-		int numpt;
-		Vector3 x, y, z;
-		Vector3 origin;
-		if ( target.player )
-		{
-			[x, y, z] = Matrix4.GetAxes(target.pitch,target.angle,target.roll);
-			origin = (0,0,target.player.viewz-target.pos.z)+5.0*x+3.0*y-1.5*z;
-		}
-		else origin = (0,0,target.missileheight);
-		SetOrigin(target.Vec3Offset(origin.x,origin.y,origin.z),true);
-		A_SetAngle(target.angle,SPF_INTERPOLATE);
-		A_SetPitch(target.BulletSlope(),SPF_INTERPOLATE);
-		// draw beam
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		for ( double i=0; i<=beamsize; i+=0.5 )
-		{
-			origin = Level.Vec3Diff(pos,pos+x*i
-				+sin(i*0.834-phase)*y*0.1435*min(1,(i*0.1)**.5)
-				+sin(i*0.836-phase)*y*0.1342*min(1,(i*0.1)**.5)
-				+sin(i*0.843-phase)*z*0.1463*min(1,(i*0.1)**.5)
-				+sin(i*0.863-phase)*z*0.1345*min(1,(i*0.1)**.5));
-			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,1,FRandom[Pulse](0.6,1.2),0,origin.x,origin.y,origin.z,0,0,0,0,0,0,2);
-			A_SpawnParticle("40FF00",SPF_FULLBRIGHT,1,FRandom[Pulse](2.4,4.8),0,origin.x,origin.y,origin.z,0,0,0,0,0,0,.1);
-		}
-		for ( int i=50; i<beamsize; i+=100 )
-		{
-			origin = Vec3Offset(x.x*i,x.y*i,x.z*i);
-			Spawn("PulseBoltLight",origin);
-		}
-		// check beam
 		t.Trace(pos,cursector,x,beamsize,0);
 		if ( t.Results.HitType != TRACE_HitNone )
 		{
@@ -276,16 +280,28 @@ Class PulseBolt : Actor
 					accdamage = 0;
 				}
 			}
-			origin = Level.Vec3Diff(pos,t.Results.HitPos);
-			numpt = Random[Pulse](10,20)*!Random[Pulse](0,2);
+			Vector3 origin = Level.Vec3Diff(pos,t.Results.HitPos);
+			int numpt = Random[Pulse](10,20)*!Random[Pulse](0,2);
 			for ( int i=0; i<numpt; i++ )
 			{
 				Vector3 pvel = ((FRandom[Pulse](-.4,.5),FRandom[Pulse](-.4,.4),FRandom[Pulse](-.4,.4))-x).unit()*FRandom[Pulse](2,4);
 				A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[Pulse](20,40),FRandom[Pulse](2.4,4.8),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
 				A_SpawnParticle("40FF00",SPF_FULLBRIGHT,Random[Pulse](30,50),FRandom[Pulse](4.8,7.2),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
 			}
-			beamsize = t.Results.Distance;
+			if ( weffect && (weffect is 'PulseBoltCap') )
+			{
+				weffect.Destroy();
+				weffect = null;
+			}
+			if ( !weffect ) weffect = Spawn("PulseBoltHit",t.Results.HitPos);
+			else weffect.SetOrigin(t.Results.HitPos,true);
 			A_SprayDecal("BoltScorch",beamsize+8);
+			if ( next )
+			{
+				accdamage += next.accdamage;
+				next.Destroy();
+				next = null;
+			}
 			return;
 		}
 		else if ( damagedactor )
@@ -294,20 +310,54 @@ Class PulseBolt : Actor
 			accdamage = 0;
 			damagedactor = null;
 		}
-		origin = Level.Vec3Diff(pos,t.Results.HitPos);
-		numpt = Random[Pulse](5,10)*!Random[Pulse](0,5);
-		for ( int i=0; i<numpt; i++ )
+		Vector3 origin = Level.Vec3Diff(pos,t.Results.HitPos);
+		if ( position >= 19 )
 		{
-			Vector3 pvel = (t.Results.HitVector+(FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5))).unit()*FRandom[Pulse](2,4);
-			A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[Pulse](20,40),FRandom[Pulse](2.4,4.8),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
-			A_SpawnParticle("40FF00",SPF_FULLBRIGHT,Random[Pulse](30,50),FRandom[Pulse](4.8,7.2),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
+			int numpt = Random[Pulse](5,10)*!Random[Pulse](0,5);
+			for ( int i=0; i<numpt; i++ )
+			{
+				Vector3 pvel = (t.Results.HitVector+(FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5))).unit()*FRandom[Pulse](2,4);
+				A_SpawnParticle("FFFFFF",SPF_FULLBRIGHT,Random[Pulse](20,40),FRandom[Pulse](2.4,4.8),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,1,-1,-0.1);
+				A_SpawnParticle("40FF00",SPF_FULLBRIGHT,Random[Pulse](30,50),FRandom[Pulse](4.8,7.2),0,origin.x,origin.y,origin.z,pvel.x,pvel.y,pvel.z,0,0,0,.5,-1,-0.1);
+			}
+			if ( weffect && (weffect is 'PulseBoltHit') )
+			{
+				weffect.Destroy();
+				weffect = null;
+			}
+			if ( !weffect ) weffect = Spawn("PulseBoltCap",t.Results.HitPos);
+			else weffect.SetOrigin(t.Results.HitPos,true);
 		}
-		beamsize = min(400,beamsize+40);
+		else
+		{
+			if ( weffect )
+			{
+				weffect.Destroy();
+				weffect = null;
+			}
+			if ( !next )
+			{
+				next = PulseBolt(Spawn("PulseBolt",t.Results.HitPos));
+				next.angle = angle;
+				next.pitch = pitch;
+				next.target = target;
+				next.position = position+1;
+			}
+			else next.UpdateBeam(self,x);
+		}
+	}
+	void UpdateBeam( PulseBolt parent, Vector3 x )
+	{
+		frame = parent.frame;
+		SetOrigin(parent.Vec3Offset(x.x*beamsize,x.y*beamsize,x.z*beamsize),true);
+		A_SetAngle(parent.angle,SPF_INTERPOLATE);
+		A_SetPitch(parent.pitch,SPF_INTERPOLATE);
+		CheckBeam(x);
 	}
 	Default
 	{
-		Obituary "%o ate %k's burning plasma death.";
 		RenderStyle "Add";
+		Obituary "%o ate %k's burning plasma death.";
 		Radius 0.1;
 		Height 0;
 		+NOGRAVITY;
@@ -317,8 +367,38 @@ Class PulseBolt : Actor
 	States
 	{
 	Spawn:
-		PBLT A 1 Bright;
-		Loop;
+		PBLT # -1;
+		Stop;
+	Dummy:
+		PBLT ABCDE -1;
+		Stop;
+	}
+}
+
+Class StarterBolt : PulseBolt
+{
+	override void Tick()
+	{
+		Super.Tick();
+		if ( globalfreeze || level.frozen ) return;
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		Vector3 x, y, z, origin;
+		if ( target.player )
+		{
+			[x, y, z] = Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+			origin = (0,0,target.player.viewz-target.pos.z)+5.0*x+3.0*y-1.5*z;
+		}
+		else origin = (0,0,target.missileheight);
+		SetOrigin(target.Vec3Offset(origin.x,origin.y,origin.z),true);
+		A_SetAngle(target.angle,SPF_INTERPOLATE);
+		A_SetPitch(target.BulletSlope(),SPF_INTERPOLATE);
+		frame++;
+		if ( frame > 4 ) frame = 0;
+		CheckBeam(x);
 	}
 }
 
@@ -354,7 +434,6 @@ Class PulseGun : UTWeapon
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,128,255,128),1);
 		A_AlertMonsters();
-		A_QuakeEx(1,1,1,2,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+4.5*y-2.4*z;
@@ -416,7 +495,7 @@ Class PulseGun : UTWeapon
 	action void A_StartBeam()
 	{
 		A_PlaySound("pulse/bolt",CHAN_WEAPON,1.0,true);
-		invoker.beam = Spawn("PulseBolt",pos);
+		invoker.beam = Spawn("StarterBolt",pos);
 		invoker.beam.target = self;
 	}
 	action void A_StopBeam()
