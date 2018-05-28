@@ -38,11 +38,13 @@ Class UTRocketAmmo2 : UTRocketAmmo
 
 Class UTRocketLauncher : UTWeapon
 {
+	int loaded;
+
 	Default
 	{
 		Tag "Rocket Launcher";
 		Inventory.PickupMessage "You got the Rocket Launcher.";
-		Weapon.UpSound "";
+		Weapon.UpSound "utrl/select";
 		Weapon.SlotNumber 9;
 		Weapon.SelectionOrder 1;
 		Weapon.AmmoType "UTRocketAmmo";
@@ -58,5 +60,40 @@ Class UTRocketLauncher : UTWeapon
 		Stop;
 		EBLP B -1;
 		Stop;
+	Select:
+		EBLS A 1 A_Raise(int.max);
+		Wait;
+	Ready:
+		EBLS ABCDEFGHIJKLMNOPQRST 1;
+	Idle:
+		EBLI A 1
+		{
+			A_CheckReload();
+			A_WeaponReady();
+		}
+		Wait;
+	Fire:
+		EBF1 ABCDEFGH 1;
+		EBF2 ABCDEFGHIJK 1;
+		EBF3 ABCDEFGHIJ 1;
+		EBF4 ABCDEFGHIJK 1;
+		EBF5 ABCDEFGHIJKLM 1;
+		EBF6 ABCDEFGHIJKLMNOP 1;
+		EBR1 ABCDEFG 1;
+		EBR2 ABCDEFG 1;
+		EBR3 ABCDEFG 1;
+		EBR4 ABCDEFG 1;
+		EBR5 ABCDEFG 1;
+		EBL1 ABCDEFG 1;
+		EBL2 ABCDEFG 1;
+		EBL3 ABCDEFG 1;
+		EBL4 ABCDEFG 1;
+		EBL5 ABCDEFG 1;
+		EBL6 ABCDEF 1;
+		Goto Idle;
+	Deselect:
+		EBLD ABCDEFGHIJK 1;
+		EBLD K 1 A_Lower(int.max);
+		Wait;
 	}
 }

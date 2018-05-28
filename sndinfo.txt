@@ -202,6 +202,19 @@ $random flak/bounce { flak/bounce1 flak/bounce2 flak/bounce3 }
 $limit flak/bounce 64
 flak/explode	expl04
 
+utrl/select	selectin
+utrl/rotate	barrelmv
+utrl/load	loading
+utrl/fire	ignite
+utrl/altfire	eightalt
+utrl/seeklock	seeklock
+utrl/seeklost	seeklost
+utrl/fly	rcktfly1
+utrl/explode	expl2
+
+sniper/select	riflepck
+sniper/fire	sniperf
+
 warhead/explode	warexplo
 warhead/fly	warfly
 warhead/select	warhpick

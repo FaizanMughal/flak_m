@@ -43,3 +43,101 @@ Model "SniperRifle"
 
 	FrameIndex SRFP B 1 0
 }
+
+Model "SniperRifle"
+{
+	Path "models"
+	Model 0 "Rifle2m_d.3d"
+	SurfaceSkin 0 0 "Rifle2a.png"
+	SurfaceSkin 0 1 "Rifle2b.png"
+	SurfaceSkin 0 2 "Rifle2c.png"
+	SurfaceSkin 0 3 "Rifle2d.png"
+	Scale 0.32 -0.16 0.32
+	Offset 7.5 -23.0 -7.0
+	AngleOffset 90
+	PitchOffset -5	// doesn't look right otherwise
+
+	// Select
+	FrameIndex SRFS A 0 0
+	FrameIndex SRFS B 0 1
+	FrameIndex SRFS C 0 2
+	FrameIndex SRFS D 0 3
+	FrameIndex SRFS E 0 4
+	FrameIndex SRFS F 0 5
+	FrameIndex SRFS G 0 6
+	FrameIndex SRFS H 0 7
+	FrameIndex SRFS I 0 8
+	FrameIndex SRFS J 0 9
+	FrameIndex SRFS K 0 10
+	FrameIndex SRFS L 0 11
+	FrameIndex SRFS M 0 12
+	FrameIndex SRFS N 0 13
+	FrameIndex SRFS O 0 14
+	FrameIndex SRFS P 0 15
+	FrameIndex SRFS Q 0 16
+	// Idle
+	FrameIndex SRFI A 0 17
+	// Fire 1
+	FrameIndex SRF1 A 0 17
+	FrameIndex SRF1 B 0 18
+	FrameIndex SRF1 C 0 19
+	FrameIndex SRF1 D 0 20
+	FrameIndex SRF1 E 0 21
+	FrameIndex SRF1 F 0 22
+	FrameIndex SRF1 G 0 23
+	FrameIndex SRF1 H 0 24
+	FrameIndex SRF1 I 0 25
+	FrameIndex SRF1 J 0 26
+	// Fire 2
+	FrameIndex SRF2 A 0 27
+	FrameIndex SRF2 B 0 28
+	FrameIndex SRF2 C 0 29
+	FrameIndex SRF2 D 0 30
+	FrameIndex SRF2 E 0 31
+	FrameIndex SRF2 F 0 32
+	FrameIndex SRF2 G 0 33
+	FrameIndex SRF2 H 0 34
+	FrameIndex SRF2 I 0 35
+	FrameIndex SRF2 J 0 36
+	// Fire 3
+	FrameIndex SRF3 A 0 37
+	FrameIndex SRF3 B 0 38
+	FrameIndex SRF3 C 0 39
+	FrameIndex SRF3 D 0 40
+	FrameIndex SRF3 E 0 41
+	FrameIndex SRF3 F 0 42
+	FrameIndex SRF3 G 0 43
+	FrameIndex SRF3 H 0 44
+	FrameIndex SRF3 I 0 45
+	FrameIndex SRF3 J 0 46
+	// Fire 4
+	FrameIndex SRF4 A 0 47
+	FrameIndex SRF4 B 0 48
+	FrameIndex SRF4 C 0 49
+	FrameIndex SRF4 D 0 50
+	FrameIndex SRF4 E 0 51
+	FrameIndex SRF4 F 0 52
+	FrameIndex SRF4 G 0 53
+	FrameIndex SRF4 H 0 54
+	FrameIndex SRF4 I 0 55
+	FrameIndex SRF4 J 0 56
+	// Fire 5
+	FrameIndex SRF5 A 0 57
+	FrameIndex SRF5 B 0 58
+	FrameIndex SRF5 C 0 59
+	FrameIndex SRF5 D 0 60
+	FrameIndex SRF5 E 0 61
+	FrameIndex SRF5 F 0 62
+	FrameIndex SRF5 G 0 63
+	FrameIndex SRF5 H 0 64
+	FrameIndex SRF5 I 0 65
+	FrameIndex SRF5 J 0 66
+	// Down
+	FrameIndex SRFD A 0 67
+	FrameIndex SRFD B 0 68
+	FrameIndex SRFD C 0 69
+	FrameIndex SRFD D 0 70
+	FrameIndex SRFD E 0 71
+	FrameIndex SRFD F 0 72
+	FrameIndex SRFD G 0 73
+}

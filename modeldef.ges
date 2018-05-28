@@ -262,7 +262,7 @@ Model "BioRifle"
 	AngleOffset 94.21875
 	RollOffset 8.4375
 	Scale 0.125 -0.06 0.125
-	Offset 9.8 -17.6 -9.4
+	Offset 10.1 -17.8 -9.8
 
 	// select
 	FrameIndex BIOS A 0 0

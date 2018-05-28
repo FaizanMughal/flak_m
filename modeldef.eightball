@@ -45,3 +45,215 @@ Model "UTRocketLauncher"
 
 	FrameIndex EBLP B 1 0
 }
+
+Model "UTRocketLauncher"
+{
+	Path "models"
+	Model 0 "Eightm_d.3d"
+	SurfaceSkin 0 0 "Eight_t1.png"
+	SurfaceSkin 0 1 "Eight_t2.png"
+	SurfaceSkin 0 2 "Eight_t3.png"
+	SurfaceSkin 0 3 "Eight_t4.png"
+	SurfaceSkin 0 4 "miniammoledbase.png"
+	Scale -0.24 0.12 0.24
+	Offset 2.0 -11.0 -9.5
+	AngleOffset 90
+
+	// Select
+	FrameIndex EBLS A 0 0
+	FrameIndex EBLS B 0 1
+	FrameIndex EBLS C 0 2
+	FrameIndex EBLS D 0 3
+	FrameIndex EBLS E 0 4
+	FrameIndex EBLS F 0 5
+	FrameIndex EBLS G 0 6
+	FrameIndex EBLS H 0 7
+	FrameIndex EBLS I 0 8
+	FrameIndex EBLS J 0 9
+	FrameIndex EBLS K 0 10
+	FrameIndex EBLS L 0 11
+	FrameIndex EBLS M 0 12
+	FrameIndex EBLS N 0 13
+	FrameIndex EBLS O 0 14
+	FrameIndex EBLS P 0 15
+	FrameIndex EBLS Q 0 16
+	FrameIndex EBLS R 0 17
+	FrameIndex EBLS S 0 18
+	FrameIndex EBLS T 0 19
+	// Idle
+	FrameIndex EBLI A 0 19
+	// Fire 1
+	FrameIndex EBF1 A 0 20
+	FrameIndex EBF1 B 0 21
+	FrameIndex EBF1 C 0 22
+	FrameIndex EBF1 D 0 23
+	FrameIndex EBF1 E 0 24
+	FrameIndex EBF1 F 0 25
+	FrameIndex EBF1 G 0 26
+	FrameIndex EBF1 H 0 27
+	// Fire 2
+	FrameIndex EBF2 A 0 49
+	FrameIndex EBF2 B 0 50
+	FrameIndex EBF2 C 0 51
+	FrameIndex EBF2 D 0 52
+	FrameIndex EBF2 E 0 53
+	FrameIndex EBF2 F 0 54
+	FrameIndex EBF2 G 0 55
+	FrameIndex EBF2 H 0 56
+	FrameIndex EBF2 I 0 57
+	FrameIndex EBF2 J 0 58
+	FrameIndex EBF2 K 0 59
+	// Fire 3
+	FrameIndex EBF3 A 0 74
+	FrameIndex EBF3 B 0 75
+	FrameIndex EBF3 C 0 76
+	FrameIndex EBF3 D 0 77
+	FrameIndex EBF3 E 0 78
+	FrameIndex EBF3 F 0 79
+	FrameIndex EBF3 G 0 80
+	FrameIndex EBF3 H 0 81
+	FrameIndex EBF3 I 0 82
+	FrameIndex EBF3 J 0 83
+	// Fire 4
+	FrameIndex EBF4 A 0 98
+	FrameIndex EBF4 B 0 99
+	FrameIndex EBF4 C 0 100
+	FrameIndex EBF4 D 0 101
+	FrameIndex EBF4 E 0 102
+	FrameIndex EBF4 F 0 103
+	FrameIndex EBF4 G 0 104
+	FrameIndex EBF4 H 0 105
+	FrameIndex EBF4 I 0 106
+	FrameIndex EBF4 J 0 107
+	FrameIndex EBF4 K 0 108
+	// Fire 5
+	FrameIndex EBF5 A 0 116
+	FrameIndex EBF5 B 0 117
+	FrameIndex EBF5 C 0 118
+	FrameIndex EBF5 D 0 119
+	FrameIndex EBF5 E 0 120
+	FrameIndex EBF5 F 0 121
+	FrameIndex EBF5 G 0 122
+	FrameIndex EBF5 H 0 123
+	FrameIndex EBF5 I 0 124
+	FrameIndex EBF5 J 0 125
+	FrameIndex EBF5 K 0 126
+	FrameIndex EBF5 L 0 127
+	FrameIndex EBF5 M 0 128
+	// Fire 6
+	FrameIndex EBF6 A 0 130
+	FrameIndex EBF6 B 0 131
+	FrameIndex EBF6 C 0 132
+	FrameIndex EBF6 D 0 133
+	FrameIndex EBF6 E 0 134
+	FrameIndex EBF6 F 0 135
+	FrameIndex EBF6 G 0 136
+	FrameIndex EBF6 H 0 137
+	FrameIndex EBF6 I 0 138
+	FrameIndex EBF6 J 0 139
+	FrameIndex EBF6 K 0 140
+	FrameIndex EBF6 L 0 141
+	FrameIndex EBF6 M 0 142
+	FrameIndex EBF6 N 0 143
+	FrameIndex EBF6 O 0 144
+	FrameIndex EBF6 P 0 145
+	// Rotate 1
+	FrameIndex EBR1 A 0 35
+	FrameIndex EBR1 B 0 36
+	FrameIndex EBR1 C 0 37
+	FrameIndex EBR1 D 0 38
+	FrameIndex EBR1 E 0 39
+	FrameIndex EBR1 F 0 40
+	FrameIndex EBR1 G 0 41
+	// Rotate 2
+	FrameIndex EBR2 A 0 60
+	FrameIndex EBR2 B 0 61
+	FrameIndex EBR2 C 0 62
+	FrameIndex EBR2 D 0 63
+	FrameIndex EBR2 E 0 64
+	FrameIndex EBR2 F 0 65
+	FrameIndex EBR2 G 0 66
+	// Rotate 3
+	FrameIndex EBR3 A 0 84
+	FrameIndex EBR3 B 0 85
+	FrameIndex EBR3 C 0 86
+	FrameIndex EBR3 D 0 87
+	FrameIndex EBR3 E 0 88
+	FrameIndex EBR3 F 0 89
+	FrameIndex EBR3 G 0 90
+	// Rotate 4
+	FrameIndex EBR4 A 0 109
+	FrameIndex EBR4 B 0 110
+	FrameIndex EBR4 C 0 111
+	FrameIndex EBR4 D 0 112
+	FrameIndex EBR4 E 0 113
+	FrameIndex EBR4 F 0 114
+	FrameIndex EBR4 G 0 115
+	// Rotate 5
+	FrameIndex EBR5 A 0 164
+	FrameIndex EBR5 B 0 165
+	FrameIndex EBR5 C 0 166
+	FrameIndex EBR5 D 0 167
+	FrameIndex EBR5 E 0 168
+	FrameIndex EBR5 F 0 169
+	FrameIndex EBR5 G 0 170
+	// Load 1
+	FrameIndex EBL1 A 0 28
+	FrameIndex EBL1 B 0 29
+	FrameIndex EBL1 C 0 30
+	FrameIndex EBL1 D 0 31
+	FrameIndex EBL1 E 0 32
+	FrameIndex EBL1 F 0 33
+	FrameIndex EBL1 G 0 34
+	// Load 2
+	FrameIndex EBL2 A 0 42
+	FrameIndex EBL2 B 0 43
+	FrameIndex EBL2 C 0 44
+	FrameIndex EBL2 D 0 45
+	FrameIndex EBL2 E 0 46
+	FrameIndex EBL2 F 0 47
+	FrameIndex EBL2 G 0 48
+	// Load 3
+	FrameIndex EBL3 A 0 67
+	FrameIndex EBL3 B 0 68
+	FrameIndex EBL3 C 0 69
+	FrameIndex EBL3 D 0 70
+	FrameIndex EBL3 E 0 71
+	FrameIndex EBL3 F 0 72
+	FrameIndex EBL3 G 0 73
+	// Load 4
+	FrameIndex EBL4 A 0 91
+	FrameIndex EBL4 B 0 92
+	FrameIndex EBL4 C 0 93
+	FrameIndex EBL4 D 0 94
+	FrameIndex EBL4 E 0 95
+	FrameIndex EBL4 F 0 96
+	FrameIndex EBL4 G 0 97
+	// Load 5
+	FrameIndex EBL5 A 0 157
+	FrameIndex EBL5 B 0 158
+	FrameIndex EBL5 C 0 159
+	FrameIndex EBL5 D 0 160
+	FrameIndex EBL5 E 0 161
+	FrameIndex EBL5 F 0 162
+	FrameIndex EBL5 G 0 163
+	// Load 6
+	FrameIndex EBL6 A 0 171
+	FrameIndex EBL6 B 0 172
+	FrameIndex EBL6 C 0 173
+	FrameIndex EBL6 D 0 174
+	FrameIndex EBL6 E 0 175
+	FrameIndex EBL6 F 0 176
+	// Down
+	FrameIndex EBLD A 0 146
+	FrameIndex EBLD B 0 147
+	FrameIndex EBLD C 0 148
+	FrameIndex EBLD D 0 149
+	FrameIndex EBLD E 0 150
+	FrameIndex EBLD F 0 151
+	FrameIndex EBLD G 0 152
+	FrameIndex EBLD H 0 153
+	FrameIndex EBLD I 0 154
+	FrameIndex EBLD J 0 155
+	FrameIndex EBLD K 0 156
+}

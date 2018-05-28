@@ -41,7 +41,7 @@ Class SniperRifle : UTWeapon
 	{
 		Tag "Sniper Rifle";
 		Inventory.PickupMessage "You got the Sniper Rifle.";
-		Weapon.UpSound "";
+		Weapon.UpSound "sniper/select";
 		Weapon.SlotNumber 0;
 		Weapon.SelectionOrder 5;
 		Weapon.AmmoType "RifleAmmo";
@@ -57,5 +57,48 @@ Class SniperRifle : UTWeapon
 		Stop;
 		SRFP B -1;
 		Stop;
+	Select:
+		SRFS A 1 A_Raise(int.max);
+		Wait;
+	Ready:
+		SRFS A 1;
+		SRFS B 2;
+		SRFS C 1;
+		SRFS D 2;
+		SRFS E 1;
+		SRFS F 2;
+		SRFS G 1;
+		SRFS H 2;
+		SRFS I 1;
+		SRFS J 2;
+		SRFS K 1;
+		SRFS L 2;
+		SRFS M 1;
+		SRFS N 2;
+		SRFS O 1;
+		SRFS P 2;
+		SRFS Q 1;
+	Idle:
+		SRFI A 1
+		{
+			A_CheckReload();
+			A_WeaponReady();
+		}
+		Wait;
+	Fire:
+		SRF1 ABCDEFGHIJ 2;
+		Goto Idle;
+		SRF2 ABCDEFGHIJ 2;
+		Goto Idle;
+		SRF3 ABCDEFGHIJ 2;
+		Goto Idle;
+		SRF4 ABCDEFGHIJ 2;
+		Goto Idle;
+		SRF5 ABCDEFGHIJ 2;
+		Goto Idle;
+	Deselect:
+		SRFD ABCDEFG 2;
+		SRFD G 1 A_Lower(int.max);
+		Wait;
 	}
 }
