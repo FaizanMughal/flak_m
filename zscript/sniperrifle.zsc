@@ -35,11 +35,100 @@ Class RifleAmmo2 : RifleAmmo
 	}
 }
 
-Class SniperRifle : UTWeapon
+Class SniperLight : EnforcerLight
 {
 	Default
 	{
+		args 255,224,64,120;
+	}
+}
+
+Class SniperRifle : UTWeapon
+{
+	double sniperzoom;
+	TextureID reticle;
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		reticle = TexMan.CheckForTexture("RReticle",Texman.Type_Any);
+	}
+	override void PreRender()
+	{
+		if ( sniperzoom <= 1.0 ) return;
+		Screen.DrawTexture(reticle,false,320,240,DTA_VirtualWidth,640,DTA_VirtualHeight,480);
+		Screen.DrawText(confont,Font.CR_DARKGREEN,192,160,String.Format("X%.1f",sniperzoom),DTA_Clean,true);
+	}
+	action void A_SniperFire( bool zoomed = false )
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		if ( weap.Ammo1.Amount <= 0 ) return;
+		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
+		invoker.FireEffect();
+		UTMainHandler.DoFlash(self,Color(32,0,0,255),1);
+		A_PlaySound("sniper/fire",CHAN_WEAPON);
+		A_AlertMonsters();
+		if ( zoomed ) A_QuakeEx(2,2,2,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.09);
+		else
+		{
+			A_QuakeEx(3,3,3,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
+			A_Overlay(-2,"MuzzleFlash");
+			A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
+			A_OverlayRenderstyle(-2,STYLE_Add);
+		}
+		let l = Spawn("SniperLight",pos);
+		l.target = self;
+		Vector3 x, y, z;
+		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x;
+		if ( !zoomed ) origin = origin+y*4.0-z*2.0;
+		FLineTraceData d;
+		LineTrace(angle,10000,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		if ( d.HitType == TRACE_HitActor )
+		{
+			int dmg = Random[Sniper](40,50);
+			if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.8) )
+				dmg = d.HitActor.DamageMobj(invoker,self,dmg+65,'Decapitated');
+			else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot');
+			if ( d.HitActor.bNOBLOOD )
+			{
+				let p = Spawn("BulletImpact",d.HitLocation);
+				p.scale *= 1.5;
+				p.angle = atan2(d.HitDir.y,d.HitDir.x)+180;
+				p.pitch = asin(d.HitDir.z);
+			}
+			else
+			{
+				d.HitActor.TraceBleed(dmg,self);
+				d.HitActor.SpawnBlood(d.HitLocation,atan2(d.HitDir.y,d.HitDir.x)+180,dmg);
+			}
+		}
+		else if ( d.HitType != TRACE_HitNone )
+		{
+			Vector3 hitnormal = -d.HitDir;
+			if ( d.HitType == TRACE_HitFloor ) hitnormal = d.HitSector.floorplane.Normal;
+			else if ( d.HitType == TRACE_HitCeiling ) hitnormal = d.HitSector.ceilingplane.Normal;
+			else if ( d.HitType == TRACE_HitWall )
+			{
+				hitnormal = (-d.HitLine.delta.y,d.HitLine.delta.x,0).unit();
+				if ( !d.LineSide ) hitnormal *= -1;
+			}
+			let p = Spawn("BulletImpact",d.HitLocation+hitnormal*0.01);
+			p.scale *= 1.5;
+			p.angle = atan2(hitnormal.y,hitnormal.x);
+			p.pitch = asin(-hitnormal.z);
+			if ( d.HitLine ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation);
+		}
+		origin += x*8.0+y*6.0-z*9.0;
+		let c = Spawn("UTCasing",origin);
+		c.scale *= 1.25;
+		c.vel = x*FRandom[Junk](-2,2)+y*FRandom[Junk](3,6)+z*FRandom[Junk](3,5);
+	}
+	Default
+	{
 		Tag "Sniper Rifle";
+		Obituary "%k put a bullet through %o's head.";
 		Inventory.PickupMessage "You got the Sniper Rifle.";
 		Weapon.UpSound "sniper/select";
 		Weapon.SlotNumber 0;
@@ -61,7 +150,7 @@ Class SniperRifle : UTWeapon
 		SRFS A 1 A_Raise(int.max);
 		Wait;
 	Ready:
-		SRFS A 1;
+		SRFS A 1 A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
 		SRFS B 2;
 		SRFS C 1;
 		SRFS D 2;
@@ -85,7 +174,21 @@ Class SniperRifle : UTWeapon
 			A_WeaponReady();
 		}
 		Wait;
+	ZoomedIdle:
+		TNT1 A 1
+		{
+			A_CheckReload();
+			A_WeaponReady();
+		}
+		Wait;
 	Fire:
+		SRFI A 0 A_JumpIf(invoker.sniperzoom>1.0,"ZoomedFire");
+		SRFI A 0
+		{
+			A_SniperFire();
+			return A_Jump(256,1,11,21,31,41);
+		}
+		Goto Idle;
 		SRF1 ABCDEFGHIJ 2;
 		Goto Idle;
 		SRF2 ABCDEFGHIJ 2;
@@ -96,9 +199,31 @@ Class SniperRifle : UTWeapon
 		Goto Idle;
 		SRF5 ABCDEFGHIJ 2;
 		Goto Idle;
+	ZoomedFire:
+		TNT1 A 20 A_SniperFire(true);
+		Goto ZoomedIdle;
+	AltFire:
+		SRFI A 0 A_JumpIf(invoker.sniperzoom>1.0,"AltHold2");
+	AltHold:
+		TNT1 A 1
+		{
+			if ( invoker.sniperzoom <= 8.0 )
+				A_ZoomFactor(invoker.sniperzoom*=1.1);
+			invoker.sniperzoom = min(invoker.sniperzoom,8.1);
+		}
+		TNT1 A 0 A_Refire("AltHold");
+		Goto ZoomedIdle;
+	AltHold2:
+		SRFI A 1 A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
+		SRFI A 0 A_Refire("AltHold2");
+		Goto Idle;
 	Deselect:
+		SRFD A 0 A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
 		SRFD ABCDEFG 2;
 		SRFD G 1 A_Lower(int.max);
 		Wait;
+	MuzzleFlash:
+		SMUZ A 3 Bright;
+		Stop;
 	}
 }

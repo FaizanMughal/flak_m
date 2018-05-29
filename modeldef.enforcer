@@ -27,6 +27,67 @@ Model "UTCasing"
 	FrameIndex PCAS A 0 0
 }
 
+Model "BulletImpact"
+{
+	Path "models"
+	Model 0 "BulletImpact_d.3d"
+	Skin 0 "Impact_a00.png"
+	Scale 0.32 0.268 0.24
+	PitchOffset -90
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+	FrameIndex BIMP A 0 0
+}
+Model "BulletImpact"
+{
+	Path "models"
+	Model 0 "BulletImpact_d.3d"
+	Skin 0 "Impact_a01.png"
+	Scale 0.32 0.268 0.24
+	PitchOffset -90
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+	FrameIndex BIMP B 0 0
+}
+Model "BulletImpact"
+{
+	Path "models"
+	Model 0 "BulletImpact_d.3d"
+	Skin 0 "Impact_a02.png"
+	Scale 0.32 0.268 0.24
+	PitchOffset -90
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+	FrameIndex BIMP C 0 0
+}
+Model "BulletImpact"
+{
+	Path "models"
+	Model 0 "BulletImpact_d.3d"
+	Skin 0 "Impact_a03.png"
+	Scale 0.32 0.268 0.24
+	PitchOffset -90
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+	FrameIndex BIMP D 0 0
+}
+Model "BulletImpact"
+{
+	Path "models"
+	Model 0 "BulletImpact_d.3d"
+	Skin 0 "Impact_a04.png"
+	Scale 0.32 0.268 0.24
+	PitchOffset -90
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+	FrameIndex BIMP E 0 0
+}
+
 Model "Enforcer"
 {
 	Path "models"

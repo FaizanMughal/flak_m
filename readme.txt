@@ -37,11 +37,11 @@ Currently implemented:
  - Ripper (slot 6)
  - Jump Boots (radsuit, has "iron boots" powerup effect to compensate)
  - Minigun (slot 7)
+ - Sniper Rifle (slot 0)
 
 In progress:
 
  - Rocket Launcher (slot 9)
- - Sniper Rifle (slot 0)
 
 Things to do eventually:
 

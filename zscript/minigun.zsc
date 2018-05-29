@@ -126,9 +126,10 @@ Class Minigun : UTWeapon
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot');
 			if ( d.HitActor.bNOBLOOD )
 			{
-				let p = Spawn("BulletImpact",d.HitLocation-d.HitDir*4);
-				p.angle = atan2(d.HitDir.y,d.HitDir.x);
-				p.pitch = asin(-d.HitDir.z);
+				let p = Spawn("BulletImpact",d.HitLocation);
+				p.scale *= 0.75;
+				p.angle = atan2(d.HitDir.y,d.HitDir.x)+180;
+				p.pitch = asin(d.HitDir.z);
 			}
 			else
 			{
@@ -138,9 +139,18 @@ Class Minigun : UTWeapon
 		}
 		else if ( d.HitType != TRACE_HitNone )
 		{
-			let p = Spawn("BulletImpact",d.HitLocation-d.HitDir*4);
-			p.angle = atan2(d.HitDir.y,d.HitDir.x);
-			p.pitch = asin(-d.HitDir.z);
+			Vector3 hitnormal = -d.HitDir;
+			if ( d.HitType == TRACE_HitFloor ) hitnormal = d.HitSector.floorplane.Normal;
+			else if ( d.HitType == TRACE_HitCeiling ) hitnormal = d.HitSector.ceilingplane.Normal;
+			else if ( d.HitType == TRACE_HitWall )
+			{
+				hitnormal = (-d.HitLine.delta.y,d.HitLine.delta.x,0).unit();
+				if ( !d.LineSide ) hitnormal *= -1;
+			}
+			let p = Spawn("BulletImpact",d.HitLocation+hitnormal*0.01);
+			p.scale *= 0.75;
+			p.angle = atan2(hitnormal.y,hitnormal.x);
+			p.pitch = asin(-hitnormal.z);
 			if ( d.HitLine ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation);
 		}
 		if ( !Random[Minigun](0,1) )

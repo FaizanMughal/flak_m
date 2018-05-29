@@ -76,9 +76,14 @@ Class Razor2 : Actor
 		A_SetAngle(atan2(dir.y,dir.x));
 		A_SetPitch(asin(-dir.z));
 	}
+	override int SpecialMissileHit( Actor victim )
+	{
+		if ( pos.z > victim.pos.z+victim.height*0.8 ) DamageType = 'Decapitated';
+		return -1;
+	}
 	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
 	{
-		if ( pos.z > target.pos.z+target.height*0.8 ) damage *= 3;
+		if ( pos.z > target.pos.z+target.height*0.8 ) damage *= 2;
 		if ( !target.bNOBLOOD )
 		{
 			target.SpawnBlood(pos,AngleTo(target),damage);

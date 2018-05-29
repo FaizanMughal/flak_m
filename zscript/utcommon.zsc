@@ -176,7 +176,9 @@ Class RandomSpawner2 : RandomSpawner
 
 Class UTWeapon : Weapon
 {
+	// Drawstuffs under HUD
 	virtual ui void PreRender() {}
+	// Drawstuffs over HUD
 	virtual ui void PostRender() {}
 
 	override Inventory CreateTossable( int amt )

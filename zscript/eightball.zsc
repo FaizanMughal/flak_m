@@ -36,6 +36,26 @@ Class UTRocketAmmo2 : UTRocketAmmo
 	}
 }
 
+Class UTRocket : Actor
+{
+	States
+	{
+	Spawn:
+		RCKT B 1;
+		Wait;
+	}
+}
+
+Class UTGrenade : Actor
+{
+	States
+	{
+	Spawn:
+		RCKT A 1;
+		Wait;
+	}
+}
+
 Class UTRocketLauncher : UTWeapon
 {
 	int loaded;
@@ -43,6 +63,7 @@ Class UTRocketLauncher : UTWeapon
 	Default
 	{
 		Tag "Rocket Launcher";
+		//Obituary "%o was smacked down by %k's Rocket Launcher.";
 		Inventory.PickupMessage "You got the Rocket Launcher.";
 		Weapon.UpSound "utrl/select";
 		Weapon.SlotNumber 9;
