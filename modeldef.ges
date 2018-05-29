@@ -16,7 +16,7 @@ Model "BioGel"
 	Path "models"
 	Model 0 "BioGelm_d.3d"
 	Skin 0 "Jgreen.png"
-	Scale 0.08 0.096 0.08
+	Scale 0.096 0.08 0.08
 	PitchOffset -90
 	USEACTORPITCH
 	USEACTORROLL
@@ -88,7 +88,7 @@ Model "BioSplash"
 	Path "models"
 	Model 0 "BioGelm_d.3d"
 	Skin 0 "Jgreen.png"
-	Scale 0.08 0.096 0.08
+	Scale 0.096 0.08 0.08
 	PitchOffset -90
 	USEACTORPITCH
 	USEACTORROLL
@@ -160,7 +160,7 @@ Model "BioGlob"
 	Path "models"
 	Model 0 "BioGelm_d.3d"
 	Skin 0 "Jgreen.png"
-	Scale 0.08 0.096 0.08
+	Scale 0.096 0.08 0.08
 	PitchOffset -90
 	USEACTORPITCH
 	USEACTORROLL

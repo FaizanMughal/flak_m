@@ -61,7 +61,7 @@ Class DamageAmplifier : Powerup
 
 	Default
 	{
-		Powerup.Duration -30;
+		Powerup.Duration -60;
 		Powerup.Color "EE00FF", 0.15;
 	}
 
@@ -219,11 +219,6 @@ Class PowerUTInvisibility : PowerInvisibility
 		Super.EndEffect();
 		PrintPickupMessage(true,"Invisibility has worn off.");
 	}
-	override bool isBlinking()
-	{
-		// don't cause blinking, it bugs out models
-		return false;
-	}
 }
 
 Class UTInvisibility : PowerupGiver replaces BlurSphere
@@ -346,6 +341,11 @@ Class UTJumpBoots : Inventory replaces RadSuit
 		Super.DetachFromOwner();
 		Owner.TakeInventory("PowerJumpBoots_HighJump",1);
 		Owner.TakeInventory("PowerJumpBoots_IronFeet",1);
+	}
+	override void OwnerDied()
+	{
+		Super.OwnerDied();
+		DepleteOrDestroy();
 	}
 	States
 	{

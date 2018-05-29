@@ -181,7 +181,7 @@ Model "PulseGun"
 	AngleOffset 90
 	PitchOffset 90
 	Scale 0.08 0.08 0.08
-	Offset 8.5 -25.0 -4.5
+	Offset 8.5 -25.0 -3.5
 
 	FrameIndex PMUZ A 2 0
 }
@@ -195,7 +195,7 @@ Model "PulseGun"
 	SurfaceSkin 0 2 "JPulseGun_03.png"
 	AngleOffset 90
 	Scale 0.26 -0.195 0.26
-	Offset 0.0 -7.5 -8.0
+	Offset 0.0 -7.5 -7.0
 
 	// Select
 	FrameIndex PGNS A 0 2

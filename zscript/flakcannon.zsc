@@ -482,7 +482,7 @@ Class FlakCannon : UTWeapon
 	action void A_Loading( bool first = false )
 	{
 		if ( first ) A_PlaySound("flak/load",CHAN_WEAPON);
-		else A_PlaySound("flak/reload",CHAN_5);
+		else A_PlaySound("flak/reload",CHAN_6);
 	}
 	action void A_FireChunks()
 	{

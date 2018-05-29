@@ -105,7 +105,7 @@ Class Minigun : UTWeapon
 		invoker.bcnt = alt?3:5;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.FireEffect();
-		UTMainHandler.DoFlash(self,Color(64,255,255,0),1);
+		UTMainHandler.DoFlash(self,Color(32,255,255,0),1);
 		A_AlertMonsters();
 		if ( alt ) A_QuakeEx(3,3,3,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
 		else A_QuakeEx(2,2,2,5,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
@@ -407,7 +407,8 @@ Class Minigun : UTWeapon
 		MGU2 ABCDEFGHIJKLM 1;
 		Goto Idle;
 	Deselect:
-		MGND ABCDEFGHIJ 2;
+		MGND A 2 A_StopSound(CHAN_WEAPON);
+		MGND BCDEFGHIJ 2;
 		MGND J 1 A_Lower(int.max);
 		Wait;
 	MuzzleFlash:

@@ -742,7 +742,7 @@ Model "FlakCannon"
 	AngleOffset 90
 	PitchOffset 90
 	Scale 0.08 0.08 0.08
-	Offset 7.4 -25.0 -7.5
+	Offset 7.4 -25.0 -8.5
 
 	FrameIndex FMUZ A 2 0
 }
@@ -758,9 +758,9 @@ Model "FlakCannon"
 	SurfaceSkin 0 4 "flakammoledbase.png"
 	AngleOffset 90
 	PitchOffset 180
-	RollOffset 174.375
+	RollOffset 178
 	Scale 0.28 -0.14 0.28
-	Offset 8.6 -10.4 -12.8
+	Offset 8.6 -10.4 -13.8
 
 	// select
 	FrameIndex FLKS A 0 0

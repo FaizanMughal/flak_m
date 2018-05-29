@@ -28,7 +28,7 @@ Model "Ripper2"
 	Skin 1 "JRazorw.png"
 	Scale 0.2 0.2 0.24
 	AngleOffset 90
-	ZOffset 6
+	ZOffset 10
 
 	FrameIndex RZRP B 1 0
 }
@@ -86,7 +86,7 @@ Model "Ripper2"
 	SurfaceSkin 0 3 "JRazor5.png"
 	SurfaceSkin 0 4 "JRazor3.png"
 	Scale 0.16 -0.08 0.16
-	Offset 6.4 -9.8 -7.9
+	Offset 6.4 -9.8 -8.4
 	AngleOffset 90
 
 	// Select

@@ -81,8 +81,9 @@ Model "UTRocketLauncher"
 	SurfaceSkin 0 3 "Eight_t4.png"
 	SurfaceSkin 0 4 "miniammoledbase.png"
 	Scale -0.24 0.12 0.24
-	Offset 2.0 -11.0 -9.5
+	Offset 2.0 -12.0 -10.5
 	AngleOffset 90
+	RollOffset -3
 
 	// Select
 	FrameIndex EBLS A 0 0

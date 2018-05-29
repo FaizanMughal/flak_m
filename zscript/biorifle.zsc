@@ -255,11 +255,12 @@ Class BioGel : Actor
 				atside = 0;
 				normal *= -1;
 			}
+			Vector3 orig = (BlockingLine.v1.p.x,BlockingLine.v1.p.y,0);
+			Vector3 onwall = pos-(normal dot (pos-orig))*normal;
+			SetOrigin(onwall+normal*0.5,false);
 			angle = atan2(normal.y,normal.x);
 			pitch = 0;
 			roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
-			LineTrace(angle+180,172,0,TRF_THRUACTORS,data:d);
-			SetOrigin(d.HitLocation+normal*0.5,false);
 			if ( waterlevel > 0 ) hittype = HIT_FLOOR;
 			else hittype = HIT_WALL;
 		}
@@ -345,6 +346,7 @@ Class BioGel : Actor
 		+SKYEXPLODE;
 		+FORCERADIUSDMG;
 		+FORCEXYBILLBOARD;
+		+MOVEWITHSECTOR;
 	}
 	States
 	{

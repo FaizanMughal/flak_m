@@ -33,7 +33,7 @@ Model "Translocator"
 	SurfaceSkin 1 1 "tloc2_.png"
 	Scale 0.046 0.046 0.0552
 	AngleOffset -90
-	ZOffset 6
+	ZOffset 1
 
 	FrameIndex TLCP B 1 0
 }
@@ -48,8 +48,9 @@ Model "Translocator"
 	SurfaceSkin 0 3 "tloc4.png"
 	Scale 0.11 -0.055 0.11
 	Offset -19.8 -22.8 -31.2
-	AngleOffset -94.21875
-	PitchOffset 3.55555555556
+	AngleOffset -95
+	PitchOffset 5
+	RollOffset -5
 
 	// select
 	FrameIndex TLCS A 0 18

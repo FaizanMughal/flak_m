@@ -120,12 +120,13 @@ Class TranslocatorModule : Actor
 	{
 		Radius 2;
 		Height 2;
-		Speed 20;
+		Speed 25;
 		PROJECTILE;
 		-NOGRAVITY;
 		+USEBOUNCESTATE;
 		+SKYEXPLODE;
 		+HITTRACER;
+		+MOVEWITHSECTOR;
 		BounceType "Doom";
 		BounceFactor 0.5;
 		WallBounceFactor 0.5;
@@ -287,8 +288,9 @@ Class Translocator : UTWeapon
 		p.target = self;
 		p.angle = angle;
 		p.pitch = BulletSlope();
-		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
-		p.vel.z += 5;
+		Vector3 dir = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch));
+		dir.z += 0.35*(1-abs(dir.z));
+		p.vel = dir*p.speed;
 		invoker.module = p;
 	}
 
