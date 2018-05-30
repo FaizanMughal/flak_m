@@ -87,6 +87,11 @@ $playeralias	player	female	*pain75-drowning	ut/femaledrowning
 $playeralias	player	female	*pain50-drowning	ut/femaledrowning
 $playeralias	player	female	*pain25-drowning	ut/femaledrowning
 
+ut/playerfootstep1	stone02
+ut/playerfootstep2	stone04
+ut/playerfootstep3	stone05
+$random ut/playerfootstep { ut/playerfootstep1 ut/playerfootstep2 ut/playerfootstep3 }
+
 // everything else
 
 misc/secret	capsound

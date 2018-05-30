@@ -7,7 +7,7 @@ Class RifleAmmo : Ammo
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
-		Ammo.BackpackMaxAmount 50;
+		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 5;
 	}
 	States
@@ -150,23 +150,27 @@ Class SniperRifle : UTWeapon
 		SRFS A 1 A_Raise(int.max);
 		Wait;
 	Ready:
-		SRFS A 1 A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
-		SRFS B 2;
-		SRFS C 1;
-		SRFS D 2;
-		SRFS E 1;
-		SRFS F 2;
-		SRFS G 1;
-		SRFS H 2;
-		SRFS I 1;
-		SRFS J 2;
-		SRFS K 1;
-		SRFS L 2;
-		SRFS M 1;
-		SRFS N 2;
-		SRFS O 1;
-		SRFS P 2;
-		SRFS Q 1;
+		SRFS A 1
+		{
+			A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
+			A_WeaponReady(WRF_NOFIRE);
+		}
+		SRFS B 2 A_WeaponReady(WRF_NOFIRE);
+		SRFS C 1 A_WeaponReady(WRF_NOFIRE);
+		SRFS D 2 A_WeaponReady(WRF_NOFIRE);
+		SRFS E 1 A_WeaponReady(WRF_NOFIRE);
+		SRFS F 2 A_WeaponReady(WRF_NOFIRE);
+		SRFS G 1 A_WeaponReady(WRF_NOFIRE);
+		SRFS H 2 A_WeaponReady(WRF_NOFIRE);
+		SRFS I 1 A_WeaponReady(WRF_NOFIRE);
+		SRFS J 2 A_WeaponReady(WRF_NOFIRE);
+		SRFS K 1 A_WeaponReady(WRF_NOFIRE);
+		SRFS L 2 A_WeaponReady(WRF_NOFIRE);
+		SRFS M 1 A_WeaponReady(WRF_NOFIRE);
+		SRFS N 2 A_WeaponReady(WRF_NOFIRE);
+		SRFS O 1 A_WeaponReady(WRF_NOFIRE);
+		SRFS P 2 A_WeaponReady(WRF_NOFIRE);
+		SRFS Q 1 A_WeaponReady(WRF_NOFIRE);
 	Idle:
 		SRFI A 1
 		{

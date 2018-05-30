@@ -204,7 +204,7 @@ Class Minigun : UTWeapon
 		MGNS A 1 A_Raise(int.max);
 		Wait;
 	Ready:
-		MGNS ABCDEFGHIJKLMNOPQRST 1;
+		MGNS ABCDEFGHIJKLMNOPQRST 1 A_WeaponReady(WRF_NOFIRE);
 	Idle:
 		MGNI ABCDEFGHIJKLMNOPQRS 5
 		{

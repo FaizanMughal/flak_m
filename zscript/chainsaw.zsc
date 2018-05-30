@@ -155,6 +155,7 @@ Class UTChainsaw : UTWeapon
 	Ready:
 		CSWS ABCDEFGHIJLMNO 1
 		{
+			A_WeaponReady(WRF_NOFIRE);
 			A_AlertMonsters();
 			A_QuakeEx(1,1,1,2,0,1,"",QF_RELATIVE,rollIntensity:0.1);
 		}

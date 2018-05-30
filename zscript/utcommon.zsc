@@ -157,6 +157,14 @@ Class UTPlayer : DoomPlayer
 		}
 		else GiveInventory(type,amount,true);
 	}
+
+	override void Tick()
+	{
+		Super.Tick();
+		double ang = level.time/(20*TICRATE/35.)*360.;
+		if ( (abs(sin(ang)) >= 1.0) && player.onground && (player.cmd.forwardmove || player.cmd.sidemove) )
+			A_PlaySound("ut/playerfootstep",CHAN_BODY);
+	}
 }
 
 // Random Spawner that passes through dropped status to items

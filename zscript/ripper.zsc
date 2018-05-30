@@ -7,7 +7,7 @@ Class RipperAmmo : Ammo
 		Inventory.Amount 25;
 		Inventory.MaxAmount 75;
 		Ammo.BackpackAmount 50;
-		Ammo.BackpackMaxAmount 75;
+		Ammo.BackpackMaxAmount 150;
 		Ammo.DropAmount 10;
 	}
 	States
@@ -185,7 +185,7 @@ Class Razor2Alt : Razor2
 	{
 		A_SetRenderStyle(1.0,STYLE_Add);
 		bFORCEXYBILLBOARD = true;
-		Scale *= 0.5;
+		Scale *= 0.65;
 		A_StopSound(CHAN_VOICE);
 		A_PlaySound("ripper/althit");
 		Spawn("Razor2AltLight",pos);
@@ -280,8 +280,8 @@ Class Ripper2 : UTWeapon
 		RZRS A 1 A_Raise(int.max);
 		Wait;
 	Ready:
-		RZRS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
-		RZS2 ABCD 1;
+		RZRS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE);
+		RZS2 ABCD 1 A_WeaponReady(WRF_NOFIRE);
 	Idle:
 		RZRI ABCDEFGHIJKLMNOPQRS 2
 		{

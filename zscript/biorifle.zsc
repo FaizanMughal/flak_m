@@ -26,7 +26,7 @@ Class BioAmmo : Ammo
 		Inventory.Amount 25;
 		Inventory.MaxAmount 100;
 		Ammo.BackpackAmount 50;
-		Ammo.BackpackMaxAmount 100;
+		Ammo.BackpackMaxAmount 199;
 		Ammo.DropAmount 10;
 	}
 	States
@@ -336,6 +336,7 @@ Class BioGel : Actor
 	{
 		Obituary "%o drank a glass of %k's dripping green load.";
 		DamageType 'Slime';
+		DamageFunction Random[GES](20,30)*Scale.x;
 		RenderStyle "Add";
 		Radius 4;
 		Height 4;
@@ -498,7 +499,7 @@ Class BioRifle : UTWeapon
 		BIOP B -1;
 		Stop;
 	Ready:
-		BIOS ABCDEFGHIJKLMNOPQRSTUV 1;
+		BIOS ABCDEFGHIJKLMNOPQRSTUV 1 A_WeaponReady(WRF_NOFIRE);
 	Idle:
 		BIOI A 1
 		{

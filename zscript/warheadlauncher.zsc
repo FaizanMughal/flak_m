@@ -8,7 +8,7 @@ Class WarheadAmmo : Ammo
 		Inventory.Amount 1;
 		Inventory.MaxAmount 2;
 		Ammo.BackpackAmount 0;
-		Ammo.BackpackMaxAmount 2;
+		Ammo.BackpackMaxAmount 3;
 		Ammo.DropAmount 1;
 		Inventory.RespawnTics 2100;
 	}
@@ -69,7 +69,7 @@ Class ShockWave : Actor
 			if ( (dist > olddmgradius) || (dir dot a.vel < 0) )
 			{
 				a.vel += dir*(moscale/a.mass+20);
-				a.DamageMobj(self,target,moscale,'RedeemerDeath');
+				a.DamageMobj(self,target,moscale,'RedeemerDeath',DMG_THRUSTLESS);
 			}
 		}
 		olddmgradius = dmgradius;
@@ -246,6 +246,7 @@ Class WarShell : Actor
 		Height 4;
 		Speed 2;
 		DamageType 'RedeemerDeath';
+		DamageFactor 1000;
 		PROJECTILE;
 		+FORCEXYBILLBOARD;
 		+SKYEXPLODE;
@@ -657,7 +658,7 @@ Class WarheadLauncher : UTWeapon replaces BFG9000
 		RDMP B -1;
 		Stop;
 	Ready:
-		WARS ABCDEFGHIJKLMNO 1;
+		WARS ABCDEFGHIJKLMNO 1 A_WeaponReady(WRF_NOFIRE);
 	Idle:
 		WARI A 1
 		{

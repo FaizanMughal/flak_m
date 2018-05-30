@@ -217,7 +217,7 @@ Class ImpactHammer : UTWeapon replaces Fist
 		IMPS A 1 A_Raise(int.max);
 		Wait;
 	Ready:
-		IMPS ABCDEFGHIJKLMNOPQ 1;
+		IMPS ABCDEFGHIJKLMNOPQ 1 A_WeaponReady(WRF_NOFIRE);
 	Idle:
 		IMPI A 1 A_WeaponReady();
 		Wait;

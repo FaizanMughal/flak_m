@@ -33,7 +33,7 @@ Class FlakAmmo : Ammo
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
-		Ammo.BackpackMaxAmount 50;
+		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 5;
 	}
 	States
@@ -574,8 +574,8 @@ Class FlakCannon : UTWeapon
 		FPCK B -1;
 		Stop;
 	Ready:
-		FLKS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
-		FKS2 ABC 1;
+		FLKS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE);
+		FKS2 ABC 1 A_WeaponReady(WRF_NOFIRE);
 		FLKL A 1 A_Loading(true);
 		FLKL BCDEFGHIJKLMNO 1;
 		Goto Idle;

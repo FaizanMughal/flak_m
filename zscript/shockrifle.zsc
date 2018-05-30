@@ -7,7 +7,7 @@ Class ShockAmmo : Ammo
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
-		Ammo.BackpackMaxAmount 50;
+		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 5;
 	}
 	States
@@ -261,6 +261,7 @@ Class ShockBeam : Actor
 		+NOCLIP;
 		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
+		+FORCERADIUSDMG;
 	}
 	override void PostBeginPlay()
 	{
@@ -476,6 +477,7 @@ Class SuperShockBeam : Actor
 		+NOCLIP;
 		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
+		+FORCERADIUSDMG;
 		+EXTREMEDEATH;
 	}
 	override void PostBeginPlay()
@@ -789,7 +791,7 @@ Class ShockBall : Actor
 	}
 	action void A_BallExplode()
 	{
-		A_Explode(Random[ASMD](50,60),70);
+		A_Explode(Random[ASMD](40,50),70);
 		A_SprayDecal("ShockMarkBig",16);
 		Spawn("ShockExplLight",pos);
 		A_SetScale(1.0);
@@ -814,6 +816,7 @@ Class ShockBall : Actor
 		Obituary "%k inflicted mortal damage upon %o with the Shock Rifle";
 		RenderStyle "Add";
 		DamageType 'jolted';
+		DamageFunction Random[ASMD](50,60);
 		Radius 2;
 		Height 0;
 		Scale 0.4;
@@ -821,7 +824,6 @@ Class ShockBall : Actor
 		PROJECTILE;
 		+FORCEXYBILLBOARD;
 		+SKYEXPLODE;
-		+FORCERADIUSDMG;
 	}
 	States
 	{
@@ -850,7 +852,7 @@ Class SuperShockBall : Actor
 	}
 	action void A_BallExplode()
 	{
-		A_Explode(Random[ASMD](5000,6000),120);
+		A_Explode(Random[ASMD](4000,5000),120);
 		A_SprayDecal("ShockMarkBig",16);
 		Spawn("SuperShockExplLight",pos);
 		A_SetScale(1.5);
@@ -876,6 +878,7 @@ Class SuperShockBall : Actor
 		Obituary "%k electrified %o with the Enhanced Shock Rifle.";
 		RenderStyle "Add";
 		DamageType 'jolted';
+		DamageFunction Random[ASMD](5000,6000);
 		Radius 2;
 		Height 0;
 		Scale 0.5;
@@ -962,7 +965,7 @@ Class ShockRifle : UTWeapon
 		ASMP B -1;
 		Stop;
 	Ready:
-		ASMS ABCDEFGHIJKLMNO 1;
+		ASMS ABCDEFGHIJKLMNO 1 A_WeaponReady(WRF_NOFIRE);
 	Idle:
 		ASMI A 1
 		{
@@ -1071,7 +1074,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		ASMP B -1;
 		Stop;
 	Ready:
-		ASMS ABCDEFGHIJKLMNO 1;
+		ASMS ABCDEFGHIJKLMNO 1 A_WeaponReady(WRF_NOFIRE);
 	Idle:
 		ASMI A 1
 		{

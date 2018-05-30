@@ -45,3 +45,9 @@ In progress:
  - Add some more effects, maybe some nicer recoil on guns too.
  - General polishing and bugfixing.
  - Trim out unused animations.
+
+Known bugs:
+
+ - Sometimes the slave enforcer gets "lowered" while the main enforcer is
+   reloading. No idea what causes this.
+ - Sludge doesn't react to ceiling and wall movement.
