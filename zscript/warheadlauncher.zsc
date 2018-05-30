@@ -8,7 +8,7 @@ Class WarheadAmmo : Ammo
 		Inventory.Amount 1;
 		Inventory.MaxAmount 2;
 		Ammo.BackpackAmount 0;
-		Ammo.BackpackMaxAmount 3;
+		Ammo.BackpackMaxAmount 2;
 		Ammo.DropAmount 1;
 		Inventory.RespawnTics 2100;
 	}
