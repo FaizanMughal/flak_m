@@ -195,7 +195,8 @@ Class Razor2Alt : Razor2
 		Spawn("Razor2AltLight",pos);
 		A_AlertMonsters();
 		A_SprayDecal("RazorBlast",20);
-		A_Explode(Random[Ripper](20,34),180);
+		A_Explode(Random[Ripper](20,34),120);
+		A_QuakeEx(3,3,3,10,0,180,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		int numpt = Random[Ripper](10,20);
 		Vector3 x = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
 		for ( int i=0; i<numpt; i++ )

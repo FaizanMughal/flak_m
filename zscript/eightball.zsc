@@ -70,7 +70,7 @@ Class UTRocketTrail : Actor
 		+NOGRAVITY;
 		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
-		Scale 0.2;
+		Scale 0.7;
 	}
 	override void PostBeginPlay()
 	{
@@ -132,8 +132,8 @@ Class UTRocket : Actor
 		A_SprayDecal("RocketBlast",150);
 		A_NoGravity();
 		A_SetScale(0.75);
-		A_Explode(Random[Eightball](60,70),200);
-		A_QuakeEx(3,3,3,8,0,300,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
+		A_Explode(Random[Eightball](60,70),100);
+		A_QuakeEx(3,3,3,8,0,250,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
 		A_PlaySound("utrl/explode",CHAN_VOICE);
 		A_AlertMonsters();
 		Spawn("RocketExplLight",pos);
@@ -304,7 +304,7 @@ Class UTRocketLauncher : UTWeapon
 			for ( int i=0; i<num; i++ )
 			{
 				a = FRandom[Eightball](0,360);
-				s = FRandom[Eightball](0,0.1);
+				s = FRandom[Eightball](0,0.06*(num-1));
 				Vector3 dir = (x2+cos(a)*y2*s+sin(a)*z2*s).unit();
 				p = Spawn("UTGrenade",origin);
 				p.vel = dir*p.speed*FRandom[Eightball](1.0,1.2);

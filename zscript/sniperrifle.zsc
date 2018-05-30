@@ -28,7 +28,7 @@ Class RifleAmmo2 : RifleAmmo
 		Inventory.PickupMessage "You got a Rifle Round.";
 		Inventory.Amount 1;
 		Ammo.DropAmount 1;
-		Radius 1;
+		Radius 2;
 		Height 8;
 	}
 	States
