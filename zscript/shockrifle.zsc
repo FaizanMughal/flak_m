@@ -9,6 +9,8 @@ Class ShockAmmo : Ammo
 		Ammo.BackpackAmount 20;
 		Ammo.BackpackMaxAmount 50;
 		Ammo.DropAmount 5;
+		Radius 4;
+		Height 23;
 	}
 	States
 	{
@@ -759,8 +761,8 @@ Class ShockHitbox : Actor
 {
 	Default
 	{
-		Radius 24;
-		Height 24;
+		Radius 8;
+		Height 16;
 		+NOGRAVITY;
 		+NOCLIP;
 		+DONTSPLASH;
@@ -818,7 +820,7 @@ Class ShockBall : Actor
 		DamageType 'jolted';
 		DamageFunction Random[ASMD](50,60);
 		Radius 2;
-		Height 0;
+		Height 2;
 		Scale 0.4;
 		Speed 20;
 		PROJECTILE;
@@ -880,7 +882,7 @@ Class SuperShockBall : Actor
 		DamageType 'jolted';
 		DamageFunction Random[ASMD](5000,6000);
 		Radius 2;
-		Height 0;
+		Height 2;
 		Scale 0.5;
 		Speed 25;
 		PROJECTILE;
@@ -956,6 +958,9 @@ Class ShockRifle : UTWeapon
 		Weapon.AmmoType2 "ShockAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 20;
+		Radius 20;
+		Height 16;
+		UTWeapon.DroppedHeight 8;
 	}
 	States
 	{
@@ -1002,6 +1007,8 @@ Class EnhancedShockAmmo : Ammo
 		Ammo.BackpackAmount 0;
 		Ammo.BackpackMaxAmount 25;
 		Ammo.DropAmount 2;
+		Radius 4;
+		Height 23;
 	}
 	States
 	{
@@ -1065,6 +1072,9 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		Weapon.AmmoType2 "EnhancedShockAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 25;
+		Radius 20;
+		Height 16;
+		UTWeapon.DroppedHeight 8;
 	}
 	States
 	{

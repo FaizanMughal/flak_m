@@ -131,6 +131,12 @@ Class UTChainsaw : UTWeapon
 			if ( d.HitType == TRACE_HitWall ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation-d.HitDir*4);
 		}
 	}
+	override void DetachFromOwner()
+	{
+		if ( Owner ) Owner.A_StopSound(CHAN_6);
+		A_PlaySound("chainsaw/lower",CHAN_6);
+		Super.DetachFromOwner();
+	}
 	Default
 	{
 		Tag "Chainsaw";
@@ -141,6 +147,9 @@ Class UTChainsaw : UTWeapon
 		Weapon.SelectionOrder 9;
 		+WEAPON.MELEEWEAPON;
 		+FORCEPAIN;
+		Radius 20;
+		Height 16;
+		UTWeapon.DroppedHeight 12;
 	}
 	States
 	{

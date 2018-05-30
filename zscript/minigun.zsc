@@ -35,6 +35,8 @@ Class MiniAmmo : Ammo
 		Ammo.BackpackAmount 100;
 		Ammo.BackpackMaxAmount 199;
 		Ammo.DropAmount 20;
+		Radius 12;
+		Height 14;
 	}
 	States
 	{
@@ -192,6 +194,9 @@ Class Minigun : UTWeapon
 		Weapon.AmmoType2 "MiniAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 50;
+		Radius 20;
+		Height 16;
+		UTWeapon.DroppedHeight 8;
 	}
 	States
 	{

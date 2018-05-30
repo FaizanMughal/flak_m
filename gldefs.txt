@@ -538,6 +538,54 @@ HardwareShader Texture "models/JBigFlash1.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
+Brightmap Texture "models/Chunk_a00.png"
+{
+	Map "brightmaps/Chunk_a00.png"
+}
+Brightmap Texture "models/Chunk_a01.png"
+{
+	Map "brightmaps/Chunk_a01.png"
+}
+Brightmap Texture "models/Chunk_a02.png"
+{
+	Map "brightmaps/Chunk_a02.png"
+}
+Brightmap Texture "models/Chunk_a03.png"
+{
+	Map "brightmaps/Chunk_a03.png"
+}
+Brightmap Texture "models/Chunk_a04.png"
+{
+	Map "brightmaps/Chunk_a04.png"
+}
+Brightmap Texture "models/Chunk_a05.png"
+{
+	Map "brightmaps/Chunk_a05.png"
+}
+Brightmap Texture "models/Chunk_a06.png"
+{
+	Map "brightmaps/Chunk_a06.png"
+}
+Brightmap Texture "models/Chunk_a07.png"
+{
+	Map "brightmaps/Chunk_a07.png"
+}
+Brightmap Texture "models/Chunk_a08.png"
+{
+	Map "brightmaps/Chunk_a08.png"
+}
+Brightmap Texture "models/Chunk_a09.png"
+{
+	Map "brightmaps/Chunk_a09.png"
+}
+Brightmap Texture "models/Chunk_a10.png"
+{
+	Map "brightmaps/Chunk_a10.png"
+}
+Brightmap Texture "models/Chunk_a11.png"
+{
+	Map "brightmaps/Chunk_a11.png"
+}
 PulseLight "UTRedKeyLight"
 {
 	Color 1.0 0.0 0.0

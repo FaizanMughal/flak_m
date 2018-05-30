@@ -6,6 +6,8 @@ Class EClip : MiniAmmo replaces Clip
 		Inventory.PickupMessage "You picked up a Clip.";
 		Inventory.Amount 20;
 		Ammo.DropAmount 5;
+		Radius 8;
+		Height 6;
 	}
 	States
 	{
@@ -94,7 +96,7 @@ Class UTCasing : Actor
 	Default
 	{
 		Radius 2;
-		Height 0;
+		Height 2;
 		+NOBLOCKMAP;
 		+MISSILE;
 		+MOVEWITHSECTOR;
@@ -360,6 +362,9 @@ Class Enforcer : UTWeapon replaces Pistol
 		Weapon.AmmoGive 30;
 		Enforcer.ClipCount 20;
 		Enforcer.SlaveClipCount 20;
+		Radius 8;
+		Height 16;
+		UTWeapon.DroppedHeight 8;
 	}
 	States
 	{

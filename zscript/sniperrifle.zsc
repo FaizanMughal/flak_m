@@ -9,6 +9,8 @@ Class RifleAmmo : Ammo
 		Ammo.BackpackAmount 20;
 		Ammo.BackpackMaxAmount 50;
 		Ammo.DropAmount 5;
+		Radius 6;
+		Height 12;
 	}
 	States
 	{
@@ -26,6 +28,8 @@ Class RifleAmmo2 : RifleAmmo
 		Inventory.PickupMessage "You got a Rifle Round.";
 		Inventory.Amount 1;
 		Ammo.DropAmount 1;
+		Radius 1;
+		Height 8;
 	}
 	States
 	{
@@ -138,6 +142,9 @@ Class SniperRifle : UTWeapon
 		Weapon.AmmoType2 "RifleAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 8;
+		Radius 20;
+		Height 16;
+		UTWeapon.DroppedHeight 10;
 	}
 	States
 	{

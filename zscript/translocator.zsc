@@ -2,7 +2,7 @@ Class ModuleHitbox : Actor
 {
 	Default
 	{
-		Radius 10;
+		Radius 5;
 		Height 4;
 		+SHOOTABLE;
 		+NOGRAVITY;
@@ -30,7 +30,7 @@ Class ModuleHitbox : Actor
 			Destroy();
 			return;
 		}
-		SetOrigin(target.pos-(0,0,height*0.5),true);
+		SetOrigin(target.pos,true);
 		if ( target.bMISSILE ) return;
 		let bi = BlockThingsIterator.Create(self,32);
 		while ( bi.Next() )
@@ -119,7 +119,7 @@ Class TranslocatorModule : Actor
 	Default
 	{
 		Radius 2;
-		Height 0;
+		Height 2;
 		Speed 25;
 		PROJECTILE;
 		-NOGRAVITY;
@@ -357,6 +357,9 @@ Class Translocator : UTWeapon
 		Weapon.SlotNumber 1;
 		Weapon.SelectionOrder 10;
 		+WEAPON.NO_AUTO_SWITCH;
+		Radius 5;
+		Height 16;
+		UTWeapon.DroppedHeight 4;
 	}
 	States
 	{

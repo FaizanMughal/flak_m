@@ -9,6 +9,8 @@ Class RipperAmmo : Ammo
 		Ammo.BackpackAmount 50;
 		Ammo.BackpackMaxAmount 75;
 		Ammo.DropAmount 10;
+		Radius 4;
+		Height 21;
 	}
 	States
 	{
@@ -27,6 +29,8 @@ Class Razor2Trail : Actor
 		+NOCLIP;
 		+DONTSPLASH;
 		+NOTELEPORT;
+		Radius 0.1;
+		Height 0;
 	}
 	override void Tick()
 	{
@@ -54,7 +58,7 @@ Class Razor2 : Actor
 	Default
 	{
 		Radius 2;
-		Height 0;
+		Height 2;
 		Speed 50;
 		DamageFunction Random[Ripper](20,30);
 		DamageType "Ripper";
@@ -244,6 +248,9 @@ Class Ripper2 : UTWeapon
 		Weapon.AmmoType2 "RipperAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 15;
+		Radius 20;
+		Height 16;
+		UTWeapon.DroppedHeight 16;
 	}
 	action void A_RazorFire( bool alt = false )
 	{

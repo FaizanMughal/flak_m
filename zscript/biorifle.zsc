@@ -28,6 +28,8 @@ Class BioAmmo : Ammo
 		Ammo.BackpackAmount 50;
 		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 10;
+		Radius 8;
+		Height 8;
 	}
 	States
 	{
@@ -82,13 +84,18 @@ Class BioHitbox : Actor
 {
 	Default
 	{
-		Radius 2;
-		Height 2;
+		Radius 3;
+		Height 6;
 		+SHOOTABLE;
 		+NOGRAVITY;
 		+NOCLIP;
 		+DONTSPLASH;
 		+NOBLOOD;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		if ( target ) A_SetSize(1.5*target.scale.x,3*target.scale.y);
 	}
 	override int DamageMobj( Actor inflictor, Actor source, int damage, Name mod, int flags, double angle )
 	{
@@ -338,8 +345,8 @@ Class BioGel : Actor
 		DamageType 'Slime';
 		DamageFunction Random[GES](20,30)*Scale.x;
 		RenderStyle "Add";
-		Radius 4;
-		Height 4;
+		Radius 3;
+		Height 3;
 		Scale 2;
 		Speed 20;
 		PROJECTILE;
@@ -490,6 +497,9 @@ Class BioRifle : UTWeapon
 		Weapon.AmmoType2 "BioAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 25;
+		Radius 10;
+		Height 16;
+		UTWeapon.DroppedHeight 14;
 	}
 	States
 	{

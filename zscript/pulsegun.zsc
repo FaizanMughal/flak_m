@@ -27,6 +27,8 @@ Class PulseAmmo : Ammo
 		Ammo.BackpackAmount 50;
 		Ammo.BackpackMaxAmount 199;
 		Ammo.DropAmount 10;
+		Radius 5;
+		Height 12;
 	}
 	States
 	{
@@ -99,7 +101,7 @@ Class PulseBall : Actor
 		Scale 0.2;
 		Speed 30;
 		Radius 2;
-		Height 0;
+		Height 2;
 	}
 	override void PostBeginPlay()
 	{
@@ -516,6 +518,11 @@ Class PulseGun : UTWeapon
 		Super.OwnerDied();
 		if ( beam ) beam.Destroy();
 	}
+	override void DetachFromOwner()
+	{
+		if ( beam ) beam.Destroy();
+		Super.DetachFromOwner();
+	}
 	Default
 	{
 		Tag "Pulse Gun";
@@ -529,6 +536,9 @@ Class PulseGun : UTWeapon
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 60;
 		PulseGun.ClipCount 50;
+		Radius 18;
+		Height 16;
+		UTWeapon.DroppedHeight 12;
 	}
 	States
 	{

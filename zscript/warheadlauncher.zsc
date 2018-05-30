@@ -11,6 +11,8 @@ Class WarheadAmmo : Ammo
 		Ammo.BackpackMaxAmount 2;
 		Ammo.DropAmount 1;
 		Inventory.RespawnTics 2100;
+		Radius 2;
+		Height 42;
 	}
 	States
 	{
@@ -110,8 +112,8 @@ Class WarheadHitbox : Actor
 {
 	Default
 	{
-		Radius 8;
-		Height 8;
+		Radius 2;
+		Height 4;
 		+SHOOTABLE;
 		+NOGRAVITY;
 		+NOCLIP;
@@ -242,8 +244,8 @@ Class WarShell : Actor
 	Default
 	{
 		Obituary "%o was vaporized by %k's Redeemer!!";
-		Radius 4;
-		Height 4;
+		Radius 2;
+		Height 2;
 		Speed 2;
 		DamageType 'RedeemerDeath';
 		DamageFactor 1000;
@@ -649,6 +651,9 @@ Class WarheadLauncher : UTWeapon replaces BFG9000
 		Inventory.RespawnTics 2100;
 		+INVENTORY.ALWAYSPICKUP;
 		+WEAPON.NOAUTOFIRE;
+		Radius 24;
+		Height 16;
+		UTWeapon.DroppedHeight 16;
 	}
 	States
 	{

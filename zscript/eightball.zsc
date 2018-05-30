@@ -9,6 +9,8 @@ Class UTRocketAmmo : Ammo
 		Ammo.BackpackAmount 12;
 		Ammo.BackpackMaxAmount 48;
 		Ammo.DropAmount 3;
+		Radius 4;
+		Height 14;
 	}
 	States
 	{
@@ -27,6 +29,8 @@ Class UTRocketAmmo2 : UTRocketAmmo
 		Inventory.PickupMessage "You picked up a Single Rocket.";
 		Inventory.Amount 1;
 		Ammo.DropAmount 1;
+		Radius 2;
+		Height 13;
 	}
 	States
 	{
@@ -108,7 +112,7 @@ Class UTRocket : Actor
 		DamageFunction Random[Eightball](70,80);
 		DamageType 'RocketDeath';
 		Radius 2;
-		Height 0;
+		Height 2;
 		Speed 30;
 		PROJECTILE;
 		+SKYEXPLODE;
@@ -386,6 +390,9 @@ Class UTRocketLauncher : UTWeapon
 		Weapon.AmmoType2 "UTRocketAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 6;
+		Radius 20;
+		Height 16;
+		UTWeapon.DroppedHeight 12;
 	}
 	States
 	{

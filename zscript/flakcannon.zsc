@@ -35,6 +35,8 @@ Class FlakAmmo : Ammo
 		Ammo.BackpackAmount 20;
 		Ammo.BackpackMaxAmount 50;
 		Ammo.DropAmount 5;
+		Radius 10;
+		Height 8;
 	}
 	States
 	{
@@ -52,6 +54,8 @@ Class FlakAmmo2 : FlakAmmo
 		Inventory.PickupMessage "You picked up a Flak Shell.";
 		Inventory.Amount 1;
 		Ammo.DropAmount 1;
+		Radius 4;
+		Height 6;
 	}
 	States
 	{
@@ -77,9 +81,9 @@ Class ChunkLight : DynamicLight
 			return;
 		}
 		if ( globalfreeze || level.frozen ) return;
-		args[LIGHT_RED] = 255*target.alpha;
-		args[LIGHT_GREEN] = 224*target.alpha;
-		args[LIGHT_BLUE] = 128*target.alpha;
+		args[LIGHT_RED] = 255*(10-target.frame)*0.1;
+		args[LIGHT_GREEN] = 224*(10-target.frame)*0.1;
+		args[LIGHT_BLUE] = 128*(10-target.frame)*0.1;
 	}
 }
 
@@ -94,7 +98,6 @@ Class ChunkTrail : Actor
 		+NOGRAVITY;
 		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
-		+INVISIBLE;	// temporarily until clipping screwery is fixed
 		Scale 0.2;
 	}
 	override void PostBeginPlay()
@@ -107,13 +110,11 @@ Class ChunkTrail : Actor
 	{
 		Super.Tick();
 		if ( globalfreeze || level.frozen ) return;
-		A_SpawnParticle("FFFF00",SPF_FULLBRIGHT,1,8,startalphaf:alpha);
-		A_SpawnParticle("E0A000",SPF_FULLBRIGHT,1,16,startalphaf:alpha*0.6);
-		A_SpawnParticle("804000",SPF_FULLBRIGHT,1,32,startalphaf:alpha*0.3);
 		if ( InStateSequence(CurState,FindState("Death")) ) return;
 		if ( !target )
 		{
-			SetStateLabel("Death");
+			int dist = FindState("Spawn").DistanceTo(CurState);
+			SetState(FindState("Death")+dist);
 			return;
 		}
 		SetOrigin(target.pos+(0,0,speed),true);
@@ -121,13 +122,12 @@ Class ChunkTrail : Actor
 	States
 	{
 	Spawn:
-		FGLO A 1 Bright;
-		Wait;
+		FGLO ABCDEFGHIJK 3 Bright;
+		Stop;
 	Death:
-		FGLO A 1 Bright A_FadeOut(0.1);
-		Wait;
+		FGLO ABCDEFGHIJK 1 Bright;
+		Stop;
 	}
-
 }
 
 Class FlakChunk : Actor
@@ -142,7 +142,7 @@ Class FlakChunk : Actor
 	{
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
 		Radius 2;
-		Height 0;
+		Height 2;
 		Speed 50;
 		DamageFunction Random[Flak](12,18);
 		DamageType 'Shredded';
@@ -164,7 +164,7 @@ Class FlakChunk : Actor
 		lifespeed = FRandom[Flak](0.004,0.008);
 		trail = ChunkTrail(Spawn("ChunkTrail",pos));
 		trail.target = self;
-		trail.speed = 0.5;
+		trail.speed = 2;
 		rollvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1);
 		pitchvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1);
 		yawvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1);
@@ -356,14 +356,13 @@ Class SlugLight : DynamicLight
 
 Class FlakSlug : Actor
 {
-	ChunkTrail trail;
 	Default
 	{
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
 		DamageType 'FlakDeath';
 		DamageFunction Random[Flak](60,80);
 		Radius 2;
-		Height 0;
+		Height 2;
 		Speed 40;
 		PROJECTILE;
 		-NOGRAVITY;
@@ -373,19 +372,12 @@ Class FlakSlug : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		trail = ChunkTrail(Spawn("ChunkTrail",pos));
-		trail.target = self;
-		trail.speed = 1;
 		vel.z += 5;
 	}
 	override void Tick()
 	{
 		Super.Tick();
-		if ( waterlevel > 0 )
-		{
-			vel.xy *= 0.98;
-			if ( trail ) trail.Destroy();
-		}
+		if ( waterlevel > 0 ) vel.xy *= 0.98;
 	}
 	action void A_FlakExplode()
 	{
@@ -565,6 +557,9 @@ Class FlakCannon : UTWeapon
 		Weapon.AmmoType2 "FlakAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 10;
+		Radius 12;
+		Height 16;
+		UTWeapon.DroppedHeight 16;
 	}
 	States
 	{

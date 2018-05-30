@@ -184,6 +184,10 @@ Class RandomSpawner2 : RandomSpawner
 
 Class UTWeapon : Weapon
 {
+	double droppedheight;
+
+	Property DroppedHeight : droppedheight;
+
 	// Drawstuffs under HUD
 	virtual ui void PreRender() {}
 	// Drawstuffs over HUD
@@ -197,6 +201,7 @@ Class UTWeapon : Weapon
 		{
 			d.SetState(d.ResolveState("Spawn")+1);
 			d.bALWAYSPICKUP = true;
+			d.A_SetSize(-1,UTWeapon(d).droppedheight);
 		}
 		return d;
 	}
@@ -205,6 +210,7 @@ Class UTWeapon : Weapon
 	{
 		SetState(ResolveState("Spawn")+1);
 		bALWAYSPICKUP = true;
+		A_SetSize(-1,droppedheight);
 		return false;
 	}
 
@@ -228,6 +234,7 @@ Class UTWeapon : Weapon
 		Weapon.BobRangeX 0.2;
 		Weapon.BobRangeY 0.4;
 		+WEAPON.NOALERT;
+		UTWeapon.DroppedHeight 16;
 	}
 }
 

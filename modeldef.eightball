@@ -15,8 +15,8 @@ Model "UTRocketAmmo2"
 	Path "models"
 	Model 0 "UTRocket_d.3d"
 	Skin 0 "JuRocket1_.png"
+	Offset 0 1.4796 6
 	Scale 0.0822 0.09864 0.07
-	ZOffset 6
 	RollOffset -90
 
 	FrameIndex RCKT A 0 0
