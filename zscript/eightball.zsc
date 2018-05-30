@@ -312,7 +312,7 @@ Class UTRocketLauncher : UTWeapon
 		{
 			// single rocket
 			p = Spawn("UTRocket",origin+cos(a)*y*s+sin(a)*z*s);
-			p.vel = (x2+cos(a)*y2*s*0.01+sin(a)*z2*s*0.01).unit()*p.speed;
+			p.vel = x2*p.speed;
 			p.target = self;
 			p.tracer = invoker.LockedTarget;
 		}
@@ -325,7 +325,7 @@ Class UTRocketLauncher : UTWeapon
 			for ( int i=0; i<num; i++ )
 			{
 				p = Spawn("UTRocket",origin+cos(a)*y*s+sin(a)*z*s);
-				p.vel = (x2+cos(a)*y2*s*0.01+sin(a)*z2*s*0.01).unit()*p.speed;
+				p.vel = (x2+cos(a)*y2*s*0.02+sin(a)*z2*s*0.02).unit()*p.speed;
 				p.target = self;
 				p.tracer = invoker.LockedTarget;
 				a += step;
@@ -334,12 +334,12 @@ Class UTRocketLauncher : UTWeapon
 		else
 		{
 			// rockets (wide spread)
-			double range = (num-1);
+			double range = 2.5*(num-1);
 			double step = range/(num-1);
 			s = -range*0.5;
 			for ( int i=0; i<num; i++ )
 			{
-				p = Spawn("UTRocket",origin+sin(s)*y*2);
+				p = Spawn("UTRocket",origin+sin(s)*y);
 				p.vel = (x2+sin(s)*y2).unit()*p.speed;
 				p.target = self;
 				p.tracer = invoker.LockedTarget;
@@ -640,32 +640,32 @@ Class UTRocketLauncher : UTWeapon
 	FireOne:
 		EBF1 A 0 A_FireRockets(1);
 		EBF1 ABCDEFGH 2;
-		EBLI A 2;
+		EBLI A 10;
 		Goto Idle;
 	FireTwo:
 		EBF2 A 0 A_FireRockets(2);
 		EBF2 ABCDEFGHIJK 2;
-		EBLI A 2;
+		EBLI A 10;
 		Goto Idle;
 	FireThree:
 		EBF3 A 0 A_FireRockets(3);
 		EBF3 ABCDEFGHIJ 2;
-		EBLI A 2;
+		EBLI A 10;
 		Goto Idle;
 	FireFour:
 		EBF4 A 0 A_FireRockets(4);
 		EBF4 ABCDEFGHIJK 2;
-		EBLI A 2;
+		EBLI A 10;
 		Goto Idle;
 	FireFive:
 		EBF5 A 0 A_FireRockets(5);
 		EBF5 ABCDEFGHIJKLM 2;
-		EBLI A 2;
+		EBLI A 10;
 		Goto Idle;
 	FireSix:
 		EBF6 A 0 A_FireRockets(6);
 		EBF6 ABCDEFGHIJKLMNOP 2;
-		EBLI A 2;
+		EBLI A 10;
 		Goto Idle;
 	Deselect:
 		EBLD ABCDEFGHIJK 1;
