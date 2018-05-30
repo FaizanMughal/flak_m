@@ -225,6 +225,10 @@ Class Razor2Alt : Razor2
 	{
 		return damage;
 	}
+	override int SpecialMissileHit( Actor victim )
+	{
+		return -1;
+	}
 	States
 	{
 	Death:
