@@ -98,8 +98,8 @@ Class PulseBall : Actor
 		PROJECTILE;
 		Scale 0.2;
 		Speed 30;
-		Radius 4;
-		Height 4;
+		Radius 2;
+		Height 0;
 	}
 	override void PostBeginPlay()
 	{

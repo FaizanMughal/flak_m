@@ -180,3 +180,5 @@ Sprite "EBLDH0",1,1{}
 Sprite "EBLDI0",1,1{}
 Sprite "EBLDJ0",1,1{}
 Sprite "EBLDK0",1,1{}
+Graphic "XHAIRS99",16,16{}
+Graphic "XHAIRB99",16,16{}

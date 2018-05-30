@@ -38,14 +38,10 @@ Currently implemented:
  - Jump Boots (radsuit, has "iron boots" powerup effect to compensate)
  - Minigun (slot 7)
  - Sniper Rifle (slot 0)
+ - Rocket Launcher (slot 9)
 
 In progress:
 
- - Rocket Launcher (slot 9)
-
-Things to do eventually:
-
- - Trim out unused animations.
  - Add some more effects, maybe some nicer recoil on guns too.
- - Unreal 1 weapons?
- - Think of what item(s) the jump boots can replace.
+ - General polishing and bugfixing.
+ - Trim out unused animations.

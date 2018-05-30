@@ -68,10 +68,6 @@ Class ChunkLight : DynamicLight
 		DynamicLight.Type "Point";
 		Args 255,224,128,8;
 	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-	}
 	override void Tick()
 	{
 		Super.Tick();
@@ -146,7 +142,7 @@ Class FlakChunk : Actor
 	{
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
 		Radius 2;
-		Height 2;
+		Height 0;
 		Speed 50;
 		DamageFunction Random[Flak](12,18);
 		DamageType 'Shredded';
@@ -365,13 +361,13 @@ Class FlakSlug : Actor
 	{
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
 		DamageType 'FlakDeath';
-		Radius 4;
-		Height 4;
+		DamageFunction Random[Flak](60,80);
+		Radius 2;
+		Height 0;
 		Speed 40;
 		PROJECTILE;
 		-NOGRAVITY;
 		+SKYEXPLODE;
-		+FORCERADIUSDMG;
 		+HITTRACER;
 	}
 	override void PostBeginPlay()
@@ -398,7 +394,7 @@ Class FlakSlug : Actor
 		A_SprayDecal("RocketBlast",150);
 		A_NoGravity();
 		A_SetScale(1.2);
-		A_Explode(Random[Flak](60,80),150);
+		A_Explode(Random[Flak](40,60),150);
 		A_QuakeEx(4,4,4,8,0,200,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
 		A_PlaySound("flak/explode",CHAN_VOICE);
 		A_AlertMonsters();

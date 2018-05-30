@@ -36,45 +36,236 @@ Class UTRocketAmmo2 : UTRocketAmmo
 	}
 }
 
+Class RocketLight : DynamicLight
+{
+	Default
+	{
+		DynamicLight.Type "Point";
+		Args 255,224,128,32;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.pos,true);
+	}
+}
+
+Class UTRocketTrail : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+DONTSPLASH;
+		+FORCEXYBILLBOARD;
+		Scale 0.2;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		let l = Spawn("RocketLight",pos);
+		l.target = self;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target || target.InStateSequence(target.CurState,target.FindState("Death")) )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.pos,true);
+	}
+	States
+	{
+	Spawn:
+		RFLA A -1 Bright;
+		Stop;
+	}
+}
+
+Class RocketExplLight : SlugLight
+{
+	Default
+	{
+		Args 255,224,128,120;
+	}
+}
+
 Class UTRocket : Actor
 {
 	Default
 	{
 		Obituary "%o was smacked down by %k's Rocket Launcher.";
+		DamageFunction Random[Eightball](70,80);
+		DamageType 'RocketDeath';
+		Radius 2;
+		Height 0;
+		Speed 30;
+		PROJECTILE;
+		+SKYEXPLODE;
+		+SEEKERMISSILE;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		let l = Spawn("UTRocketTrail",pos);
+		l.target = self;
+		A_PlaySound("utrl/fly",CHAN_VOICE,1.0,true,2.5);
+	}
+	action void A_RocketExplode()
+	{
+		bFORCEXYBILLBOARD = true;
+		A_SetRenderStyle(1.0,STYLE_Add);
+		A_SprayDecal("RocketBlast",150);
+		A_NoGravity();
+		A_SetScale(0.75);
+		A_Explode(Random[Eightball](60,70),200);
+		A_QuakeEx(3,3,3,8,0,300,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
+		A_PlaySound("utrl/explode",CHAN_VOICE);
+		A_AlertMonsters();
+		Spawn("RocketExplLight",pos);
+		int numpt = Random[Eightball](15,30);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Eightball](-1,1),FRandom[Eightball](-1,1),FRandom[Eightball](-1,1)).unit()*FRandom[Eightball](1,4);
+			let s = Spawn("UTSmoke",pos);
+			s.vel = pvel;
+		}
+		numpt = Random[Eightball](10,20);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Eightball](-1,1),FRandom[Eightball](-1,1),FRandom[Eightball](-1,1)).unit()*FRandom[Eightball](2,8);
+			let s = Spawn("UTSpark",pos);
+			s.vel = pvel;
+		}
+		numpt = Random[Eightball](25,50);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Eightball](-1,1),FRandom[Eightball](-1,1),FRandom[Eightball](-1,1)).unit()*FRandom[Eightball](4,12);
+			let s = Spawn("UTChip",pos);
+			s.vel = pvel;
+		}
 	}
 	States
 	{
 	Spawn:
-		RCKT B 1;
+		RCKT B 1
+		{
+			A_SetRoll(roll+30,SPF_INTERPOLATE);
+			Vector3 dir = vel.unit();
+			A_SetAngle(atan2(dir.y,dir.x),SPF_INTERPOLATE);
+			A_SetPitch(asin(-dir.z),SPF_INTERPOLATE);
+			if ( tracer ) A_SeekerMissile(0,2,SMF_PRECISE);
+			Spawn("UTSmoke",pos);
+		}
 		Wait;
+	Death:
+		TNT1 A 0 A_RocketExplode();
+		SEXP ABCDEFGHIJ 2 Bright;
+		Stop;
 	}
 }
 
-Class UTGrenade : Actor
+Class UTGrenade : UTRocket
 {
+	double rollvel, pitchvel, anglevel;
+
 	Default
 	{
-		Obituary "%o was smacked down by %k's Rocket Launcher.";
+		DamageFunction Random[Eightball](80,90);
+		DamageType 'GrenadeDeath';
+		-NOGRAVITY;
+		+USEBOUNCESTATE;
+		BounceType "Doom";
+		BounceFactor 0.75;
+		ReactionTime 85;
+		Speed 20;
+	}
+	override void PostBeginPlay()
+	{
+		Actor.PostBeginPlay();
+		rollvel = FRandom[Eightball](-8,8);
+		pitchvel = FRandom[Eightball](-8,8);
+		anglevel = FRandom[Eightball](-8,8);
+		ReactionTime += Random[Eightball](0,20);
 	}
 	States
 	{
 	Spawn:
-		RCKT A 1;
+		RCKT A 1
+		{
+			A_SetAngle(angle+anglevel,SPF_INTERPOLATE);
+			A_SetPitch(pitch+pitchvel,SPF_INTERPOLATE);
+			A_SetRoll(roll+rollvel,SPF_INTERPOLATE);
+			A_Countdown();
+		}
 		Wait;
+	Bounce:
+		RCKT A 0
+		{
+			A_PlaySound("utrl/bounce");
+			rollvel = FRandom[Eightball](-16,16);
+			pitchvel = FRandom[Eightball](-16,16);
+			anglevel = FRandom[Eightball](-16,16);
+		}
+		Goto Spawn;
 	}
 }
 
 Class UTRocketLauncher : UTWeapon
 {
+	bool LockedOn;
 	Actor LockedTarget;
+	TextureID lockontex;
+	int locktics;
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		lockontex = TexMan.CheckForTexture("Crosshr6",TexMan.Type_Any);
+	}
+
+	override void PostRender()
+	{
+		if ( LockedTarget ) Screen.DrawTexture(lockontex,false,(Screen.GetWidth()-16)*0.5,(Screen.GetHeight()-16)*0.5);
+	}
+
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !Owner ) return;
+		if ( LockedOn && (!LockedTarget || (LockedTarget.Health <= 0) || LockedTarget.bKilled || LockedTarget.bCorpse || !LockedTarget.bShootable) )
+		{
+			LockedTarget = null;
+			LockedOn = false;
+			Owner.A_PlaySound("utrl/seeklost",CHAN_6);
+		}
+		if ( LockedTarget ) A_SetCrosshair(99);
+		else A_SetCrosshair(0);
+	}
 
 	// consumes 1 ammo
-	action void A_LoadRocket()
+	action void A_LoadRocket( bool checktarget = true )
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
+		if ( weap.bAltFire )
+		{
+			invoker.LockedTarget = null;
+			invoker.LockedOn = false;
+		}
+		if ( checktarget && !weap.bAltFire ) A_CheckTarget();
 	}
 
 	// refire that is ignored if there's no ammo
@@ -97,13 +288,90 @@ Class UTRocketLauncher : UTWeapon
 		UTMainHandler.DoFlash(self,Color(64,255,0,0),1);
 		A_AlertMonsters();
 		A_QuakeEx(2+num,2+num,2+num,6+num,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1+num*0.05);
-		// TODO
+		Vector3 x, y, z, x2, y2, z2;
+		double a, s;
+		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+6.0*y-6.0*z;
+		[x2, y2, z2] = Matrix4.GetAxes(BulletSlope(),angle,roll);
+		Actor p;
+		if ( weap.bAltFire )
+		{
+			// grenades
+			for ( int i=0; i<num; i++ )
+			{
+				a = FRandom[Eightball](0,360);
+				s = FRandom[Eightball](0,0.1);
+				Vector3 dir = (x2+cos(a)*y2*s+sin(a)*z2*s).unit();
+				p = Spawn("UTGrenade",origin);
+				p.vel = dir*p.speed*FRandom[Eightball](1.0,1.2);
+				p.vel.z += 5;
+				p.target = self;
+			}
+		}
+		else if ( num <= 1 )
+		{
+			// single rocket
+			p = Spawn("UTRocket",origin+cos(a)*y*s+sin(a)*z*s);
+			p.vel = (x2+cos(a)*y2*s*0.01+sin(a)*z2*s*0.01).unit()*p.speed;
+			p.target = self;
+			p.tracer = invoker.LockedTarget;
+		}
+		else if ( player.cmd.buttons&BT_ALTATTACK )
+		{
+			// rockets ("tight wad" as UT calls it)
+			double step = 360/num;
+			a = 90;
+			s = num?1.2:0.0;
+			for ( int i=0; i<num; i++ )
+			{
+				p = Spawn("UTRocket",origin+cos(a)*y*s+sin(a)*z*s);
+				p.vel = (x2+cos(a)*y2*s*0.01+sin(a)*z2*s*0.01).unit()*p.speed;
+				p.target = self;
+				p.tracer = invoker.LockedTarget;
+				a += step;
+			}
+		}
+		else
+		{
+			// rockets (wide spread)
+			double range = (num-1);
+			double step = range/(num-1);
+			s = -range*0.5;
+			for ( int i=0; i<num; i++ )
+			{
+				p = Spawn("UTRocket",origin+sin(s)*y*2);
+				p.vel = (x2+sin(s)*y2).unit()*p.speed;
+				p.target = self;
+				p.tracer = invoker.LockedTarget;
+				s += step;
+			}
+		}
 	}
 
-	// lock-on check (TODO)
-	Actor CheckTarget()
+	// lock-on check
+	action void A_CheckTarget()
 	{
-		return null;
+		let t = ThinkerIterator.Create("Actor");
+		Actor a;
+		double closest = double.max;
+		invoker.LockedTarget = null;
+		while ( a = Actor(t.Next()) )
+		{
+			if ( !a.bSHOOTABLE || (a.Health <= 0) || a.bKilled || a.bCorpse || (a == self) || isTeammate(a) || !CheckSight(a) ) continue;
+			Vector3 viewdir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+			Vector3 reldir = level.Vec3Diff(Vec2OffsetZ(0,0,player.viewz),a.Vec2OffsetZ(0,0,a.pos.z+a.height*0.5));
+			double reldist = reldir.length();
+			if ( reldist > 2000 ) continue;
+			if ( reldir.unit() dot viewdir < 0.99 ) continue;
+			if ( reldist < closest )
+			{
+				closest = reldist;
+				invoker.LockedTarget = a;
+			}
+		}
+		if ( invoker.LockedTarget ) A_PlaySound("utrl/seeklock",CHAN_6);
+		else if ( invoker.LockedOn ) A_PlaySound("utrl/seeklost",CHAN_6);
+		if ( invoker.LockedTarget ) invoker.LockedOn = true;
 	}
 
 	Default
@@ -134,14 +402,26 @@ Class UTRocketLauncher : UTWeapon
 	Idle:
 		EBLI A 1
 		{
+			invoker.locktics = 0;
 			A_CheckReload();
 			A_WeaponReady();
+		}
+		EBLI A 1
+		{
+			A_CheckReload();
+			A_WeaponReady();
+			invoker.locktics++;
+			if ( invoker.locktics > 42 )
+			{
+				invoker.locktics = 0;
+				A_CheckTarget();
+			}
 		}
 		Wait;
 	Fire:
 	AltFire:
 		// one is loaded already
-		EBLI A 3 A_LoadRocket();
+		EBLI A 3 A_LoadRocket(false);
 		EBLI A 0 A_LoadedRefire(1);
 		Goto FireOne;
 		// load two

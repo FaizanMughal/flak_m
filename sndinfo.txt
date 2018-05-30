@@ -219,6 +219,7 @@ utrl/seeklock	seeklock
 utrl/seeklost	seeklost
 utrl/fly	rcktfly1
 utrl/explode	expl2
+utrl/bounce	hit1
 
 sniper/select	riflepck
 sniper/fire	sniperf

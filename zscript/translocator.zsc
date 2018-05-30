@@ -119,7 +119,7 @@ Class TranslocatorModule : Actor
 	Default
 	{
 		Radius 2;
-		Height 2;
+		Height 0;
 		Speed 25;
 		PROJECTILE;
 		-NOGRAVITY;

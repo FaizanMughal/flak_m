@@ -27,10 +27,11 @@ Model "UTGrenade"
 	Path "models"
 	Model 0 "UTRocket_d.3d"
 	Skin 0 "JuRocket1.png"
-	Scale 0.07 0.0822 0.09864
+	Offset 0 0 1.4796
+	Scale 0.0822 0.0822 0.09864
 	USEACTORPITCH
 	USEACTORROLL
-	AngleOffset -90
+	AngleOffset 90
 
 	FrameIndex RCKT A 0 0
 }
@@ -39,10 +40,11 @@ Model "UTRocket"
 	Path "models"
 	Model 0 "UTRocket_d.3d"
 	Skin 0 "JuRocket1.png"
-	Scale 0.07 0.0822 0.09864
+	Offset 10.175 0 1.4796
+	Scale 0.0822 0.0822 0.09864
 	USEACTORPITCH
 	USEACTORROLL
-	AngleOffset -90
+	AngleOffset 90
 
 	FrameIndex RCKT B 0 1
 }
