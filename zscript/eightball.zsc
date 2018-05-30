@@ -236,21 +236,21 @@ Class UTRocketLauncher : UTWeapon
 
 	override void PostRender()
 	{
-		if ( LockedTarget ) Screen.DrawTexture(lockontex,false,(Screen.GetWidth()-16)*0.5,(Screen.GetHeight()-16)*0.5);
+		if ( LockedTarget ) Screen.DrawTexture(lockontex,false,Screen.GetWidth()*0.5,Screen.GetHeight()*0.5);
 	}
 
 	override void Tick()
 	{
 		Super.Tick();
 		if ( !Owner ) return;
-		if ( LockedOn && (!LockedTarget || (LockedTarget.Health <= 0) || LockedTarget.bKilled || LockedTarget.bCorpse || !LockedTarget.bShootable) )
+		if ( LockedOn && (!LockedTarget || (LockedTarget.Health <= 0) || !LockedTarget.bIsMonster || LockedTarget.bKilled || LockedTarget.bCorpse || !LockedTarget.bShootable) )
 		{
 			LockedTarget = null;
 			LockedOn = false;
 			Owner.A_PlaySound("utrl/seeklost",CHAN_6);
 		}
-		if ( LockedTarget ) A_SetCrosshair(99);
-		else A_SetCrosshair(0);
+		if ( LockedTarget ) crosshair = 99;
+		else crosshair = 0;
 	}
 
 	// consumes 1 ammo
@@ -357,7 +357,7 @@ Class UTRocketLauncher : UTWeapon
 		invoker.LockedTarget = null;
 		while ( a = Actor(t.Next()) )
 		{
-			if ( !a.bSHOOTABLE || (a.Health <= 0) || a.bKilled || a.bCorpse || (a == self) || isTeammate(a) || !CheckSight(a) ) continue;
+			if ( !a.bSHOOTABLE || (a.Health <= 0) || a.bKilled || !a.bIsMonster || a.bCorpse || (a == self) || isTeammate(a) || !CheckSight(a) ) continue;
 			Vector3 viewdir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
 			Vector3 reldir = level.Vec3Diff(Vec2OffsetZ(0,0,player.viewz),a.Vec2OffsetZ(0,0,a.pos.z+a.height*0.5));
 			double reldist = reldir.length();

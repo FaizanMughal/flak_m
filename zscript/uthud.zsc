@@ -192,6 +192,7 @@ Class UTHud : BaseStatusBar
 	}
 
 	// UT's implementation doesn't seem to translate well to this, so I improvised a bit and made something not so ugly
+	// This whole function might need to be rewritten in a prettier way someday
 	private void UTDrawBigNum( int value, double sx = 1.0 )
 	{
 		double step = 25*HScale*sx;
@@ -200,6 +201,7 @@ Class UTHud : BaseStatusBar
 		String digits = String.Format("%d",min(abs(value),9999));
 		double flen = 3*step;
 		double len = digits.length()*step;
+		for ( int i=0; i<digits.length(); i++ ) if ( digits.CharAt(i) == "1" ) len -= 0.5*step;
 		CurX += (flen-len)*0.5;
 		if ( digits.CharAt(0) == "1" ) CurX -= 0.5*step;
 		if ( value < 0 )
@@ -210,7 +212,7 @@ Class UTHud : BaseStatusBar
 		for ( int i=0; i<digits.length(); i++ )
 		{
 			Screen.DrawTexture(BigNum[digits.CharCodeAt(i)-0x30],false,CurX/ss,CurY/ss,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_AlphaChannel,true,DTA_FillColor,DrawColor);
-			CurX += step;
+			CurX += ((i<digits.length()-1)&&(digits.CharAt(i+1)=="1"))?step*0.5:step;
 		}
 	}
 
@@ -407,14 +409,14 @@ Class UTHud : BaseStatusBar
 			cl1 = String.Format("Dark%s",cl2);
 		}
 		String tname = String.Format("\c[%s]Name:\c[%s] %s",cl1,cl2,lastseen.player.GetUserName());
-		CurX = (Screen.GetWidth()-confont.StringWidth(tname)*CleanXFac)*0.5;
-		CurY = Screen.GetHeight()*0.75;
-		Screen.DrawText(confont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_CleanNoMove,true,DTA_Alpha,lalpha/2.);
+		CurX = (640-confont.StringWidth(tname))*0.5;
+		CurY = 480*0.75;
+		Screen.DrawText(confont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_Alpha,lalpha/2.);
 		if ( !deathmatch || (lastseen.IsTeammate(CPlayer.mo)) )
 		{
-			CurY += 1.2*confont.GetHeight()*CleanYFac;
+			CurY += 1.2*confont.GetHeight();
 			tname = String.Format("\c[%s]Health:\c[%s] %d",cl1,cl2,lastseen.Health);
-			Screen.DrawText(confont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_CleanNoMove,true,DTA_Alpha,lalpha/2.);
+			Screen.DrawText(confont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_Alpha,lalpha/2.);
 		}
 	}
 

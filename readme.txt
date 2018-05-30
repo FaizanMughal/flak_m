@@ -46,8 +46,14 @@ In progress:
  - General polishing and bugfixing.
  - Trim out unused animations.
 
+TODO:
+
+ - Scaling/Customization options for the HUD.
+
 Known bugs:
 
  - Sometimes the slave enforcer gets "lowered" while the main enforcer is
    reloading. No idea what causes this.
  - Sludge doesn't react to ceiling and wall movement.
+ - Pulse gun beams behave oddly when the player is on moving platforms.
+   This might just be a rendering interpolation glitch, as usual.

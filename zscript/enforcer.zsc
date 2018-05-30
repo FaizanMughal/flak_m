@@ -160,8 +160,8 @@ Class Enforcer : UTWeapon replaces Pistol
 	override void PostRender()
 	{
 		if ( !CVar.GetCVar('flak_enforcerreload').GetBool() ) return;
-		if ( Amount > 1 ) Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,Screen.GetHeight()*0.88,String.Format("L Clip: % 2d / 20\nR Clip: % 2d / 20",slaveclipcount,clipcount));
-		else Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,Screen.GetHeight()*0.88,String.Format("Clip: % 2d / 20",clipcount));
+		if ( Amount > 1 ) Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,Screen.GetHeight()*0.9-confont.GetHeight()*2,String.Format("L Clip: %2d / 20\nR Clip: %2d / 20",slaveclipcount,clipcount));
+		else Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,Screen.GetHeight()*0.9-confont.GetHeight(),String.Format("Clip: %2d / 20",clipcount));
 	}
 
 	override bool HandlePickup( Inventory item )
