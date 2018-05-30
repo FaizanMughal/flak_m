@@ -350,6 +350,9 @@ Class UTRocketLauncher : UTWeapon
 				s += step;
 			}
 		}
+		// lose lock-on
+		invoker.LockedTarget = null;
+		invoker.LockedOn = false;
 	}
 
 	// lock-on check
