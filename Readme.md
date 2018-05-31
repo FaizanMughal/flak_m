@@ -1,13 +1,11 @@
-#DOOM TOURNAMENT
+# DOOM TOURNAMENT
 
 What began as a test for importing UT vertex meshes has turned into an actual
 full UT weapon and item mod.
 
 ### Important
 
-#### Currently you have to patch in
-[this pull request](https://github.com/coelckers/gzdoom/pull/495) yourself for
-models to render correctly.
+#### Currently you have to patch in [this pull request](https://github.com/coelckers/gzdoom/pull/495) yourself for models to render correctly.
 
 Currently implemented:
 
