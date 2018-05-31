@@ -6,8 +6,6 @@ Class EClip : MiniAmmo replaces Clip
 		Inventory.PickupMessage "You picked up a Clip.";
 		Inventory.Amount 20;
 		Ammo.DropAmount 5;
-		Radius 8;
-		Height 6;
 	}
 	States
 	{
@@ -159,11 +157,11 @@ Class Enforcer : UTWeapon replaces Pistol
 	property ClipCount : ClipCount;
 	property SlaveClipCount : SlaveClipCount;
 
-	override void PostRender()
+	override void PostRender( double lbottom )
 	{
 		if ( !CVar.GetCVar('flak_enforcerreload').GetBool() ) return;
-		if ( Amount > 1 ) Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,Screen.GetHeight()*0.9-confont.GetHeight()*2,String.Format("L Clip: %2d / 20\nR Clip: %2d / 20",slaveclipcount,clipcount));
-		else Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,Screen.GetHeight()*0.9-confont.GetHeight(),String.Format("Clip: %2d / 20",clipcount));
+		if ( Amount > 1 ) Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,lbottom-Screen.GetHeight()*0.01-confont.GetHeight()*2,String.Format("L Clip: %2d / 20\nR Clip: %2d / 20",slaveclipcount,clipcount));
+		else Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,lbottom-Screen.GetHeight()*0.01-confont.GetHeight(),String.Format("Clip: %2d / 20",clipcount));
 	}
 
 	override bool HandlePickup( Inventory item )
@@ -204,7 +202,7 @@ Class Enforcer : UTWeapon replaces Pistol
 		if ( !weap || !player ) return;
 		if ( slave )
 		{
-			if ( CVar.GetCVar('flak_enforcerreload').GetBool() && (invoker.slaveclipcount < 5) ) A_PlaySound("enforcer/click",CHAN_7);
+			if ( CVar.GetCVar('flak_enforcerreload').GetBool() && (invoker.slaveclipcount < 5) ) A_PlaySound("enforcer/click",CHAN_6);
 			if ( (invoker.slaveclipcount <= 0) || (weap.Ammo1.Amount <= 0) )
 			{
 				invoker.slaverefire = 0;
@@ -277,7 +275,7 @@ Class Enforcer : UTWeapon replaces Pistol
 		}
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,255,128,0),1);
-		A_PlaySound("enforcer/shoot",slave?CHAN_7:CHAN_WEAPON);
+		A_PlaySound("enforcer/shoot",slave?CHAN_6:CHAN_WEAPON);
 		A_AlertMonsters();
 		A_QuakeEx(2,2,2,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
 		if ( slave )
@@ -362,9 +360,6 @@ Class Enforcer : UTWeapon replaces Pistol
 		Weapon.AmmoGive 30;
 		Enforcer.ClipCount 20;
 		Enforcer.SlaveClipCount 20;
-		Radius 8;
-		Height 16;
-		UTWeapon.DroppedHeight 8;
 	}
 	States
 	{
@@ -391,7 +386,7 @@ Class Enforcer : UTWeapon replaces Pistol
 	LeftReady:
 		2NFS A 0
 		{
-			A_PlaySound("enforcer/select",CHAN_7);
+			A_PlaySound("enforcer/select",CHAN_6);
 			invoker.slaveactive = true;
 		}
 		2NFS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_JumpIf(invoker.slavedown,"LeftDeselect");
@@ -486,18 +481,18 @@ Class Enforcer : UTWeapon replaces Pistol
 			invoker.slaveclipcount = Min(20,invoker.Ammo1.Amount);
 			invoker.slavereload = false;
 			A_Overlay(-9998,"Null");
-			A_PlaySound("enforcer/click",CHAN_7);
+			A_PlaySound("enforcer/click",CHAN_6);
 		}
 		2NFR ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
 		2NR2 AB 1;
-		2NR2 B 30 A_PlaySound("enforcer/reload",CHAN_7);
-		2NFS A 0 A_PlaySound("enforcer/select",CHAN_7);
+		2NR2 B 30 A_PlaySound("enforcer/reload",CHAN_6);
+		2NFS A 0 A_PlaySound("enforcer/select",CHAN_6);
 		Goto LeftReady;
 	Deselect:
 		ENFI A 1 { invoker.slavedown = true; }
 		ENFD A 0 A_Overlay(-9999,"Null");
 		ENFD A 0 A_JumpIf(invoker.slaveactive,"Deselect");
-		ENFD ABCDEFGHIJKL 1;
+		ENFD ABDEGHJK 1;
 		ENFD L 1 A_Lower(int.max);
 		Wait;
 	LeftDeselect:
@@ -506,7 +501,8 @@ Class Enforcer : UTWeapon replaces Pistol
 			A_Overlay(-9998,"Null");
 			invoker.slaveactive = false;
 		}
-		2NFD ABCDEFGHIJKL 1;
+		2NFD ABDEGHJK 1;
+		2NFD L 0;
 		Stop;
 	MuzzleFlash:
 		EMUZ A 2 Bright

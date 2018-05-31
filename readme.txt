@@ -1,6 +1,6 @@
 DOOM TOURNAMENT
 
-What began as a test for importing UT vertex meshes is turning into an actual
+What began as a test for importing UT vertex meshes has turned into an actual
 full UT weapon and item mod.
 
 Currently implemented:
@@ -39,21 +39,19 @@ Currently implemented:
  - Minigun (slot 7)
  - Sniper Rifle (slot 0)
  - Rocket Launcher (slot 9)
+ - Scaling/Customization options for the HUD
 
 In progress:
 
- - Add some more effects, maybe some nicer recoil on guns too.
- - General polishing and bugfixing.
- - Trim out unused animations.
-
-TODO:
-
- - Scaling/Customization options for the HUD.
+ - Make biorifle sludge follow ceiling and wall movement (this might be hard)
+ - Add some more effects, maybe some nicer recoil on guns too
+ - General polishing and bugfixing
+ - Trim out unused animations
 
 Known bugs:
 
- - Sometimes the slave enforcer gets "lowered" while the main enforcer is
-   reloading. No idea what causes this.
- - Sludge doesn't react to ceiling and wall movement.
+ - Sometimes the slave enforcer has its psprite "lower" slightly while the main
+   enforcer is reloading. No idea what causes this (Could be bobbing-related)
+ - Sludge doesn't react to ceiling and wall movement
  - Pulse gun beams behave oddly when the player is on moving platforms.
-   This might just be a rendering interpolation glitch, as usual.
+   This might just be a rendering interpolation glitch, as usual

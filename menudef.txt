@@ -3,6 +3,12 @@ OptionValue "BetaToggle"
 	0, "Normal"
 	1, "Beta"
 }
+OptionValue "BetaToggleMenu"
+{
+	0, "Normal"
+	1, "Beta"
+	2, "Beta (Alt. music)"
+}
 OptionValue "ColorPrefs"
 {
 	0, "Team"
@@ -14,7 +20,8 @@ OptionMenu "UTOptionMenu"
 	Title "UT Options"
 
 	StaticText "Menu Options", "Gold"
-	Option "Menu Type", "flak_protomenu", "BetaToggle"
+	Option "Show Menu", "flak_showmenu", "YesNo"
+	Option "Menu Type", "flak_protomenu", "BetaToggleMenu"
 	Command "Apply Changes", "event refreshmenu"
 	StaticText " "
 	StaticText "Item Options", "Gold"
@@ -26,10 +33,17 @@ OptionMenu "UTOptionMenu"
 	Option "Redeemer Target Visuals", "flak_redeemerreadout", "YesNo"
 	StaticText " "
 	StaticText "HUD Options", "Gold"
+	Option "Show Weapon Bar", "flak_showweapons", "YesNo"
+	Option "Show Status Doll", "flak_showstatus", "YesNo"
+	Option "Show Frags", "flak_showfrags", "YesNo"
+	Option "Show Ammo", "flak_showammo", "YesNo"
+	Option "Show Player Names", "flak_showinfo", "YesNo"
+	Slider "HUD Size", "flak_hudsize", 0.2, 1.0, 0.2, 1
+	Slider "Weapon Bar Size", "flak_weaponsize", 0.2, 1.0, 0.2, 1
+	Slider "Status Doll Size", "flak_statussize", 0.5, 1.5, 0.1, 1
 	Option "Color Choice", "flak_colorprefs", "ColorPrefs"
 	ColorPicker "Custom Color", "flak_colorcustom"
-	Slider "HUD Opacity", "flak_opacity", 0.5, 1, 0.05, 2
-	ColorPicker "Background Color", "flak_bgcolor"
+	Slider "HUD Opacity", "flak_opacity", 1, 16, 1, 0
 }
 
 AddOptionMenu "OptionsMenu"

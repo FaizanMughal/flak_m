@@ -9,8 +9,6 @@ Class RifleAmmo : Ammo
 		Ammo.BackpackAmount 20;
 		Ammo.BackpackMaxAmount 50;
 		Ammo.DropAmount 5;
-		Radius 6;
-		Height 12;
 	}
 	States
 	{
@@ -28,8 +26,6 @@ Class RifleAmmo2 : RifleAmmo
 		Inventory.PickupMessage "You got a Rifle Round.";
 		Inventory.Amount 1;
 		Ammo.DropAmount 1;
-		Radius 2;
-		Height 8;
 	}
 	States
 	{
@@ -57,10 +53,10 @@ Class SniperRifle : UTWeapon
 		Super.PostBeginPlay();
 		reticle = TexMan.CheckForTexture("RReticle",Texman.Type_Any);
 	}
-	override void PreRender()
+	override void PreRender( double lbottom )
 	{
 		if ( sniperzoom <= 1.0 ) return;
-		Screen.DrawTexture(reticle,false,320,240,DTA_VirtualWidth,640,DTA_VirtualHeight,480);
+		Screen.DrawTexture(reticle,false,320,240,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_RenderStyle,(1|2<<8|1<<16));
 		Screen.DrawText(confont,Font.CR_DARKGREEN,192,160,String.Format("X%.1f",sniperzoom),DTA_Clean,true);
 	}
 	action void A_SniperFire( bool zoomed = false )
@@ -142,9 +138,6 @@ Class SniperRifle : UTWeapon
 		Weapon.AmmoType2 "RifleAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 8;
-		Radius 20;
-		Height 16;
-		UTWeapon.DroppedHeight 10;
 	}
 	States
 	{
@@ -162,22 +155,7 @@ Class SniperRifle : UTWeapon
 			A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
 			A_WeaponReady(WRF_NOFIRE);
 		}
-		SRFS B 2 A_WeaponReady(WRF_NOFIRE);
-		SRFS C 1 A_WeaponReady(WRF_NOFIRE);
-		SRFS D 2 A_WeaponReady(WRF_NOFIRE);
-		SRFS E 1 A_WeaponReady(WRF_NOFIRE);
-		SRFS F 2 A_WeaponReady(WRF_NOFIRE);
-		SRFS G 1 A_WeaponReady(WRF_NOFIRE);
-		SRFS H 2 A_WeaponReady(WRF_NOFIRE);
-		SRFS I 1 A_WeaponReady(WRF_NOFIRE);
-		SRFS J 2 A_WeaponReady(WRF_NOFIRE);
-		SRFS K 1 A_WeaponReady(WRF_NOFIRE);
-		SRFS L 2 A_WeaponReady(WRF_NOFIRE);
-		SRFS M 1 A_WeaponReady(WRF_NOFIRE);
-		SRFS N 2 A_WeaponReady(WRF_NOFIRE);
-		SRFS O 1 A_WeaponReady(WRF_NOFIRE);
-		SRFS P 2 A_WeaponReady(WRF_NOFIRE);
-		SRFS Q 1 A_WeaponReady(WRF_NOFIRE);
+		SRFS BCDEFGHIJKLMNOPQ 1 A_WeaponReady(WRF_NOFIRE);
 	Idle:
 		SRFI A 1
 		{
@@ -230,7 +208,7 @@ Class SniperRifle : UTWeapon
 		Goto Idle;
 	Deselect:
 		SRFD A 0 A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
-		SRFD ABCDEFG 2;
+		SRFD ABCDEFG 1;
 		SRFD G 1 A_Lower(int.max);
 		Wait;
 	MuzzleFlash:

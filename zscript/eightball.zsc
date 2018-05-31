@@ -9,8 +9,6 @@ Class UTRocketAmmo : Ammo
 		Ammo.BackpackAmount 12;
 		Ammo.BackpackMaxAmount 48;
 		Ammo.DropAmount 3;
-		Radius 4;
-		Height 14;
 	}
 	States
 	{
@@ -29,8 +27,6 @@ Class UTRocketAmmo2 : UTRocketAmmo
 		Inventory.PickupMessage "You picked up a Single Rocket.";
 		Inventory.Amount 1;
 		Ammo.DropAmount 1;
-		Radius 2;
-		Height 13;
 	}
 	States
 	{
@@ -238,7 +234,7 @@ Class UTRocketLauncher : UTWeapon
 		lockontex = TexMan.CheckForTexture("Crosshr6",TexMan.Type_Any);
 	}
 
-	override void PostRender()
+	override void PreRender( double lbottom )
 	{
 		if ( LockedTarget ) Screen.DrawTexture(lockontex,false,Screen.GetWidth()*0.5,Screen.GetHeight()*0.5);
 	}
@@ -351,6 +347,7 @@ Class UTRocketLauncher : UTWeapon
 			}
 		}
 		// lose lock-on
+		if ( invoker.LockedOn ) A_PlaySound("utrl/seeklost",CHAN_6);
 		invoker.LockedTarget = null;
 		invoker.LockedOn = false;
 	}
@@ -393,9 +390,6 @@ Class UTRocketLauncher : UTWeapon
 		Weapon.AmmoType2 "UTRocketAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 6;
-		Radius 20;
-		Height 16;
-		UTWeapon.DroppedHeight 12;
 	}
 	States
 	{

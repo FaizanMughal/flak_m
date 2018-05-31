@@ -9,8 +9,6 @@ Class ShockAmmo : Ammo
 		Ammo.BackpackAmount 20;
 		Ammo.BackpackMaxAmount 50;
 		Ammo.DropAmount 5;
-		Radius 4;
-		Height 23;
 	}
 	States
 	{
@@ -958,9 +956,6 @@ Class ShockRifle : UTWeapon
 		Weapon.AmmoType2 "ShockAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 20;
-		Radius 20;
-		Height 16;
-		UTWeapon.DroppedHeight 8;
 	}
 	States
 	{
@@ -987,7 +982,7 @@ Class ShockRifle : UTWeapon
 		ASMA BCDEFGHIJ 2;
 		Goto Idle;
 	Deselect:
-		ASMD ABCDEFG 2;
+		ASMD ABCDEFG 1;
 		ASMD G 1 A_Lower(int.max);
 		Wait;
 	Select:
@@ -1007,8 +1002,6 @@ Class EnhancedShockAmmo : Ammo
 		Ammo.BackpackAmount 0;
 		Ammo.BackpackMaxAmount 25;
 		Ammo.DropAmount 2;
-		Radius 4;
-		Height 23;
 	}
 	States
 	{
@@ -1072,9 +1065,6 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		Weapon.AmmoType2 "EnhancedShockAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 25;
-		Radius 20;
-		Height 16;
-		UTWeapon.DroppedHeight 8;
 	}
 	States
 	{
@@ -1101,7 +1091,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		ASMA BCDEFGHIJ 2;
 		Goto Idle;
 	Deselect:
-		ASMD ABCDEFG 2;
+		ASMD ABCDEFG 1;
 		ASMD G 1 A_Lower(int.max);
 		Wait;
 	Select:

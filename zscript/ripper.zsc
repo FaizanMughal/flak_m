@@ -9,8 +9,6 @@ Class RipperAmmo : Ammo
 		Ammo.BackpackAmount 50;
 		Ammo.BackpackMaxAmount 75;
 		Ammo.DropAmount 10;
-		Radius 4;
-		Height 21;
 	}
 	States
 	{
@@ -253,9 +251,6 @@ Class Ripper2 : UTWeapon
 		Weapon.AmmoType2 "RipperAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 15;
-		Radius 20;
-		Height 16;
-		UTWeapon.DroppedHeight 16;
 	}
 	action void A_RazorFire( bool alt = false )
 	{
@@ -311,7 +306,7 @@ Class Ripper2 : UTWeapon
 		RZRF HIJKLMNO 1;
 		Goto Idle;
 	Deselect:
-		RZRD ABCDEF 2;
+		RZRD ABCDEF 1;
 		RZRD F 1 A_Lower(int.max);
 		Wait;
 	}

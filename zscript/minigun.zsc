@@ -35,8 +35,6 @@ Class MiniAmmo : Ammo
 		Ammo.BackpackAmount 100;
 		Ammo.BackpackMaxAmount 199;
 		Ammo.DropAmount 20;
-		Radius 12;
-		Height 14;
 	}
 	States
 	{
@@ -194,9 +192,6 @@ Class Minigun : UTWeapon
 		Weapon.AmmoType2 "MiniAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 50;
-		Radius 20;
-		Height 16;
-		UTWeapon.DroppedHeight 8;
 	}
 	States
 	{
@@ -412,8 +407,8 @@ Class Minigun : UTWeapon
 		MGU2 ABCDEFGHIJKLM 1;
 		Goto Idle;
 	Deselect:
-		MGND A 2 A_StopSound(CHAN_WEAPON);
-		MGND BCDEFGHIJ 2;
+		MGND A 1 A_StopSound(CHAN_WEAPON);
+		MGND BCDEFGHIJ 1;
 		MGND J 1 A_Lower(int.max);
 		Wait;
 	MuzzleFlash:

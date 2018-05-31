@@ -28,8 +28,6 @@ Class BioAmmo : Ammo
 		Ammo.BackpackAmount 50;
 		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 10;
-		Radius 8;
-		Height 8;
 	}
 	States
 	{
@@ -497,9 +495,6 @@ Class BioRifle : UTWeapon
 		Weapon.AmmoType2 "BioAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 25;
-		Radius 10;
-		Height 16;
-		UTWeapon.DroppedHeight 14;
 	}
 	States
 	{

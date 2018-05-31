@@ -1,11 +1,16 @@
 Class UTPlayer : DoomPlayer
 {
+	bool lastground;
+	double lastvelz, prevvelz;
+
 	Default
 	{
 		Player.StartItem "MiniAmmo", 30;
 		Player.StartItem "Enforcer";
 		Player.StartItem "Translocator";
 		Player.StartItem "ImpactHammer";
+		Player.DamageScreenColor "FF 00 00", 1.0;
+		Player.ViewHeight 46;
 	}
 
 	// Have to modify the give cheat to handle UT armor
@@ -163,7 +168,12 @@ Class UTPlayer : DoomPlayer
 		Super.Tick();
 		double ang = level.time/(20*TICRATE/35.)*360.;
 		if ( (abs(sin(ang)) >= 1.0) && player.onground && (player.cmd.forwardmove || player.cmd.sidemove) )
-			A_PlaySound("ut/playerfootstep",CHAN_BODY);
+			A_PlaySound("ut/playerfootstep",CHAN_5,abs(vel.xy.length())*0.03);
+		if ( player.onground && !bNoGravity && !lastground && (lastvelz < -2) && (lastvelz >= -8) )
+			A_PlaySound("*land",CHAN_AUTO,abs(lastvelz*0.0625));
+		lastground = player.onground;
+		lastvelz = prevvelz;
+		prevvelz = vel.z;
 	}
 }
 
@@ -184,14 +194,10 @@ Class RandomSpawner2 : RandomSpawner
 
 Class UTWeapon : Weapon
 {
-	double droppedheight;
-
-	Property DroppedHeight : droppedheight;
-
 	// Drawstuffs under HUD
-	virtual ui void PreRender() {}
+	virtual ui void PreRender( double lbottom ) {}
 	// Drawstuffs over HUD
-	virtual ui void PostRender() {}
+	virtual ui void PostRender( double lbottom ) {}
 
 	override Inventory CreateTossable( int amt )
 	{
@@ -201,7 +207,6 @@ Class UTWeapon : Weapon
 		{
 			d.SetState(d.ResolveState("Spawn")+1);
 			d.bALWAYSPICKUP = true;
-			d.A_SetSize(-1,UTWeapon(d).droppedheight);
 		}
 		return d;
 	}
@@ -210,7 +215,6 @@ Class UTWeapon : Weapon
 	{
 		SetState(ResolveState("Spawn")+1);
 		bALWAYSPICKUP = true;
-		A_SetSize(-1,droppedheight);
 		return false;
 	}
 
@@ -234,7 +238,6 @@ Class UTWeapon : Weapon
 		Weapon.BobRangeX 0.2;
 		Weapon.BobRangeY 0.4;
 		+WEAPON.NOALERT;
-		UTWeapon.DroppedHeight 16;
 	}
 }
 
@@ -700,11 +703,13 @@ Class UTMainHandler : StaticEventHandler
 	override void WorldLoaded( WorldEvent e )
 	{
 		if ( gamestate != GS_LEVEL || e.IsSaveGame ) return;
+		// prettify Kinsie's test map for a more Unreal feel
 		if ( level.levelname ~== "Modder Test Map" )
 		{
 			TexMan.ReplaceTextures("-noflat-","-kinsie-",0);
 			TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
 			level.ChangeSky(skytx,skytx);
+			// TODO handplace some dynamic lights and add Unreal/UT ambient sounds
 		}
 	}
 
@@ -716,9 +721,11 @@ Class UTMainHandler : StaticEventHandler
 	ui void StartMenu()
 	{
 		if ( gamestate != GS_TITLELEVEL ) return;
-		if ( CVar.GetCVar('flak_protomenu',players[consoleplayer]).GetBool() )
+		int proto = CVar.GetCVar('flak_protomenu',players[consoleplayer]).GetInt();
+		if ( proto )
 		{
-			S_ChangeMusic("xyzdMenu");
+			if ( proto > 1 ) S_ChangeMusic("menu2");
+			else S_ChangeMusic("xyzdMenu");
 			tex = TexMan.CheckForTexture("protobg",TexMan.Type_Any);
 		}
 		else
@@ -758,6 +765,7 @@ Class UTMainHandler : StaticEventHandler
 	{
 		if ( gamestate != GS_TITLELEVEL ) return;
 		if ( tex.IsNull() || !tex.IsValid() ) return;
+		if ( !CVar.GetCVar('flak_showmenu',players[consoleplayer]).GetBool() ) return;
 		Screen.Dim("Black",1.0,0,0,Screen.GetWidth(),Screen.GetHeight());
 		Screen.DrawTexture(tex,true,0,0,DTA_VirtualWidth,1024,DTA_VirtualHeight,768);
 	}

@@ -147,9 +147,6 @@ Class UTChainsaw : UTWeapon
 		Weapon.SelectionOrder 9;
 		+WEAPON.MELEEWEAPON;
 		+FORCEPAIN;
-		Radius 20;
-		Height 16;
-		UTWeapon.DroppedHeight 12;
 	}
 	States
 	{
@@ -247,7 +244,7 @@ Class UTChainsaw : UTWeapon
 		Goto Ready;
 	Deselect:
 		CSWD A 0 A_PlaySound("chainsaw/lower",CHAN_6);
-		CSWD ABCDEF 2;
+		CSWD ABCDEF 1;
 		CSWD F 1 A_Lower(int.max);
 		Wait;
 	}

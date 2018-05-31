@@ -1,9 +1,20 @@
-user bool flak_protomenu = false;
+user int flak_protomenu = 0;
+user bool flak_showmenu = true;
 server bool flak_betaudamage = false;
 server bool flak_pulsereload = false;
 server bool flak_enforcerreload = false;
 user bool flak_redeemerreadout = true;
 user int flak_colorprefs = 0;
-user color flak_colorcustom = "ff ff ff";
-user float flak_opacity = 0.8;
-user color flak_bgcolor = "00 00 00";
+user color flak_colorcustom = "00 80 ff";
+user int flak_opacity = 15;	// UT's opacity is 1 <-> 16 in steps of 1 (default 15)
+				// 16 means fully opaque, everything else is just additive with gradually lowering alpha
+				// status is never fully opaque (clamped under 16)
+				// currently selected weapon and numbers are fully opaque until 8 opacity (their opacity is bumped by 7 basically)
+user bool flak_showweapons = true;	// if disabled, frags and ammo are shown centered, with a gap for armor and health
+user bool flak_showstatus = true;	// if disabled armor and health show on the top right (or center between frags and ammo if weapon display is disabled)
+user bool flak_showammo = true;
+user bool flak_showfrags = true;
+user bool flak_showinfo = true;
+user float flak_hudsize = 1.0;		// 0.2 <-> 1.0 in steps of 0.2 (default 1.0)
+user float flak_weaponsize = 0.8;	// 0.2 <-> 1.0 in steps of 0.2 (default 0.8)
+user float flak_statussize = 1.0;	// 0.5 <-> 1.5 in steps of 0.1 (default 1.0)

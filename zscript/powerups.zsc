@@ -12,8 +12,6 @@ Class UDamage : PowerupGiver replaces Berserk
 		Powerup.Type "DamageAmplifier";
 		Inventory.PickupSound "udamage/pickup";
 		Inventory.RespawnTics 4200;
-		Radius 15;
-		Height 40;
 	}
 	override void PostBeginPlay()
 	{
@@ -79,7 +77,7 @@ Class DamageAmplifier : Powerup
 	{
 		Super.DoEffect();
 		if ( (EffectTics == 175) || (EffectTics == 140) || (EffectTics == 105) || (EffectTics == 70) || (EffectTics == 35) )
-			Owner.A_PlaySound("udamage/drain",CHAN_6,1.0,false,0.25);
+			Owner.A_PlaySound("udamage/drain",CHAN_7,1.0,false,0.25);
 	}
 
 	override void EndEffect()
@@ -95,8 +93,8 @@ Class DamageAmplifier : Powerup
 
 	void FireEffect()
 	{
-		if ( EffectTics < 350 ) Owner.A_PlaySound("udamage/fire2",CHAN_5,1.0,false,0.25);
-		else Owner.A_PlaySound("udamage/fire1",CHAN_5,1.0,false,0.25);
+		if ( EffectTics < 350 ) Owner.A_PlaySound("udamage/fire2",CHAN_7,1.0,false,0.25);
+		else Owner.A_PlaySound("udamage/fire1",CHAN_7,1.0,false,0.25);
 		UTMainHandler.DoFlash(Owner,Color(96,238,0,255),10);
 	}
 
@@ -198,8 +196,6 @@ Class UTBackpack : BackpackItem replaces Backpack
 		Tag "Backpack";
 		Inventory.PickupMessage "You got a Backpack.";
 		Inventory.RespawnTics 2100;
-		Radius 10;
-		Height 32;
 	}
 	States
 	{
@@ -239,8 +235,6 @@ Class UTInvisibility : PowerupGiver replaces BlurSphere
 		Inventory.PickupMessage "You have Invisibility.";
 		Inventory.PickupSound "invis/pickup";
 		Inventory.RespawnTics 4200;
-		Radius 6;
-		Height 20;
 	}
 	override void PostBeginPlay()
 	{
@@ -298,8 +292,6 @@ Class UTMapRevealer : MapRevealer replaces Allmap
 		Inventory.MaxAmount 0;
 		Inventory.PickupSound "trans/pickup";
 		Inventory.PickupMessage "You got the Computer Map.";
-		Radius 10;
-		Height 4;
 	}
 	States
 	{
@@ -321,8 +313,6 @@ Class UTJumpBoots : Inventory replaces RadSuit
 		Inventory.PickupMessage "You picked up the AntiGrav boots.";
 		Inventory.PickupSound "boot/pickup";
 		Inventory.RespawnTics 1050;
-		Radius 9;
-		Height 14;
 	}
 	override bool Use( bool pickup )
 	{
@@ -407,8 +397,6 @@ Class Searchlight : Inventory replaces Infrared
 		Inventory.MaxAmount 200;
 		Inventory.InterHubAmount 0;
 		Inventory.PickupMessage "You picked up the Searchlight.";
-		Radius 10;
-		Height 16;
 	}
 
 	override bool Use( bool pickup )

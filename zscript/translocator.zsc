@@ -288,6 +288,7 @@ Class Translocator : UTWeapon
 		p.target = self;
 		p.angle = angle;
 		p.pitch = BulletSlope();
+		p.A_SetSize(radius);
 		Vector3 dir = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch));
 		dir.z += 0.35*(1-abs(dir.z));
 		p.vel = dir*p.speed;
@@ -323,10 +324,13 @@ Class Translocator : UTWeapon
 		}
 		// check if there's enough space
 		Vector3 oldpos = pos, newpos = invoker.module.pos;
+		double modulefloorz = invoker.module.floorz, moduleceilingz = invoker.module.ceilingz;
 		bool bBroken = invoker.module.bAMBUSH;
 		invoker.module.Destroy();
 		invoker.FireEffect();
 		A_AlertMonsters();
+		// squeeze down new z if ceiling is in the way
+		if ( (newpos.z+height > moduleceilingz) ) newpos.z = max(modulefloorz,moduleceilingz-height);
 		if ( Warp(self,newpos.x,newpos.y,newpos.z,flags:WARPF_ABSOLUTEPOSITION|WARPF_TESTONLY) && TeleportMove(newpos,true) )
 		{
 			SpawnTeleportFog(oldpos,true,false);
@@ -357,9 +361,6 @@ Class Translocator : UTWeapon
 		Weapon.SlotNumber 1;
 		Weapon.SelectionOrder 10;
 		+WEAPON.NO_AUTO_SWITCH;
-		Radius 5;
-		Height 16;
-		UTWeapon.DroppedHeight 4;
 	}
 	States
 	{
@@ -412,11 +413,11 @@ Class Translocator : UTWeapon
 		Goto Idle2;
 	Deselect:
 		TLCD A 0 A_JumpIf(invoker.module,"Deselect2");
-		TLCD ABCDEFG 2;
+		TLCD ABCDEFG 1;
 		TLCD G 1 A_Lower(int.max);
 		Wait;
 	Deselect2:
-		TLD2 ABCDEFG 2;
+		TLD2 ABCDEFG 1;
 		TLD2 G 1 A_Lower(int.max);
 		Wait;
 	}

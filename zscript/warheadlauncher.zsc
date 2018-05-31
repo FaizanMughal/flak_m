@@ -11,8 +11,6 @@ Class WarheadAmmo : Ammo
 		Ammo.BackpackMaxAmount 2;
 		Ammo.DropAmount 1;
 		Inventory.RespawnTics 2100;
-		Radius 2;
-		Height 42;
 	}
 	States
 	{
@@ -496,17 +494,17 @@ Class RedeemerHUD : HUDMessageBase
 		{
 			for ( int i=0; i<ta.Size(); i++ )
 			{
-				Screen.DrawTexture(mark,false,ta[i].vpos.x,ta[i].vpos.y);
-				Screen.DrawText(whfont,Font.CR_UNTRANSLATED,(ta[i].vpos.x-whfont.StringWidth(ta[i].diststr)/2)-12,ta[i].vpos.y+8,ta[i].diststr);
+				Screen.DrawTexture(mark,false,ta[i].vpos.x,ta[i].vpos.y,DTA_RenderStyle,(1|2<<8|1<<16));
+				Screen.DrawText(whfont,Font.CR_UNTRANSLATED,(ta[i].vpos.x-whfont.StringWidth(ta[i].diststr)/2)-12,ta[i].vpos.y+8,ta[i].diststr,DTA_RenderStyle,(1|2<<8|1<<16));
 			}
 		}
 		// other stuff
-		Screen.DrawTexture(reticle,false,320,240,DTA_VirtualWidth,640,DTA_VirtualHeight,480);
+		Screen.DrawTexture(reticle,false,320,240,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_RenderStyle,(1|2<<8|1<<16));
 		int numreadouts = Screen.GetHeight()/128+2;
 		for ( int i=0; i<numreadouts; i++ )
 		{
 			int scroll = (gametic*5)%128;
-			Screen.DrawTexture(readout,false,0,i*128-scroll);
+			Screen.DrawTexture(readout,false,0,i*128-scroll,DTA_RenderStyle,(1|2<<8|1<<16));
 		}
 	}
 }
@@ -651,9 +649,6 @@ Class WarheadLauncher : UTWeapon replaces BFG9000
 		Inventory.RespawnTics 2100;
 		+INVENTORY.ALWAYSPICKUP;
 		+WEAPON.NOAUTOFIRE;
-		Radius 24;
-		Height 16;
-		UTWeapon.DroppedHeight 16;
 	}
 	States
 	{
@@ -687,7 +682,7 @@ Class WarheadLauncher : UTWeapon replaces BFG9000
 		WARS A 1 A_Raise(int.max);
 		Wait;
 	Deselect:
-		WARD ABCDEFG 2;
+		WARD ABCDEFG 1;
 		WARD G 1 A_Lower(int.max);
 		Wait;
 	}

@@ -60,8 +60,6 @@ Class UTThighPads : UTArmor replaces GreenArmor
 		UTArmor.ArmorAbsorption 50;
 		Inventory.PickupMessage "You got the Thigh Pads.";
 		Inventory.PickupSound "misc/ut_armor";
-		Radius 8;
-		Height 20;
 	}
 	States
 	{
@@ -82,8 +80,6 @@ Class UTBodyArmor : UTArmor replaces BlueArmor
 		UTArmor.ArmorAbsorption 75;
 		Inventory.PickupMessage "You got the Body Armor.";
 		Inventory.PickupSound "misc/ut_armor";
-		Radius 10;
-		Height 20;
 	}
 	States
 	{
@@ -99,7 +95,7 @@ Class UTShieldBelt : UTArmor replaces Megasphere
 	{
 		if ( (amount > 0) && !DamageTypeDefinition.IgnoreArmor(damageType) )
 		{
-			Owner.A_PlaySound("belt/absorb");
+			Owner.A_PlaySound("belt/absorb",CHAN_7);
 			UTMainHandler.DoFlash(Owner,Color(80,255,224,0),5);
 		}
 		Super.AbsorbDamage(damage,damageType,newdamage);
@@ -141,8 +137,6 @@ Class UTShieldBelt : UTArmor replaces Megasphere
 		Inventory.PickupMessage "You got the Shield Belt.";
 		Inventory.PickupSound "belt/pickup";
 		Inventory.RespawnTics 2100;
-		Radius 10;
-		Height 8;
 	}
 	States
 	{

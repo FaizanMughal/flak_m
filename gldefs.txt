@@ -184,7 +184,7 @@ Brightmap Texture "models/JPulseGun_02.png"
 }
 /*Brightmap Texture "models/JPulsePickup_01.png"
 {
-	Map "brightmaps/JPulseGun_02.png"
+	Map "brightmaps/JPulsePickup_01.png"
 }*/
 HardwareShader Texture "models/JPulsePickup_01.png"
 {
