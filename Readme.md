@@ -3,9 +3,9 @@
 What began as a test for importing UT vertex meshes has turned into an actual
 full UT weapon and item mod.
 
-## Currently you have to patch in [this pull request](https://github.com/coelckers/gzdoom/pull/495) yourself for models to render correctly.
+### Currently you have to patch in [this pull request](https://github.com/coelckers/gzdoom/pull/495) yourself for models to render correctly.
 
-Currently implemented:
+## Currently implemented
 
  - Flak Cannon (slot 8)
  - ASMD Shock Rifle (slot 4)
@@ -43,14 +43,14 @@ Currently implemented:
  - Rocket Launcher (slot 9)
  - Scaling/Customization options for the HUD
 
-In progress:
+## In progress
 
  - Make biorifle sludge follow ceiling and wall movement (this might be hard)
  - Add some more effects, maybe some nicer recoil on guns too
  - General polishing and bugfixing
  - Trim out unused animations
 
-Known bugs:
+## Known bugs
 
  - Sometimes the slave enforcer has its psprite "lower" slightly while the main
    enforcer is reloading. No idea what causes this (Could be bobbing-related)
