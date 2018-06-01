@@ -56,5 +56,5 @@ This mod requires a recent devbuild of QZDoom. You can get them
  - Sometimes the slave enforcer has its psprite "lower" slightly while the main
    enforcer is reloading. No idea what causes this (Could be bobbing-related)
  - Sludge doesn't react to ceiling and wall movement
- - Pulse gun beams behave oddly when the player is on moving platforms.
-   This might just be a rendering interpolation glitch, as usual
+ - Pulse gun beams behave oddly when the player is moving or looking up and
+   down. This might just be a rendering interpolation glitch, as usual
