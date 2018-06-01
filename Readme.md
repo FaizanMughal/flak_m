@@ -58,3 +58,4 @@ This mod requires a recent devbuild of QZDoom. You can get them
  - Sludge doesn't react to ceiling and wall movement
  - Pulse gun beams behave oddly when the player is moving or looking up and
    down. This might just be a rendering interpolation glitch, as usual
+ - Translocator allows telefragging of other players in coop.

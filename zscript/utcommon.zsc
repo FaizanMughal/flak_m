@@ -167,6 +167,7 @@ Class UTPlayer : DoomPlayer
 	override void Tick()
 	{
 		Super.Tick();
+		if ( !player ) return;
 		if ( !footsteps ) footsteps = CVar.GetCVar('flak_footsteps',players[consoleplayer]);
 		if ( !footsteps.GetBool() ) return;
 		double ang = level.time/(20*TICRATE/35.)*360.;
