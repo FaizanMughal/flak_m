@@ -3,7 +3,7 @@ user bool flak_showmenu = true;
 server bool flak_pulsereload = false;
 server bool flak_enforcerreload = false;
 user bool flak_redeemerreadout = true;
-user int flak_colorprefs = 0;
+user int flak_colorprefs = 2;
 user color flak_colorcustom = "00 80 ff";
 user int flak_opacity = 15;	// UT's opacity is 1 <-> 16 in steps of 1 (default 15)
 				// 16 means fully opaque, everything else is just additive with gradually lowering alpha

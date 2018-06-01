@@ -5,10 +5,10 @@ Class UTPlayer : DoomPlayer
 
 	Default
 	{
-		Player.StartItem "MiniAmmo", 30;
 		Player.StartItem "Enforcer";
 		Player.StartItem "Translocator";
 		Player.StartItem "ImpactHammer";
+		Player.StartItem "MiniAmmo", 30;
 		Player.DamageScreenColor "FF 00 00", 1.0;
 		Player.ViewHeight 46;
 	}
