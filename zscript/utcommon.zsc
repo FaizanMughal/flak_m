@@ -2,6 +2,7 @@ Class UTPlayer : DoomPlayer
 {
 	bool lastground;
 	double lastvelz, prevvelz;
+	transient CVar footsteps;
 
 	Default
 	{
@@ -166,11 +167,19 @@ Class UTPlayer : DoomPlayer
 	override void Tick()
 	{
 		Super.Tick();
+		if ( !footsteps ) footsteps = CVar.GetCVar('flak_footsteps',players[consoleplayer]);
+		if ( !footsteps.GetBool() ) return;
 		double ang = level.time/(20*TICRATE/35.)*360.;
 		if ( (abs(sin(ang)) >= 1.0) && player.onground && (player.cmd.forwardmove || player.cmd.sidemove) )
-			A_PlaySound("ut/playerfootstep",CHAN_5,abs(vel.xy.length())*0.03);
+		{
+			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid ) A_PlaySound("ut/playerfootstepwet",CHAN_5,abs(vel.xy.length())*0.03);
+			else A_PlaySound("ut/playerfootstep",CHAN_5,abs(vel.xy.length())*0.03);
+		}
 		if ( player.onground && !bNoGravity && !lastground && (lastvelz < -2) && (lastvelz >= -8) )
-			A_PlaySound("*land",CHAN_AUTO,abs(lastvelz*0.0625));
+		{
+			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid ) A_PlaySound("ut/wetsplash",CHAN_AUTO,abs(lastvelz*0.0625));
+			else A_PlaySound("*land",CHAN_AUTO,abs(lastvelz*0.0625));
+		}
 		lastground = player.onground;
 		lastvelz = prevvelz;
 		prevvelz = vel.z;
@@ -229,6 +238,12 @@ Class UTWeapon : Weapon
 	{
 		let amp = DamageAmplifier(Owner.FindInventory("DamageAmplifier",true));
 		if ( amp ) amp.FireEffect();
+	}
+
+	override void OwnerDied()
+	{
+		Super.OwnerDied();
+		A_ClearRefire();
 	}
 
 	Default
@@ -339,13 +354,14 @@ Class UTSpark : Actor
 	{
 		RenderStyle "Add";
 		Radius 2;
-		Height 0;
+		Height 2;
 		+NOBLOCKMAP;
 		+FORCEXYBILLBOARD;
 		+MISSILE;
 		+MOVEWITHSECTOR;
 		+THRUACTORS;
 		+NOTELEPORT;
+		+DONTSPLASH;
 		BounceType "Doom";
 		BounceFactor 0.4;
 		Gravity 0.5;
@@ -381,12 +397,13 @@ Class UTChip : Actor
 	Default
 	{
 		Radius 2;
-		Height 0;
+		Height 2;
 		+NOBLOCKMAP;
 		+MISSILE;
 		+MOVEWITHSECTOR;
 		+THRUACTORS;
 		+NOTELEPORT;
+		+DONTSPLASH;
 		BounceType "Doom";
 		BounceFactor 0.3;
 		Gravity 0.7;
@@ -446,7 +463,7 @@ Class UTBubble : Actor
 	{
 		RenderStyle "Add";
 		Radius 2;
-		Height 0;
+		Height 2;
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+DONTSPLASH;
@@ -488,13 +505,15 @@ Class UTSmoke : Actor
 		RenderStyle "Shaded";
 		StencilColor "FFFFFF";
 		Radius 2;
-		Height 0;
+		Height 2;
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
 		+THRUACTORS;
 		+NOTELEPORT;
+		+CANBOUNCEWATER;
+		-BOUNCEAUTOOFF;
 		BounceType "Hexen";
 		BounceFactor 1.0;
 		WallBounceFactor 1.0;

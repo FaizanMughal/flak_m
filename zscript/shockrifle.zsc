@@ -184,7 +184,7 @@ Class ShockSpark : Actor
 	{
 		RenderStyle "Add";
 		Radius 2;
-		Height 0;
+		Height 2;
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+MISSILE;
@@ -193,6 +193,9 @@ Class ShockSpark : Actor
 		+ROLLSPRITE;
 		+ROLLCENTER;
 		+NOTELEPORT;
+		+DONTSPLASH;
+		+CANBOUNCEWATER;
+		-BOUNCEAUTOOFF;
 		BounceType "Doom";
 		BounceFactor 1.0;
 		WallBounceFactor 1.0;
@@ -388,7 +391,7 @@ Class ShockBeam : Actor
 		Wait;
 	Death:
 		TNT1 A 0 A_BeamExplode();
-		AEXP ABCDEFGHIJKL 1 Bright;
+		ASMX ABCDEFGHIJKL 1 Bright;
 		TNT1 A 100;
 		Stop;
 	}
@@ -400,7 +403,7 @@ Class SuperShockSpark : Actor
 	{
 		RenderStyle "Add";
 		Radius 2;
-		Height 0;
+		Height 2;
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+MISSILE;
@@ -409,6 +412,9 @@ Class SuperShockSpark : Actor
 		+ROLLSPRITE;
 		+ROLLCENTER;
 		+NOTELEPORT;
+		+DONTSPLASH;
+		+CANBOUNCEWATER;
+		-BOUNCEAUTOOFF;
 		BounceType "Doom";
 		BounceFactor 1.0;
 		WallBounceFactor 1.0;
@@ -608,7 +614,7 @@ Class SuperShockBeam : Actor
 		Wait;
 	Death:
 		TNT1 A 0 A_BeamExplode();
-		SEXP ABCDEFGHIJKL 1 Bright;
+		SSMX ABCDEFGHIJKL 1 Bright;
 		TNT1 A 100;
 		Stop;
 	}
@@ -824,15 +830,16 @@ Class ShockBall : Actor
 		PROJECTILE;
 		+FORCEXYBILLBOARD;
 		+SKYEXPLODE;
+		+EXPLODEONWATER;
 	}
 	States
 	{
 	Spawn:
-		ABAL ABCD 2 Bright;
+		ASMB ABCD 2 Bright;
 		Loop;
 	Death:
 		TNT1 A 0 A_BallExplode();
-		AEXP ABCDEFGHIJKL 2 Bright;
+		ASMX ABCDEFGHIJKL 2 Bright;
 		TNT1 A 300;
 		Stop;
 	}
@@ -888,15 +895,16 @@ Class SuperShockBall : Actor
 		+SKYEXPLODE;
 		+FORCERADIUSDMG;
 		+EXTREMEDEATH;
+		+EXPLODEONWATER;
 	}
 	States
 	{
 	Spawn:
-		SBAL ABCD 2 Bright;
+		SSMB ABCD 2 Bright;
 		Loop;
 	Death:
 		TNT1 A 0 A_BallExplode();
-		SEXP ABCDEFGHIJKL 2 Bright;
+		SSMX ABCDEFGHIJKL 2 Bright;
 		TNT1 A 300;
 		Stop;
 	}

@@ -36,6 +36,9 @@ OptionMenu "UTOptionMenu"
 	Option "Color Choice", "flak_colorprefs", "ColorPrefs"
 	ColorPicker "Custom Color", "flak_colorcustom"
 	Slider "HUD Opacity", "flak_opacity", 1, 16, 1, 0
+	StaticText " "
+	StaticText "Misc Options", "Gold"
+	Option "UT Footsteps", "flak_footsteps", "YesNo"
 }
 
 AddOptionMenu "OptionsMenu"

@@ -345,11 +345,24 @@ Class Enforcer : UTWeapon replaces Pistol
 		return "%k riddled %o full of holes with the Enforcer.";
 	}
 
+	override void Travelled()
+	{
+		Super.Travelled();
+		slaveactive = false;
+	}
+
+	override void OwnerDied()
+	{
+		Super.OwnerDied();
+		slaverefire = 0;
+	}
+
 	Default
 	{
 		Tag "Enforcer";
 		Inventory.PickupMessage "You picked up another Enforcer!";
 		Inventory.MaxAmount 2;
+		Inventory.InterHubAmount 2;
 		Weapon.UpSound "enforcer/select";
 		Weapon.SlotNumber 2;
 		Weapon.SelectionOrder 8;

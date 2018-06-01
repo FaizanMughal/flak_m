@@ -43,7 +43,7 @@ Class BioSpark : Actor
 	{
 		RenderStyle "Add";
 		Radius 2;
-		Height 0;
+		Height 2;
 		+NOBLOCKMAP;
 		+FORCEXYBILLBOARD;
 		+MISSILE;
@@ -52,6 +52,9 @@ Class BioSpark : Actor
 		+ROLLSPRITE;
 		+ROLLCENTER;
 		+NOTELEPORT;
+		+DONTSPLASH;
+		-BOUNCEAUTOOFF;
+		+BOUNCEAUTOOFFFLOORONLY;
 		BounceType "Doom";
 		BounceFactor 0.5;
 		WallBounceFactor 0.5;
@@ -350,6 +353,7 @@ Class BioGel : Actor
 		PROJECTILE;
 		-NOGRAVITY;
 		+SKYEXPLODE;
+		+EXPLODEONWATER;
 		+FORCERADIUSDMG;
 		+FORCEXYBILLBOARD;
 		+MOVEWITHSECTOR;

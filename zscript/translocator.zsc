@@ -127,6 +127,9 @@ Class TranslocatorModule : Actor
 		+SKYEXPLODE;
 		+HITTRACER;
 		+MOVEWITHSECTOR;
+		+CANBOUNCEWATER;
+		-BOUNCEAUTOOFF;
+		+BOUNCEAUTOOFFFLOORONLY;
 		BounceType "Doom";
 		BounceFactor 0.5;
 		WallBounceFactor 0.5;
@@ -352,6 +355,12 @@ Class Translocator : UTWeapon
 			A_PlaySound("transloc/spark",CHAN_WEAPON);
 			DamageMobj(invoker,self,int.max,'Telefrag',DMG_THRUSTLESS);
 		}
+	}
+
+	override void OnDestroy()
+	{
+		Super.OnDestroy();
+		if ( module ) module.Destroy();
 	}
 
 	Default

@@ -145,8 +145,11 @@ Class FlakChunk : Actor
 		BounceType "Doom";
 		BounceFactor 0.8;
 		PROJECTILE;
-		+USEBOUNCESTATE
-		-BOUNCEAUTOOFF
+		+USEBOUNCESTATE;
+		-BOUNCEAUTOOFF;
+		+BOUNCEAUTOOFFFLOORONLY;
+		+CANBOUNCEWATER;
+		+SKYEXPLODE;
 		Scale 0.5;
 	}
 	override bool CanCollideWith( Actor other, bool passive )
@@ -363,6 +366,7 @@ Class FlakSlug : Actor
 		PROJECTILE;
 		-NOGRAVITY;
 		+SKYEXPLODE;
+		+EXPLODEONWATER;
 		+HITTRACER;
 	}
 	override void PostBeginPlay()

@@ -251,6 +251,7 @@ Class WarShell : Actor
 		+FORCEXYBILLBOARD;
 		+SKYEXPLODE;
 		+FORCERADIUSDMG;
+		+EXPLODEONWATER;
 	}
 	override void PostBeginPlay()
 	{
@@ -632,6 +633,18 @@ Class WarheadLauncher : UTWeapon replaces BFG9000
 	{
 		if ( guided ) return null;
 		return Super.CreateTossable();
+	}
+
+	override void OwnerDied()
+	{
+		Super.OwnerDied();
+		if ( guided ) guided.ExplodeMissile();
+	}
+
+	override void OnDestroy()
+	{
+		Super.OnDestroy();
+		if ( guided ) guided.ExplodeMissile();
 	}
 
 	Default

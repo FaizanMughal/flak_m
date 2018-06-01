@@ -62,11 +62,14 @@ Class Razor2 : Actor
 		DamageType "Ripper";
 		Obituary "%k ripped a chunk of meat out of %o with the Ripper.";
 		BounceType "Doom";
-		BounceCount 7;
+		ReactionTime 7;
 		BounceFactor 1.0;
 		WallBounceFactor 1.0;
 		PROJECTILE;
 		+USEBOUNCESTATE;
+		-BOUNCEAUTOOFF;
+		+SKYEXPLODE;
+		+CANBOUNCEWATER;
 	}
 	override void PostBeginPlay()
 	{
@@ -135,6 +138,7 @@ Class Razor2 : Actor
 			A_SetAngle(atan2(dir.y,dir.x));
 			A_SetPitch(asin(-dir.z));
 			A_RazorHit();
+			A_CountDown();
 		}
 		Goto Spawn;
 	Death:
@@ -182,6 +186,8 @@ Class Razor2Alt : Razor2
 		DamageFunction Random[Ripper](25,34);
 		DamageType "RipperAltDealth";
 		BounceType "None";
+		-CANBOUNCEWATER;
+		+EXPLODEONWATER;
 	}
 	action void A_RazorExplode()
 	{
@@ -232,7 +238,7 @@ Class Razor2Alt : Razor2
 	Death:
 	XDeath:
 		TNT1 A 0 A_RazorExplode();
-		REXP ABCDEFG 2 Bright;
+		RIPX ABCDEFG 2 Bright;
 		Stop;
 	}
 }
