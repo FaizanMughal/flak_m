@@ -474,7 +474,7 @@ Class SuperShockBeam : Actor
 	Default
 	{
 		Obituary "%k electrified %o with the Enhanced Shock Rifle.";
-		DamageType 'jolted';
+		DamageType 'joltedX';
 		RenderStyle "Add";
 		Radius 0.1;
 		Height 0;
@@ -560,7 +560,7 @@ Class SuperShockBeam : Actor
 			}
 			else
 			{
-				t.Results.HitActor.DamageMobj(self,target,Random[ASMD](3500,5000),'jolted');
+				t.Results.HitActor.DamageMobj(self,target,Random[ASMD](3500,5000),'joltedX');
 				let r = Spawn("SuperShockBeamRing",pos);
 				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
 				r.pitch = asin(-t.Results.HitVector.z);
@@ -884,7 +884,7 @@ Class SuperShockBall : Actor
 	{
 		Obituary "%k electrified %o with the Enhanced Shock Rifle.";
 		RenderStyle "Add";
-		DamageType 'jolted';
+		DamageType 'joltedX';
 		DamageFunction Random[ASMD](5000,6000);
 		Radius 2;
 		Height 2;

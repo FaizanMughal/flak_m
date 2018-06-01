@@ -59,7 +59,7 @@ Class Razor2 : Actor
 		Height 2;
 		Speed 50;
 		DamageFunction Random[Ripper](20,30);
-		DamageType "Ripper";
+		DamageType 'Ripper';
 		Obituary "%k ripped a chunk of meat out of %o with the Ripper.";
 		BounceType "Doom";
 		ReactionTime 7;
@@ -184,7 +184,7 @@ Class Razor2Alt : Razor2
 	Default
 	{
 		DamageFunction Random[Ripper](25,34);
-		DamageType "RipperAltDealth";
+		DamageType 'RipperAltDealth';
 		BounceType "None";
 		-CANBOUNCEWATER;
 		+EXPLODEONWATER;
