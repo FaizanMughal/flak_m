@@ -1,8 +1,3 @@
-OptionValue "BetaToggle"
-{
-	0, "Normal"
-	1, "Beta"
-}
 OptionValue "BetaToggleMenu"
 {
 	0, "Normal"
@@ -23,9 +18,6 @@ OptionMenu "UTOptionMenu"
 	Option "Show Menu", "flak_showmenu", "YesNo"
 	Option "Menu Type", "flak_protomenu", "BetaToggleMenu"
 	Command "Apply Changes", "event refreshmenu"
-	StaticText " "
-	StaticText "Item Options", "Gold"
-	Option "UDamage Style", "flak_betaudamage", "BetaToggle"
 	StaticText " "
 	StaticText "Weapon Options", "Gold"
 	Option "Enforcer Reloading", "flak_enforcerreload", "YesNo"

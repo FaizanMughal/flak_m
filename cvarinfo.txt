@@ -1,6 +1,5 @@
 user int flak_protomenu = 0;
 user bool flak_showmenu = true;
-server bool flak_betaudamage = false;
 server bool flak_pulsereload = false;
 server bool flak_enforcerreload = false;
 user bool flak_redeemerreadout = true;

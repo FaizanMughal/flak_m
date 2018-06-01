@@ -254,14 +254,6 @@ HardwareShader Texture "models/jinvis.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
-/*Brightmap Texture "models/Judamage1.png"
-{
-	Map "brightmaps/Judamage1.png"
-}*/
-HardwareShader Texture "models/Judamage1.png"
-{
-	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
-}
 /*Brightmap Texture "models/Jlboot2.png"
 {
 	Map "brightmaps/Jlboot2.png"

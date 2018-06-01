@@ -155,17 +155,6 @@ Model "UDamage"
 
 	FrameIndex UDAM A 0 0
 }
-Model "UDamage"
-{
-	Path "models"
-	Model 1 "UDamageB_d.3d"
-	Skin 1 "Judamage1.png"
-	Scale 0.16 0.16 0.192
-	ZOffset 24
-	ROTATING
-
-	FrameIndex UDAM B 1 0
-}
 
 Model "UTRedSkull"
 {

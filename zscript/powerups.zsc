@@ -13,24 +13,11 @@ Class UDamage : PowerupGiver replaces Berserk
 		Inventory.PickupSound "udamage/pickup";
 		Inventory.RespawnTics 4200;
 	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		A_CheckSkin();
-	}
-	action void A_CheckSkin()
-	{
-		bool isbeta = CVar.GetCVar('flak_betaudamage').GetBool();
-		if ( isbeta && (CurState == ResolveState("Spawn")) ) SetState(ResolveState("Spawn")+1);
-		else if ( !isbeta && (CurState == ResolveState("Spawn")+1) ) SetState(ResolveState("Spawn"));
-	}
 	States
 	{
 	Spawn:
-		UDAM A 5 A_CheckSkin();
-		Loop;
-		UDAM B 5 A_CheckSkin();
-		Loop;
+		UDAM A -1;
+		Stop;
 	}
 }
 
