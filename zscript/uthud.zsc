@@ -35,6 +35,8 @@ Class UTHud : BaseStatusBar
 	bool showweapons, showfrags, showammo, showstatus, showinfo;
 	double hudsize, weaponsize, statussize;
 
+	HUDFont mConFont;
+
 	// For easier UT Canvas drawing
 	Color DrawColor, WhiteColor, GoldColor;
 	double CurX, CurY;
@@ -50,6 +52,7 @@ Class UTHud : BaseStatusBar
 		lastfrag = int.min;
 		lastfragcnt = 0;
 		vtracer = new("ViewTracer");
+		mConFont = HUDFont.Create("confont");
 		// Set defaults
 		DrawColor = WhiteColor = "White";
 		GoldColor = "Gold";
@@ -562,5 +565,73 @@ Class UTHud : BaseStatusBar
 		DrawKeys();
 		// Display Identification Info
 		if ( CPlayer == players[consoleplayer] && showinfo ) DrawIdentifyInfo();
+	}
+
+	override void DrawAutomapHUD( double ticFrac )
+	{
+		int crdefault = Font.CR_TEAL;
+		int highlight = Font.CR_CYAN;
+		HScale = Screen.GetWidth()/1280.;
+		showweapons = CVar.GetCVar('flak_showweapons',players[consoleplayer]).GetBool();
+		showstatus = CVar.GetCVar('flak_showstatus',players[consoleplayer]).GetBool();
+		weaponsize = CVar.GetCVar('flak_weaponsize',players[consoleplayer]).GetFloat();
+		statussize = CVar.GetCVar('flak_statussize',players[consoleplayer]).GetFloat();
+		double cbottom = Screen.GetHeight()*0.99;
+		let scale = GetHUDScale();
+		double textdist = 8./scale.Y;
+		int height = ConFont.GetHeight();
+		String printtext;
+		int SCREENWIDTH = screen.GetWidth();
+		BeginHUD();
+		let y = textdist;
+		let width = ConFont.StringWidth("00:00:00");
+		double tmp, hres;
+		[tmp,tmp,hres] = StatusbarToRealCoords(0,0,HorizontalResolution);
+		double swidth = 0;
+		if ( !(players[consoleplayer].camera is 'GuidedWarShell') )
+		{
+			if ( showweapons ) cbottom -= 64*hudsize*weaponsize*HScale;
+			else if ( showfrags || showammo || !showstatus ) cbottom -= 64*hudsize*HScale;
+			if ( showstatus ) swidth += 128*hudsize*statussize*HScale;
+			if ( showweapons ) swidth += 140*hudsize*HScale+Screen.GetWidth()*0.01;
+		}
+		int protrusion = GetProtrusion(swidth/hres);
+		[tmp,tmp,hres] = StatusbarToRealCoords(0,0,protrusion);
+		width += (swidth-hres)/scale.X;
+		if ( am_showtime )
+		{
+			printtext = level.TimeFormatted();
+			DrawString(mConFont,level.TimeFormatted(),(-textdist-width,y),0,crdefault);
+			y += height;
+		}
+		if ( am_showtotaltime ) DrawString(mConFont,level.TimeFormatted(true),(-textdist-width,y),0,crdefault);
+		if ( !deathmatch )
+		{
+			y = textdist;
+			if ( am_showmonsters )
+			{
+				DrawString(mConFont,String.Format("%s\34%c %d/%d",Stringtable.Localize("$AM_MONSTERS"),crdefault+65,level.killed_monsters,level.total_monsters),(textdist,y),0,highlight);
+				y += height;
+			}
+			if ( am_showsecrets )
+			{
+				DrawString(mConFont,String.Format("%s\34%c %d/%d",Stringtable.Localize("$AM_SECRETS"),crdefault+65,level.found_secrets,level.total_secrets),(textdist,y),0,highlight);
+				y += height;
+			}
+			if ( am_showitems ) DrawString(mConFont,String.Format("%s\34%c %d/%d",Stringtable.Localize("$AM_ITEMS"),crdefault+65,level.found_items,level.total_items),(textdist,y),0,highlight);
+		}
+		String mapname = level.FormatMapName(crdefault);
+		BrokenLines lines = ConFont.BreakLines(mapname,int(SCREENWIDTH/scale.X));
+		int numlines = lines.Count();
+		int finalwidth = int(ConFont.StringWidth(lines.StringAt(numlines-1))*scale.X);
+		[tmp,tmp,hres] = StatusbarToRealCoords(0,0,HorizontalResolution);
+		protrusion = GetProtrusion(finalwidth/hres);
+		[tmp,tmp,tmp,hres] = StatusbarToRealCoords(0,0,0,protrusion);
+		y = (cbottom-hres)/scale.Y-height*numlines;
+		for ( int i = 0; i < numlines; i++ )
+		{
+			DrawString(mConFont,lines.StringAt(i),(0,y),DI_TEXT_ALIGN_CENTER|DI_SCREEN_HCENTER|DI_SCREEN_TOP,highlight);
+			y += height;
+		}
 	}
 }
