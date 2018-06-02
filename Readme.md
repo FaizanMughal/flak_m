@@ -3,8 +3,8 @@
 What began as a test for importing UT vertex meshes has turned into an actual
 full UT weapon and item mod.
 
-This mod requires a recent devbuild of QZDoom. You can get them
-[here](https://devbuilds.drdteam.org/qzdoom/).
+This mod requires very recent devbuilds of GZDoom or QZDoom. You can get them
+[here](https://devbuilds.drdteam.org/).
 
 ## Currently implemented
 
