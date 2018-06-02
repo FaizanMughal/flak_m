@@ -64,16 +64,12 @@ decal BigShockMark1
 {
 	pic bigshck1
 	shade "00 00 00"
-	x-scale 0.5
-	y-scale 0.5
 }
 
 decal BigShockMark2Sub
 {
 	pic bigshck2
 	shade "08 08 20"
-	x-scale 0.5
-	y-scale 0.5
 }
 
 decal BigShockMark2
@@ -82,9 +78,22 @@ decal BigShockMark2
 	shade "20 10 60"
 	fullbright
 	animator GoAway2
-	x-scale 0.5
-	y-scale 0.5
 	lowerdecal BigShockMark2Sub
+}
+
+decal SBigShockMark2Sub
+{
+	pic bigshck2
+	shade "20 08 08"
+}
+
+decal SBigShockMark2
+{
+	pic bigshck2
+	shade "60 20 10"
+	fullbright
+	animator GoAway2
+	lowerdecal SBigShockMark2Sub
 }
 
 decal ShockMark
