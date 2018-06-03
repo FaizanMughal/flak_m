@@ -175,10 +175,10 @@ Class UTPlayer : DoomPlayer
 			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid ) A_PlaySound("ut/playerfootstepwet",CHAN_5,abs(vel.xy.length())*0.03);
 			else A_PlaySound("ut/playerfootstep",CHAN_5,abs(vel.xy.length())*0.03);
 		}
-		if ( player.onground && !bNoGravity && !lastground && (lastvelz < -2) && (lastvelz >= -8) )
+		if ( player.onground && !bNoGravity && !lastground && (lastvelz < -4) && (lastvelz >= -8) )
 		{
-			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid ) A_PlaySound("ut/wetsplash",CHAN_AUTO,abs(lastvelz*0.0625));
-			else A_PlaySound("*land",CHAN_AUTO,abs(lastvelz*0.0625));
+			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid ) A_PlaySound("ut/wetsplash",CHAN_AUTO,abs(lastvelz*0.03));
+			else A_PlaySound("*land",CHAN_AUTO,abs(lastvelz*0.03));
 		}
 		lastground = player.onground;
 		lastvelz = prevvelz;

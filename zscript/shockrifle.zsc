@@ -1028,7 +1028,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		Super.Tick();
 		if ( !Owner ) return;
 		ticcnt++;
-		if ( ticcnt < 35 ) return;
+		if ( ticcnt < 105 ) return;
 		ticcnt = 0;
 		DepleteAmmo(false,true,1);
 	}
@@ -1070,6 +1070,11 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		p.pitch = BulletSlope();
 		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
 		p.target = self;
+	}
+	override bool CheckAmmo( int fireMode, bool autoSwitch, bool requireAmmo, int ammocount )
+	{
+		if ( (Owner.player.ReadyWeapon != self) && (Ammo1.Amount <= 0) ) return false;
+		return Super.CheckAmmo(fireMode,autoSwitch,requireAmmo,ammocount);
 	}
 	Default
 	{
