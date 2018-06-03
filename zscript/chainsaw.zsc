@@ -67,7 +67,7 @@ Class UTChainsaw : UTWeapon
 		LineTrace(angle,90,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Chainsaw](16,22);
+			int dmg = Random[Chainsaw](20,30);
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed');
 			d.HitActor.vel -= x*(500/d.HitActor.mass);
 			vel += x*(100/mass);
@@ -104,7 +104,7 @@ Class UTChainsaw : UTWeapon
 		LineTrace(angle,90,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Chainsaw](50,55);
+			int dmg = Random[Chainsaw](50,60);
 			if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.8) )
 				dmg = d.HitActor.DamageMobj(invoker,self,dmg*2,'Decapitated');
 			else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed');

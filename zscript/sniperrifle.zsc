@@ -7,7 +7,7 @@ Class RifleAmmo : Ammo
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
-		Ammo.BackpackMaxAmount 50;
+		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 5;
 	}
 	States
@@ -87,9 +87,9 @@ Class SniperRifle : UTWeapon
 		LineTrace(angle,10000,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Sniper](40,50);
+			int dmg = Random[Sniper](45,60);
 			if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.8) )
-				dmg = d.HitActor.DamageMobj(invoker,self,dmg+65,'Decapitated');
+				dmg = d.HitActor.DamageMobj(invoker,self,dmg+70,'Decapitated');
 			else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot');
 			if ( d.HitActor.bNOBLOOD )
 			{

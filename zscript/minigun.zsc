@@ -31,9 +31,9 @@ Class MiniAmmo : Ammo
 		Tag "Large Bullets";
 		Inventory.PickupMessage "You picked up 50 bullets.";
 		Inventory.Amount 50;
-		Inventory.MaxAmount 199;
+		Inventory.MaxAmount 200;
 		Ammo.BackpackAmount 100;
-		Ammo.BackpackMaxAmount 199;
+		Ammo.BackpackMaxAmount 400;
 		Ammo.DropAmount 20;
 	}
 	States
@@ -122,7 +122,7 @@ Class Minigun : UTWeapon
 		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Minigun](9,15); // fun fact: the Minigun is one of the few weapons that has actual RNG damage in UT (and it's exactly this damage)
+			int dmg = Random[Minigun](12,18); // fun fact: the Minigun is one of the few weapons that has actual RNG damage in UT
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot');
 			if ( d.HitActor.bNOBLOOD )
 			{

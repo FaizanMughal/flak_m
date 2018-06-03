@@ -7,7 +7,7 @@ Class RipperAmmo : Ammo
 		Inventory.Amount 25;
 		Inventory.MaxAmount 75;
 		Ammo.BackpackAmount 50;
-		Ammo.BackpackMaxAmount 75;
+		Ammo.BackpackMaxAmount 150;
 		Ammo.DropAmount 10;
 	}
 	States
@@ -58,7 +58,7 @@ Class Razor2 : Actor
 		Radius 2;
 		Height 2;
 		Speed 50;
-		DamageFunction Random[Ripper](20,30);
+		DamageFunction Random[Ripper](30,40);
 		DamageType 'Ripper';
 		Obituary "%k ripped a chunk of meat out of %o with the Ripper.";
 		BounceType "Doom";
@@ -183,7 +183,7 @@ Class Razor2Alt : Razor2
 {
 	Default
 	{
-		DamageFunction Random[Ripper](25,34);
+		DamageFunction Random[Ripper](40,60);
 		DamageType 'RipperAltDealth';
 		BounceType "None";
 		-CANBOUNCEWATER;
@@ -199,7 +199,7 @@ Class Razor2Alt : Razor2
 		Spawn("Razor2AltLight",pos);
 		A_AlertMonsters();
 		A_SprayDecal("RazorBlast",20);
-		A_Explode(Random[Ripper](20,34),120);
+		A_Explode(Random[Ripper](30,50),120);
 		A_QuakeEx(3,3,3,10,0,180,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		int numpt = Random[Ripper](10,20);
 		Vector3 x = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));

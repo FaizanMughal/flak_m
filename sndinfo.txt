@@ -182,6 +182,7 @@ shock/ball	expla02
 $pitchshift shock/ball 5
 $pitchshiftrange 0
 sshock/blast	expl2
+sshock/dryfire	aclick2
 
 pulse/bolt	pulseblt
 pulse/down	pulsedwn

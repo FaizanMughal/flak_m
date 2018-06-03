@@ -7,7 +7,7 @@ Class UTRocketAmmo : Ammo
 		Inventory.Amount 12;
 		Inventory.MaxAmount 48;
 		Ammo.BackpackAmount 12;
-		Ammo.BackpackMaxAmount 48;
+		Ammo.BackpackMaxAmount 96;
 		Ammo.DropAmount 3;
 	}
 	States
@@ -105,7 +105,7 @@ Class UTRocket : Actor
 	Default
 	{
 		Obituary "%o was smacked down by %k's Rocket Launcher.";
-		DamageFunction Random[Eightball](70,80);
+		DamageFunction Random[Eightball](90,115);
 		DamageType 'RocketDeath';
 		Radius 2;
 		Height 2;
@@ -129,7 +129,7 @@ Class UTRocket : Actor
 		A_SprayDecal("RocketBlast",150);
 		A_NoGravity();
 		A_SetScale(0.75);
-		A_Explode(Random[Eightball](60,70),100);
+		A_Explode(Random[Eightball](80,100),100);
 		A_QuakeEx(3,3,3,8,0,250,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
 		A_PlaySound("utrl/explode",CHAN_VOICE);
 		A_AlertMonsters();
@@ -182,7 +182,7 @@ Class UTGrenade : UTRocket
 
 	Default
 	{
-		DamageFunction Random[Eightball](80,90);
+		DamageFunction Random[Eightball](90,120);
 		DamageType 'GrenadeDeath';
 		-NOGRAVITY;
 		+USEBOUNCESTATE;

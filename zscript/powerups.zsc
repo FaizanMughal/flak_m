@@ -196,10 +196,10 @@ Class PowerUTInvisibility : PowerInvisibility
 {
 	Default
 	{
-		Powerup.Duration -50;
-		Powerup.Strength 95;
-		Powerup.Mode "Translucent";
-		Powerup.Color "FFFFFF", 0.15;
+		Powerup.Duration -80;
+		Powerup.Strength 90;
+		Powerup.Mode "Additive";
+		Powerup.Color "FFFFFF", 0.1;
 	}
 	override void EndEffect()
 	{
@@ -297,6 +297,7 @@ Class UTJumpBoots : Inventory replaces RadSuit
 		+INVENTORY.ALWAYSPICKUP;
 		Inventory.Amount 3;
 		Inventory.MaxAmount 3;
+		Inventory.InterHubAmount 3;
 		Inventory.PickupMessage "You picked up the AntiGrav boots.";
 		Inventory.PickupSound "boot/pickup";
 		Inventory.RespawnTics 1050;
@@ -350,6 +351,7 @@ Class PowerJumpBoots_HighJump : PowerHighJump
 	{
 		Powerup.Strength 3;
 		Powerup.Duration int.max;
+		+INVENTORY.PERSISTENTPOWER;
 	}
 }
 Class PowerJumpBoots_IronFeet : PowerIronFeet
@@ -358,6 +360,7 @@ Class PowerJumpBoots_IronFeet : PowerIronFeet
 	{
 		Powerup.Duration int.max;
 		Powerup.Color "00 00 00", 0.0;
+		+INVENTORY.PERSISTENTPOWER;
 	}
 	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
 	{

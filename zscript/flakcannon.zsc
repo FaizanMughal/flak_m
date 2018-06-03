@@ -33,7 +33,7 @@ Class FlakAmmo : Ammo
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
-		Ammo.BackpackMaxAmount 50;
+		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 5;
 	}
 	States
@@ -140,7 +140,7 @@ Class FlakChunk : Actor
 		Radius 2;
 		Height 2;
 		Speed 50;
-		DamageFunction Random[Flak](12,18);
+		DamageFunction Random[Flak](15,25);
 		DamageType 'Shredded';
 		BounceType "Doom";
 		BounceFactor 0.8;
@@ -359,7 +359,7 @@ Class FlakSlug : Actor
 	{
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
 		DamageType 'FlakDeath';
-		DamageFunction Random[Flak](60,80);
+		DamageFunction Random[Flak](80,90);
 		Radius 2;
 		Height 2;
 		Speed 40;
@@ -386,7 +386,7 @@ Class FlakSlug : Actor
 		A_SprayDecal("RocketBlast",150);
 		A_NoGravity();
 		A_SetScale(1.2);
-		A_Explode(Random[Flak](40,60),80);
+		A_Explode(Random[Flak](70,80),80);
 		A_QuakeEx(4,4,4,8,0,200,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
 		A_PlaySound("flak/explode",CHAN_VOICE);
 		A_AlertMonsters();

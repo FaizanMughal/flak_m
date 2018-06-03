@@ -18,3 +18,4 @@ user float flak_hudsize = 1.0;		// 0.2 <-> 1.0 in steps of 0.2 (default 1.0)
 user float flak_weaponsize = 0.8;	// 0.2 <-> 1.0 in steps of 0.2 (default 0.8)
 user float flak_statussize = 1.0;	// 0.5 <-> 1.5 in steps of 0.1 (default 1.0)
 user bool flak_footsteps = true;
+server bool flak_translocator = false;

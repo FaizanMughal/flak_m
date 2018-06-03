@@ -370,6 +370,7 @@ Class Translocator : UTWeapon
 		Weapon.SlotNumber 1;
 		Weapon.SelectionOrder 10;
 		+WEAPON.NO_AUTO_SWITCH;
+		+WEAPON.CHEATNOTWEAPON;
 	}
 	States
 	{

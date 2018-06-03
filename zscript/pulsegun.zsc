@@ -23,9 +23,9 @@ Class PulseAmmo : Ammo
 		Tag "Pulse Cell";
 		Inventory.PickupMessage "You picked up a Pulse Cell.";
 		Inventory.Amount 25;
-		Inventory.MaxAmount 199;
+		Inventory.MaxAmount 200;
 		Ammo.BackpackAmount 50;
-		Ammo.BackpackMaxAmount 199;
+		Ammo.BackpackMaxAmount 400;
 		Ammo.DropAmount 10;
 	}
 	States
@@ -142,7 +142,7 @@ Class PulseBall : Actor
 		Obituary "%o ate %k's burning plasma death.";
 		DamageType 'Pulsed';
 		RenderStyle "Add";
-		DamageFunction Random[Pulse](15,25);
+		DamageFunction Random[Pulse](20,30);
 		PROJECTILE;
 		+EXPLODEONWATER;
 		+SKYEXPLODE;
@@ -315,12 +315,12 @@ Class PulseBolt : Actor
 				if ( !damagedactor )
 				{
 					accdamage = min(0.5*(level.time-lasthit),0.1);
-					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](65,75)*accdamage,'zapped');
+					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](70,80)*accdamage,'zapped');
 					accdamage = 0;
 				}
 				else if ( t.Results.HitActor != damagedactor )
 				{
-					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](65,75)*accdamage,'zapped');
+					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](70,80)*accdamage,'zapped');
 					accdamage = 0;
 				}
 				lasthit = level.time;
@@ -328,10 +328,11 @@ Class PulseBolt : Actor
 				accdamage += 1./TICRATE;
 				if ( accdamage > 0.22 )
 				{
-					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](65,75)*accdamage,'zapped');
+					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](70,80)*accdamage,'zapped');
 					accdamage = 0;
 				}
 			}
+			if ( t.Results.HitType == TRACE_HitWall ) t.Results.HitLine.RemoteActivate(tracer,t.Results.Side,SPAC_Impact,t.Results.HitPos);
 			int numpt = Random[Pulse](10,20)*!Random[Pulse](0,2);
 			for ( int i=0; i<numpt; i++ )
 			{

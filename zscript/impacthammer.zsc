@@ -75,7 +75,7 @@ Class ImpactHammer : UTWeapon replaces Fist
 		LineTrace(angle,80,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Impact](50,60)*realcharge;
+			int dmg = Random[Impact](60,80)*realcharge;
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact');
 			d.HitActor.vel = x*(1000/d.HitActor.mass)*realcharge;
 			if ( d.HitActor.bNOBLOOD )
@@ -137,7 +137,7 @@ Class ImpactHammer : UTWeapon replaces Fist
 		double dscale = d.Distance/180.;
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Impact](16,20)*dscale;
+			int dmg = Random[Impact](25,35)*dscale;
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact');
 			d.HitActor.vel = x*(500/d.HitActor.mass)*dscale;
 		}

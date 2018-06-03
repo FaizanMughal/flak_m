@@ -7,7 +7,6 @@ Class UTPlayer : DoomPlayer
 	Default
 	{
 		Player.StartItem "Enforcer";
-		Player.StartItem "Translocator";
 		Player.StartItem "ImpactHammer";
 		Player.StartItem "MiniAmmo", 30;
 		Player.DamageScreenColor "FF 00 00", 1.0;
@@ -755,9 +754,36 @@ Class UTMainHandler : StaticEventHandler
 		}
 	}
 
+	override void PlayerEntered( PlayerEvent e )
+	{
+		if ( CVar.GetCVar('flak_translocator').GetBool() )
+			players[e.playernumber].mo.GiveInventory("Translocator",1);
+	}
+	override void PlayerRespawned( PlayerEvent e )
+	{
+		if ( CVar.GetCVar('flak_translocator').GetBool() )
+			players[e.playernumber].mo.GiveInventory("Translocator",1);
+	}
+
+	override void NetworkProcess( ConsoleEvent e )
+	{
+		if ( e.Name ~== "refreshtrans" )
+		{
+			if ( CVar.GetCVar('flak_translocator').GetBool() )
+			{
+				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] ) players[i].mo.GiveInventory("Translocator",1);
+			}
+			else
+			{
+				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] ) players[i].mo.TakeInventory("Translocator",1);
+			}
+		}
+	}
+
 	override void ConsoleProcess( ConsoleEvent e )
 	{
 		if ( e.Name ~== "refreshmenu" ) StartMenu();
+		if ( e.Name ~== "refreshtrans" ) EventHandler.SendNetworkEvent("refreshtrans");
 	}
 
 	override void WorldTick()

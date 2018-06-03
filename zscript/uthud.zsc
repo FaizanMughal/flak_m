@@ -335,7 +335,7 @@ Class UTHud : BaseStatusBar
 		CurX += 8*hudsize*HScale;
 		CurY += 14*hudsize*HScale;
 		if ( !showstatus && b ) DrawColor = GoldColor;
-		UTDrawBigNum(Min(199,allarmor),hudsize);
+		UTDrawBigNum(allarmor,hudsize);
 		DrawColor = WhiteColor;
 		if ( !showstatus && !showweapons )
 		{
@@ -358,14 +358,14 @@ Class UTHud : BaseStatusBar
 			DrawColor = LerpColor(WhiteColor,blinkcolor,blinky);
 			CurX += 8*hudsize*HScale;
 			CurY += 14*hudsize*HScale;
-			UTDrawBigNum(max(0,CPlayer.mo.Health),hudsize);
+			UTDrawBigNum(Max(0,CPlayer.mo.Health),hudsize);
 		}
 		else
 		{
 			UTDrawTintedTex(Boxes[2],hudsize);
 			CurX += 8*hudsize*HScale;
 			CurY += 14*hudsize*HScale;
-			UTDrawBigNum(Clamp(CPlayer.mo.Health,0,199),hudsize);
+			UTDrawBigNum(Max(0,CPlayer.mo.Health),hudsize);
 		}
 	}
 	private void DrawWeapons()
