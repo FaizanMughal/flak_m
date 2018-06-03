@@ -536,7 +536,7 @@ Class SuperShockBeam : Actor
 			ExplodeMissile(null,t.Results.HitActor);
 			if ( t.Results.HitActor is 'ShockHitbox' )
 			{
-				if ( target ) target.TakeInventory('EnhancedShockAmmo',2);
+				if ( target ) target.TakeInventory('EnhancedShockAmmo',1);
 				let b = t.Results.HitActor.target;
 				b.ExplodeMissile(null,self);
 				b.A_Explode(Random[ASMD](15000,16000),400);
