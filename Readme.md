@@ -59,6 +59,3 @@ This mod requires very recent devbuilds of GZDoom or QZDoom. You can get them
  - Pulse gun beams behave oddly when the player is moving or looking up and
    down. This might just be a rendering interpolation glitch, as usual
  - Translocator allows telefragging of other players in coop.
- - Translocator modules go through player blocking lines, this can be easily
-   abused to screw up map flow. Blocking on player lines requires engine-side
-   changes, so this will take some effort.
