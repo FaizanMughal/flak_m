@@ -386,7 +386,6 @@ Class UTHud : BaseStatusBar
 			UTDrawWeaponIcon(cw,true,hudsize*weaponsize);
 			CurX = BaseX+cwslot*WeaponOffset;
 			CurY = BaseY;
-			UTDrawPlainTex(WeaponBox,hudsize*weaponsize,opacity+7);
 		}
 		if ( pw && (pw.SlotNumber != -1) && (pw != WP_NOCHANGE) )
 		{
@@ -398,17 +397,38 @@ Class UTHud : BaseStatusBar
 			CurY = BaseY;
 			UTDrawWeaponIcon(pw,true,hudsize*weaponsize);
 		}
-		Weapon wslots[10];
-		for ( Inventory i = CPlayer.mo.Inv; i; i=i.Inv )
+		if ( cwslot != -1 )
 		{
-			if ( !(i is 'Weapon') ) continue;
-			let w = Weapon(i);
-			if ( w.SlotNumber == -1 ) continue;
-			int slot = w.SlotNumber?(w.SlotNumber-1):9;
-			if ( !wslots[slot] ) wslots[slot] = w;
-			else if ( (wslots[slot] != cw) && ((wslots[slot] != pw)
-				|| (wslots[slot].SelectionOrder > w.SelectionOrder)) )
-				wslots[slot] = w;
+			CurX = BaseX+cwslot*WeaponOffset;
+			UTDrawPlainTex(WeaponBox,hudsize*weaponsize,opacity+7);
+		}
+		Weapon wslots[10];
+		// first run, populate the full array of weapons
+		for ( int i=0; i<10; i++ )
+		{
+			int sslot = (i<9)?(i+1):0;
+			for ( Inventory i = CPlayer.mo.Inv; i; i=i.Inv )
+			{
+				if ( !(i is 'Weapon') ) continue;
+				let w = Weapon(i);
+				if ( w.SlotNumber != sslot ) continue;
+				int slot = w.SlotNumber?(w.SlotNumber-1):9;
+				if ( !wslots[slot] )
+				{
+					wslots[slot] = w;
+					continue;
+				}
+				if ( (wslots[slot] == pw) || (wslots[slot] == cw) ) continue;
+				if ( (w == pw) || (w == cw) )
+				{
+					wslots[slot] = w;
+					continue;
+				}
+				if ( (w.SelectionOrder < wslots[slot].SelectionOrder) && (!w.Ammo1 || (w.Ammo1.Amount > 0)) )
+					wslots[slot] = w;
+				else if ( (w.SelectionOrder >= wslots[slot].SelectionOrder) && wslots[slot].Ammo1 && (wslots[slot].Ammo1.Amount <= 0) )
+					wslots[slot] = w;
+			}
 		}
 		for ( int i=0; i<10; i++ )
 		{
@@ -426,7 +446,7 @@ Class UTHud : BaseStatusBar
 			CurX = BaseX+i*WeaponOffset+4*WeapScale;
 			CurY = BaseY+4*WeapScale;
 			UTDrawTintedTex(BigNum[(i==9)?0:(i+1)],0.75*hudsize*weaponsize,opacity+7,GoldColor);
-			if ( !wslots[i].Ammo1 || (wslots[i].Ammo1.Amount <= 0) ) continue;
+			if ( !wslots[i].Ammo1 ) continue;
 			CurY = BaseY+52*WeapScale;
 			Vector2 ss = (0.6875,0.5)*WeapScale;
 			double dw = (Screen.GetWidth()/ss.x), dh = (Screen.GetHeight()/ss.y);
