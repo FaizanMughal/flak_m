@@ -54,22 +54,14 @@ Model "WarheadLauncher"
 	Model 1 "whpick_d.3d"
 	Skin 1 "jwhpick1.png"
 	Scale 0.2 0.24 0.2
-	ZOffset 12
-	RollOffset -90
-	ROTATING
-
-	FrameIndex RDMP A 1 0
-}
-Model "WarheadLauncher"
-{
-	Path "models"
-	Model 1 "whpick_d.3d"
-	Skin 1 "jwhpick1.png"
-	Scale 0.2 0.24 0.2
 	RollOffset -90
 	ZOffset 11
 
 	FrameIndex RDMP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex RDMP A 1 0
 }
 
 Model "WarheadLauncher"

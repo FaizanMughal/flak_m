@@ -13,70 +13,22 @@ Model "PulseBolt"
 {
 	Path "models"
 	Model 0 "PBolt_d.3d"
+	Offset 20.25 0 0
+	Scale 0.2025 0.10125 0.1215
+	AngleOffset 90
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+
 	Skin 0 "pbolt0.png"
-	Offset 20.25 0 0
-	Scale 0.2025 0.10125 0.1215
-	AngleOffset 90
-	DONTCULLBACKFACES
-	USEACTORPITCH
-	USEACTORROLL
-
 	FrameIndex PBLT A 0 0
-}
-Model "PulseBolt"
-{
-	Path "models"
-	Model 0 "PBolt_d.3d"
 	Skin 0 "pbolt1.png"
-	Offset 20.25 0 0
-	Scale 0.2025 0.10125 0.1215
-	AngleOffset 90
-	DONTCULLBACKFACES
-	USEACTORPITCH
-	USEACTORROLL
-
 	FrameIndex PBLT B 0 0
-}
-Model "PulseBolt"
-{
-	Path "models"
-	Model 0 "PBolt_d.3d"
 	Skin 0 "pbolt2.png"
-	Offset 20.25 0 0
-	Scale 0.2025 0.10125 0.1215
-	AngleOffset 90
-	DONTCULLBACKFACES
-	USEACTORPITCH
-	USEACTORROLL
-
 	FrameIndex PBLT C 0 0
-}
-Model "PulseBolt"
-{
-	Path "models"
-	Model 0 "PBolt_d.3d"
 	Skin 0 "pbolt3.png"
-	Offset 20.25 0 0
-	Scale 0.2025 0.10125 0.1215
-	AngleOffset 90
-	DONTCULLBACKFACES
-	USEACTORPITCH
-	USEACTORROLL
-
 	FrameIndex PBLT D 0 0
-}
-Model "PulseBolt"
-{
-	Path "models"
-	Model 0 "PBolt_d.3d"
 	Skin 0 "pbolt4.png"
-	Offset 20.25 0 0
-	Scale 0.2025 0.10125 0.1215
-	AngleOffset 90
-	DONTCULLBACKFACES
-	USEACTORPITCH
-	USEACTORROLL
-
 	FrameIndex PBLT E 0 0
 }
 
@@ -84,84 +36,25 @@ Model "StarterBolt"
 {
 	Path "models"
 	Model 0 "PBolt_d.3d"
+	Offset 20.25 0 0
+	Scale 0.2025 0.10125 0.1215
+	AngleOffset 90
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+
 	Skin 0 "sbolt0.png"
-	Offset 20.25 0 0
-	Scale 0.2025 0.10125 0.1215
-	AngleOffset 90
-	DONTCULLBACKFACES
-	USEACTORPITCH
-	USEACTORROLL
-
 	FrameIndex PBLT A 0 0
-}
-Model "StarterBolt"
-{
-	Path "models"
-	Model 0 "PBolt_d.3d"
 	Skin 0 "sbolt1.png"
-	Offset 20.25 0 0
-	Scale 0.2025 0.10125 0.1215
-	AngleOffset 90
-	DONTCULLBACKFACES
-	USEACTORPITCH
-	USEACTORROLL
-
 	FrameIndex PBLT B 0 0
-}
-Model "StarterBolt"
-{
-	Path "models"
-	Model 0 "PBolt_d.3d"
 	Skin 0 "sbolt2.png"
-	Offset 20.25 0 0
-	Scale 0.2025 0.10125 0.1215
-	AngleOffset 90
-	DONTCULLBACKFACES
-	USEACTORPITCH
-	USEACTORROLL
-
 	FrameIndex PBLT C 0 0
-}
-Model "StarterBolt"
-{
-	Path "models"
-	Model 0 "PBolt_d.3d"
 	Skin 0 "sbolt3.png"
-	Offset 20.25 0 0
-	Scale 0.2025 0.10125 0.1215
-	AngleOffset 90
-	DONTCULLBACKFACES
-	USEACTORPITCH
-	USEACTORROLL
-
 	FrameIndex PBLT D 0 0
-}
-Model "StarterBolt"
-{
-	Path "models"
-	Model 0 "PBolt_d.3d"
 	Skin 0 "sbolt4.png"
-	Offset 20.25 0 0
-	Scale 0.2025 0.10125 0.1215
-	AngleOffset 90
-	DONTCULLBACKFACES
-	USEACTORPITCH
-	USEACTORROLL
-
 	FrameIndex PBLT E 0 0
 }
 
-Model "PulseGun"
-{
-	Path "models"
-	Model 1 "PulsePickup_d.3d"
-	Skin 1 "JPulsePickup_01.png"
-	Scale 0.16 0.16 0.192
-	ZOffset 12
-	ROTATING
-
-	FrameIndex PGNP A 1 0
-}
 Model "PulseGun"
 {
 	Path "models"
@@ -171,6 +64,10 @@ Model "PulseGun"
 	ZOffset 8
 
 	FrameIndex PGNP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex PGNP A 1 0
 }
 
 Model "PulseGun"

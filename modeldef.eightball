@@ -56,21 +56,13 @@ Model "UTRocketLauncher"
 	Skin 1 "Eight_t.png"
 	Scale 0.24 0.24 0.288
 	AngleOffset 90
-	ZOffset 12
-	ROTATING
-
-	FrameIndex EBLP A 1 0
-}
-Model "UTRocketLauncher"
-{
-	Path "models"
-	Model 1 "Eight2Pick_d.3d"
-	Skin 1 "Eight_t.png"
-	Scale 0.24 0.24 0.288
-	AngleOffset 90
 	ZOffset 6
 
 	FrameIndex EBLP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex EBLP A 1 0
 }
 
 Model "UTRocketLauncher"

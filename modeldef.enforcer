@@ -31,60 +31,20 @@ Model "BulletImpact"
 {
 	Path "models"
 	Model 0 "BulletImpact_d.3d"
+	Scale 0.32 0.268 0.24
+	PitchOffset -90
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
 	Skin 0 "Impact_a00.png"
-	Scale 0.32 0.268 0.24
-	PitchOffset -90
-	USEACTORPITCH
-	USEACTORROLL
-	DONTCULLBACKFACES
 	FrameIndex BIMP A 0 0
-}
-Model "BulletImpact"
-{
-	Path "models"
-	Model 0 "BulletImpact_d.3d"
 	Skin 0 "Impact_a01.png"
-	Scale 0.32 0.268 0.24
-	PitchOffset -90
-	USEACTORPITCH
-	USEACTORROLL
-	DONTCULLBACKFACES
 	FrameIndex BIMP B 0 0
-}
-Model "BulletImpact"
-{
-	Path "models"
-	Model 0 "BulletImpact_d.3d"
 	Skin 0 "Impact_a02.png"
-	Scale 0.32 0.268 0.24
-	PitchOffset -90
-	USEACTORPITCH
-	USEACTORROLL
-	DONTCULLBACKFACES
 	FrameIndex BIMP C 0 0
-}
-Model "BulletImpact"
-{
-	Path "models"
-	Model 0 "BulletImpact_d.3d"
 	Skin 0 "Impact_a03.png"
-	Scale 0.32 0.268 0.24
-	PitchOffset -90
-	USEACTORPITCH
-	USEACTORROLL
-	DONTCULLBACKFACES
 	FrameIndex BIMP D 0 0
-}
-Model "BulletImpact"
-{
-	Path "models"
-	Model 0 "BulletImpact_d.3d"
 	Skin 0 "Impact_a04.png"
-	Scale 0.32 0.268 0.24
-	PitchOffset -90
-	USEACTORPITCH
-	USEACTORROLL
-	DONTCULLBACKFACES
 	FrameIndex BIMP E 0 0
 }
 
@@ -95,21 +55,13 @@ Model "Enforcer"
 	Skin 1 "Jautot1.png"
 	Scale 0.1 0.1 0.12
 	AngleOffset 90
-	ZOffset 12
-	ROTATING
-
-	FrameIndex ENFP A 1 0
-}
-Model "Enforcer"
-{
-	Path "models"
-	Model 1 "MagPick_d.3d"
-	Skin 1 "Jautot1.png"
-	Scale 0.1 0.1 0.12
-	AngleOffset 90
 	ZOffset 6
 
 	FrameIndex ENFP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex ENFP A 1 0
 }
 
 Model "Enforcer"
@@ -123,38 +75,17 @@ Model "Enforcer"
 	Offset 10.4 -25.0 -2.9
 
 	FrameIndex EMUZ A 3 0
-}
-Model "Enforcer"
-{
-	Path "models"
-	Model 3 "Flat_d.3d"
-	Skin 3 "EMuz1.png"
-	AngleOffset 90
-	PitchOffset 90
+
 	Scale 0.04 0.04 0.04
 	Offset 1.9 -25.0 -9.3
 
 	FrameIndex EMUZ B 3 0
-}
-Model "Enforcer"
-{
-	Path "models"
-	Model 3 "Flat_d.3d"
-	Skin 3 "EMuz1.png"
-	AngleOffset 90
-	PitchOffset 90
+
 	Scale 0.04 0.04 0.04
 	Offset -10.4 -25.0 -2.9
 
 	FrameIndex EMUZ C 3 0
-}
-Model "Enforcer"
-{
-	Path "models"
-	Model 3 "Flat_d.3d"
-	Skin 3 "EMuz1.png"
-	AngleOffset 90
-	PitchOffset 90
+
 	Scale 0.04 0.04 0.04
 	Offset -1.9 -25.0 -9.3
 

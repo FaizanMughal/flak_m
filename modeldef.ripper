@@ -16,21 +16,13 @@ Model "Ripper2"
 	Skin 1 "JRazorw.png"
 	Scale 0.2 0.2 0.24
 	AngleOffset 90
-	ZOffset 12
-	ROTATING
-
-	FrameIndex RZRP A 1 0
-}
-Model "Ripper2"
-{
-	Path "models"
-	Model 1 "RazPick2_d.3d"
-	Skin 1 "JRazorw.png"
-	Scale 0.2 0.2 0.24
-	AngleOffset 90
 	ZOffset 10
 
 	FrameIndex RZRP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex RZRP A 1 0
 }
 
 Model "Razor2"

@@ -139,21 +139,13 @@ Model "ShockRifle"
 	Skin 1 "asmd_t.png"
 	AngleOffset 90
 	Scale 0.14 0.14 0.18
-	ZOffset 12
-	ROTATING
-
-	FrameIndex ASMP A 1 0
-}
-Model "ShockRifle"
-{
-	Path "models"
-	Model 1 "asmd2pick_d.3d"
-	Skin 1 "asmd_t.png"
-	AngleOffset 90
-	Scale 0.14 0.14 0.18
 	ZOffset 4
 
 	FrameIndex ASMP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex ASMP A 1 0
 }
 
 Model "ShockRifle"

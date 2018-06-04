@@ -38,675 +38,111 @@ Model "FlakChunk"
 {
 	Path "models"
 	Model 0 "chunkm_d.3d"
+	Model 1 "chunk2m_d.3d"
+	Model 2 "chunk3m_d.3d"
+	Model 3 "chunk4m_d.3d"
+	Scale 0.06 0.06 0.072
+	ZOffset 2
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 2
+
 	Skin 0 "chunk_a00.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH1 A 0 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 0 "chunkm_d.3d"
-	Skin 0 "chunk_a01.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH1 B 0 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 0 "chunkm_d.3d"
-	Skin 0 "chunk_a02.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH1 C 0 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 0 "chunkm_d.3d"
-	Skin 0 "chunk_a03.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH1 D 0 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 0 "chunkm_d.3d"
-	Skin 0 "chunk_a04.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH1 E 0 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 0 "chunkm_d.3d"
-	Skin 0 "chunk_a05.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH1 F 0 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 0 "chunkm_d.3d"
-	Skin 0 "chunk_a06.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH1 G 0 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 0 "chunkm_d.3d"
-	Skin 0 "chunk_a07.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH1 H 0 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 0 "chunkm_d.3d"
-	Skin 0 "chunk_a08.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH1 I 0 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 0 "chunkm_d.3d"
-	Skin 0 "chunk_a09.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH1 J 0 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 0 "chunkm_d.3d"
-	Skin 0 "chunk_a10.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH1 K 0 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 0 "chunkm_d.3d"
-	Skin 0 "chunk_a11.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH1 L 0 0
-}
-
-Model "FlakChunk"
-{
-	Path "models"
-	Model 1 "chunk2m_d.3d"
 	Skin 1 "chunk_a00.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH2 A 1 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 1 "chunk2m_d.3d"
-	Skin 1 "chunk_a01.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH2 B 1 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 1 "chunk2m_d.3d"
-	Skin 1 "chunk_a02.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH2 C 1 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 1 "chunk2m_d.3d"
-	Skin 1 "chunk_a03.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH2 D 1 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 1 "chunk2m_d.3d"
-	Skin 1 "chunk_a04.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH2 E 1 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 1 "chunk2m_d.3d"
-	Skin 1 "chunk_a05.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH2 F 1 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 1 "chunk2m_d.3d"
-	Skin 1 "chunk_a06.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH2 G 1 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 1 "chunk2m_d.3d"
-	Skin 1 "chunk_a07.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH2 H 1 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 1 "chunk2m_d.3d"
-	Skin 1 "chunk_a08.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH2 I 1 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 1 "chunk2m_d.3d"
-	Skin 1 "chunk_a09.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH2 J 1 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 1 "chunk2m_d.3d"
-	Skin 1 "chunk_a10.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH2 K 1 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 1 "chunk2m_d.3d"
-	Skin 1 "chunk_a11.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH2 L 1 0
-}
-
-Model "FlakChunk"
-{
-	Path "models"
-	Model 2 "chunk3m_d.3d"
 	Skin 2 "chunk_a00.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH3 A 2 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 2 "chunk3m_d.3d"
-	Skin 2 "chunk_a01.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH3 B 2 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 2 "chunk3m_d.3d"
-	Skin 2 "chunk_a02.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH3 C 2 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 2 "chunk3m_d.3d"
-	Skin 2 "chunk_a03.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH3 D 2 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 2 "chunk3m_d.3d"
-	Skin 2 "chunk_a04.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH3 E 2 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 2 "chunk3m_d.3d"
-	Skin 2 "chunk_a05.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH3 F 2 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 2 "chunk3m_d.3d"
-	Skin 2 "chunk_a06.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH3 G 2 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 2 "chunk3m_d.3d"
-	Skin 2 "chunk_a07.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH3 H 2 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 2 "chunk3m_d.3d"
-	Skin 2 "chunk_a08.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH3 I 2 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 2 "chunk3m_d.3d"
-	Skin 2 "chunk_a09.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH3 J 2 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 2 "chunk3m_d.3d"
-	Skin 2 "chunk_a10.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH3 K 2 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 2 "chunk3m_d.3d"
-	Skin 2 "chunk_a11.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
-	FrameIndex FCH3 L 2 0
-}
-
-Model "FlakChunk"
-{
-	Path "models"
-	Model 3 "chunk4m_d.3d"
 	Skin 3 "chunk_a00.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
+	FrameIndex FCH1 A 0 0
+	FrameIndex FCH2 A 1 0
+	FrameIndex FCH3 A 2 0
 	FrameIndex FCH4 A 3 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 3 "chunk4m_d.3d"
+	Skin 0 "chunk_a01.png"
+	Skin 1 "chunk_a01.png"
+	Skin 2 "chunk_a01.png"
 	Skin 3 "chunk_a01.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
+	FrameIndex FCH1 B 0 0
+	FrameIndex FCH2 B 1 0
+	FrameIndex FCH3 B 2 0
 	FrameIndex FCH4 B 3 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 3 "chunk4m_d.3d"
+	Skin 0 "chunk_a02.png"
+	Skin 1 "chunk_a02.png"
+	Skin 2 "chunk_a02.png"
 	Skin 3 "chunk_a02.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
+	FrameIndex FCH1 C 0 0
+	FrameIndex FCH2 C 1 0
+	FrameIndex FCH3 C 2 0
 	FrameIndex FCH4 C 3 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 3 "chunk4m_d.3d"
+	Skin 0 "chunk_a03.png"
+	Skin 1 "chunk_a03.png"
+	Skin 2 "chunk_a03.png"
 	Skin 3 "chunk_a03.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
+	FrameIndex FCH1 D 0 0
+	FrameIndex FCH2 D 1 0
+	FrameIndex FCH3 D 2 0
 	FrameIndex FCH4 D 3 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 3 "chunk4m_d.3d"
+	Skin 0 "chunk_a04.png"
+	Skin 1 "chunk_a04.png"
+	Skin 2 "chunk_a04.png"
 	Skin 3 "chunk_a04.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
+	FrameIndex FCH1 E 0 0
+	FrameIndex FCH2 E 1 0
+	FrameIndex FCH3 E 2 0
 	FrameIndex FCH4 E 3 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 3 "chunk4m_d.3d"
+	Skin 0 "chunk_a05.png"
+	Skin 1 "chunk_a05.png"
+	Skin 2 "chunk_a05.png"
 	Skin 3 "chunk_a05.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
+	FrameIndex FCH1 F 0 0
+	FrameIndex FCH2 F 1 0
+	FrameIndex FCH3 F 2 0
 	FrameIndex FCH4 F 3 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 3 "chunk4m_d.3d"
+	Skin 0 "chunk_a06.png"
+	Skin 1 "chunk_a06.png"
+	Skin 2 "chunk_a06.png"
 	Skin 3 "chunk_a06.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
+	FrameIndex FCH1 G 0 0
+	FrameIndex FCH2 G 1 0
+	FrameIndex FCH3 G 2 0
 	FrameIndex FCH4 G 3 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 3 "chunk4m_d.3d"
+	Skin 0 "chunk_a07.png"
+	Skin 1 "chunk_a07.png"
+	Skin 2 "chunk_a07.png"
 	Skin 3 "chunk_a07.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
+	FrameIndex FCH1 H 0 0
+	FrameIndex FCH2 H 1 0
+	FrameIndex FCH3 H 2 0
 	FrameIndex FCH4 H 3 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 3 "chunk4m_d.3d"
+	Skin 0 "chunk_a08.png"
+	Skin 1 "chunk_a08.png"
+	Skin 2 "chunk_a08.png"
 	Skin 3 "chunk_a08.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
+	FrameIndex FCH1 I 0 0
+	FrameIndex FCH2 I 1 0
+	FrameIndex FCH3 I 2 0
 	FrameIndex FCH4 I 3 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 3 "chunk4m_d.3d"
+	Skin 0 "chunk_a09.png"
+	Skin 1 "chunk_a09.png"
+	Skin 2 "chunk_a09.png"
 	Skin 3 "chunk_a09.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
+	FrameIndex FCH1 J 0 0
+	FrameIndex FCH2 J 1 0
+	FrameIndex FCH3 J 2 0
 	FrameIndex FCH4 J 3 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 3 "chunk4m_d.3d"
+	Skin 0 "chunk_a10.png"
+	Skin 1 "chunk_a10.png"
+	Skin 2 "chunk_a10.png"
 	Skin 3 "chunk_a10.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
+	FrameIndex FCH1 K 0 0
+	FrameIndex FCH2 K 1 0
+	FrameIndex FCH3 K 2 0
 	FrameIndex FCH4 K 3 0
-}
-Model "FlakChunk"
-{
-	Path "models"
-	Model 3 "chunk4m_d.3d"
+	Skin 0 "chunk_a11.png"
+	Skin 1 "chunk_a11.png"
+	Skin 2 "chunk_a11.png"
 	Skin 3 "chunk_a11.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 2
-	USEACTORPITCH
-	USEACTORROLL
-	USEROTATIONCENTER
-	Rotation-Center 0 0 2
-
+	FrameIndex FCH1 L 0 0
+	FrameIndex FCH2 L 1 0
+	FrameIndex FCH3 L 2 0
 	FrameIndex FCH4 L 3 0
 }
 
@@ -718,20 +154,11 @@ Model "FlakCannon"
 	AngleOffset 90
 	Scale 0.14 0.14 0.168
 	Offset 18.9 0 12
-	ROTATING
-
-	FrameIndex FPCK A 1 0
-}
-Model "FlakCannon"
-{
-	Path "models"
-	Model 1 "flak2pick_d.3d"
-	Skin 1 "flak_t.png"
-	AngleOffset 90
-	Scale 0.14 0.14 0.168
-	Offset 18.9 0 12
 
 	FrameIndex FPCK B 1 0
+
+	ROTATING
+	FrameIndex FPCK A 1 0
 }
 
 Model "FlakCannon"

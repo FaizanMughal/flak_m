@@ -20,22 +20,13 @@ Model "Translocator"
 	SurfaceSkin 1 1 "tloc2_.png"
 	Scale 0.046 0.046 0.0552
 	AngleOffset -90
-	ZOffset 12
-	ROTATING
-
-	FrameIndex TLCP A 1 0
-}
-Model "Translocator"
-{
-	Path "models"
-	Model 1 "Trans3loc_d.3d"
-	SurfaceSkin 1 0 "tloc1_.png"
-	SurfaceSkin 1 1 "tloc2_.png"
-	Scale 0.046 0.046 0.0552
-	AngleOffset -90
 	ZOffset 1
 
 	FrameIndex TLCP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex TLCP A 1 0
 }
 
 Model "Translocator"
