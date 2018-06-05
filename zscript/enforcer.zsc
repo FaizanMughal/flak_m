@@ -306,7 +306,7 @@ Class Enforcer : UTWeapon replaces Pistol
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = Random[Enforcer](15,20);
-			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot');
+			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
 			if ( d.HitActor.bNOBLOOD )
 			{
 				let p = Spawn("BulletImpact",d.HitLocation);

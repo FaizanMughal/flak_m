@@ -123,7 +123,7 @@ Class Minigun : UTWeapon
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = Random[Minigun](12,18); // fun fact: the Minigun is one of the few weapons that has actual RNG damage in UT
-			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot');
+			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
 			if ( d.HitActor.bNOBLOOD )
 			{
 				let p = Spawn("BulletImpact",d.HitLocation);

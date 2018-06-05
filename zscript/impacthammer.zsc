@@ -76,7 +76,7 @@ Class ImpactHammer : UTWeapon replaces Fist
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = Random[Impact](60,80)*realcharge;
-			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact');
+			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
 			d.HitActor.vel = x*(1000/d.HitActor.mass)*realcharge;
 			if ( d.HitActor.bNOBLOOD )
 			{
@@ -94,7 +94,7 @@ Class ImpactHammer : UTWeapon replaces Fist
 		{
 			realcharge = max(1.0,realcharge);
 			int dmg = Random[Impact](16,24)*realcharge;	// It's a flat damage of 36 on UT, but I think it's more fair for it to scale
-			dmg = DamageMobj(invoker,self,dmg,'impact');
+			dmg = DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
 			TraceBleed(dmg,invoker);
 			vel -= x*(1200/mass)*realcharge;
 			let p = Spawn("HammerImpact",d.HitLocation-d.HitDir*4);
@@ -138,13 +138,13 @@ Class ImpactHammer : UTWeapon replaces Fist
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = Random[Impact](25,35)*dscale;
-			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact');
+			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
 			d.HitActor.vel = x*(500/d.HitActor.mass)*dscale;
 		}
 		else if ( d.HitType != TRACE_HitNone )
 		{
 			int dmg = Random[Impact](16,24)*dscale;
-			dmg = DamageMobj(invoker,self,dmg,'impact');
+			dmg = DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
 			vel -= x*(600/mass)*dscale;
 			if ( d.HitType == TRACE_HitWall ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation-d.HitDir*4);
 		}

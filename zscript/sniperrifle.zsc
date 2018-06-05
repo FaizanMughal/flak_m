@@ -89,8 +89,8 @@ Class SniperRifle : UTWeapon
 		{
 			int dmg = Random[Sniper](45,60);
 			if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.8) )
-				dmg = d.HitActor.DamageMobj(invoker,self,dmg+70,'Decapitated');
-			else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot');
+				dmg = d.HitActor.DamageMobj(invoker,self,dmg+70,'Decapitated',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
+			else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
 			if ( d.HitActor.bNOBLOOD )
 			{
 				let p = Spawn("BulletImpact",d.HitLocation);

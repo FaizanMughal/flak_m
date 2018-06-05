@@ -68,7 +68,7 @@ Class UTChainsaw : UTWeapon
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = Random[Chainsaw](20,30);
-			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed');
+			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
 			d.HitActor.vel -= x*(500/d.HitActor.mass);
 			vel += x*(100/mass);
 			if ( d.HitActor.player ) d.HitActor.A_QuakeEx(5,5,5,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
@@ -106,8 +106,8 @@ Class UTChainsaw : UTWeapon
 		{
 			int dmg = Random[Chainsaw](50,60);
 			if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.8) )
-				dmg = d.HitActor.DamageMobj(invoker,self,dmg*2,'Decapitated');
-			else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed');
+				dmg = d.HitActor.DamageMobj(invoker,self,dmg*2,'Decapitated',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
+			else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
 			d.HitActor.vel = -y*(1200/d.HitActor.mass);
 			vel += x*(100/mass);
 			if ( d.HitActor.player ) d.HitActor.A_QuakeEx(5,5,5,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);

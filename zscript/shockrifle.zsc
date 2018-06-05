@@ -339,7 +339,7 @@ Class ShockBeam : Actor
 			}
 			else
 			{
-				t.Results.HitActor.DamageMobj(self,target,Random[ASMD](35,50),'jolted');
+				t.Results.HitActor.DamageMobj(self,target,Random[ASMD](35,50),'jolted',DMG_USEANGLE,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
 				let r = Spawn("ShockBeamRing",pos);
 				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
 				r.pitch = asin(-t.Results.HitVector.z);
@@ -560,7 +560,7 @@ Class SuperShockBeam : Actor
 			}
 			else
 			{
-				t.Results.HitActor.DamageMobj(self,target,Random[ASMD](3500,5000),'joltedX');
+				t.Results.HitActor.DamageMobj(self,target,Random[ASMD](3500,5000),'joltedX',DMG_USEANGLE,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
 				let r = Spawn("SuperShockBeamRing",pos);
 				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
 				r.pitch = asin(-t.Results.HitVector.z);
