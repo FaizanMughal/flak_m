@@ -130,6 +130,7 @@ Class TranslocatorModule : Actor
 		+CANBOUNCEWATER;
 		-BOUNCEAUTOOFF;
 		+BOUNCEAUTOOFFFLOORONLY;
+		+BLOCKASPLAYER;
 		BounceType "Doom";
 		BounceFactor 0.5;
 		WallBounceFactor 0.5;
