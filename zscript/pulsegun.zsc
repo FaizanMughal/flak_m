@@ -315,12 +315,12 @@ Class PulseBolt : Actor
 				if ( !damagedactor )
 				{
 					accdamage = min(0.5*(level.time-lasthit),0.1);
-					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](70,80)*accdamage,'zapped');
+					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](70,80)*accdamage,'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 				else if ( t.Results.HitActor != damagedactor )
 				{
-					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](70,80)*accdamage,'zapped');
+					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](70,80)*accdamage,'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 				lasthit = level.time;
@@ -328,7 +328,7 @@ Class PulseBolt : Actor
 				accdamage += 1./TICRATE;
 				if ( accdamage > 0.22 )
 				{
-					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](70,80)*accdamage,'zapped');
+					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](70,80)*accdamage,'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 			}
