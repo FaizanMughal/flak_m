@@ -57,7 +57,7 @@ Class Razor2 : Actor
 	{
 		Radius 2;
 		Height 2;
-		Speed 50;
+		Speed 40;	// should be 26 but it looks way too slow
 		DamageFunction Random[Ripper](30,40);
 		DamageType 'Ripper';
 		Obituary "%k ripped a chunk of meat out of %o with the Ripper.";

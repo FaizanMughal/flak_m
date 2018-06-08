@@ -146,8 +146,8 @@ Class PulseBall : Actor
 		PROJECTILE;
 		+EXPLODEONWATER;
 		+SKYEXPLODE;
-		Scale 0.2;
-		Speed 30;
+		Scale 0.19;
+		Speed 29;
 		Radius 2;
 		Height 2;
 	}

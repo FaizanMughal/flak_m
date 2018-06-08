@@ -244,7 +244,7 @@ Class WarShell : Actor
 		Obituary "%o was vaporized by %k's Redeemer!!";
 		Radius 2;
 		Height 2;
-		Speed 2;
+		Speed 12;
 		DamageType 'RedeemerDeath';
 		DamageFactor 1000;
 		PROJECTILE;
@@ -279,9 +279,9 @@ Class WarShell : Actor
 			if ( waterlevel > 0 )
 			{
 				vel *= 0.98;
-				if ( vel.length() < 5 ) vel += vel.unit()*0.5;
+				if ( vel.length() < 12 ) vel += vel.unit();
 			}
-			else if ( vel.length() < 10 ) vel += vel.unit()*0.5;
+			else if ( vel.length() < 40 ) vel += vel.unit();
 		}
 	}
 	action void A_Trail()
@@ -395,13 +395,7 @@ Class GuidedWarShell : WarShell
 			A_SetAngle(destangle,SPF_INTERPOLATE);
 			A_SetPitch(destpitch,SPF_INTERPOLATE);
 			A_SetRoll(destroll,SPF_INTERPOLATE);
-			vel = vel.length()*(cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
-			if ( waterlevel > 0 )
-			{
-				vel *= 0.98;
-				if ( vel.length() < 5 ) vel += vel.unit()*0.5;
-			}
-			else if ( vel.length() < 10 ) vel += vel.unit()*0.5;
+			vel = (vel+(cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch))*0.8).unit()*11;
 		}
 		lagangle2 = lagangle2*0.95+lagangle*0.05;
 		lagpitch2 = lagpitch2*0.95+lagpitch*0.05;

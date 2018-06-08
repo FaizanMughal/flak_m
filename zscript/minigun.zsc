@@ -69,13 +69,13 @@ Class MinigunTracer : Actor
 	{
 		Super.Tick();
 		Vector3 dir = level.Vec3Diff(pos,dest);
-		if ( dir.length() < 200 )
+		if ( dir.length() < 160 )
 		{
 			Destroy();
 			return;
 		}
 		dir = dir.unit();
-		SetOrigin(Vec3Offset(dir.x*200,dir.y*200,dir.z*200),true);
+		SetOrigin(Vec3Offset(dir.x*160,dir.y*160,dir.z*160),true);
 		A_SetAngle(atan2(dir.y,dir.x),SPF_INTERPOLATE);
 		A_SetPitch(asin(-dir.z),SPF_INTERPOLATE);
 		A_SetRoll(roll+60,SPF_INTERPOLATE);

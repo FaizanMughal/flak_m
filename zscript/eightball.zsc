@@ -109,7 +109,7 @@ Class UTRocket : Actor
 		DamageType 'RocketDeath';
 		Radius 2;
 		Height 2;
-		Speed 30;
+		Speed 18;
 		PROJECTILE;
 		+SKYEXPLODE;
 		+EXPLODEONWATER;
@@ -163,10 +163,16 @@ Class UTRocket : Actor
 		{
 			A_SetRoll(roll+30,SPF_INTERPOLATE);
 			Vector3 dir = vel.unit();
+			if ( waterlevel <= 0 ) vel = dir*min(vel.length()+1,32);
 			A_SetAngle(atan2(dir.y,dir.x),SPF_INTERPOLATE);
 			A_SetPitch(asin(-dir.z),SPF_INTERPOLATE);
 			if ( tracer ) A_SeekerMissile(0,2,SMF_PRECISE);
-			Spawn("UTSmoke",pos);
+			for ( int i=0; i<3; i++ )
+			{
+				let s = Spawn("UTSmoke",pos);
+				s.vel = (FRandom[Eightball](-0.2,0.2),FRandom[Eightball](-0.2,0.2),FRandom[Eightball](-0.2,0.2));
+				s.vel += vel*0.1;
+			}
 		}
 		Wait;
 	Death:
@@ -308,8 +314,8 @@ Class UTRocketLauncher : UTWeapon
 				s = FRandom[Eightball](0,0.06*(num-1));
 				Vector3 dir = (x2+cos(a)*y2*s+sin(a)*z2*s).unit();
 				p = Spawn("UTGrenade",origin);
-				p.vel = dir*p.speed*FRandom[Eightball](1.0,1.2);
-				p.vel.z += 5;
+				p.vel = x*(vel dot x)*0.4 + dir*p.speed*FRandom[Eightball](1.0,1.2);
+				p.vel.z += 6;
 				p.target = self;
 			}
 		}

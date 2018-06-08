@@ -45,10 +45,25 @@ This mod requires GZDoom 3.4.0 or later.
 
 ## In progress
 
- - Make biorifle sludge follow ceiling and wall movement (this might be hard)
- - Add some more effects, maybe some nicer recoil on guns too
  - General polishing and bugfixing
- - Trim out unused animations
+ - Make biorifle sludge follow ceiling and wall movement (this might be hard)
+ - Add some more effects
+   - Additional particle effects on explosions
+   - Smoke on spent casings
+   - Visual recoil affecting aim (time to recycle SM's A_Swing once again)
+ - Additional model optimization and cleanup
+   - Trim out unused animations (this one is going to be very time-consuming)
+   - Unify some texture groups (umodel does some weird thing where it separates
+     unlit polys into a new group, even when they're not supposed to be)
+   - Trim out garbage triangles (e.g.: an extra triangle in the biorifle that
+     has no reason to exist (can be seen when using invisibility, looks
+     completely out of place there)
+   - Recenter the backpack mesh (it was a complete hack job to begin with)
+
+## Future plans
+
+ - Add ammo counters to Pulsegun, Minigun, Flak Cannon and Rocket Launcher once
+   scripted textures are implemented.
 
 ## Known bugs
 

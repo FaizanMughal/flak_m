@@ -372,7 +372,7 @@ Class FlakSlug : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		vel.z += 5;
+		vel.z += 4;
 	}
 	override void Tick()
 	{
