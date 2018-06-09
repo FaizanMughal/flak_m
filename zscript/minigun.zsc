@@ -205,6 +205,7 @@ Class Minigun : UTWeapon
 		Weapon.AmmoType2 "MiniAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 50;
+		Weapon.Kickback 180;
 	}
 	States
 	{

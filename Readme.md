@@ -46,11 +46,12 @@ This mod requires GZDoom 3.4.0 or later.
 ## In progress
 
  - General polishing and bugfixing
- - Make biorifle sludge follow ceiling and wall movement (this might be hard)
  - Add some more effects
    - Additional particle effects on explosions
    - Smoke on spent casings [DONE]
    - View-space particles for weapon fire [WIP]
+     - Done: Enforcer, Biorifle
+     - Remaining: Shock Rifle, Pulsegun, Minigun, Flak Cannon, Rocket Launcher, Sniper rifle, Chainsaw
    - Visual recoil affecting aim (time to recycle SM's A_Swing once again)
  - Additional model optimization and cleanup
    - Trim out unused animations (this one is going to be very time-consuming)
@@ -72,7 +73,6 @@ This mod requires GZDoom 3.4.0 or later.
 
  - Sometimes the slave enforcer has its psprite "lower" slightly while the main
    enforcer is reloading. No idea what causes this (Could be bobbing-related)
- - Sludge doesn't react to ceiling and wall movement
  - Pulse gun beams behave oddly when the player is moving or looking up and
    down. This might just be a rendering interpolation glitch, as usual
  - Translocator allows telefragging of other players in coop.

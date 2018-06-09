@@ -252,6 +252,7 @@ Class UTWeapon : Weapon
 		Weapon.BobSpeed 1.5;
 		Weapon.BobRangeX 0.2;
 		Weapon.BobRangeY 0.4;
+		Weapon.YAdjust 0;
 		+WEAPON.NOALERT;
 	}
 }

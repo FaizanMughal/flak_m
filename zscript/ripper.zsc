@@ -186,6 +186,7 @@ Class Razor2Alt : Razor2
 		DamageFunction Random[Ripper](40,60);
 		DamageType 'RipperAltDealth';
 		BounceType "None";
+		ProjectileKickback 350;
 		-CANBOUNCEWATER;
 		+EXPLODEONWATER;
 	}

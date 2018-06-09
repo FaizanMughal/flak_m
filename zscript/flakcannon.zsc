@@ -363,6 +363,7 @@ Class FlakSlug : Actor
 		Radius 2;
 		Height 2;
 		Speed 40;
+		ProjectileKickback 320;
 		PROJECTILE;
 		-NOGRAVITY;
 		+SKYEXPLODE;

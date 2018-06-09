@@ -68,7 +68,7 @@ Class ShockWave : Actor
 			double moscale = max(0,1100-0.22*dist);
 			if ( (dist > olddmgradius) || (dir dot a.vel < 0) )
 			{
-				a.vel += dir*(moscale/a.mass+20);
+				if ( !a.bDONTTHRUST ) a.vel += dir*((moscale+20)/a.mass);
 				a.DamageMobj(self,target,moscale,'RedeemerDeath',DMG_THRUSTLESS);
 			}
 		}

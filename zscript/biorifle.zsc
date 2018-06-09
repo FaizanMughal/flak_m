@@ -118,6 +118,10 @@ Class BioHitbox : Actor
 		}
 		SetOrigin(target.pos-(0,0,height*0.5),true);
 	}
+	override bool CanCollideWith( Actor other, bool passive )
+	{
+		return !target.bNoGravity;	// don't "intercept" while flying (doesn't seem to work, but at least I tried)
+	}
 }
 
 Class BioLight : DynamicLight
@@ -179,6 +183,9 @@ Class BioGel : Actor
 	int deadtimer, dttimer;
 	Line atline;
 	int atside;
+	int atpart;
+	secplane atplane;
+	double atz;
 	int rollvel, pitchvel, yawvel;
 	Vector3	normal;
 
@@ -216,6 +223,30 @@ Class BioGel : Actor
 				rollvel *= 0.98;
 				pitchvel *= 0.98;
 				yawvel *= 0.98;
+			}
+		}
+		if ( deadtimer > -2 )
+		{
+			if ( atline )	// attempt to follow the movement of the line
+			{
+				if ( atpart == 1 )
+				{
+					if ( atline.flags&Line.ML_DONTPEGTOP ) SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside].sector.GetPlaneTexZ(1)),true);
+					else SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside?0:1].sector.GetPlaneTexZ(1)),true);
+				}
+				else if ( atpart == -1 )
+				{
+					if ( atline.flags&Line.ML_DONTPEGBOTTOM ) SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside].sector.GetPlaneTexZ(0)),true);
+					else SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside?0:1].sector.GetPlaneTexZ(0)),true);
+				}
+				else if ( atline.flags&Line.ML_DONTPEGBOTTOM ) SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside].sector.GetPlaneTexZ(0)),true);
+				else SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside].sector.GetPlaneTexZ(1)),true);
+				if ( (pos.z > ceilingz) || (pos.z < floorz) ) deadtimer = min(deadtimer,0);
+			}
+			else if ( atplane )	// attempt to follow the movement of the plane
+			{
+				SetOrigin(Vec2OffsetZ(0,0,atz+cursector.GetPlaneTexZ(atpart)),true);
+				if ( ceilingz-floorz <= 2 ) deadtimer = min(deadtimer,0);
 			}
 		}
 		if ( !InStateSequence(CurState,FindState("XDeath")) && ((!bNOGRAVITY && !Random[GES](0,2)) || !Random[GES](0,10)) )
@@ -266,6 +297,23 @@ Class BioGel : Actor
 			Vector3 orig = (BlockingLine.v1.p.x,BlockingLine.v1.p.y,0);
 			Vector3 onwall = pos-(normal dot (pos-orig))*normal;
 			SetOrigin(onwall+normal*0.5,false);
+			// attempt to guess line part (upper/mid/lower)
+			if ( !atline.sidedef[1] ) atpart = 0;	// mid
+			else if ( atline.sidedef[atside?0:1].sector.ceilingplane.ZAtPoint(pos.xy) < pos.z ) atpart = 1;	// upper
+			else if ( atline.sidedef[atside?0:1].sector.floorplane.ZAtPoint(pos.xy) > pos.z ) atpart = -1;	// lower
+			else atpart = 0;
+			if ( atpart == 1 )
+			{
+				if ( atline.flags&Line.ML_DONTPEGTOP ) atz = pos.z-atline.sidedef[atside].sector.GetPlaneTexZ(1);
+				else atz = pos.z-atline.sidedef[atside?0:1].sector.GetPlaneTexZ(1);
+			}
+			else if ( atpart == -1 )
+			{
+				if ( atline.flags&Line.ML_DONTPEGBOTTOM ) atz = pos.z-atline.sidedef[atside].sector.GetPlaneTexZ(0);
+				else atz = pos.z-atline.sidedef[atside?0:1].sector.GetPlaneTexZ(0);
+			}
+			else if ( atline.flags&Line.ML_DONTPEGBOTTOM ) atz = pos.z-atline.sidedef[atside].sector.GetPlaneTexZ(0);
+			else atz = pos.z-atline.sidedef[atside].sector.GetPlaneTexZ(1);
 			angle = atan2(normal.y,normal.x);
 			pitch = 0;
 			roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
@@ -274,20 +322,26 @@ Class BioGel : Actor
 		}
 		else if ( pos.z <= floorz+4 )
 		{
+			atplane = cursector.floorplane;
+			atpart = 0;
 			normal = cursector.floorplane.Normal;
 			pitch = asin(-normal.z);
 			angle = atan2(normal.y,normal.x);
 			roll = FRandom[GES](0,360);
 			SetOrigin((pos.x,pos.y,floorz)+normal*0.5,false);
+			atz = pos.z-cursector.GetPlaneTexZ(0);
 			hittype = HIT_FLOOR;
 		}
 		else if ( pos.z >= ceilingz-8 )
 		{
+			atplane = cursector.ceilingplane;
+			atpart = 1;
 			normal = cursector.ceilingplane.Normal;
 			pitch = asin(-normal.z);
 			angle = atan2(normal.y,normal.x);
 			roll = FRandom[GES](0,360);
 			SetOrigin((pos.x,pos.y,ceilingz)+normal*0.5,false);
+			atz = pos.z-cursector.GetPlaneTexZ(1);
 			if ( waterlevel > 0 ) hittype = HIT_FLOOR;
 			else if ( normal dot (0,0,-1) > 0.7 )
 				hittype = HIT_CEILING;
@@ -327,7 +381,7 @@ Class BioGel : Actor
 		if ( invoker.b ) invoker.b.Destroy();
 		let s = Spawn("BioXLight",pos);
 		s.args[3] *= Scale.x;
-		invoker.deadtimer = -1;
+		invoker.deadtimer = -2;
 		if ( invoker.atline ) invoker.atline.RemoteActivate(target,invoker.atside,SPAC_Impact,pos);
 		A_Explode(Random[GES](20,40)*Scale.x,Min(150,Scale.x*25));
 		A_PlaySound("ges/explode",CHAN_VOICE);
@@ -361,6 +415,7 @@ Class BioGel : Actor
 		Height 3;
 		Scale 2;
 		Speed 18;
+		ProjectileKickback 220;
 		PROJECTILE;
 		-NOGRAVITY;
 		+SKYEXPLODE;

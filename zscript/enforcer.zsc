@@ -385,6 +385,7 @@ Class Enforcer : UTWeapon replaces Pistol
 		Weapon.AmmoType2 "MiniAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 30;
+		Weapon.Kickback 180;
 		Enforcer.ClipCount 20;
 		Enforcer.SlaveClipCount 20;
 	}
