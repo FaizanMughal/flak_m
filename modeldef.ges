@@ -251,10 +251,10 @@ Model "BioRifle"
 	SurfaceSkin 0 1 "JBRifle22.png"
 	SurfaceSkin 0 2 "JBRifle23.png"
 	SurfaceSkin 0 3 "JBRifle24.png"
-	AngleOffset 94.21875
-	RollOffset 8.4375
-	Scale 0.125 -0.06 0.125
-	Offset 10.1 -17.8 -9.8
+	AngleOffset 90
+	RollOffset 10
+	Scale 0.12 -0.08 0.12
+	Offset 9.8 -19.8 -10.8
 
 	// select
 	FrameIndex BIOS A 0 0

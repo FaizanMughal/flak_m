@@ -158,8 +158,9 @@ Model "ShockRifle"
 	SurfaceSkin 0 3 "asmd_t3.png"
 	SurfaceSkin 0 4 "asmd_t4.png"
 	AngleOffset 90
+	RollOffset 3	// subtly hide an ugly looking part of the model
 	Scale 0.15 -0.12 0.15
-	Offset 3.9 -17.6 -6.1
+	Offset 5.1 -18.4 -5.2
 
 	// select
 	FrameIndex ASMS A 0 0
@@ -245,8 +246,9 @@ Model "EnhancedShockRifle"
 	SurfaceSkin 0 3 "sasmd_t3.png"
 	SurfaceSkin 0 4 "sasmd_t4.png"
 	AngleOffset 90
+	RollOffset 3	// subtly hide an ugly looking part of the model
 	Scale 0.15 -0.12 0.15
-	Offset 3.9 -17.6 -6.1
+	Offset 5.1 -18.4 -5.2
 
 	// select
 	FrameIndex ASMS A 0 0

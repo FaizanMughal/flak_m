@@ -25,7 +25,7 @@ Class ShockWave : Actor
 	double shocksize, olddmgradius;
 	double lifespan;
 	int icount;
-	ThinkerIterator t;
+	transient ThinkerIterator t;
 	Default
 	{
 		Obituary "%o was vaporized by %k's Redeemer!!";
@@ -43,13 +43,13 @@ Class ShockWave : Actor
 		lifespan = ReactionTime;
 		A_PlaySound("warhead/explode",CHAN_VOICE,attenuation:ATTN_NONE);
 		A_QuakeEx(9,9,9,100,0,12000,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.5);
-		t = ThinkerIterator.Create("Actor");
 	}
 	override void Tick()
 	{
 		Super.Tick();
 		if ( globalfreeze || level.frozen ) return;
 		if ( alpha <= 0 ) return;
+		if ( !t ) t = ThinkerIterator.Create("Actor");
 		icount++;
 		if ( icount == 4 ) Spawn("WarheadSubExplosion",pos);
 		lifespan--;

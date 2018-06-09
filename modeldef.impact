@@ -23,10 +23,10 @@ Model "ImpactHammer"
 	SurfaceSkin 0 1 "JImpactHammer2.png"
 	SurfaceSkin 0 2 "JImpactHammer3.png"
 	SurfaceSkin 0 3 "JImpactHammer4.png"
-	AngleOffset 90
-	RollOffset -85
+	AngleOffset 93
+	RollOffset -81
 	Scale 0.1 -0.05 0.1
-	Offset 4.8 -11.8 -6.7
+	Offset 6.2 -14.9 -7.2
 
 	// select
 	FrameIndex IMPS A 0 0

@@ -583,6 +583,57 @@ Class UTSmoke : Actor
 	}
 }
 
+Class UTSmallSmoke : UTSmoke
+{
+	override void PostBeginPlay()
+	{
+		Actor.PostBeginPlay();
+		double ang, pt;
+		scale *= FRandom[Puff](0.1,0.3);
+		alpha *= FRandom[Puff](0.5,1.5);
+		ang = FRandom[Puff](0,360);
+		pt = FRandom[Puff](-90,90);
+		vel += (cos(pt)*cos(ang),cos(pt)*sin(ang),-sin(pt))*FRandom[Puff](0.04,0.16);
+	}
+}
+
+Class UTViewSmoke : UTSmoke
+{
+	Vector3 ofs, vvel;
+
+	override void PostBeginPlay()
+	{
+		Actor.PostBeginPlay();
+		double ang, pt;
+		scale *= FRandom[Puff](0.1,0.3);
+		alpha *= FRandom[Puff](0.5,1.5);
+		ang = FRandom[Puff](0,360);
+		pt = FRandom[Puff](-90,90);
+		vvel += (cos(pt)*cos(ang),cos(pt)*sin(ang),-sin(pt))*FRandom[Puff](0.04,0.16);
+	}
+
+	override void Tick()
+	{
+		Actor.Tick();
+		if ( !target || !target.player )
+		{
+			Destroy();
+			return;
+		}
+		Vector3 x, y, z;
+		[x, y, z] = Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
+		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
+		bInvisible = (players[consoleplayer].camera != target);
+		if ( level.frozen || globalfreeze ) return;
+		ofs += vvel;
+		vvel *= 0.96;
+		vvel.z += 0.01;
+		A_FadeOut(1/32.);
+		if ( waterlevel > 0 ) Destroy();
+	}
+}
+
 Class UTRedSkull : RedSkull replaces RedSkull
 {
 	Default

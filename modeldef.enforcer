@@ -72,22 +72,22 @@ Model "Enforcer"
 	AngleOffset 90
 	PitchOffset 90
 	Scale 0.04 0.04 0.04
-	Offset 10.4 -25.0 -2.9
+	Offset 12.4 -30.0 -2.9
 
 	FrameIndex EMUZ A 3 0
 
 	Scale 0.04 0.04 0.04
-	Offset 1.9 -25.0 -9.3
+	Offset 2.4 -30.0 -10.9
 
 	FrameIndex EMUZ B 3 0
 
 	Scale 0.04 0.04 0.04
-	Offset -10.4 -25.0 -2.9
+	Offset -12.4 -30.0 -2.9
 
 	FrameIndex EMUZ C 3 0
 
 	Scale 0.04 0.04 0.04
-	Offset -1.9 -25.0 -9.3
+	Offset -2.4 -30.0 -10.9
 
 	FrameIndex EMUZ D 3 0
 }
@@ -101,7 +101,7 @@ Model "Enforcer"
 	SurfaceSkin 0 2 "Jtutot3.png"
 	SurfaceSkin 0 3 "Jtutot4.png"
 	Scale 0.14 -0.08 0.12
-	Offset 8.6 -12.8 -13.5
+	Offset 8.6 -14.8 -13.5
 	AngleOffset 90
 
 	// Fire
@@ -248,7 +248,7 @@ Model "Enforcer"
 	SurfaceSkin 2 2 "Jtutot3.png"
 	SurfaceSkin 2 3 "Jtutot4.png"
 	Scale 0.14 -0.08 0.12
-	Offset -8.8 -12.8 -13.5
+	Offset -8.8 -14.8 -13.5
 	AngleOffset 90
 
 	// Fire

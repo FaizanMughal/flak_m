@@ -49,12 +49,15 @@ This mod requires GZDoom 3.4.0 or later.
  - Make biorifle sludge follow ceiling and wall movement (this might be hard)
  - Add some more effects
    - Additional particle effects on explosions
-   - Smoke on spent casings
+   - Smoke on spent casings [DONE]
+   - View-space particles for weapon fire [WIP]
    - Visual recoil affecting aim (time to recycle SM's A_Swing once again)
  - Additional model optimization and cleanup
    - Trim out unused animations (this one is going to be very time-consuming)
    - Unify some texture groups (umodel does some weird thing where it separates
-     unlit polys into a new group, even when they're not supposed to be)
+     unlit polys into a new group, even when they're not supposed to be, this
+     can be seen in the shock rifle hud model) (unlit polys are kind of
+     unnecessary in gzdoom since there's brightmaps)
    - Trim out garbage triangles (e.g.: an extra triangle in the biorifle that
      has no reason to exist (can be seen when using invisibility, looks
      completely out of place there)

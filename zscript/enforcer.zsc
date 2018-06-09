@@ -90,6 +90,7 @@ Class UTCasing : Actor
 {
 	int deadtimer;
 	double pitchvel, anglevel;
+	double heat;
 
 	Default
 	{
@@ -110,16 +111,22 @@ Class UTCasing : Actor
 		deadtimer = 0;
 		pitchvel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
 		anglevel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
+		heat = 1.0;
 	}
 	override void Tick()
 	{
 		Super.Tick();
+		if ( level.frozen || globalfreeze ) return;
 		if ( InStateSequence(CurState,ResolveState("Death")) )
 		{
 			deadtimer++;
 			if ( deadtimer > 300 ) A_FadeOut(0.05);
 			return;
 		}
+		heat -= 0.02;
+		if ( heat <= 0 ) return;
+		let s = Spawn("UTSmallSmoke",pos);
+		s.alpha *= heat;
 	}
 	States
 	{
@@ -296,8 +303,8 @@ Class Enforcer : UTWeapon replaces Pistol
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x;
 		int ydir = slave?-1:1;
-		if ( alt ) origin = origin-z*9.0+ydir*y*1.0;
-		else origin = origin-z*2.0+ydir*y*6.0;
+		if ( alt ) origin = origin-z*3.0+ydir*y*1.0;
+		else origin = origin-z*1.0+ydir*y*4.0;
 		double a = FRandom[Enforcer](0,360), s = FRandom[Enforcer](0,alt?0.08:0.004);
 		[x2, y2, z2] = Matrix4.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
@@ -333,6 +340,13 @@ Class Enforcer : UTWeapon replaces Pistol
 			p.angle = atan2(hitnormal.y,hitnormal.x);
 			p.pitch = asin(-hitnormal.z);
 			if ( d.HitLine ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation);
+		}
+		for ( int i=0; i<8; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			if ( alt ) UTViewSmoke(s).ofs = (10,ydir,-3);
+			else UTViewSmoke(s).ofs = (10,4*ydir,-1);
+			s.target = self;
 		}
 		origin += x*8.0+ydir*y*6.0-z*2.0;
 		let c = Spawn("UTCasing",origin);

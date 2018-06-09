@@ -114,7 +114,7 @@ Class Minigun : UTWeapon
 		if ( !alt ) MinigunLight(l).cnt--;
 		Vector3 x, y, z, x2, y2, z2;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+y*4.0-z*6.0;
+		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+y*4.0-z*4.0;
 		double a = FRandom[Minigun](0,360), s = FRandom[Minigun](0,alt?0.05:0.02);
 		[x2, y2, z2] = Matrix4.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
@@ -160,7 +160,7 @@ Class Minigun : UTWeapon
 			t.pitch = asin(-dir.z);
 			MinigunTracer(t).dest = d.HitLocation;
 		}
-		origin += x*8.0+y*4.0-z*2.0;
+		origin += x*8.0+y*5.0-z*5.0;
 		let c = Spawn("UTCasing",origin);
 		c.vel = x*FRandom[Junk](-2,2)+y*FRandom[Junk](3,6)+z*FRandom[Junk](3,5);
 		c.Scale *= 0.5;

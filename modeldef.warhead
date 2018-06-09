@@ -72,11 +72,13 @@ Model "WarheadLauncher"
 	SurfaceSkin 0 1 "jwarhead2.png"
 	SurfaceSkin 0 2 "jwarhead3.png"
 	SurfaceSkin 0 3 "jwarhead4.png"
-	Scale 0.2 -0.1 0.2
-	AngleOffset 90
-	PitchOffset 35.0
-	RollOffset -85.0
-	Offset 5.8 -13.6 -5.2
+	Scale 0.2 -0.18 0.2
+	AngleOffset 89
+	PitchOffset 30
+	RollOffset -82
+	Offset 4.4 -18.1 -4.8
+	// Offsets and rotations are still not like in UT because really, I can't get over that damn hole in the right tube
+	// I should patch that up someday when I write the .3d editor
 
 	// select
 	FrameIndex WARS A 0 0

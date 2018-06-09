@@ -43,7 +43,7 @@ Model "SniperRifle"
 	AngleOffset 90
 	PitchOffset 90
 	Scale 0.12 0.12 0.12
-	Offset 6.0 -40.0 -6.0
+	Offset 6.0 -50.0 -4.8
 
 	FrameIndex SMUZ A 2 0
 }
@@ -57,9 +57,10 @@ Model "SniperRifle"
 	SurfaceSkin 0 2 "Rifle2c.png"
 	SurfaceSkin 0 3 "Rifle2d.png"
 	Scale 0.32 -0.16 0.32
-	Offset 7.5 -23.0 -7.0
-	AngleOffset 90
-	PitchOffset -5	// doesn't look right otherwise
+	Offset 7.1 -23.9 -6.8
+	AngleOffset 92
+	RollOffset 2
+	PitchOffset -5
 
 	// Select
 	FrameIndex SRFS A 0 0

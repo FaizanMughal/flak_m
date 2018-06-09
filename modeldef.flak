@@ -205,7 +205,7 @@ Model "FlakCannon"
 	AngleOffset 90
 	PitchOffset 90
 	Scale 0.08 0.08 0.08
-	Offset 7.4 -25.0 -8.5
+	Offset 8.0 -25.0 -8.5
 
 	FrameIndex FMUZ A 2 0
 }
@@ -223,7 +223,7 @@ Model "FlakCannon"
 	PitchOffset 180
 	RollOffset 178
 	Scale 0.28 -0.14 0.28
-	Offset 8.6 -10.4 -13.8
+	Offset 9.4 -10.3 -12.9
 
 	// select
 	FrameIndex FLKS A 0 0
