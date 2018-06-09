@@ -497,16 +497,30 @@ Class PulseGun : UTWeapon
 			s.vel = pvel;
 		}
 	}
-	action void A_PulseRefire( statelabel flash = null )
+	action void A_PulseRefire( statelabel flash = null, bool noreload = false )
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap || !player ) return;
 		if ( (invoker.clipcount <= 0) || (weap.Ammo1.Amount <= 0) )
 		{
+			if ( noreload ) return;
 			A_ClearRefire();
 			if ( weap.bAltFire ) player.setpsprite(PSP_WEAPON,weap.FindState("AltRelease"));
 			else player.setpsprite(PSP_WEAPON,weap.FindState("Release"));
 			return;
+		}
+		if ( noreload )
+		{
+			if ( player.cmd.buttons&BT_ALTATTACK )
+			{
+				weap.bAltFire = true;
+				flash = "AltFire";
+			}
+			else
+			{
+				weap.bAltFire = false;
+				flash = "Fire";
+			}
 		}
 		A_Refire(flash);
 	}
@@ -646,7 +660,7 @@ Class PulseGun : UTWeapon
 		Goto Release;
 	Release:
 		PGNC A 0 A_PlaySound("pulse/down",CHAN_WEAPON);
-		PGNC ABCDEFGHIJKLMNOPQRSTUVWXY 1;
+		PGNC ABCDEFGHIJKLMNOPQRSTUVWXY 1 A_PulseRefire(null,true);
 		PGNC Y 0;
 		Goto Idle;
 	AltFire:
@@ -684,7 +698,7 @@ Class PulseGun : UTWeapon
 		PGBL A 0 A_PulseRefire();
 	AltRelease:
 		PGBE A 0 A_StopBeam();
-		PGBE ABCDE 1;
+		PGBE ABCDE 1 A_PulseRefire(null,true);
 		Goto Idle;
 	Reload:
 		PGNI A 1;

@@ -100,9 +100,8 @@ Class Minigun : UTWeapon
 		A_Overlay(-2,"MuzzleFlash",true);
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);
-		if ( alt ) invoker.bcnt = min(invoker.bcnt,3);
-		if ( invoker.bcnt-- > 0 ) return;
-		invoker.bcnt = alt?3:5;
+		if ( (alt && (invoker.bcnt++ < 3)) || (invoker.bcnt++ < 5) ) return;
+		invoker.bcnt = 0;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,255,255,0),1);
@@ -166,15 +165,29 @@ Class Minigun : UTWeapon
 		c.Scale *= 0.5;
 	}
 
-	action void A_MinigunRefire( statelabel flash = null )
+	action void A_MinigunRefire( statelabel flash = null, bool nounwind = false )
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap || !player ) return;
 		if ( weap.Ammo1.Amount <= 0 )
 		{
+			if ( nounwind ) return;
 			A_ClearRefire();
 			player.setpsprite(PSP_WEAPON,weap.FindState("Unwind"));
 			return;
+		}
+		if ( nounwind )
+		{
+			if ( player.cmd.buttons&BT_ALTATTACK )
+			{
+				weap.bAltFire = true;
+				flash = "AltFire";
+			}
+			else
+			{
+				weap.bAltFire = false;
+				flash = "Fire";
+			}
 		}
 		A_Refire(flash);
 	}
@@ -403,8 +416,8 @@ Class Minigun : UTWeapon
 		Goto Unwind;
 	Unwind:
 		MGNU A 0 A_PlaySound("minigun/unwind",CHAN_WEAPON);
-		MGNU ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
-		MGU2 ABCDEFGHIJKLM 1;
+		MGNU ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_MinigunRefire(null,true);
+		MGU2 ABCDEFGHIJKLM 1 A_MinigunRefire(null,true);
 		Goto Idle;
 	Deselect:
 		MGND A 1 A_StopSound(CHAN_WEAPON);
