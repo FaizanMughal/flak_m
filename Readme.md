@@ -53,6 +53,7 @@ This mod requires GZDoom 3.4.0 or later.
      - Done: Enforcer, Biorifle
      - Remaining: Shock Rifle, Pulsegun, Minigun, Flak Cannon, Rocket Launcher, Sniper rifle, Chainsaw
    - Visual recoil affecting aim (time to recycle SM's A_Swing once again)
+   - Lava/Slime footstep sounds?
  - Additional model optimization and cleanup
    - Trim out unused animations (this one is going to be very time-consuming)
    - Unify some texture groups (umodel does some weird thing where it separates

@@ -170,14 +170,14 @@ Class UTPlayer : DoomPlayer
 		if ( !footsteps ) footsteps = CVar.GetCVar('flak_footsteps',players[consoleplayer]);
 		if ( !footsteps.GetBool() ) return;
 		double ang = level.time/(20*TICRATE/35.)*360.;
-		if ( (abs(sin(ang)) >= 1.0) && player.onground && (player.cmd.forwardmove || player.cmd.sidemove) )
+		if ( (abs(sin(ang)) >= 1.0) && player.onground && (player.cmd.forwardmove || player.cmd.sidemove) && (waterlevel < 3) )
 		{
-			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid ) A_PlaySound("ut/playerfootstepwet",CHAN_5,abs(vel.xy.length())*0.03);
+			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid && !bOnMobj ) A_PlaySound("ut/playerfootstepwet",CHAN_5,abs(vel.xy.length())*0.03);
 			else A_PlaySound("ut/playerfootstep",CHAN_5,abs(vel.xy.length())*0.03);
 		}
-		if ( player.onground && !bNoGravity && !lastground && (lastvelz < -4) && (lastvelz >= -8) )
+		if ( player.onground && !bNoGravity && !lastground && (lastvelz < -4) && (lastvelz >= -8) && (waterlevel < 3) )
 		{
-			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid ) A_PlaySound("ut/wetsplash",CHAN_AUTO,abs(lastvelz*0.03));
+			if ( ((waterlevel > 0) || GetFloorTerrain().IsLiquid) && !bOnMobj ) A_PlaySound("ut/wetsplash",CHAN_AUTO,abs(lastvelz*0.03));
 			else A_PlaySound("*land",CHAN_AUTO,abs(lastvelz*0.03));
 		}
 		lastground = player.onground;
