@@ -149,12 +149,13 @@ Class UTRocket : Actor
 			let s = Spawn("UTSpark",pos);
 			s.vel = pvel;
 		}
-		numpt = Random[Eightball](25,50);
+		numpt = Random[Eightball](35,70);
 		for ( int i=0; i<numpt; i++ )
 		{
-			Vector3 pvel = (FRandom[Eightball](-1,1),FRandom[Eightball](-1,1),FRandom[Eightball](-1,1)).unit()*FRandom[Eightball](4,12);
+			Vector3 pvel = (FRandom[Eightball](-1,1),FRandom[Eightball](-1,1),FRandom[Eightball](-1,1)).unit()*FRandom[Eightball](4,36);
 			let s = Spawn("UTChip",pos);
 			s.vel = pvel;
+			s.scale *= FRandom[Eightball](0.9,2.7);
 		}
 	}
 	States
@@ -239,6 +240,7 @@ Class UTRocketLauncher : UTWeapon
 	Actor LockedTarget;
 	TextureID lockontex;
 	int locktics;
+	bool bSingleRocket;
 
 	override void PostBeginPlay()
 	{
@@ -259,7 +261,7 @@ Class UTRocketLauncher : UTWeapon
 		{
 			LockedTarget = null;
 			LockedOn = false;
-			Owner.A_PlaySound("utrl/seeklost",CHAN_6);
+			Owner.A_PlaySound("utrl/seeklost",CHAN_WEAPON);
 		}
 		if ( LockedTarget ) crosshair = 99;
 		else crosshair = 0;
@@ -303,7 +305,7 @@ Class UTRocketLauncher : UTWeapon
 		Vector3 x, y, z, x2, y2, z2;
 		double a, s;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+8.0*y-6.0*z;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-3.0*z;
 		[x2, y2, z2] = Matrix4.GetAxes(BulletSlope(),angle,roll);
 		Actor p;
 		if ( weap.bAltFire )
@@ -362,6 +364,15 @@ Class UTRocketLauncher : UTWeapon
 		if ( invoker.LockedOn ) A_PlaySound("utrl/seeklost",CHAN_6);
 		invoker.LockedTarget = null;
 		invoker.LockedOn = false;
+		for ( int i=0; i<12; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,3,-3);
+			UTViewSmoke(s).vvel = (FRandom[Eightball](0,1.2),FRandom[Eightball](-.4,.4),FRandom[Eightball](-.4,.4));
+			s.target = self;
+			s.scale *= 1.8;
+			s.alpha *= 0.8;
+		}
 	}
 
 	// lock-on check
@@ -385,8 +396,8 @@ Class UTRocketLauncher : UTWeapon
 				invoker.LockedTarget = a;
 			}
 		}
-		if ( invoker.LockedTarget ) A_PlaySound("utrl/seeklock",CHAN_6);
-		else if ( invoker.LockedOn ) A_PlaySound("utrl/seeklost",CHAN_6);
+		if ( invoker.LockedTarget ) A_PlaySound("utrl/seeklock",CHAN_WEAPON);
+		else if ( invoker.LockedOn ) A_PlaySound("utrl/seeklost",CHAN_WEAPON);
 		if ( invoker.LockedTarget ) invoker.LockedOn = true;
 	}
 
@@ -420,12 +431,12 @@ Class UTRocketLauncher : UTWeapon
 		{
 			invoker.locktics = 0;
 			A_CheckReload();
-			A_WeaponReady();
+			A_WeaponReady(WRF_ALLOWRELOAD);
 		}
 		EBLI A 1
 		{
 			A_CheckReload();
-			A_WeaponReady();
+			A_WeaponReady(WRF_ALLOWRELOAD);
 			invoker.locktics++;
 			if ( invoker.locktics > 42 )
 			{
@@ -434,16 +445,25 @@ Class UTRocketLauncher : UTWeapon
 			}
 		}
 		Wait;
+	Reload:
+		EBLI A 5
+		{
+			A_PlaySound("utrl/load",CHAN_6,0.3);
+			if ( invoker.bSingleRocket = !invoker.bSingleRocket ) A_Print("Instant Rocket mode enabled");
+			else A_Print("Instant Rocket mode disabled");
+		}
+		Goto Idle;
 	Fire:
 	AltFire:
 		// one is loaded already
-		EBLI A 3 A_LoadRocket(false);
+		EBLI A 1 A_LoadRocket(false);
+		EBLI A 2 A_JumpIf(!invoker.bAltFire&&invoker.bSingleRocket,"FireOne");
 		EBLI A 0 A_LoadedRefire(1);
 		Goto FireOne;
 		// load two
 		EBLI A 2;
 		EBL1 A 0;
-		EBR1 A 2 A_PlaySound("utrl/rotate",CHAN_WEAPON,0.1);
+		EBR1 A 2 A_PlaySound("utrl/rotate",CHAN_6,0.1);
 		EBR1 B 0 A_Refire(1);
 		Goto FireOne;
 		EBR1 B 2;
@@ -464,7 +484,7 @@ Class UTRocketLauncher : UTWeapon
 		EBR1 G 2;
 		EBL2 A 0 A_Refire(1);
 		Goto FireOne;
-		EBL2 A 3 A_PlaySound("utrl/load",CHAN_WEAPON);
+		EBL2 A 3 A_PlaySound("utrl/load",CHAN_6);
 		EBL2 B 0 A_Refire(1);
 		Goto FireOne;
 		EBL2 B 3;
@@ -486,7 +506,7 @@ Class UTRocketLauncher : UTWeapon
 		EBR2 A 0 A_LoadedRefire(1);
 		Goto FireTwo;
 		// load three
-		EBR2 A 2 A_PlaySound("utrl/rotate",CHAN_WEAPON,0.1);
+		EBR2 A 2 A_PlaySound("utrl/rotate",CHAN_6,0.1);
 		EBR2 B 0 A_Refire(1);
 		Goto FireTwo;
 		EBR2 B 2;
@@ -507,7 +527,7 @@ Class UTRocketLauncher : UTWeapon
 		EBR2 G 2;
 		EBL3 A 0 A_Refire(1);
 		Goto FireTwo;
-		EBL3 A 3 A_PlaySound("utrl/load",CHAN_WEAPON);
+		EBL3 A 3 A_PlaySound("utrl/load",CHAN_6);
 		EBL3 B 0 A_Refire(1);
 		Goto FireTwo;
 		EBL3 B 3;
@@ -529,7 +549,7 @@ Class UTRocketLauncher : UTWeapon
 		EBR3 A 0 A_LoadedRefire(1);
 		Goto FireThree;
 		// load four
-		EBR3 A 2 A_PlaySound("utrl/rotate",CHAN_WEAPON,0.1);
+		EBR3 A 2 A_PlaySound("utrl/rotate",CHAN_6,0.1);
 		EBR3 B 0 A_Refire(1);
 		Goto FireThree;
 		EBR3 B 2;
@@ -550,7 +570,7 @@ Class UTRocketLauncher : UTWeapon
 		EBR3 G 2;
 		EBL4 A 0 A_Refire(1);
 		Goto FireThree;
-		EBL4 A 3 A_PlaySound("utrl/load",CHAN_WEAPON);
+		EBL4 A 3 A_PlaySound("utrl/load",CHAN_6);
 		EBL4 B 0 A_Refire(1);
 		Goto FireThree;
 		EBL4 B 3;
@@ -572,7 +592,7 @@ Class UTRocketLauncher : UTWeapon
 		EBR4 A 0 A_LoadedRefire(1);
 		Goto FireFour;
 		// load five
-		EBR4 A 2 A_PlaySound("utrl/rotate",CHAN_WEAPON,0.1);
+		EBR4 A 2 A_PlaySound("utrl/rotate",CHAN_6,0.1);
 		EBR4 B 0 A_Refire(1);
 		Goto FireFour;
 		EBR4 B 2;
@@ -593,7 +613,7 @@ Class UTRocketLauncher : UTWeapon
 		EBR4 G 2;
 		EBL5 A 0 A_Refire(1);
 		Goto FireFour;
-		EBL5 A 3 A_PlaySound("utrl/load",CHAN_WEAPON);
+		EBL5 A 3 A_PlaySound("utrl/load",CHAN_6);
 		EBL5 B 0 A_Refire(1);
 		Goto FireFour;
 		EBL5 B 3;
@@ -615,7 +635,7 @@ Class UTRocketLauncher : UTWeapon
 		EBR5 A 0 A_LoadedRefire(1);
 		Goto FireFive;
 		// load six
-		EBR5 A 2 A_PlaySound("utrl/rotate",CHAN_WEAPON,0.1);
+		EBR5 A 2 A_PlaySound("utrl/rotate",CHAN_6,0.1);
 		EBR5 B 0 A_Refire(1);
 		Goto FireFive;
 		EBR5 B 2;
@@ -636,7 +656,7 @@ Class UTRocketLauncher : UTWeapon
 		EBR5 G 2;
 		EBL6 A 0 A_Refire(1);
 		Goto FireFive;
-		EBL6 A 3 A_PlaySound("utrl/load",CHAN_WEAPON);
+		EBL6 A 3 A_PlaySound("utrl/load",CHAN_6);
 		EBL6 B 0 A_Refire(1);
 		Goto FireFive;
 		EBL6 B 3;
@@ -657,43 +677,49 @@ Class UTRocketLauncher : UTWeapon
 		EBF1 A 0 A_FireRockets(1);
 		EBF1 ABCDEFGH 2;
 		EBL1 A 0 A_CheckReload();
-		EBL1 ABCDEFG 2;
-		EBLI A 8;
+		EBL1 A 2 A_PlaySound("utrl/load",CHAN_6);
+		EBL1 BCDEFG 2;
+		EBLI A 0;
 		Goto Idle;
 	FireTwo:
 		EBF2 A 0 A_FireRockets(2);
 		EBF2 ABCDEFGHIJK 2;
 		EBL1 A 0 A_CheckReload();
-		EBL1 ABCDEFG 2;
-		EBLI A 8;
+		EBL1 A 2 A_PlaySound("utrl/load",CHAN_6);
+		EBL1 BCDEFG 2;
+		EBLI A 0;
 		Goto Idle;
 	FireThree:
 		EBF3 A 0 A_FireRockets(3);
 		EBF3 ABCDEFGHIJ 2;
 		EBL1 A 0 A_CheckReload();
-		EBL1 ABCDEFG 2;
-		EBLI A 8;
+		EBL1 A 2 A_PlaySound("utrl/load",CHAN_6);
+		EBL1 BCDEFG 2;
+		EBLI A 0;
 		Goto Idle;
 	FireFour:
 		EBF4 A 0 A_FireRockets(4);
 		EBF4 ABCDEFGHIJK 2;
 		EBL1 A 0 A_CheckReload();
-		EBL1 ABCDEFG 2;
-		EBLI A 8;
+		EBL1 A 2 A_PlaySound("utrl/load",CHAN_6);
+		EBL1 BCDEFG 2;
+		EBLI A 0;
 		Goto Idle;
 	FireFive:
 		EBF5 A 0 A_FireRockets(5);
 		EBF5 ABCDEFGHIJKLM 2;
 		EBL1 A 0 A_CheckReload();
-		EBL1 ABCDEFG 2;
-		EBLI A 8;
+		EBL1 A 2 A_PlaySound("utrl/load",CHAN_6);
+		EBL1 BCDEFG 2;
+		EBLI A 0;
 		Goto Idle;
 	FireSix:
 		EBF6 A 0 A_FireRockets(6);
 		EBF6 ABCDEFGHIJKLMNOP 2;
 		EBL1 A 0 A_CheckReload();
-		EBL1 ABCDEFG 2;
-		EBLI A 8;
+		EBL1 A 2 A_PlaySound("utrl/load",CHAN_6);
+		EBL1 BCDEFG 2;
+		EBLI A 0;
 		Goto Idle;
 	Deselect:
 		EBLD ABCDEFGHIJK 1;

@@ -16,6 +16,7 @@ Model "MinigunTracer"
 	Model 0 "MiniTrace_d.3d"
 	Skin 0 "JUT_Tracer_01.png"
 	Scale 0.6 0.2 0.24
+	Offset 60 0 0
 	USEACTORPITCH
 	USEACTORROLL
 	DONTCULLBACKFACES

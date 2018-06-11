@@ -68,6 +68,7 @@ Class MinigunTracer : Actor
 	override void Tick()
 	{
 		Super.Tick();
+		if ( level.frozen || globalfreeze ) return;
 		Vector3 dir = level.Vec3Diff(pos,dest);
 		if ( dir.length() < 160 )
 		{
@@ -106,14 +107,14 @@ Class Minigun : UTWeapon
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,255,255,0),1);
 		A_AlertMonsters();
-		if ( alt ) A_QuakeEx(3,3,3,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
-		else A_QuakeEx(2,2,2,5,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
+		if ( alt ) A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
+		else A_QuakeEx(1,1,1,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
 		let l = Spawn("MinigunLight",pos);
 		l.target = self;
 		if ( !alt ) MinigunLight(l).cnt--;
 		Vector3 x, y, z, x2, y2, z2;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+y*4.0-z*4.0;
+		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+y*2.0-z*2.0;
 		double a = FRandom[Minigun](0,360), s = FRandom[Minigun](0,alt?0.05:0.02);
 		[x2, y2, z2] = Matrix4.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
@@ -158,6 +159,14 @@ Class Minigun : UTWeapon
 			t.angle = atan2(dir.y,dir.x);
 			t.pitch = asin(-dir.z);
 			MinigunTracer(t).dest = d.HitLocation;
+		}
+		for ( int i=0; i<8; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,2,-2);
+			s.scale *= 1.5;
+			UTViewSmoke(s).vvel += (FRandom[Minigun](0.2,0.8),FRandom[Minigun](-0.3,0.3),FRandom[Minigun](-0.3,0.3));
+			s.target = self;
 		}
 		origin += x*8.0+y*5.0-z*5.0;
 		let c = Spawn("UTCasing",origin);

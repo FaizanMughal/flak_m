@@ -84,6 +84,46 @@ Class PulseSpark : Actor
 	}
 }
 
+Class ViewPulseSpark : PulseSpark
+{
+	Vector3 ofs, vvel;
+
+	override void PostBeginPlay()
+	{
+		Actor.PostBeginPlay();
+		scale *= FRandom[Puff](0.4,0.9);
+		alpha *= FRandom[Puff](0.5,2.0);
+		roll = FRandom[Pulse](0,360);
+	}
+
+	override void Tick()
+	{
+		Actor.Tick();
+		if ( !target || !target.player )
+		{
+			Destroy();
+			return;
+		}
+		Vector3 x, y, z;
+		[x, y, z] = Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
+		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
+		bInvisible = (players[consoleplayer].camera != target);
+		if ( level.frozen || globalfreeze ) return;
+		ofs += vvel;
+		vvel *= 0.9;
+		scale *= 0.8;
+		if ( scale.x <= 0.01 ) Destroy();
+	}
+
+	States
+	{
+	Spawn:
+		PSPK A 1 Bright A_FadeOut(FRandom[Pulse](0.0,0.15));
+		Wait;
+	}
+}
+
 Class PulseBallLight : DynamicLight
 {
 	double pulseofs;
@@ -146,6 +186,7 @@ Class PulseBall : Actor
 		PROJECTILE;
 		+EXPLODEONWATER;
 		+SKYEXPLODE;
+		+FORCEXYBILLBOARD;
 		Scale 0.19;
 		Speed 29;
 		Radius 2;
@@ -239,6 +280,24 @@ Class PulseBoltTracer : LineTracer
 
 Class PulseBoltCap : Actor
 {
+	override void OnDestroy()
+	{
+		Super.OnDestroy();
+		if ( tracer ) tracer.Destroy();
+	}
+
+	override void Tick()
+	{
+		Super.Tick();
+		if ( bAMBUSH ) return;
+		if ( !tracer )
+		{
+			tracer = Spawn(GetClass(),pos);
+			tracer.bAMBUSH = true;
+		}
+		tracer.SetOrigin(pos,true);
+	}
+
 	Default
 	{
 		RenderStyle "Add";
@@ -260,6 +319,23 @@ Class PulseBoltCap : Actor
 
 Class PulseBoltHit : Actor
 {
+	override void OnDestroy()
+	{
+		Super.OnDestroy();
+		if ( tracer ) tracer.Destroy();
+	}
+
+	override void Tick()
+	{
+		Super.Tick();
+		if ( bAMBUSH ) return;
+		if ( !tracer )
+		{
+			tracer = Spawn(GetClass(),pos);
+			tracer.bAMBUSH = true;
+		}
+	}
+
 	Default
 	{
 		RenderStyle "Add";
@@ -332,11 +408,19 @@ Class PulseBolt : Actor
 					accdamage = 0;
 				}
 			}
-			if ( t.Results.HitType == TRACE_HitWall ) t.Results.HitLine.RemoteActivate(tracer,t.Results.Side,SPAC_Impact,t.Results.HitPos);
+			Vector3 norm = -x;
+			if ( t.Results.HitType == TRACE_HitWall )
+			{
+				norm = (t.Results.HitLine.delta.y,-t.Results.HitLine.delta.x,0).unit();
+				if ( t.Results.Side ) norm *= -1;
+				t.Results.HitLine.RemoteActivate(tracer,t.Results.Side,SPAC_Impact,t.Results.HitPos);
+			}
+			else if ( t.Results.HitType == TRACE_HitFloor ) norm = t.Results.HitSector.floorplane.Normal;
+			else if ( t.Results.HitType == TRACE_HitCeiling ) norm = t.Results.HitSector.ceilingplane.Normal;
 			int numpt = Random[Pulse](10,20)*!Random[Pulse](0,2);
 			for ( int i=0; i<numpt; i++ )
 			{
-				Vector3 pvel = ((FRandom[Pulse](-.4,.5),FRandom[Pulse](-.4,.4),FRandom[Pulse](-.4,.4))-x).unit()*FRandom[Pulse](2,4);
+				Vector3 pvel = (norm+(FRandom[Pulse](-.6,.6),FRandom[Pulse](-.6,.6),FRandom[Pulse](-.6,.6))).unit()*FRandom[Pulse](2,4);
 				let s = Spawn("PulseSpark",t.Results.HitPos-t.Results.HitVector*4);
 				s.vel = pvel;
 			}
@@ -346,7 +430,11 @@ Class PulseBolt : Actor
 				weffect = null;
 			}
 			if ( !weffect ) weffect = Spawn("PulseBoltHit",t.Results.HitPos-t.Results.HitVector*4);
-			else weffect.SetOrigin(t.Results.HitPos-t.Results.HitVector*4,true);
+			else
+			{
+				weffect.SetOrigin(t.Results.HitPos-t.Results.HitVector*4,true);
+				if ( weffect.tracer ) weffect.tracer.SetOrigin(t.Results.HitPos-t.Results.HitVector*4,true);
+			}
 			A_SprayDecal("BoltScorch",beamsize+8);
 			if ( next )
 			{
@@ -367,7 +455,7 @@ Class PulseBolt : Actor
 			int numpt = Random[Pulse](5,10)*!Random[Pulse](0,5);
 			for ( int i=0; i<numpt; i++ )
 			{
-				Vector3 pvel = (t.Results.HitVector+(FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5))).unit()*FRandom[Pulse](2,4);
+				Vector3 pvel = (t.Results.HitVector+(FRandom[Pulse](-.6,.6),FRandom[Pulse](-.6,.6),FRandom[Pulse](-.6,.6))).unit()*FRandom[Pulse](2,4);
 				let s = Spawn("PulseSpark",t.Results.HitPos);
 				s.vel = pvel;
 			}
@@ -377,7 +465,11 @@ Class PulseBolt : Actor
 				weffect = null;
 			}
 			if ( !weffect ) weffect = Spawn("PulseBoltCap",t.Results.HitPos);
-			else weffect.SetOrigin(t.Results.HitPos,true);
+			else
+			{
+				weffect.SetOrigin(t.Results.HitPos,true);
+				if ( weffect.tracer ) weffect.tracer.SetOrigin(t.Results.HitPos,true);
+			}
 		}
 		else
 		{
@@ -489,12 +581,23 @@ Class PulseGun : UTWeapon
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x+4.1*y-2.7*z;
-		int numpt = Random[Pulse](2,5);
+		for ( int i=0; i<4; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,4.1,-2.7);
+			s.scale *= 1.8;
+			s.target = self;
+			s.SetShade("206010");
+			s.A_SetRenderStyle(0.4,STYLE_AddShaded);
+			UTViewSmoke(s).vvel += (FRandom[Pulse](0.2,0.6),FRandom[Pulse](-0.2,0.2),FRandom[Pulse](-0.2,0.2));
+		}
+		int numpt = Random[Pulse](8,16);
 		for ( int i=0; i<numpt; i++ )
 		{
-			Vector3 pvel = (x+(FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5))).unit()*FRandom[Pulse](2,4);
-			let s = Spawn("PulseSpark",origin);
-			s.vel = pvel;
+			let s = Spawn("ViewPulseSpark",origin);
+			ViewPulseSpark(s).ofs = (10,4.1,-2.7);
+			s.target = self;
+			ViewPulseSpark(s).vvel += (FRandom[Pulse](0.2,0.8),FRandom[Pulse](-0.5,0.5),FRandom[Pulse](-0.5,0.5));
 		}
 	}
 	action void A_PulseRefire( statelabel flash = null, bool noreload = false )
@@ -542,7 +645,7 @@ Class PulseGun : UTWeapon
 		Vector3 x, y, z;
 		double a;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x+4.0*y-1.5*z;
+		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x+3.0*y-1.8*z;
 		origin += y*cos(invoker.sangle)*2.0+z*sin(invoker.sangle)*2.0;
 		invoker.sangle += 100;
 		Actor p = Spawn("PulseBall",origin);
@@ -550,12 +653,23 @@ Class PulseGun : UTWeapon
 		p.pitch = BulletSlope();
 		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
 		p.target = self;
-		int numpt = Random[Pulse](2,5);
+		for ( int i=0; i<8; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,3.0,-1.8);
+			s.scale *= 1.8;
+			s.target = self;
+			s.SetShade("206010");
+			s.A_SetRenderStyle(0.4,STYLE_AddShaded);
+			UTViewSmoke(s).vvel += (FRandom[Pulse](0.4,0.8),FRandom[Pulse](-0.2,0.2),FRandom[Pulse](-0.2,0.2));
+		}
+		int numpt = Random[Pulse](8,16);
 		for ( int i=0; i<numpt; i++ )
 		{
-			Vector3 pvel = (x+(FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5),FRandom[Pulse](-.5,.5))).unit()*FRandom[Pulse](2,4);
-			let s = Spawn("PulseSpark",origin);
-			s.vel = pvel;
+			let s = Spawn("ViewPulseSpark",origin);
+			ViewPulseSpark(s).ofs = (10,3.0,-1.8);
+			s.target = self;
+			ViewPulseSpark(s).vvel += (FRandom[Pulse](0.4,1.6),FRandom[Pulse](-1.2,1.2),FRandom[Pulse](-1.2,1.2));
 		}
 	}
 	action void A_StartBeam()

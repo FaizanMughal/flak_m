@@ -390,6 +390,37 @@ Class UTSpark : Actor
 	}
 }
 
+Class UTViewSpark : UTSpark
+{
+	Default
+	{
+		+NOCLIP;
+		-MISSILE;
+		BounceType "None";
+	}
+	Vector3 ofs, vvel;
+
+	override void Tick()
+	{
+		Actor.Tick();
+		if ( !target || !target.player )
+		{
+			Destroy();
+			return;
+		}
+		Vector3 x, y, z;
+		[x, y, z] = Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
+		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
+		bInvisible = (players[consoleplayer].camera != target);
+		if ( level.frozen || globalfreeze ) return;
+		ofs += vvel;
+		vvel.z -= 0.1;
+		scale *= 0.8;
+		if ( (scale.x <= 0.01) || (waterlevel > 0) ) Destroy();
+	}
+}
+
 Class UTChip : Actor
 {
 	int deadtimer;
@@ -632,6 +663,16 @@ Class UTViewSmoke : UTSmoke
 		vvel.z += 0.01;
 		A_FadeOut(1/32.);
 		if ( waterlevel > 0 ) Destroy();
+	}
+}
+
+Class UTStaticViewSmoke : UTViewSmoke
+{
+	override void PostBeginPlay()
+	{
+		Actor.PostBeginPlay();
+		scale *= FRandom[Puff](0.1,0.3);
+		alpha *= FRandom[Puff](0.5,1.5);
 	}
 }
 

@@ -120,6 +120,15 @@ Class SniperRifle : UTWeapon
 			p.pitch = asin(-hitnormal.z);
 			if ( d.HitLine ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation);
 		}
+		for ( int i=0; i<24; i++ )
+		{
+			let s = Spawn("UTStaticViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,1,-1);
+			UTViewSmoke(s).vvel += (FRandom[Sniper](-0.05,0.15),FRandom[Sniper](-0.4,0.4),FRandom[Sniper](-0.1,0.1));
+			s.target = self;
+			s.scale *= 1.8;
+			s.alpha *= 0.3;
+		}
 		origin += x*8.0+y*6.0-z*9.0;
 		let c = Spawn("UTCasing",origin);
 		c.scale *= 1.25;

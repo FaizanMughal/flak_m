@@ -150,7 +150,7 @@ Class FlakChunk : Actor
 		+BOUNCEAUTOOFFFLOORONLY;
 		+CANBOUNCEWATER;
 		+SKYEXPLODE;
-		Scale 0.5;
+		Scale 0.3;
 	}
 	override bool CanCollideWith( Actor other, bool passive )
 	{
@@ -163,7 +163,7 @@ Class FlakChunk : Actor
 		lifespeed = FRandom[Flak](0.004,0.008);
 		trail = ChunkTrail(Spawn("ChunkTrail",pos));
 		trail.target = self;
-		trail.speed = 2;
+		trail.speed = 1.2;
 		rollvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1);
 		pitchvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1);
 		yawvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1);
@@ -415,12 +415,13 @@ Class FlakSlug : Actor
 			let s = Spawn("UTSpark",pos);
 			s.vel = pvel;
 		}
-		numpt = Random[Flak](20,40);
+		numpt = Random[Flak](40,80);
 		for ( int i=0; i<numpt; i++ )
 		{
-			Vector3 pvel = (FRandom[Flak](-1,1),FRandom[Flak](-1,1),FRandom[Flak](-1,1)).unit()*FRandom[Flak](2,8);
+			Vector3 pvel = (FRandom[Flak](-1,1),FRandom[Flak](-1,1),FRandom[Flak](-1,1)).unit()*FRandom[Flak](6,16);
 			let s = Spawn("UTChip",pos);
 			s.vel = pvel;
+			s.scale *= FRandom[Flak](0.9,1.8);
 		}
 	}
 	States
@@ -507,10 +508,19 @@ Class FlakCannon : UTWeapon
 		int numpt = Random[Flak](20,30);
 		for ( int i=0; i<numpt; i++ )
 		{
-			Vector3 pvel = (x+(FRandom[Flak](-.8,.8),FRandom[Flak](-.8,.8),FRandom[Flak](-.8,.8))).unit()*FRandom[Flak](8,32);
-			let s = Spawn("UTSpark",origin);
-			s.vel = pvel;
-			s.alpha *= 0.2;
+			let s = Spawn("UTViewSpark",origin);
+			UTViewSpark(s).ofs = (10,2,-3);
+			UTViewSpark(s).vvel = (FRandom[Flak](3,12),FRandom[Flak](-4,4),FRandom[Flak](-4,4));
+			s.target = self;
+		}
+		for ( int i=0; i<12; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,2,-3);
+			UTViewSmoke(s).vvel = (FRandom[Flak](0,1.2),FRandom[Flak](-.4,.4),FRandom[Flak](-.4,.4));
+			s.target = self;
+			s.scale *= 2.4;
+			s.alpha *= 0.5;
 		}
 	}
 	action void A_FireSlug()
@@ -539,10 +549,19 @@ Class FlakCannon : UTWeapon
 		int numpt = Random[Flak](10,15);
 		for ( int i=0; i<numpt; i++ )
 		{
-			Vector3 pvel = (x+(FRandom[Flak](-.8,.8),FRandom[Flak](-.8,.8),FRandom[Flak](-.8,.8))).unit()*FRandom[Flak](8,32);
-			let s = Spawn("UTSpark",origin);
-			s.vel = pvel;
-			s.alpha *= 0.2;
+			let s = Spawn("UTViewSpark",origin);
+			UTViewSpark(s).ofs = (10,2,-3);
+			UTViewSpark(s).vvel = (FRandom[Flak](3,12),FRandom[Flak](-4,4),FRandom[Flak](-4,4));
+			s.target = self;
+		}
+		for ( int i=0; i<16; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,2,-3);
+			UTViewSmoke(s).vvel = (FRandom[Flak](0,1.2),FRandom[Flak](-.8,.8),FRandom[Flak](-.8,.8));
+			s.target = self;
+			s.scale *= 2.4;
+			s.alpha *= 0.5;
 		}
 	}
 

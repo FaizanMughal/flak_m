@@ -41,17 +41,13 @@ This mod requires GZDoom 3.4.0 or later.
  - Minigun (slot 7)
  - Sniper Rifle (slot 0)
  - Rocket Launcher (slot 9)
+   - "Instant Rocket" mode toggleable with reload
  - Scaling/Customization options for the HUD
 
 ## In progress
 
  - General polishing and bugfixing
  - Add some more effects
-   - Additional particle effects on explosions
-   - Smoke on spent casings [DONE]
-   - View-space particles for weapon fire [WIP]
-     - Done: Enforcer, Biorifle
-     - Remaining: Shock Rifle, Pulsegun, Minigun, Flak Cannon, Rocket Launcher, Sniper rifle, Chainsaw
    - Visual recoil affecting aim (time to recycle SM's A_Swing once again)
    - Lava/Slime footstep sounds?
  - Additional model optimization and cleanup
@@ -69,6 +65,7 @@ This mod requires GZDoom 3.4.0 or later.
 
  - Add ammo counters to Pulsegun, Minigun, Flak Cannon and Rocket Launcher once
    scripted textures are implemented.
+ - Add player models + weapon attachment support when that is also added in.
 
 ## Known bugs
 
@@ -76,4 +73,5 @@ This mod requires GZDoom 3.4.0 or later.
    enforcer is reloading. No idea what causes this (Could be bobbing-related)
  - Pulse gun beams behave oddly when the player is moving or looking up and
    down. This might just be a rendering interpolation glitch, as usual
- - Translocator allows telefragging of other players in coop.
+ - Translocator allows telefragging of other players in coop
+ - Biorifle sludge doesn't handle 3d floors (especially sloped ones) properly

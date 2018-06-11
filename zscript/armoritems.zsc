@@ -8,6 +8,7 @@ Class UTArmor : Armor
 	{
 		+INVENTORY.AUTOACTIVATE;
 		+INVENTORY.UNTOSSABLE;
+		+INVENTORY.KEEPDEPLETED;
 	}
 	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
 	{
@@ -21,18 +22,23 @@ Class UTArmor : Armor
 			damage = newdamage;
 		}
 		if ( damage > 0 ) newdamage = ApplyDamageFactors(GetClass(),damageType,damage,damage);
-		if ( amount <= 0 ) Destroy();
 	}
 }
 
 Class UTArmorBonus : UTArmor replaces ArmorBonus
 {
+	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
+	{
+		absorb = Clamp(amount*2,25,75);
+		Super.AbsorbDamage(damage,damageType,newdamage);
+	}
+
 	Default
 	{
 		Tag "Armor Bonus";
 		+COUNTITEM;
 		+INVENTORY.ALWAYSPICKUP;
-		Inventory.Amount 5;
+		Inventory.Amount 1;
 		Inventory.MaxAmount 50;
 		Inventory.InterHubAmount 50;
 		UTArmor.ArmorAbsorption 25;
@@ -98,12 +104,9 @@ Class UTShieldBelt : UTArmor replaces Megasphere
 			Owner.A_PlaySound("belt/absorb",CHAN_7);
 			UTMainHandler.DoFlash(Owner,Color(80,255,224,0),5);
 		}
+		int oldamt = amount;
 		Super.AbsorbDamage(damage,damageType,newdamage);
-	}
-	override void OnDestroy()
-	{
-		Super.OnDestroy();
-		if ( amount <= 0 && Owner ) PrintPickupMessage(true,"The Shield Belt has depleted.");
+		if ( (oldamt > 0) && (amount <= 0) ) PrintPickupMessage(true,"The Shield Belt has depleted.");
 	}
 	override bool Use( bool pickup )
 	{

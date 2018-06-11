@@ -916,6 +916,46 @@ Class SuperShockBall : Actor
 	}
 }
 
+Class ViewShockSpark : ShockSpark
+{
+	Vector3 ofs, vvel;
+
+	override void PostBeginPlay()
+	{
+		Actor.PostBeginPlay();
+		scale *= FRandom[Puff](0.4,0.9);
+		alpha *= FRandom[Puff](0.5,2.0);
+		roll = FRandom[ASMD](0,360);
+	}
+
+	override void Tick()
+	{
+		Actor.Tick();
+		if ( !target || !target.player )
+		{
+			Destroy();
+			return;
+		}
+		Vector3 x, y, z;
+		[x, y, z] = Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
+		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
+		bInvisible = (players[consoleplayer].camera != target);
+		if ( level.frozen || globalfreeze ) return;
+		ofs += vvel;
+		vvel *= 0.9;
+		scale *= 0.8;
+		if ( scale.x <= 0.01 ) Destroy();
+	}
+
+	States
+	{
+	Spawn:
+		ASMK A 1 Bright A_FadeOut(FRandom[ASMD](0.0,0.1));
+		Wait;
+	}
+}
+
 Class ShockRifle : UTWeapon
 {
 	action void A_ShockFire()
@@ -928,14 +968,32 @@ Class ShockRifle : UTWeapon
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,128,0,255),1);
 		A_AlertMonsters();
-		A_QuakeEx(3,3,3,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+		A_QuakeEx(2,2,2,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
 		Actor p = Spawn("ShockBeam",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
 		p.target = self;
+		for ( int i=0; i<12; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,2,-1.5);
+			s.scale *= 1.8;
+			s.target = self;
+			s.SetShade("C080FF");
+			s.A_SetRenderStyle(0.4,STYLE_AddShaded);
+			UTViewSmoke(s).vvel += (FRandom[ASMD](0.2,0.6),FRandom[ASMD](-0.2,0.2),FRandom[ASMD](-0.2,0.2));
+		}
+		int numpt = Random[ASMD](20,40);
+		for ( int i=0; i<numpt; i++ )
+		{
+			let s = Spawn("ViewShockSpark",origin);
+			ViewShockSpark(s).ofs = (10,2,-1.5);
+			s.target = self;
+			ViewShockSpark(s).vvel += (FRandom[ASMD](0.5,2.0),FRandom[ASMD](-1.5,1.5),FRandom[ASMD](-1.5,1.5));
+		}
 	}
 	action void A_ShockAlt()
 	{
@@ -947,15 +1005,33 @@ Class ShockRifle : UTWeapon
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,128,0,255),1);
 		A_AlertMonsters();
-		A_QuakeEx(3,3,3,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+		A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
 		Actor p = Spawn("ShockBall",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
 		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
 		p.target = self;
+		for ( int i=0; i<12; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,2,-1.5);
+			s.scale *= 2.2;
+			s.target = self;
+			s.SetShade("C080FF");
+			s.A_SetRenderStyle(0.4,STYLE_AddShaded);
+			UTViewSmoke(s).vvel += (FRandom[ASMD](0.4,1.2),FRandom[ASMD](-0.4,0.4),FRandom[ASMD](-0.4,0.4));
+		}
+		int numpt = Random[ASMD](20,40);
+		for ( int i=0; i<numpt; i++ )
+		{
+			let s = Spawn("ViewShockSpark",origin);
+			ViewShockSpark(s).ofs = (10,2,-1.5);
+			s.target = self;
+			ViewShockSpark(s).vvel += (FRandom[ASMD](0.5,2.0),FRandom[ASMD](-1.5,1.5),FRandom[ASMD](-1.5,1.5));
+		}
 	}
 
 	Default
@@ -1025,6 +1101,17 @@ Class EnhancedShockAmmo : Ammo
 	}
 }
 
+Class ViewSuperShockSpark : ViewShockSpark
+{
+
+	States
+	{
+	Spawn:
+		SSMK A 1 Bright A_FadeOut(FRandom[ASMD](0.0,0.1));
+		Wait;
+	}
+}
+
 Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 {
 	int ticcnt;
@@ -1048,14 +1135,32 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,0),1);
 		A_AlertMonsters();
-		A_QuakeEx(8,8,8,12,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
+		A_QuakeEx(3,3,3,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.15);
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
 		Actor p = Spawn("SuperShockBeam",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
 		p.target = self;
+		for ( int i=0; i<12; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,2,-1.5);
+			s.scale *= 1.8;
+			s.target = self;
+			s.SetShade("FFC040");
+			s.A_SetRenderStyle(0.4,STYLE_AddShaded);
+			UTViewSmoke(s).vvel += (FRandom[ASMD](0.2,0.6),FRandom[ASMD](-0.2,0.2),FRandom[ASMD](-0.2,0.2));
+		}
+		int numpt = Random[ASMD](20,40);
+		for ( int i=0; i<numpt; i++ )
+		{
+			let s = Spawn("ViewSuperShockSpark",origin);
+			ViewShockSpark(s).ofs = (10,2,-1.5);
+			s.target = self;
+			ViewShockSpark(s).vvel += (FRandom[ASMD](0.5,2.0),FRandom[ASMD](-1.5,1.5),FRandom[ASMD](-1.5,1.5));
+		}
 	}
 	action void A_SShockAlt()
 	{
@@ -1067,15 +1172,33 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,0),1);
 		A_AlertMonsters();
-		A_QuakeEx(8,8,8,16,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
+		A_QuakeEx(3,3,3,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.15);
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
 		Actor p = Spawn("SuperShockBall",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
 		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
 		p.target = self;
+		for ( int i=0; i<12; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,2,-1.5);
+			s.scale *= 2.2;
+			s.target = self;
+			s.SetShade("FFC040");
+			s.A_SetRenderStyle(0.4,STYLE_AddShaded);
+			UTViewSmoke(s).vvel += (FRandom[ASMD](0.4,1.2),FRandom[ASMD](-0.4,0.4),FRandom[ASMD](-0.4,0.4));
+		}
+		int numpt = Random[ASMD](20,40);
+		for ( int i=0; i<numpt; i++ )
+		{
+			let s = Spawn("ViewSuperShockSpark",origin);
+			ViewShockSpark(s).ofs = (10,2,-1.5);
+			s.target = self;
+			ViewShockSpark(s).vvel += (FRandom[ASMD](0.5,2.0),FRandom[ASMD](-1.5,1.5),FRandom[ASMD](-1.5,1.5));
+		}
 	}
 	override bool CheckAmmo( int fireMode, bool autoSwitch, bool requireAmmo, int ammocount )
 	{
