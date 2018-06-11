@@ -59,6 +59,13 @@ Class SniperRifle : UTWeapon
 		Screen.DrawTexture(reticle,false,320,240,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_RenderStyle,(1|2<<8|1<<16));
 		Screen.DrawText(confont,Font.CR_DARKGREEN,192,160,String.Format("X%.1f",sniperzoom),DTA_Clean,true);
 	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !Owner ) return;
+		if ( sniperzoom > 1.0 ) crosshair = 99;
+		else crosshair = 0;
+	}
 	action void A_SniperFire( bool zoomed = false )
 	{
 		Weapon weap = Weapon(invoker);

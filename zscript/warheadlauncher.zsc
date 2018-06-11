@@ -560,6 +560,13 @@ Class RedeemerHUDHandler : EventHandler
 Class WarheadLauncher : UTWeapon replaces BFG9000
 {
 	Actor guided;
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !Owner ) return;
+		if ( guided ) crosshair = 99;
+		else crosshair = 0;
+	}
 	action void A_WarheadFire()
 	{
 		Weapon weap = Weapon(invoker);
