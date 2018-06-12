@@ -184,7 +184,8 @@ Class BioGel : Actor
 	Line atline;
 	int atside;
 	int atpart;
-	secplane atplane;
+	int atplane;
+	Sector atsector;
 	double atz;
 	int rollvel, pitchvel, yawvel;
 	Vector3	normal;
@@ -243,9 +244,9 @@ Class BioGel : Actor
 				else SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside].sector.GetPlaneTexZ(1)),true);
 				if ( (pos.z > ceilingz) || (pos.z < floorz) ) deadtimer = min(deadtimer,0);
 			}
-			else if ( atplane )	// attempt to follow the movement of the plane
+			else if ( atsector )	// attempt to follow the movement of the plane
 			{
-				SetOrigin(Vec2OffsetZ(0,0,atz+cursector.GetPlaneTexZ(atpart)),true);
+				SetOrigin(Vec2OffsetZ(0,0,atz+cursector.GetPlaneTexZ(atplane)),true);
 				if ( ceilingz-floorz <= 2 ) deadtimer = min(deadtimer,0);
 			}
 		}
@@ -322,8 +323,8 @@ Class BioGel : Actor
 		}
 		else if ( pos.z <= floorz+4 )
 		{
-			atplane = cursector.floorplane;
-			atpart = 0;
+			atsector = cursector;
+			atplane = 0;
 			normal = cursector.floorplane.Normal;
 			pitch = asin(-normal.z);
 			angle = atan2(normal.y,normal.x);
@@ -334,8 +335,8 @@ Class BioGel : Actor
 		}
 		else if ( pos.z >= ceilingz-8 )
 		{
-			atplane = cursector.ceilingplane;
-			atpart = 1;
+			atsector = cursector;
+			atplane = 1;
 			normal = cursector.ceilingplane.Normal;
 			pitch = asin(-normal.z);
 			angle = atan2(normal.y,normal.x);
