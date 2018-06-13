@@ -15,7 +15,7 @@ Class UTArmor : Armor
 		int saved;
 		if ( (amount > 0) && !DamageTypeDefinition.IgnoreArmor(damageType) )
 		{
-			saved = damage*absorb/100.;
+			saved = int(damage*absorb/100.);
 			if ( amount <= saved ) saved = amount;
 			newdamage -= saved;
 			amount -= saved;

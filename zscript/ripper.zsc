@@ -171,9 +171,9 @@ Class Razor2AltLight : DynamicLight
 	{
 		Super.Tick();
 		if ( globalfreeze || level.frozen ) return;
-		args[LIGHT_RED] = 255*lifetime;
-		args[LIGHT_GREEN] = 240*lifetime;
-		args[LIGHT_BLUE] = 224*lifetime;
+		args[LIGHT_RED] = int(255*lifetime);
+		args[LIGHT_GREEN] = int(240*lifetime);
+		args[LIGHT_BLUE] = int(224*lifetime);
 		lifetime -= 0.05;
 		if ( lifetime <= 0 ) Destroy();
 	}
@@ -258,6 +258,7 @@ Class Ripper2 : UTWeapon
 		Weapon.AmmoType2 "RipperAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 15;
+		UTWeapon.DropAmmo 5;
 	}
 	action void A_RazorFire( bool alt = false )
 	{

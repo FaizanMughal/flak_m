@@ -18,6 +18,23 @@ Class ShockAmmo : Ammo
 	}
 }
 
+Class ShockAmmo2 : ShockAmmo
+{
+	Default
+	{
+		Tag "Used Shock Core";
+		Inventory.PickupMessage "You picked up a used Shock Core.";
+		Inventory.Amount 3;
+		Ammo.DropAmount 3;
+	}
+	States
+	{
+	Spawn:
+		SHOA A -1;
+		Stop;
+	}
+}
+
 Class ShockBeamTracer : LineTracer
 {
 	Actor owner, ignore, lasthit;
@@ -728,9 +745,9 @@ Class ShockExplLight : DynamicLight
 	{
 		Super.Tick();
 		if ( globalfreeze || level.frozen ) return;
-		args[LIGHT_RED] = 160*lifetime;
-		args[LIGHT_GREEN] = 128*lifetime;
-		args[LIGHT_BLUE] = 255*lifetime;
+		args[LIGHT_RED] = int(160*lifetime);
+		args[LIGHT_GREEN] = int(128*lifetime);
+		args[LIGHT_BLUE] = int(255*lifetime);
 		lifetime -= 1./ReactionTime;
 		if ( lifetime <= 0 ) Destroy();
 	}
@@ -754,9 +771,9 @@ Class SuperShockExplLight : DynamicLight
 	{
 		Super.Tick();
 		if ( globalfreeze || level.frozen ) return;
-		args[LIGHT_RED] = 255*lifetime;
-		args[LIGHT_GREEN] = 160*lifetime;
-		args[LIGHT_BLUE] = 128*lifetime;
+		args[LIGHT_RED] = int(255*lifetime);
+		args[LIGHT_GREEN] = int(160*lifetime);
+		args[LIGHT_BLUE] = int(128*lifetime);
 		lifetime -= 1./ReactionTime;
 		if ( lifetime <= 0 ) Destroy();
 	}
@@ -1046,6 +1063,7 @@ Class ShockRifle : UTWeapon
 		Weapon.AmmoType2 "ShockAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 20;
+		UTWeapon.DropAmmo 5;
 	}
 	States
 	{
@@ -1218,6 +1236,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		Weapon.AmmoType2 "EnhancedShockAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 25;
+		UTWeapon.DropAmmo 5;
 		+WEAPON.AMMO_OPTIONAL;
 		+WEAPON.ALT_AMMO_OPTIONAL;
 		+WEAPON.CHEATNOTWEAPON;

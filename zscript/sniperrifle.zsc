@@ -155,6 +155,7 @@ Class SniperRifle : UTWeapon
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 8;
 		Weapon.Kickback 250;
+		UTWeapon.DropAmmo 2;
 	}
 	States
 	{

@@ -58,7 +58,7 @@ Class ImpactHammer : UTWeapon replaces Fist
 			invoker.count = 0;
 			A_AlertMonsters();
 		}
-		A_QuakeEx(clamp(invoker.chargesize*3,0,3),clamp(invoker.chargesize*3,0,3),clamp(invoker.chargesize*3,0,3),amt+1,0,96,"",QF_RELATIVE,rollIntensity:clamp(invoker.chargesize*0.3,0,0.3));
+		A_QuakeEx(clamp(int(invoker.chargesize*3),0,3),clamp(int(invoker.chargesize*3),0,3),clamp(int(invoker.chargesize*3),0,3),amt+1,0,96,"",QF_RELATIVE,rollIntensity:clamp(invoker.chargesize*0.3,0,0.3));
 	}
 	action void A_FireBlast()
 	{
@@ -75,7 +75,7 @@ Class ImpactHammer : UTWeapon replaces Fist
 		LineTrace(angle,80,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Impact](60,80)*realcharge;
+			int dmg = int(Random[Impact](60,80)*realcharge);
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
 			d.HitActor.vel = x*(1000/d.HitActor.mass)*realcharge;
 			if ( d.HitActor.bNOBLOOD )
@@ -93,7 +93,7 @@ Class ImpactHammer : UTWeapon replaces Fist
 		else if ( d.HitType != TRACE_HitNone )
 		{
 			realcharge = max(1.0,realcharge);
-			int dmg = Random[Impact](16,24)*realcharge;	// It's a flat damage of 36 on UT, but I think it's more fair for it to scale
+			int dmg = int(Random[Impact](16,24)*realcharge);	// It's a flat damage of 36 on UT, but I think it's more fair for it to scale
 			dmg = DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
 			TraceBleed(dmg,invoker);
 			vel -= x*(1200/mass)*realcharge;
@@ -102,7 +102,7 @@ Class ImpactHammer : UTWeapon replaces Fist
 			p.pitch = asin(-d.HitDir.z);
 			if ( d.HitType == TRACE_HitWall ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation-d.HitDir*4);
 		}
-		A_QuakeEx(realcharge*6,realcharge*6,realcharge*6,16,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:realcharge*0.2);
+		A_QuakeEx(int(realcharge*6),int(realcharge*6),int(realcharge*6),16,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:realcharge*0.2);
 		realcharge = max(1.0,realcharge);
 		int numpt = Random[Impact](5,10);
 		for ( int i=0; i<numpt; i++ )
@@ -137,13 +137,13 @@ Class ImpactHammer : UTWeapon replaces Fist
 		double dscale = d.Distance/180.;
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Impact](25,35)*dscale;
+			int dmg = int(Random[Impact](25,35)*dscale);
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
 			d.HitActor.vel = x*(500/d.HitActor.mass)*dscale;
 		}
 		else if ( d.HitType != TRACE_HitNone )
 		{
-			int dmg = Random[Impact](16,24)*dscale;
+			int dmg = int(Random[Impact](16,24)*dscale);
 			dmg = DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
 			vel -= x*(600/mass)*dscale;
 			if ( d.HitType == TRACE_HitWall ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation-d.HitDir*4);

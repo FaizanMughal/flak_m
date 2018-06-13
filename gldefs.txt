@@ -126,6 +126,14 @@ HardwareShader Texture "models/JShockCore.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 }
+/*Brightmap Texture "models/JShockCore_2.png"
+{
+	Map "brightmaps/JShockCore_2.png"
+}*/
+HardwareShader Texture "models/JShockCore_2.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
 /*Brightmap Texture "models/SASMD_t.png"
 {
 	Map "brightmaps/ASMD_t.png"

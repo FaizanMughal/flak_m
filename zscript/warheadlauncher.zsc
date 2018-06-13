@@ -69,7 +69,7 @@ Class ShockWave : Actor
 			if ( (dist > olddmgradius) || (dir dot a.vel < 0) )
 			{
 				if ( !a.bDONTTHRUST ) a.vel += dir*((moscale+20)/a.mass);
-				a.DamageMobj(self,target,moscale,'RedeemerDeath',DMG_THRUSTLESS);
+				a.DamageMobj(self,target,int(moscale),'RedeemerDeath',DMG_THRUSTLESS);
 			}
 		}
 		olddmgradius = dmgradius;
@@ -163,9 +163,9 @@ Class WarheadExplodLight : DynamicLight
 	{
 		Super.Tick();
 		if ( globalfreeze || level.frozen ) return;
-		args[LIGHT_RED] = 255*lifetime;
-		args[LIGHT_GREEN] = 192*lifetime;
-		args[LIGHT_BLUE] = 128*lifetime;
+		args[LIGHT_RED] = int(255*lifetime);
+		args[LIGHT_GREEN] = int(192*lifetime);
+		args[LIGHT_BLUE] = int(128*lifetime);
 		lifetime -= 1./ReactionTime;
 		if ( lifetime <= 0 ) Destroy();
 	}
@@ -663,6 +663,7 @@ Class WarheadLauncher : UTWeapon replaces BFG9000
 		Inventory.RespawnTics 2100;
 		+INVENTORY.ALWAYSPICKUP;
 		+WEAPON.NOAUTOFIRE;
+		UTWeapon.DropAmmo 1;
 	}
 	States
 	{

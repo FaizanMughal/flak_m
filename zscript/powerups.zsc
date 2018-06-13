@@ -454,9 +454,9 @@ Class mkLight : DynamicLight
 		else SetOrigin(target.vec3Offset(0,0,target.height*0.75),true);
 		A_SetAngle(target.angle,SPF_INTERPOLATE);
 		A_SetPitch(target.pitch,SPF_INTERPOLATE);
-		args[LIGHT_RED] = GetDefaultByType(GetClass()).args[LIGHT_RED]*clamp(Inventory(master).amount/40.,0.,1.);
-		args[LIGHT_GREEN] = GetDefaultByType(GetClass()).args[LIGHT_GREEN]*clamp(Inventory(master).amount/40.,0.,1.);
-		args[LIGHT_BLUE] = GetDefaultByType(GetClass()).args[LIGHT_BLUE]*clamp(Inventory(master).amount/40.,0.,1.);
+		args[LIGHT_RED] = int(GetDefaultByType(GetClass()).args[LIGHT_RED]*clamp(Inventory(master).amount/40.,0.,1.));
+		args[LIGHT_GREEN] = int(GetDefaultByType(GetClass()).args[LIGHT_GREEN]*clamp(Inventory(master).amount/40.,0.,1.));
+		args[LIGHT_BLUE] = int(GetDefaultByType(GetClass()).args[LIGHT_BLUE]*clamp(Inventory(master).amount/40.,0.,1.));
 		bDORMANT = (target.health <= 0);
 		if ( Inventory(target) && target.bInvisible ) bDORMANT = true;
 		// alert monsters hit by the light
@@ -501,9 +501,9 @@ Class mkLight3 : DynamicLight
 			Destroy();
 			return;
 		}
-		args[LIGHT_RED] = GetDefaultByType(GetClass()).args[LIGHT_RED]*clamp(Inventory(master).amount/40,0.,1.);
-		args[LIGHT_GREEN] = GetDefaultByType(GetClass()).args[LIGHT_GREEN]*clamp(Inventory(master).amount/40,0.,1.);
-		args[LIGHT_BLUE] = GetDefaultByType(GetClass()).args[LIGHT_BLUE]*clamp(Inventory(master).amount/40,0.,1.);
+		args[LIGHT_RED] = int(GetDefaultByType(GetClass()).args[LIGHT_RED]*clamp(Inventory(master).amount/40,0.,1.));
+		args[LIGHT_GREEN] = int(GetDefaultByType(GetClass()).args[LIGHT_GREEN]*clamp(Inventory(master).amount/40,0.,1.));
+		args[LIGHT_BLUE] = int(GetDefaultByType(GetClass()).args[LIGHT_BLUE]*clamp(Inventory(master).amount/40,0.,1.));
 		SetOrigin(target.vec3Offset(0,0,target.height*0.5),true);
 	}
 }

@@ -300,18 +300,18 @@ Class UTHud : BaseStatusBar
 			if ( CPlayer.GetGender() == 1 )
 			{
 				UTDrawTintedTex(Woman[0],hudsize*statussize,min(opacity,15),dollcolor);
-				if ( a ) UTDrawTintedTex(Woman[1],hudsize*statussize,min(opacity,15)*(a.Amount/double(a.MaxAmount)),dollcolor);
-				if ( t ) UTDrawTintedTex(Woman[2],hudsize*statussize,min(opacity,15)*(t.Amount/double(t.MaxAmount)),dollcolor);
-				if ( j ) UTDrawTintedTex(Woman[3],hudsize*statussize,min(opacity,15)*(j.Amount/double(j.MaxAmount)),dollcolor);
-				if ( s ) UTDrawTintedTex(Woman[4],hudsize*statussize,min(opacity,15)*(s.Amount/double(s.MaxAmount)),GoldColor);
+				if ( a ) UTDrawTintedTex(Woman[1],hudsize*statussize,int(min(opacity,15)*(a.Amount/double(a.MaxAmount))),dollcolor);
+				if ( t ) UTDrawTintedTex(Woman[2],hudsize*statussize,int(min(opacity,15)*(t.Amount/double(t.MaxAmount))),dollcolor);
+				if ( j ) UTDrawTintedTex(Woman[3],hudsize*statussize,int(min(opacity,15)*(j.Amount/double(j.MaxAmount))),dollcolor);
+				if ( s ) UTDrawTintedTex(Woman[4],hudsize*statussize,int(min(opacity,15)*(s.Amount/double(s.MaxAmount))),GoldColor);
 			}
 			else
 			{
 				UTDrawTintedTex(Man[0],hudsize*statussize,min(opacity,15),dollcolor);
-				if ( a ) UTDrawTintedTex(Man[1],hudsize*statussize,min(opacity,15)*(a.Amount/double(a.MaxAmount)),dollcolor);
-				if ( t ) UTDrawTintedTex(Man[2],hudsize*statussize,min(opacity,15)*(t.Amount/double(t.MaxAmount)),dollcolor);
-				if ( j ) UTDrawTintedTex(Man[3],hudsize*statussize,min(opacity,15)*(j.Amount/double(j.MaxAmount)),dollcolor);
-				if ( s ) UTDrawTintedTex(Man[4],hudsize*statussize,min(opacity,15)*(s.Amount/double(s.MaxAmount)),GoldColor);
+				if ( a ) UTDrawTintedTex(Man[1],hudsize*statussize,int(min(opacity,15)*(a.Amount/double(a.MaxAmount))),dollcolor);
+				if ( t ) UTDrawTintedTex(Man[2],hudsize*statussize,int(min(opacity,15)*(t.Amount/double(t.MaxAmount))),dollcolor);
+				if ( j ) UTDrawTintedTex(Man[3],hudsize*statussize,int(min(opacity,15)*(j.Amount/double(j.MaxAmount))),dollcolor);
+				if ( s ) UTDrawTintedTex(Man[4],hudsize*statussize,int(min(opacity,15)*(s.Amount/double(s.MaxAmount))),GoldColor);
 			}
 		}
 		DrawColor = WhiteColor;
@@ -617,7 +617,7 @@ Class UTHud : BaseStatusBar
 		}
 		int protrusion = GetProtrusion(swidth/hres);
 		[tmp,tmp,hres] = StatusbarToRealCoords(0,0,protrusion);
-		width += (swidth-hres)/scale.X;
+		width += int((swidth-hres)/scale.X);
 		if ( am_showtime )
 		{
 			printtext = level.TimeFormatted();

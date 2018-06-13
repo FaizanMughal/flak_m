@@ -413,6 +413,7 @@ Class UTRocketLauncher : UTWeapon
 		Weapon.AmmoType2 "UTRocketAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 6;
+		UTWeapon.DropAmmo 3;
 	}
 	States
 	{

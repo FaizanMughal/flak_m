@@ -77,9 +77,9 @@ Class ChunkLight : DynamicLight
 			return;
 		}
 		if ( globalfreeze || level.frozen ) return;
-		args[LIGHT_RED] = 255*(10-target.frame)*0.1;
-		args[LIGHT_GREEN] = 224*(10-target.frame)*0.1;
-		args[LIGHT_BLUE] = 128*(10-target.frame)*0.1;
+		args[LIGHT_RED] = int(255*(10-target.frame)*0.1);
+		args[LIGHT_GREEN] = int(224*(10-target.frame)*0.1);
+		args[LIGHT_BLUE] = int(128*(10-target.frame)*0.1);
 	}
 }
 
@@ -345,9 +345,9 @@ Class SlugLight : DynamicLight
 	{
 		Super.Tick();
 		if ( globalfreeze || level.frozen ) return;
-		args[LIGHT_RED] = 255*lifetime;
-		args[LIGHT_GREEN] = 224*lifetime;
-		args[LIGHT_BLUE] = 128*lifetime;
+		args[LIGHT_RED] = int(255*lifetime);
+		args[LIGHT_GREEN] = int(224*lifetime);
+		args[LIGHT_BLUE] = int(128*lifetime);
 		lifetime -= 0.05;
 		if ( lifetime <= 0 ) Destroy();
 	}
@@ -577,6 +577,7 @@ Class FlakCannon : UTWeapon
 		Weapon.AmmoType2 "FlakAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 10;
+		UTWeapon.DropAmmo 5;
 	}
 	States
 	{

@@ -197,12 +197,18 @@ Class RandomSpawner2 : RandomSpawner
 		{
 			spawned.SetState(spawned.ResolveState("Spawn")+1);
 			Inventory(spawned).bALWAYSPICKUP = true;
+			if ( UTWeapon(spawned).DropAmmo > 0 )
+				Weapon(spawned).AmmoGive1 = min(UTWeapon(spawned).DropAmmo,Weapon(spawned).AmmoGive1);
 		}
 	}
 }
 
 Class UTWeapon : Weapon
 {
+	int DropAmmo;
+
+	Property DropAmmo: DropAmmo;
+
 	// Drawstuffs under HUD
 	virtual ui void PreRender( double lbottom ) {}
 	// Drawstuffs over HUD
@@ -272,9 +278,9 @@ Class UTTeleportLight : DynamicLight
 			Destroy();
 			return;
 		}
-		args[LIGHT_RED] = 128*alpha;
-		args[LIGHT_GREEN] = 160*alpha;
-		args[LIGHT_BLUE] = 255*alpha;
+		args[LIGHT_RED] = int(128*alpha);
+		args[LIGHT_GREEN] = int(160*alpha);
+		args[LIGHT_BLUE] = int(255*alpha);
 		args[LIGHT_INTENSITY] = Random[Tele](10,14)*8;
 		alpha -= 1./35;
 	}
@@ -295,9 +301,9 @@ Class UTItemLight : DynamicLight
 			Destroy();
 			return;
 		}
-		args[LIGHT_RED] = 255*alpha;
-		args[LIGHT_GREEN] = 224*alpha;
-		args[LIGHT_BLUE] = 160*alpha;
+		args[LIGHT_RED] = int(255*alpha);
+		args[LIGHT_GREEN] = int(224*alpha);
+		args[LIGHT_BLUE] = int(160*alpha);
 		args[LIGHT_INTENSITY] = Random[Tele](6,8)*8;
 		alpha -= 3./35;
 	}

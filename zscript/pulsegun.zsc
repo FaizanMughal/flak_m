@@ -146,7 +146,7 @@ Class PulseBallLight : DynamicLight
 			return;
 		}
 		SetOrigin(target.pos,true);
-		args[LIGHT_INTENSITY] = 10+sin(gametic*80+pulseofs)*5;
+		args[LIGHT_INTENSITY] = 10+int(sin(gametic*80+pulseofs)*5);
 	}
 }
 
@@ -168,8 +168,8 @@ Class PulseExplLight : DynamicLight
 	{
 		Super.Tick();
 		if ( globalfreeze || level.frozen ) return;
-		args[LIGHT_RED] = 64*lifetime;
-		args[LIGHT_GREEN] = 255*lifetime;
+		args[LIGHT_RED] = int(64*lifetime);
+		args[LIGHT_GREEN] = int(255*lifetime);
 		lifetime -= 1./ReactionTime;
 		if ( lifetime <= 0 ) Destroy();
 	}
@@ -391,12 +391,12 @@ Class PulseBolt : Actor
 				if ( !damagedactor )
 				{
 					accdamage = min(0.5*(level.time-lasthit),0.1);
-					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](70,80)*accdamage,'zapped',DMG_USEANGLE,atan2(x.y,x.x));
+					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](70,80)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 				else if ( t.Results.HitActor != damagedactor )
 				{
-					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](70,80)*accdamage,'zapped',DMG_USEANGLE,atan2(x.y,x.x));
+					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](70,80)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 				lasthit = level.time;
@@ -404,7 +404,7 @@ Class PulseBolt : Actor
 				accdamage += 1./TICRATE;
 				if ( accdamage > 0.22 )
 				{
-					t.Results.HitActor.DamageMobj(self,target,Random[Pulse](70,80)*accdamage,'zapped',DMG_USEANGLE,atan2(x.y,x.x));
+					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](70,80)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 			}
@@ -446,7 +446,7 @@ Class PulseBolt : Actor
 		}
 		else if ( damagedactor )
 		{
-			damagedactor.DamageMobj(self,target,Random[Pulse](65,75)*accdamage,'zapped');
+			damagedactor.DamageMobj(self,target,int(Random[Pulse](65,75)*accdamage),'zapped');
 			accdamage = 0;
 			damagedactor = null;
 		}
@@ -716,6 +716,7 @@ Class PulseGun : UTWeapon
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 60;
 		PulseGun.ClipCount 50;
+		UTWeapon.DropAmmo 15;
 	}
 	States
 	{

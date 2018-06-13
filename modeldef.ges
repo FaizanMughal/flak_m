@@ -10,6 +10,18 @@ Model "BioAmmo"
 
 	FrameIndex BIOA A 0 0
 }
+Model "BioAmmo2"
+{
+	Path "models"
+	Model 0 "BioAmmoM_d.3d"
+	Skin 0 "Jbammo1.png"
+	Scale 0.08 0.096 0.08
+	PitchOffset 180
+	RollOffset 90
+	ZOffset 4
+
+	FrameIndex BIOA A 0 0
+}
 
 Model "BioGel"
 {

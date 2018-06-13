@@ -53,7 +53,7 @@ Class BulletImpact : Actor
 	{
 		Super.PostBeginPlay();
 		A_SprayDecal("Pock",-20);
-		int numpt = Random[Enforcer](5,10)*scale.x*4;
+		int numpt = int(Random[Enforcer](5,10)*scale.x*4);
 		Vector3 x = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
 		for ( int i=0; i<numpt; i++ )
 		{
@@ -62,14 +62,14 @@ Class BulletImpact : Actor
 			s.vel = pvel;
 			s.SetShade(Color(1,1,1)*Random[Enforcer](128,192));
 		}
-		numpt = Random[Enforcer](3,8)*scale.x*4;
+		numpt = int(Random[Enforcer](3,8)*scale.x*4);
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (FRandom[Enforcer](-1,1),FRandom[Enforcer](-1,1),FRandom[Enforcer](-1,1)).unit()*FRandom[Enforcer](2,8);
 			let s = Spawn("UTSpark",pos+x*2);
 			s.vel = pvel;
 		}
-		numpt = Random[Enforcer](2,5)*scale.x*4;
+		numpt = int(Random[Enforcer](2,5)*scale.x*4);
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (FRandom[Enforcer](-1,1),FRandom[Enforcer](-1,1),FRandom[Enforcer](-1,1)).unit()*FRandom[Enforcer](2,8);
@@ -386,6 +386,7 @@ Class Enforcer : UTWeapon replaces Pistol
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 30;
 		Weapon.Kickback 180;
+		UTWeapon.DropAmmo 10;
 		Enforcer.ClipCount 20;
 		Enforcer.SlaveClipCount 20;
 	}

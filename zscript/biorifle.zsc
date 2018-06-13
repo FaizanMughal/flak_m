@@ -2,8 +2,8 @@ Class Tier3Ammo : RandomSpawner2 replaces Shell
 {
 	Default
 	{
-		DropItem "BioAmmo", 255, 1;
-		DropItem "ShockAmmo", 255, 1;
+		DropItem "BioAmmo2", 255, 1;
+		DropItem "ShockAmmo2", 255, 1;
 	}
 }
 Class Tier3Ammo2 : Tier3Ammo replaces ShellBox {}
@@ -28,6 +28,24 @@ Class BioAmmo : Ammo
 		Ammo.BackpackAmount 50;
 		Ammo.BackpackMaxAmount 200;
 		Ammo.DropAmount 10;
+	}
+	States
+	{
+	Spawn:
+		BIOA A -1;
+		Stop;
+	}
+}
+
+Class BioAmmo2 : BioAmmo	// small variant
+{
+	Default
+	{
+		Tag "Biosludge Ammo";
+		Inventory.PickupMessage "You picked up the Small Biosludge Ammo.";
+		Inventory.Amount 10;
+		Ammo.DropAmount 5;
+		Scale 0.5;
 	}
 	States
 	{
@@ -139,7 +157,7 @@ Class BioLight : DynamicLight
 			Destroy();
 			return;
 		}
-		args[LIGHT_INTENSITY] = 8*target.Scale.x;
+		args[LIGHT_INTENSITY] = int(8*target.Scale.x);
 	}
 }
 
@@ -161,9 +179,9 @@ Class BioXLight : DynamicLight
 	{
 		Super.Tick();
 		if ( globalfreeze || level.frozen ) return;
-		args[LIGHT_RED] = 64*lifetime;
-		args[LIGHT_GREEN] = 255*lifetime;
-		args[LIGHT_BLUE] = 48*lifetime;
+		args[LIGHT_RED] = int(64*lifetime);
+		args[LIGHT_GREEN] = int(255*lifetime);
+		args[LIGHT_BLUE] = int(48*lifetime);
 		lifetime -= 0.05;
 		if ( lifetime <= 0 ) Destroy();
 	}
@@ -187,7 +205,7 @@ Class BioGel : Actor
 	int atplane;
 	Sector atsector;
 	double atz;
-	int rollvel, pitchvel, yawvel;
+	double rollvel, pitchvel, yawvel;
 	Vector3	normal;
 
 	override void PostBeginPlay()
@@ -252,7 +270,7 @@ Class BioGel : Actor
 		}
 		if ( !InStateSequence(CurState,FindState("XDeath")) && ((!bNOGRAVITY && !Random[GES](0,2)) || !Random[GES](0,10)) )
 		{
-			int numpt = Min(20,Scale.x*2)+Random[GES](-1,1);
+			int numpt = Min(20,int(Scale.x*2))+Random[GES](-1,1);
 			for ( int i=0; i<numpt; i++ )
 			{
 				Vector3 pvel = (FRandom[GES](-1,1),FRandom[GES](-1,1),FRandom[GES](-1,1)).unit()*FRandom[GES](1,3);
@@ -355,7 +373,7 @@ Class BioGel : Actor
 		}
 		A_PlaySound("ges/hit");
 		A_SprayDecal("BioSplat",-172);
-		int numpt = Min(100,Scale.x*10)+Random[GES](-5,5);
+		int numpt = Min(100,int(Scale.x*10))+Random[GES](-5,5);
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (normal+(FRandom[GES](-.8,.8),FRandom[GES](-.8,.8),FRandom[GES](-.8,.8))).unit()*FRandom[GES](3,6);
@@ -381,19 +399,19 @@ Class BioGel : Actor
 		if ( invoker.l ) invoker.l.Destroy();
 		if ( invoker.b ) invoker.b.Destroy();
 		let s = Spawn("BioXLight",pos);
-		s.args[3] *= Scale.x;
+		s.args[3] = int(s.args[3]*Scale.x);
 		invoker.deadtimer = -2;
 		if ( invoker.atline ) invoker.atline.RemoteActivate(target,invoker.atside,SPAC_Impact,pos);
-		A_Explode(Random[GES](20,40)*Scale.x,Min(150,Scale.x*25));
+		A_Explode(int(Random[GES](20,40)*Scale.x),Min(150,int(Scale.x*25)));
 		A_PlaySound("ges/explode",CHAN_VOICE);
-		int numpt = Min(300,Scale.x*30)+Random[GES](-10,10);
+		int numpt = Min(300,int(Scale.x*30))+Random[GES](-10,10);
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (FRandom[GES](-1,1),FRandom[GES](-1,1),FRandom[GES](-1,1)).unit()*FRandom[GES](3,12);
 			let s = Spawn("BioSpark",pos);
 			s.vel = pvel;
 		}
-		numpt = Min(100,Scale.x*10)+Random[GES](-4,4);
+		numpt = Min(100,int(Scale.x*10))+Random[GES](-4,4);
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (FRandom[GES](-1,1),FRandom[GES](-1,1),FRandom[GES](-1,1)).unit()*FRandom[GES](1.2,2.4);
@@ -487,7 +505,7 @@ Class BioGlob : BioGel
 	override void AlignSelf()
 	{
 		Super.AlignSelf();
-		if ( !bAMBUSH ) numsplash = 2*Scale.x-1;
+		if ( !bAMBUSH ) numsplash = int(2*Scale.x)-1;
 	}
 	override void Tick()
 	{
@@ -536,7 +554,7 @@ Class BioRifle : UTWeapon
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(48,0,255,0),1);
 		A_AlertMonsters();
-		if ( alt ) A_QuakeEx(1+0.5*invoker.charge,1+0.5*invoker.charge,1+0.5*invoker.charge,5+1.2*invoker.charge,0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05+0.01*invoker.charge);
+		if ( alt ) A_QuakeEx(1+int(0.5*invoker.charge),1+int(0.5*invoker.charge),1+int(0.5*invoker.charge),5+int(1.2*invoker.charge),0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05+0.01*invoker.charge);
 		else A_QuakeEx(1,1,1,5,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
 		Vector3 x, y, z;
 		double a, s;
@@ -593,6 +611,7 @@ Class BioRifle : UTWeapon
 		Weapon.AmmoType2 "BioAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 25;
+		UTWeapon.DropAmmo 5;
 	}
 	States
 	{
