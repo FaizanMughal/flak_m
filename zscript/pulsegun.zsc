@@ -542,7 +542,7 @@ Class StarterBolt : PulseBolt
 		A_SetPitch(target.BulletSlope());
 		frame++;
 		if ( frame > 4 ) frame = 0;
-		CheckBeam(x);
+		CheckBeam((cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch)));
 	}
 }
 
