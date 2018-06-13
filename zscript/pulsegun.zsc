@@ -574,7 +574,7 @@ Class PulseGun : UTWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.clipcount--;
-		if ( !CVar.GetCVar('flak_pulsereload').GetBool() && (invoker.clipcount <= 0) ) invoker.clipcount = Min(50,weap.Ammo1.Amount);
+		if ( !CVar.GetCVar('flak_pulsereload').GetBool() && (invoker.clipcount <= 0) ) invoker.clipcount = (weap.Ammo1.Amount>0)?Min(50,weap.Ammo1.Amount):50;
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,128,255,128),1);
 		A_AlertMonsters();
@@ -634,7 +634,7 @@ Class PulseGun : UTWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.clipcount--;
-		if ( !CVar.GetCVar('flak_pulsereload').GetBool() && (invoker.clipcount <=0) ) invoker.clipcount = Min(50,weap.Ammo1.Amount);
+		if ( !CVar.GetCVar('flak_pulsereload').GetBool() && (invoker.clipcount <=0) ) invoker.clipcount = (weap.Ammo1.Amount>0)?Min(50,weap.Ammo1.Amount):50;
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,128,255,128),1);
 		A_AlertMonsters();

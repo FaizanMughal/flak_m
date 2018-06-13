@@ -273,12 +273,12 @@ Class Enforcer : UTWeapon replaces Pistol
 		if ( slave )
 		{
 			invoker.slaveclipcount--;
-			if ( !CVar.GetCVar('flak_enforcerreload').GetBool() && (invoker.slaveclipcount <=0) ) invoker.slaveclipcount = Min(20,weap.Ammo1.Amount);
+			if ( !CVar.GetCVar('flak_enforcerreload').GetBool() && (invoker.slaveclipcount <=0) ) invoker.slaveclipcount = (weap.Ammo1.Amount>0)?Min(20,weap.Ammo1.Amount):20;
 		}
 		else
 		{
 			invoker.clipcount--;
-			if ( !CVar.GetCVar('flak_enforcerreload').GetBool() && (invoker.clipcount <=0) ) invoker.clipcount = Min(20,weap.Ammo1.Amount);
+			if ( !CVar.GetCVar('flak_enforcerreload').GetBool() && (invoker.clipcount <=0) ) invoker.clipcount = (weap.Ammo1.Amount>0)?Min(20,weap.Ammo1.Amount):20;
 		}
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,255,128,0),1);
