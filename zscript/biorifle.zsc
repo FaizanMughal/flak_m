@@ -6,7 +6,15 @@ Class Tier3Ammo : RandomSpawner2 replaces Shell
 		DropItem "ShockAmmo2", 255, 1;
 	}
 }
-Class Tier3Ammo2 : Tier3Ammo replaces ShellBox {}
+Class Tier3Ammo2 : RandomSpawner2 replaces ShellBox
+{
+	Default
+	{
+		DropItem "BioAmmo", 255, 1;
+		DropItem "ShockAmmo", 255, 1;
+	}
+}
+
 Class Tier3Weapon : RandomSpawner2 replaces Shotgun
 {
 	Default
