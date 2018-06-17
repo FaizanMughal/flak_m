@@ -456,8 +456,5 @@ Class Minigun : UTWeapon
 		Stop;
 		MMUZ I 2 Bright;
 		Stop;
-	Dummy:
-		MMUZ ABCDEFGHI -1;
-		Stop;
 	}
 }
