@@ -432,15 +432,24 @@ Class Searchlight : Inventory replaces Infrared
 /* hello, Soundless Mound copypasted lights */
 Class mkLight : DynamicLight
 {
+	int basecolor[3];
+
 	Default
 	{
 		DynamicLight.Type "Point";
 		+DynamicLight.SPOT;
 		+DynamicLight.ATTENUATE;
 		+DynamicLight.DONTLIGHTSELF;
-		args 255,224,160,350;
+		args 255,224,160,300;
 		DynamicLight.SpotInnerAngle 20;
 		DynamicLight.SpotOuterAngle 35;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		basecolor[0] = args[LIGHT_RED];
+		basecolor[1] = args[LIGHT_GREEN];
+		basecolor[2] = args[LIGHT_BLUE];
 	}
 	override void Tick()
 	{
@@ -454,9 +463,9 @@ Class mkLight : DynamicLight
 		else SetOrigin(target.vec3Offset(0,0,target.height*0.75),true);
 		A_SetAngle(target.angle,SPF_INTERPOLATE);
 		A_SetPitch(target.pitch,SPF_INTERPOLATE);
-		args[LIGHT_RED] = int(GetDefaultByType(GetClass()).args[LIGHT_RED]*clamp(Inventory(master).amount/40.,0.,1.));
-		args[LIGHT_GREEN] = int(GetDefaultByType(GetClass()).args[LIGHT_GREEN]*clamp(Inventory(master).amount/40.,0.,1.));
-		args[LIGHT_BLUE] = int(GetDefaultByType(GetClass()).args[LIGHT_BLUE]*clamp(Inventory(master).amount/40.,0.,1.));
+		args[LIGHT_RED] = int(basecolor[0]*clamp(Inventory(master).amount/40.,0.,1.));
+		args[LIGHT_GREEN] = int(basecolor[1]*clamp(Inventory(master).amount/40.,0.,1.));
+		args[LIGHT_BLUE] = int(basecolor[2]*clamp(Inventory(master).amount/40.,0.,1.));
 		bDORMANT = (target.health <= 0);
 		if ( Inventory(target) && target.bInvisible ) bDORMANT = true;
 		// alert monsters hit by the light
@@ -479,7 +488,7 @@ Class mkLight2 : mkLight
 {
 	Default
 	{
-		args 128,112,96,450;
+		args 128,112,96,300;
 		DynamicLight.SpotInnerAngle 0;
 		DynamicLight.SpotOuterAngle 50;
 	}
@@ -487,11 +496,20 @@ Class mkLight2 : mkLight
 
 Class mkLight3 : DynamicLight
 {
+	int basecolor[3];
+
 	Default
 	{
 		DynamicLight.Type "Point";
 		+DynamicLight.ATTENUATE;
 		args 32,28,24,0;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		basecolor[0] = args[LIGHT_RED];
+		basecolor[1] = args[LIGHT_GREEN];
+		basecolor[2] = args[LIGHT_BLUE];
 	}
 	override void Tick()
 	{
@@ -501,9 +519,9 @@ Class mkLight3 : DynamicLight
 			Destroy();
 			return;
 		}
-		args[LIGHT_RED] = int(GetDefaultByType(GetClass()).args[LIGHT_RED]*clamp(Inventory(master).amount/40,0.,1.));
-		args[LIGHT_GREEN] = int(GetDefaultByType(GetClass()).args[LIGHT_GREEN]*clamp(Inventory(master).amount/40,0.,1.));
-		args[LIGHT_BLUE] = int(GetDefaultByType(GetClass()).args[LIGHT_BLUE]*clamp(Inventory(master).amount/40,0.,1.));
+		args[LIGHT_RED] = int(basecolor[0]*clamp(Inventory(master).amount/40.,0.,1.));
+		args[LIGHT_GREEN] = int(basecolor[1]*clamp(Inventory(master).amount/40.,0.,1.));
+		args[LIGHT_BLUE] = int(basecolor[2]*clamp(Inventory(master).amount/40.,0.,1.));
 		SetOrigin(target.vec3Offset(0,0,target.height*0.5),true);
 	}
 }
