@@ -44,8 +44,6 @@ Class UTArmorBonus : UTArmor replaces ArmorBonus
 		UTArmor.ArmorAbsorption 25;
 		Inventory.PickupMessage "You picked up an Armor Bonus.";
 		Inventory.PickupSound "misc/ut_shard";
-		Radius 4;
-		Height 12;
 	}
 	States
 	{
