@@ -341,12 +341,13 @@ Class Enforcer : UTWeapon replaces Pistol
 			p.pitch = asin(-hitnormal.z);
 			if ( d.HitLine ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation);
 		}
-		for ( int i=0; i<8; i++ )
+		for ( int i=0; i<3; i++ )
 		{
 			let s = Spawn("UTViewSmoke",origin);
 			if ( alt ) UTViewSmoke(s).ofs = (10,ydir,-3);
 			else UTViewSmoke(s).ofs = (10,4*ydir,-1);
 			s.target = self;
+			s.alpha *= 0.5;
 		}
 		origin += x*8.0+ydir*y*6.0-z*2.0;
 		let c = Spawn("UTCasing",origin);

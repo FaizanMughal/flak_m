@@ -147,7 +147,6 @@ Class UTHud : BaseStatusBar
 	override void Draw( int state, double TicFrac )
 	{
 		Super.Draw(state,TicFrac);
-		if ( level.time < 2 ) return;	// workaround for glitched wipe (no idea what causes it)
 		if ( players[consoleplayer].camera is 'GuidedWarShell' ) return;
 		HScale = Screen.GetWidth()/1280.;
 		switch ( CVar.GetCVar('flak_colorprefs',CPlayer).GetInt() )
