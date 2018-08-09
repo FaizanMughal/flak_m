@@ -10,8 +10,9 @@ Class Tier6Ammo2 : RandomSpawner2 replaces CellPack
 {
 	Default
 	{
-		DropItem "MiniAmmo", 255, 1;
-		DropItem "RifleAmmo", 255, 1;
+		DropItem "MiniAmmo", 255, 6;
+		DropItem "RifleAmmo", 255, 6;
+		DropItem "WarheadAmmo", 255, 1;
 	}
 }
 

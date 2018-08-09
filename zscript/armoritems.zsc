@@ -55,6 +55,22 @@ Class UTArmorBonus : UTArmor replaces ArmorBonus
 
 Class UTThighPads : UTArmor replaces GreenArmor
 {
+	override bool HandlePickup( Inventory item )
+	{
+		if ( item is 'UTThighPads' )
+		{
+			let s = Owner.FindInventory("UTShieldBelt");
+			if ( s )
+			{
+				if ( amount < item.amount ) amount = item.amount;
+				amount = min(s.maxamount-s.amount,amount);
+				Console.Printf("%d",amount);
+				item.bPickupGood = true;
+				return true;
+			}
+		}
+		return Super.HandlePickup(item);
+	}
 	Default
 	{
 		Tag "Thigh Pads";
@@ -75,6 +91,22 @@ Class UTThighPads : UTArmor replaces GreenArmor
 
 Class UTBodyArmor : UTArmor replaces BlueArmor
 {
+	override bool HandlePickup( Inventory item )
+	{
+		if ( item is 'UTBodyArmor' )
+		{
+			let s = Owner.FindInventory("UTShieldBelt");
+			if ( s )
+			{
+				if ( amount < item.amount ) amount = item.amount;
+				amount = min(s.maxamount-s.amount,amount);
+				Console.Printf("%d",amount);
+				item.bPickupGood = true;
+				return true;
+			}
+		}
+		return Super.HandlePickup(item);
+	}
 	Default
 	{
 		Tag "Body Armor";
@@ -106,25 +138,21 @@ Class UTShieldBelt : UTArmor replaces Megasphere
 		Super.AbsorbDamage(damage,damageType,newdamage);
 		if ( (oldamt > 0) && (amount <= 0) ) PrintPickupMessage(true,"The Shield Belt has depleted.");
 	}
+	override bool HandlePickup( Inventory item )
+	{
+		if ( (item is 'UTBodyArmor') || (item is 'UTThighPads') )
+		{
+			item.amount = 1;
+			amount -= 1;
+		}
+		return Super.HandlePickup(item);
+	}
 	override bool Use( bool pickup )
 	{
 		// removes thigh pads and body armor like in UT
 		Owner.TakeInventory("UTThighPads",50);
 		Owner.TakeInventory("UTBodyArmor",150);
 		return false;
-	}
-	override bool HandlePickup( Inventory item )
-	{
-		if ( (item is 'UTThighPads') || (item is 'UTBodyArmor') )
-		{
-			if ( amount < maxamount )
-			{
-				DepleteOrDestroy();
-				return Super.HandlePickup(item);
-			}
-			else return true;
-		}
-		return Super.HandlePickup(item);
 	}
 	Default
 	{

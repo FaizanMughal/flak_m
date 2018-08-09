@@ -402,7 +402,7 @@ Class PulseBolt : Actor
 				lasthit = level.time;
 				damagedactor = t.Results.HitActor;
 				accdamage += 1./TICRATE;
-				if ( accdamage > 0.22 )
+				if ( accdamage > 0.16 )
 				{
 					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](70,80)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;

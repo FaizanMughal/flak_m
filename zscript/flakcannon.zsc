@@ -140,7 +140,7 @@ Class FlakChunk : Actor
 		Radius 2;
 		Height 2;
 		Speed 50;
-		DamageFunction Random[Flak](15,25);
+		DamageFunction Random[Flak](25,35);
 		DamageType 'Shredded';
 		BounceType "Doom";
 		BounceFactor 0.8;
@@ -397,7 +397,7 @@ Class FlakSlug : Actor
 		double a, s;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Actor p;
-		for ( int i=0; i<5; i++ )
+		for ( int i=0; i<8; i++ )
 		{
 			p = Spawn("FlakChunk",pos);
 			a = FRandom[Flak](0,360);
@@ -494,7 +494,7 @@ Class FlakCannon : UTWeapon
 		A_OverlayRenderstyle(-2,STYLE_Add);
 		[x, y, z] = Matrix4.GetAxes(BulletSlope(),angle,roll);
 		Actor p;
-		for ( int i=0; i<8; i++ )
+		for ( int i=0; i<12; i++ )
 		{
 			p = Spawn("FlakChunk",origin);
 			a = FRandom[Flak](0,360);
@@ -605,7 +605,7 @@ Class FlakCannon : UTWeapon
 		Wait;
 	Fire:
 		FLKF A 1 A_FireChunks();
-		FLKF BCDEFGHIJ 1;
+		FLKF BCEFHI 1;
 		FLKF J 4;
 		Goto Loading;
 	AltFire:

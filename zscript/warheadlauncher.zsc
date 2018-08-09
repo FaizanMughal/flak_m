@@ -1,4 +1,4 @@
-// shouldn't be placed in the world (it wasn't in UT99)
+// wasn't placeable in UT99
 Class WarheadAmmo : Ammo
 {
 	Default
