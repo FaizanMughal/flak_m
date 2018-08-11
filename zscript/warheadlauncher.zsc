@@ -66,11 +66,12 @@ Class ShockWave : Actor
 			double dist = max(1,dir.length());
 			dir = dir/dist+(0,0,0.3);
 			double moscale = max(0,1100-0.22*dist);
-			if ( (dist > olddmgradius) || (dir dot a.vel < 0) )
+			if ( (dist > olddmgradius-a.radius) || (dir dot a.vel <= 0) )
 			{
 				if ( !a.bDONTTHRUST ) a.vel += dir*((moscale+20)/a.mass);
 				a.DamageMobj(self,target,int(moscale),'RedeemerDeath',DMG_THRUSTLESS);
 			}
+			if ( a.player ) UTMainHandler.DoFlash(a,Color(32,255,255,255),80);
 		}
 		olddmgradius = dmgradius;
 	}

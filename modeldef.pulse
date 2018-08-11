@@ -13,8 +13,8 @@ Model "PulseBolt"
 {
 	Path "models"
 	Model 0 "PBolt_d.3d"
-	Offset 20.25 0 0
-	Scale 0.2025 0.10125 0.1215
+	Offset 40.5 0 0
+	Scale 0.405 0.2025 0.243
 	AngleOffset 90
 	DONTCULLBACKFACES
 	USEACTORPITCH
@@ -35,9 +35,9 @@ Model "PulseBolt"
 Model "StarterBolt"
 {
 	Path "models"
-	Model 0 "PBolt_d.3d"
-	Offset 20.25 0 0
-	Scale 0.2025 0.10125 0.1215
+	Model 0 "SBolt_d.3d"
+	Offset 40.5 0 0
+	Scale 0.405 0.2025 0.243
 	AngleOffset 90
 	DONTCULLBACKFACES
 	USEACTORPITCH

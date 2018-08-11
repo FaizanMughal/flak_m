@@ -312,7 +312,7 @@ Class Enforcer : UTWeapon replaces Pistol
 		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Enforcer](15,20);
+			int dmg = Random[Enforcer](12,17);
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
 			if ( d.HitActor.bNOBLOOD )
 			{
@@ -458,18 +458,20 @@ Class Enforcer : UTWeapon replaces Pistol
 	Hold:
 		ENFF A 0 A_EnforcerFire();
 		ENFF ABCDEFGHIJ 1;
+		ENFF J 5;
 		ENFF J 0 A_EnforcerRefire();
 		ENFF J 2;
 		ENFI A 0;
 		Goto Idle;
 	LeftFire:
 		2NFI A 0 A_Overlay(-9998,"Null");
-		2NFI A 1 A_SetTics(Random[Enforcer](5,6));
+		2NFI A 8;
 		2NFI A 0 A_EnforcerRefire(1,true);
 		Goto LeftIdle;
 	LeftHold:
 		2NFF A 0 A_EnforcerFire(false,true);
 		2NFF ABCDEFGHIJ 1;
+		2NFF J 5;
 		2NFF J 0 A_EnforcerRefire("LeftHold",true);
 		2NFF J 2;
 		2NFI A 0;
@@ -480,18 +482,20 @@ Class Enforcer : UTWeapon replaces Pistol
 	AltHold:
 		ENFA G 0 A_EnforcerFire(true);
 		ENFA GHIJKLMN 1;
+		ENFA N 3;
 		ENFA G 0 A_EnforcerRefire();
 		ENFA OPQRSTU 1;
 		Goto Idle;
 	LeftAltFire:
 		2NFI A 0 A_Overlay(-9998,"Null");
-		2NFI A 1 A_SetTics(Random[Enforcer](5,6));
+		2NFI A 7;
 		2NFI A 0 A_EnforcerRefire(1,true);
 		Goto LeftIdle;
 		2NFA ABCDEF 1;
 	LeftAltHold:
 		2NFA G 0 A_EnforcerFire(true,true);
 		2NFA GHIJKLMN 1;
+		2NFA N 3;
 		2NFA G 0 A_EnforcerRefire("LeftAltHold",true);
 		2NFA OPQRSTU 1;
 		Goto LeftIdle;

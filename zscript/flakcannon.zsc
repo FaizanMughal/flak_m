@@ -140,7 +140,7 @@ Class FlakChunk : Actor
 		Radius 2;
 		Height 2;
 		Speed 50;
-		DamageFunction Random[Flak](25,35);
+		DamageFunction int(Random[Flak](15,20)*max(0.1,1.0-lifetime*4.1));
 		DamageType 'Shredded';
 		BounceType "Doom";
 		BounceFactor 0.8;
@@ -189,7 +189,7 @@ Class FlakChunk : Actor
 			if ( frame < 11 ) frame++;
 		}
 		lifetime += lifespeed;
-		if ( (waterlevel <= 0) && (frame < 10) )
+		if ( (waterlevel <= 0) && (frame < 10) && !(lifetics%2) )
 		{
 			let s = Spawn("UTSmoke",pos);
 			s.vel = (FRandom[Flak](-0.1,0.1),FRandom[Flak](-0.1,0.1),FRandom[Flak](-0.1,0.1));
@@ -212,7 +212,7 @@ Class FlakChunk : Actor
 	{
 		invoker.hasbounced = true;
 		A_SprayDecal("WallCrack",-8);
-		int numpt = Random[Flak](3,6);
+		int numpt = Random[Flak](2,3);
 		if ( frame < 10 )
 		{
 			for ( int i=0; i<numpt; i++ )
@@ -359,7 +359,7 @@ Class FlakSlug : Actor
 	{
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
 		DamageType 'FlakDeath';
-		DamageFunction Random[Flak](80,90);
+		DamageFunction Random[Flak](100,110);
 		Radius 2;
 		Height 2;
 		Speed 40;
@@ -397,7 +397,7 @@ Class FlakSlug : Actor
 		double a, s;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Actor p;
-		for ( int i=0; i<8; i++ )
+		for ( int i=0; i<6; i++ )
 		{
 			p = Spawn("FlakChunk",pos);
 			a = FRandom[Flak](0,360);
@@ -408,14 +408,14 @@ Class FlakSlug : Actor
 			p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed*FRandom[Flak](0.5,1.5);
 			p.target = target;
 		}
-		int numpt = Random[Flak](10,20);
+		int numpt = Random[Flak](8,12);
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (FRandom[Flak](-1,1),FRandom[Flak](-1,1),FRandom[Flak](-1,1)).unit()*FRandom[Flak](2,8);
 			let s = Spawn("UTSpark",pos);
 			s.vel = pvel;
 		}
-		numpt = Random[Flak](40,80);
+		numpt = Random[Flak](15,30);
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pvel = (FRandom[Flak](-1,1),FRandom[Flak](-1,1),FRandom[Flak](-1,1)).unit()*FRandom[Flak](6,16);
@@ -488,13 +488,13 @@ Class FlakCannon : UTWeapon
 		Vector3 x, y, z;
 		double a, s;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-3.0*z;
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+4.0*y-3.0*z;
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);
 		[x, y, z] = Matrix4.GetAxes(BulletSlope(),angle,roll);
 		Actor p;
-		for ( int i=0; i<12; i++ )
+		for ( int i=0; i<10; i++ )
 		{
 			p = Spawn("FlakChunk",origin);
 			a = FRandom[Flak](0,360);
