@@ -484,7 +484,7 @@ Class RedeemerHUD : HUDMessageBase
 	override void Draw( int bottom, int visibility )
 	{
 		if ( visibility != StatusBar.HUDMSGLayer_UnderHUD ) return;
-		Screen.Dim("Red",0.5,0,0,Screen.GetWidth(),Screen.GetHeight());
+		Screen.Dim("C8 00 00",0.2,0,0,Screen.GetWidth(),Screen.GetHeight());
 		// shootable targetting
 		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() )
 		{
