@@ -295,9 +295,9 @@ Class UTJumpBoots : Inventory replaces RadSuit
 		Tag "AntiGrav Boots";
 		+INVENTORY.AUTOACTIVATE;
 		+INVENTORY.ALWAYSPICKUP;
-		Inventory.Amount 3;
-		Inventory.MaxAmount 3;
-		Inventory.InterHubAmount 3;
+		Inventory.Amount 2100;
+		Inventory.MaxAmount 2100;
+		Inventory.InterHubAmount 2100;
 		Inventory.PickupMessage "You picked up the AntiGrav boots.";
 		Inventory.PickupSound "boot/pickup";
 		Inventory.RespawnTics 1050;
@@ -315,15 +315,16 @@ Class UTJumpBoots : Inventory replaces RadSuit
 	{
 		Super.Tick();
 		if ( !Owner || !Owner.player ) return;
-		if ( owner.player.jumptics == -1 )
+		amount--;
+		if ( (amount > 0) && (owner.player.jumptics == -1) )
 		{
-			Amount--;
+			Amount = max(0,Amount-700);
 			Owner.A_PlaySound("boot/jump",CHAN_BODY);
-			if ( Amount <= 0 )
-			{
-				PrintPickupMessage(true,"The AntiGrav Boots have drained.");
-				DepleteOrDestroy();
-			}
+		}
+		else if ( (Amount <= 0) && owner.player.onground )
+		{
+			PrintPickupMessage(true,"The AntiGrav Boots have drained.");
+			DepleteOrDestroy();
 		}
 	}
 	override void DetachFromOwner()

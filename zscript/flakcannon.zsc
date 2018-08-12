@@ -600,12 +600,11 @@ Class FlakCannon : UTWeapon
 		}
 		FLKL BCEFGIJKMNO 1;
 	Idle:
-		FLKI A 10;
 		FLKI A 1 A_WeaponReady();
 		Wait;
 	Fire:
 		FLKF A 1 A_FireChunks();
-		FLKF BCEFHI 1;
+		FLKF BCDEFGHI 1;
 		FLKF J 4;
 		Goto Loading;
 	AltFire:

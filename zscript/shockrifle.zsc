@@ -1083,11 +1083,11 @@ Class ShockRifle : UTWeapon
 		Wait;
 	Fire:
 		ASMF A 1 A_ShockFire();
-		ASMF BCDEFGHIJ 2;
+		ASMF BCDEFGHIJJ 2;
 		Goto Idle;
 	AltFire:
 		ASMA A 1 A_ShockAlt();
-		ASMA BCDEFGHIJ 2;
+		ASMA BCDFGHIJ 2;
 		Goto Idle;
 	Deselect:
 		ASMD ABCDEFG 1;
@@ -1256,12 +1256,12 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 	Fire:
 		ASMI A 0 A_JumpIfNoAmmo("DryFire");
 		ASMF A 1 A_SShockFire();
-		ASMF BCDEFGHIJ 2;
+		ASMF BCDEFGHIJJ 2;
 		Goto Idle;
 	AltFire:
 		ASMI A 0 A_JumpIfNoAmmo("DryFire");
 		ASMA A 1 A_SShockAlt();
-		ASMA BCDEFGHIJ 2;
+		ASMA BCDFGHIJ 2;
 		Goto Idle;
 	DryFire:
 		ASMA I 3

@@ -8,7 +8,8 @@ Class UTArmor : Armor
 	{
 		+INVENTORY.AUTOACTIVATE;
 		+INVENTORY.UNTOSSABLE;
-		+INVENTORY.KEEPDEPLETED;
+		-INVENTORY.KEEPDEPLETED;
+		+INVENTORY.ALWAYSPICKUP;
 	}
 	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
 	{
@@ -37,7 +38,6 @@ Class UTArmorBonus : UTArmor replaces ArmorBonus
 	{
 		Tag "Armor Bonus";
 		+COUNTITEM;
-		+INVENTORY.ALWAYSPICKUP;
 		Inventory.Amount 1;
 		Inventory.MaxAmount 50;
 		Inventory.InterHubAmount 50;
@@ -62,9 +62,12 @@ Class UTThighPads : UTArmor replaces GreenArmor
 			let s = Owner.FindInventory("UTShieldBelt");
 			if ( s )
 			{
+				// sum up current amounts
+				let a = Owner.FindInventory("UTBodyArmor");
+				int samount = s.amount;
+				if ( a ) samount += a.amount;
 				if ( amount < item.amount ) amount = item.amount;
-				amount = min(s.maxamount-s.amount,amount);
-				Console.Printf("%d",amount);
+				amount = min(s.maxamount-samount,amount);
 				item.bPickupGood = true;
 				return true;
 			}
@@ -98,9 +101,12 @@ Class UTBodyArmor : UTArmor replaces BlueArmor
 			let s = Owner.FindInventory("UTShieldBelt");
 			if ( s )
 			{
+				// sum up current amounts
+				let p = Owner.FindInventory("UTThighPads");
+				int samount = s.amount;
+				if ( p ) samount += p.amount;
 				if ( amount < item.amount ) amount = item.amount;
-				amount = min(s.maxamount-s.amount,amount);
-				Console.Printf("%d",amount);
+				amount = min(s.maxamount-samount,amount);
 				item.bPickupGood = true;
 				return true;
 			}
@@ -142,9 +148,20 @@ Class UTShieldBelt : UTArmor replaces Megasphere
 	{
 		if ( (item is 'UTBodyArmor') || (item is 'UTThighPads') )
 		{
-			item.amount = 1;
-			amount -= 1;
+			// sum up current amounts
+			let a = Owner.FindInventory("UTBodyArmor");
+			let p = Owner.FindInventory("UTThighPads");
+			int samount = amount;
+			if ( a ) samount += a.amount;
+			if ( p ) samount += p.amount;
+			item.amount = min(item.amount,maxamount-samount);
+			if ( item.amount <= 0 )
+			{
+				item.amount = 1;
+				amount -= 1;
+			}
 		}
+		if ( item is 'UTShieldBelt' ) Use(true);
 		return Super.HandlePickup(item);
 	}
 	override bool Use( bool pickup )
