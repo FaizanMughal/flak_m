@@ -71,7 +71,13 @@ This mod requires GZDoom 3.4.0 or later.
 
  - Sometimes the slave enforcer has its psprite "lower" slightly while the main
    enforcer is reloading. No idea what causes this (Could be bobbing-related)
- - Pulse gun beams behave oddly when the player is moving or looking up and
-   down. This might just be a rendering interpolation glitch, as usual
  - Translocator allows telefragging of other players in coop
- - Biorifle sludge doesn't handle 3d floors (especially sloped ones) properly
+ - Biorifle sludge doesn't handle 3d floors (especially sloped ones) properly.
+   This is due to the unavailability of 3D floor data on ZScript and will be
+   fixed once 3D floors are exported to scripting
+
+## Known bugs that are not this mod's fault
+
+ - Pulse gun beams behave oddly when the player is moving or looking up and
+   down. This is a rendering interpolation bug in GZDoom that has been fixed
+   already in recent devbuilds
