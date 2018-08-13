@@ -3,7 +3,7 @@
 What began as a test for importing UT vertex meshes has turned into an actual
 full UT weapon and item mod.
 
-This mod requires GZDoom 3.4.0 or later.
+This mod requires GZDoom 3.5.0 or later.
 
 ## Currently implemented
 
@@ -66,6 +66,7 @@ This mod requires GZDoom 3.4.0 or later.
  - Add ammo counters to Pulsegun, Minigun, Flak Cannon and Rocket Launcher once
    scripted textures are implemented.
  - Add player models + weapon attachment support when that is also added in.
+ - Add option to have UT-like player movement physics.
 
 ## Known bugs
 

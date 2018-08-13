@@ -560,13 +560,17 @@ Class RedeemerHUDHandler : EventHandler
 
 Class WarheadLauncher : UTWeapon replaces BFG9000
 {
+	transient CVar noswitchdeemer;
 	Actor guided;
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !Owner ) return;
+		if ( !Owner || !Owner.player ) return;
 		if ( guided ) crosshair = 99;
 		else crosshair = 0;
+		if ( !noswitchdeemer ) noswitchdeemer = CVar.GetCVar('flak_noswitchdeemer',Owner.player);
+		if ( noswitchdeemer.GetBool() ) SelectionOrder = int.max;
+		else SelectionOrder = 0;
 	}
 	action void A_WarheadFire()
 	{

@@ -50,29 +50,20 @@ Brightmap Texture "FIZZHP23"
 {
 	Map "brightmaps/fullbright.png"
 }
-/*Brightmap Texture "models/jhbox1.png"
-{
-	Map "brightmaps/jhbox1.png"
-}*/
 HardwareShader Texture "models/jhbox1.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/jhbox1.png"
 }
-/*Brightmap Texture "models/bossheadT.png"
-{
-	Map "brightmaps/bossheadT.png"
-}*/
 HardwareShader Texture "models/bossheadT.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/bossheadT.png"
 }
-/*Brightmap Texture "models/JBRifle2.png"
-{
-	Map "brightmaps/JBRifle2.png"
-}*/
 HardwareShader Texture "models/JBRifle2.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JBRifle2.png"
 }
 Brightmap Texture "models/JBRifle21.png"
 {
@@ -90,21 +81,15 @@ Brightmap Texture "models/JBRifle24.png"
 {
 	Map "brightmaps/JBRifle24.png"
 }
-/*Brightmap Texture "models/JBammo1.png"
-{
-	Map "brightmaps/JBammo1.png"
-}*/
 HardwareShader Texture "models/JBammo1.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JBammo1.png"
 }
-/*Brightmap Texture "models/ASMD_t.png"
-{
-	Map "brightmaps/ASMD_t.png"
-}*/
 HardwareShader Texture "models/ASMD_t.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/ASMD_t.png"
 }
 Brightmap Texture "models/ASMD_t1.png"
 {
@@ -118,29 +103,20 @@ Brightmap Texture "models/ASMD_t4.png"
 {
 	Map "brightmaps/ASMD_t4.png"
 }
-/*Brightmap Texture "models/JShockCore.png"
-{
-	Map "brightmaps/JShockCore.png"
-}*/
 HardwareShader Texture "models/JShockCore.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JShockCore.png"
 }
-/*Brightmap Texture "models/JShockCore_2.png"
-{
-	Map "brightmaps/JShockCore_2.png"
-}*/
 HardwareShader Texture "models/JShockCore_2.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JShockCore_2.png"
 }
-/*Brightmap Texture "models/SASMD_t.png"
-{
-	Map "brightmaps/ASMD_t.png"
-}*/
 HardwareShader Texture "models/SASMD_t.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/ASMD_t.png"
 }
 Brightmap Texture "models/SASMD_t1.png"
 {
@@ -154,13 +130,10 @@ Brightmap Texture "models/SASMD_t4.png"
 {
 	Map "brightmaps/ASMD_t4.png"
 }
-/*Brightmap Texture "models/JSShockCore.png"
-{
-	Map "brightmaps/JShockCore.png"
-}*/
 HardwareShader Texture "models/JSShockCore.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JShockCore.png"
 }
 Brightmap Texture "models/Jwarhead2.png"
 {
@@ -170,33 +143,24 @@ Brightmap Texture "models/Jwarhead4.png"
 {
 	Map "brightmaps/Jwarhead4.png"
 }
-/*Brightmap Texture "models/Jwhpick1.png"
-{
-	Map "brightmaps/Jwhpick1.png"
-}*/
 HardwareShader Texture "models/Jwhpick1.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/Jwhpick1.png"
 }
-/*Brightmap Texture "models/JPammo_01.png"
-{
-	Map "brightmaps/JPammo_01.png"
-}*/
 HardwareShader Texture "models/JPammo_01.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JPammo_01.png"
 }
 Brightmap Texture "models/JPulseGun_02.png"
 {
 	Map "brightmaps/JPulseGun_02.png"
 }
-/*Brightmap Texture "models/JPulsePickup_01.png"
-{
-	Map "brightmaps/JPulsePickup_01.png"
-}*/
 HardwareShader Texture "models/JPulsePickup_01.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JPulsePickup_01.png"
 }
 Brightmap Texture "models/AmmoLedBase.png"
 {
@@ -246,53 +210,35 @@ HardwareShader Texture "models/Jmissile_01_.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
-/*Brightmap Texture "models/AUbelt1.png"
-{
-	Map "brightmaps/AUbelt1.png"
-}*/
 HardwareShader Texture "models/AUbelt1.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/AUbelt1.png"
 }
-/*Brightmap Texture "models/jinvis.png"
-{
-	Map "brightmaps/jinvis.png"
-}*/
 HardwareShader Texture "models/jinvis.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/jinvis.png"
 }
-/*Brightmap Texture "models/Jlboot2.png"
-{
-	Map "brightmaps/Jlboot2.png"
-}*/
 HardwareShader Texture "models/Jlboot2.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/Jlboot2.png"
 }
-/*Brightmap Texture "models/JRelicSkull_01b.png"
-{
-	Map "brightmaps/JRelicSkull_01b.png"
-}*/
 HardwareShader Texture "models/JRelicSkull_01b.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JRelicSkull_01.png"
 }
-/*Brightmap Texture "models/JRelicSkull_01g.png"
-{
-	Map "brightmaps/JRelicSkull_01g.png"
-}*/
 HardwareShader Texture "models/JRelicSkull_01g.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JRelicSkull_01.png"
 }
-/*Brightmap Texture "models/JRelicSkull_01r.png"
-{
-	Map "brightmaps/JRelicSkull_01r.png"
-}*/
 HardwareShader Texture "models/JRelicSkull_01r.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JRelicSkull_01.png"
 }
 HardwareShader Texture "models/BlueSkin2.png"
 {
@@ -338,13 +284,10 @@ HardwareShader Texture "models/JRifle2.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
-/*Brightmap Texture "models/JRazorw.png"
-{
-	Map "brightmaps/JRazorw.png"
-}*/
 HardwareShader Texture "models/JRazorw.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JRazorw.png"
 }
 Brightmap Texture "models/JRazor2.png"
 {
@@ -389,10 +332,12 @@ Brightmap Texture "models/miniammoledbase.png"
 HardwareShader Texture "models/tloc1_.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/tloc1.png"
 }
 HardwareShader Texture "models/tloc2_.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/tloc2.png"
 }
 HardwareShader Texture "invis00"
 {
@@ -522,21 +467,15 @@ HardwareShader Texture "invis31"
 {
 	Shader "shaders/glsl/MeshEnviroMap.fp"
 }
-/*Brightmap Texture "models/JTranslator1.png"
-{
-	Map "brightmaps/JTranslator1.png"
-}*/
 HardwareShader Texture "models/JTranslator1.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JTranslator1.png"
 }
-/*Brightmap Texture "models/JBigFlash1.png"
-{
-	Map "brightmaps/JBigFlash1.png"
-}*/
 HardwareShader Texture "models/JBigFlash1.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JBigFlash1.png"
 }
 Brightmap Texture "models/Chunk_a00.png"
 {
