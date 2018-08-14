@@ -10,6 +10,7 @@ This mod requires GZDoom 3.5.0 or later.
  - Flak Cannon (slot 8)
  - ASMD Shock Rifle (slot 4)
  - Redeemer (slot 0)
+   - 6 Degrees of Freedom movement with manual tilt (reload/zoom buttons)
  - GES Biorifle (slot 3)
  - Pulsegun (slot 5) (with beta animations)
  - Health
@@ -50,15 +51,12 @@ This mod requires GZDoom 3.5.0 or later.
  - Add some more effects
    - Visual recoil affecting aim (time to recycle SM's A_Swing once again)
    - Lava/Slime footstep sounds?
- - Additional model optimization and cleanup
+ - Additional model optimization and cleanup (optional, not needed for 1.0)
    - Trim out unused animations (this one is going to be very time-consuming)
-   - Unify some texture groups (umodel does some weird thing where it separates
-     unlit polys into a new group, even when they're not supposed to be, this
-     can be seen in the shock rifle hud model) (unlit polys are kind of
-     unnecessary in gzdoom since there's brightmaps)
-   - Trim out garbage triangles (e.g.: an extra triangle in the biorifle that
-     has no reason to exist (can be seen when using invisibility, looks
-     completely out of place there)
+   - Re-export models using umodelextract to correct the "mangling" caused by
+     using umodel (inconsistent texture indices, extra texture groups)
+   - Fix some oddly-oriented triangles (e.g. some parts of the flak cannon, can
+     be easily noticed when using invisibility)
    - Recenter the backpack mesh (it was a complete hack job to begin with)
 
 ## Future plans
@@ -72,7 +70,8 @@ This mod requires GZDoom 3.5.0 or later.
 
  - Sometimes the slave enforcer has its psprite "lower" slightly while the main
    enforcer is reloading. No idea what causes this (Could be bobbing-related)
- - Translocator allows telefragging of other players in coop
+ - Translocator allows telefragging other players in coop (no idea if I can
+   even fix this)
  - Biorifle sludge doesn't handle 3d floors (especially sloped ones) properly.
    This is due to the unavailability of 3D floor data on ZScript and will be
    fixed once 3D floors are exported to scripting
