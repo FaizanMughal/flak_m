@@ -20,3 +20,4 @@ user float flak_statussize = 1.0;	// 0.5 <-> 1.5 in steps of 0.1 (default 1.0)
 user bool flak_footsteps = true;
 server bool flak_translocator = false;
 user bool flak_noswitchdeemer = true;	// don't switch to redeemer when out of ammo
+user bool flak_deemershader = false;

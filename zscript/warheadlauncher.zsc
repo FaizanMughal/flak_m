@@ -441,29 +441,30 @@ Class RedeemerHUD : HUDMessageBase
 	Actor Camera;
 	Vector3 ViewPos;
 	double ViewAngle, ViewPitch, ViewRoll, LagRoll, LagRoll2;
-	TextureID reticle1, reticle2, mark, readout;
+	TextureID reticle1, reticle2, arrow, mark, readout;
 	Font whfont;
 	ThinkerIterator t;
 	MidTracer tr;
 	Array<TargetActor> ta;
-	Shape2D rreticle;
+	Shape2D sshape, darrow;
 
 	RedeemerHUD Init()
 	{
 		reticle1 = TexMan.CheckForTexture("GuidedX1",TexMan.Type_Any);
 		reticle2 = TexMan.CheckForTexture("GuidedX2",TexMan.Type_Any);
+		arrow = TexMan.CheckForTexture("AroDup",TexMan.Type_Any);
 		mark = TexMan.CheckForTexture("Crosshr6",TexMan.Type_Any);
 		readout = TexMan.CheckForTexture("Readout",TexMan.Type_Any);
 		whfont = Font.GetFont('WHFONT');
 		t = ThinkerIterator.Create("Actor");
 		tr = new("MidTracer");
-		rreticle = new("Shape2D");
-		rreticle.PushCoord((0,0));
-		rreticle.PushCoord((1,0));
-		rreticle.PushCoord((0,1));
-		rreticle.PushCoord((1,1));
-		rreticle.PushTriangle(0,3,1);
-		rreticle.PushTriangle(0,2,3);
+		sshape = new("Shape2D");
+		sshape.PushCoord((0,0));
+		sshape.PushCoord((1,0));
+		sshape.PushCoord((0,1));
+		sshape.PushCoord((1,1));
+		sshape.PushTriangle(0,3,1);
+		sshape.PushTriangle(0,2,3);
 		return self;
 	}
 	override bool Tick()
@@ -508,24 +509,34 @@ Class RedeemerHUD : HUDMessageBase
 		}
 		// reticle
 		Vector2 vs = (640,640/Screen.GetAspectRatio());
-		Vector2 mid, siz;
+		Vector2 mid, siz, siz2;
 		[mid, siz] = Screen.VirtualToRealCoords(vs*0.5,(128,128),vs,false,false);
+		[mid, siz2] = Screen.VirtualToRealCoords(vs*0.5,(8,4),vs,false,false);
 		Vector2 verts[4];
 		verts[0] = (-siz.x,-siz.y);
 		verts[1] = (siz.x,-siz.y);
 		verts[2] = (-siz.x,siz.y);
 		verts[3] = (siz.x,siz.y);
-		rreticle.Clear(Shape2D.C_Verts);
+		sshape.Clear(Shape2D.C_Verts);
+		double rrot = -LagRoll2*2;
 		for ( int i=0; i<4; i++ )
-			rreticle.PushVertex(mid+(verts[i].x*cos(LagRoll2)-verts[i].y*sin(LagRoll2),verts[i].x*sin(LagRoll2)+verts[i].y*cos(LagRoll2)));
-		Screen.DrawShape(reticle1,false,rreticle,DTA_RenderStyle,(1|2<<8|1<<16));
+			sshape.PushVertex(mid+(verts[i].x*cos(rrot)-verts[i].y*sin(rrot),verts[i].x*sin(rrot)+verts[i].y*cos(rrot)));
+		Screen.DrawShape(reticle1,false,sshape,DTA_RenderStyle,(1|2<<8|1<<16));
+		sshape.Clear(Shape2D.C_Verts);
+		verts[0] = (-siz2.x,siz.y+siz2.y);
+		verts[1] = (siz2.x,siz.y+siz2.y);
+		verts[2] = (-siz2.x,siz.y+3*siz2.y);
+		verts[3] = (siz2.x,siz.y+3*siz2.y);
+		for ( int i=0; i<4; i++ )
+			sshape.PushVertex(mid+(verts[i].x*cos(rrot)-verts[i].y*sin(rrot),verts[i].x*sin(rrot)+verts[i].y*cos(rrot)));
+		Screen.DrawShape(arrow,false,sshape,DTA_RenderStyle,(1|2<<8|1<<16));
 		Screen.DrawTexture(reticle2,false,vs.x*0.5,vs.y*0.5,DTA_VirtualWidthF,vs.x,DTA_VirtualHeightF,vs.y,DTA_KeepRatio,true,DTA_RenderStyle,(1|2<<8|1<<16));
 		// faux assembly readout
-		int numreadouts = Screen.GetHeight()/128+2;
+		int numreadouts = int(vs.y/128+2);
 		for ( int i=0; i<numreadouts; i++ )
 		{
 			int scroll = (gametic*5)%128;
-			Screen.DrawTexture(readout,false,0,i*128-scroll,DTA_RenderStyle,(1|2<<8|1<<16));
+			Screen.DrawTexture(readout,false,0,i*128-scroll,DTA_VirtualWidthF,vs.x,DTA_VirtualHeightF,vs.y,DTA_KeepRatio,true,DTA_RenderStyle,(1|2<<8|1<<16));
 		}
 	}
 }
@@ -558,9 +569,11 @@ Class RedeemerHUDStatic : HUDMessageBase
 Class RedeemerHUDHandler : EventHandler
 {
 	ui RedeemerHUD rhud;
+	transient ui CVar deemershader;
 
 	override void RenderOverlay( RenderEvent e )
 	{
+		if ( !deemershader ) deemershader = CVar.GetCVar('flak_deemershader',players[consoleplayer]);
 		if ( e.Camera is 'GuidedWarShell' )
 		{
 			if ( !rhud )
@@ -573,9 +586,12 @@ Class RedeemerHUDHandler : EventHandler
 			rhud.ViewAngle = e.ViewAngle;
 			rhud.ViewPitch = e.ViewPitch;
 			rhud.ViewRoll = e.ViewRoll;
+			Shader.SetEnabled(players[consoleplayer],"RedeemerView",deemershader.GetBool());
+			Shader.SetUniform1f(players[consoleplayer],"RedeemerView","Timer",gametic+e.fractic);
 		}
 		else if ( rhud )
 		{
+			Shader.SetEnabled(players[consoleplayer],"RedeemerView",false);
 			StatusBar.DetachMessage(rhud);
 			rhud.Destroy();
 			StatusBar.AttachMessage(new("RedeemerHUDStatic").Init(),0,StatusBar.HUDMSGLayer_UnderHUD);
@@ -732,3 +748,4 @@ Class WarheadLauncher : UTWeapon replaces BFG9000
 		Wait;
 	}
 }
+

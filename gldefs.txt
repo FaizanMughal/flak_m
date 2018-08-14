@@ -573,3 +573,10 @@ Object "UTGoldKey"
 {
 	Frame "UKEY" { light "UTGoldKeyLight" }
 }
+HardwareShader PostProcess scene
+{
+	Name "RedeemerView"
+	Shader "shaders/glsl/RedeemerView.fp" 330
+	Texture StaticTexture "textures/static1.png"
+	Uniform float Timer
+}
