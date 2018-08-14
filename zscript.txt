@@ -2,6 +2,7 @@ version "3.4"
 
 #include "zscript/mk_matrix.zsc"
 #include "zscript/mk_coordutil.zsc"
+#include "zscript/mk_quaternion.zsc"
 #include "zscript/utcommon.zsc"
 #include "zscript/impacthammer.zsc"
 #include "zscript/chainsaw.zsc"
