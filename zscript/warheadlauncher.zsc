@@ -447,6 +447,7 @@ Class RedeemerHUD : HUDMessageBase
 	MidTracer tr;
 	Array<TargetActor> ta;
 	Shape2D sshape, darrow;
+	bool dodim;
 
 	RedeemerHUD Init()
 	{
@@ -497,7 +498,7 @@ Class RedeemerHUD : HUDMessageBase
 	override void Draw( int bottom, int visibility )
 	{
 		if ( visibility != StatusBar.HUDMSGLayer_UnderHUD ) return;
-		Screen.Dim("C8 00 00",0.2,0,0,Screen.GetWidth(),Screen.GetHeight());
+		if ( dodim ) Screen.Dim("C8 00 00",0.2,0,0,Screen.GetWidth(),Screen.GetHeight());
 		// shootable targetting
 		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() )
 		{
@@ -586,6 +587,7 @@ Class RedeemerHUDHandler : EventHandler
 			rhud.ViewAngle = e.ViewAngle;
 			rhud.ViewPitch = e.ViewPitch;
 			rhud.ViewRoll = e.ViewRoll;
+			rhud.dodim = !deemershader.GetBool();
 			Shader.SetEnabled(players[consoleplayer],"RedeemerView",deemershader.GetBool());
 			Shader.SetUniform1f(players[consoleplayer],"RedeemerView","Timer",gametic+e.fractic);
 		}
