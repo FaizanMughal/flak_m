@@ -192,6 +192,7 @@ Class UTGrenade : UTRocket
 	Default
 	{
 		DamageType 'GrenadeDeath';
+		Damage 1;	// needs to be nonzero for self-hit to work (might send a PR to fix this later)
 		-NOGRAVITY;
 		+USEBOUNCESTATE;
 		-BOUNCEAUTOOFF;
@@ -229,6 +230,7 @@ Class UTGrenade : UTRocket
 			rollvel = FRandom[Eightball](-16,16);
 			pitchvel = FRandom[Eightball](-16,16);
 			anglevel = FRandom[Eightball](-16,16);
+			bHITOWNER = true;
 		}
 		Goto Spawn;
 	Death:

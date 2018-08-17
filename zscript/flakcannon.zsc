@@ -209,6 +209,7 @@ Class FlakChunk : Actor
 	}
 	action void A_HandleBounce()
 	{
+		bHITOWNER = true;
 		A_SprayDecal("WallCrack",-8);
 		int numpt = Random[Flak](2,3);
 		if ( frame < 10 )
@@ -399,6 +400,7 @@ Class FlakSlug : Actor
 		for ( int i=0; i<6; i++ )
 		{
 			p = Spawn("FlakChunk",pos);
+			p.bHITOWNER = true;
 			a = FRandom[Flak](0,360);
 			s = FRandom[Flak](0,0.2);
 			Vector3 dir = (x+y*cos(a)*s+z*sin(a)*s).unit();

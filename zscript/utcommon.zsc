@@ -933,7 +933,7 @@ Class UTMainHandler : StaticEventHandler
 		while ( bi.Next() )
 		{
 			Actor a = bi.Thing;
-			if ( !a || !a.bSHOOTABLE || !Source.CheckSight(a,0xf) || (a == Source) )
+			if ( !a || !a.bSHOOTABLE || !Source.CheckSight(a,0xf) || (a == Source) || (Source.Distance3D(a) > ExplosionRadius) )
 				continue;
 			Vector3 midpoint = a.Vec3Offset(0,0,a.height*0.5);
 			a.vel += Level.Vec3Diff(Source.pos,midpoint).unit()*(MomentumTransfer/(Thinker.TICRATE*a.mass));

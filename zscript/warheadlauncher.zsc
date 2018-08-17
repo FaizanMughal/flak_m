@@ -357,15 +357,22 @@ Class GuidedWarShell : WarShell
 {
 	double lagangle, lagpitch, lagroll, lagangle2, lagpitch2, lagroll2,
 		guideangle, guidepitch, guideroll;
+	bool justleft;
 
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
 		if ( target && target.player ) target.player.camera = self;
+		justleft = true;
 	}
 	override void Tick()
 	{
 		Actor.Tick();
+		if ( justleft && (Distance3D(target) > (2*max(target.radius,target.height))) )
+		{
+			justleft = false;
+			bHITOWNER = true;
+		}
 		if ( globalfreeze || level.frozen ) return;
 		if ( !bMISSILE ) return;
 		if ( !target || !target.player || (target.Health <= 0) )

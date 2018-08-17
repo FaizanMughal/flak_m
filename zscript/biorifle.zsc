@@ -303,6 +303,7 @@ Class BioGel : Actor
 	// align self to what surface was hit, currently does not support 3d floors + slopes properly
 	virtual void AlignSelf()
 	{
+		bHITOWNER = true;
 		A_NoGravity();
 		A_Stop();
 		if ( bAMBUSH )

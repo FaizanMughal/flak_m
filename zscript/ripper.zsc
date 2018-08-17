@@ -136,6 +136,7 @@ Class Razor2 : Actor
 	Bounce:
 		RAZB A 0
 		{
+			bHITOWNER = true;
 			Vector3 dir = vel.unit();
 			A_SetAngle(atan2(dir.y,dir.x));
 			A_SetPitch(asin(-dir.z));
