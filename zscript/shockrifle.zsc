@@ -277,12 +277,12 @@ Class ShockBeam : Actor
 		Radius 0.1;
 		Height 0;
 		Scale 0.4;
-		ProjectileKickback 250;
 		+NOGRAVITY;
 		+NOCLIP;
 		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
 		+FORCERADIUSDMG;
+		+NODAMAGETHRUST;
 	}
 	override void PostBeginPlay()
 	{
@@ -336,9 +336,10 @@ Class ShockBeam : Actor
 			{
 				if ( target ) target.TakeInventory('ShockAmmo',2);
 				let b = t.Results.HitActor.target;
+				UTMainHandler.DoBlast(b,300,70000);
 				b.ExplodeMissile(null,self);
 				b.A_Explode(Random[ASMD](150,160),300);
-				b.A_QuakeEx(6,6,6,60,0,1200,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
+				b.A_QuakeEx(6,6,6,60,0,1200,"",QF_RELATIVE|QF_SCALEDOWN,falloff:300,rollIntensity:0.2);
 				b.A_SprayDecal("BigShockMark1",100);
 				b.A_SprayDecal("BigShockMark2",100);
 				Spawn("ShockRifleWave",b.pos);
@@ -358,6 +359,7 @@ Class ShockBeam : Actor
 			else
 			{
 				t.Results.HitActor.DamageMobj(self,target,Random[ASMD](35,50),'jolted',DMG_USEANGLE,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
+				UTMainHandler.DoKnockback(t.Results.HitActor,t.Results.HitVector,60000);
 				let r = Spawn("ShockBeamRing",pos);
 				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
 				r.pitch = asin(-t.Results.HitVector.z);
@@ -391,7 +393,7 @@ Class ShockBeam : Actor
 	action void A_BeamExplode()
 	{
 		Spawn("ShockBeamLight",pos);
-		A_QuakeEx(2,2,2,5,0,120,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+		A_QuakeEx(2,2,2,5,0,120,"",QF_RELATIVE|QF_SCALEDOWN,falloff:60,rollIntensity:0.1);
 		A_PlaySound("shock/hit",CHAN_VOICE);
 		A_AlertMonsters();
 		int numpt = Random[ASMD](20,50);
@@ -503,6 +505,7 @@ Class SuperShockBeam : Actor
 		+FORCEXYBILLBOARD;
 		+FORCERADIUSDMG;
 		+EXTREMEDEATH;
+		+NODAMAGETHRUST;
 	}
 	override void PostBeginPlay()
 	{
@@ -556,9 +559,10 @@ Class SuperShockBeam : Actor
 			{
 				if ( target ) target.TakeInventory('EnhancedShockAmmo',1);
 				let b = t.Results.HitActor.target;
+				UTMainHandler.DoBlast(b,400,70000);
 				b.ExplodeMissile(null,self);
 				b.A_Explode(Random[ASMD](15000,16000),400);
-				b.A_QuakeEx(9,9,9,60,0,2400,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.4);
+				b.A_QuakeEx(9,9,9,60,0,2400,"",QF_RELATIVE|QF_SCALEDOWN,falloff:400,rollIntensity:0.4);
 				b.A_SprayDecal("BigShockMark1",100);
 				b.A_SprayDecal("SBigShockMark2",100);
 				Spawn("SuperShockRifleWave",b.pos);
@@ -578,7 +582,8 @@ Class SuperShockBeam : Actor
 			}
 			else
 			{
-				t.Results.HitActor.DamageMobj(self,target,Random[ASMD](3500,5000),'joltedX',DMG_USEANGLE,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
+				t.Results.HitActor.DamageMobj(self,target,Random[ASMD](3500,5000),'joltedX',DMG_USEANGLE|DMG_THRUSTLESS,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
+				UTMainHandler.DoKnockback(t.Results.HitActor,t.Results.HitVector,60000);
 				let r = Spawn("SuperShockBeamRing",pos);
 				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
 				r.pitch = asin(-t.Results.HitVector.z);
@@ -612,8 +617,12 @@ Class SuperShockBeam : Actor
 	action void A_BeamExplode()
 	{
 		Spawn("SuperShockBeamLight",pos);
-		A_Explode(Random[ASMD](500,800),90);
-		A_QuakeEx(6,6,6,5,0,200,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
+		if ( !CVar.GetCVar('flak_classicsshock').GetBool() )
+		{
+			UTMainHandler.DoBlast(self,90,60000);
+			A_Explode(Random[ASMD](500,800),90);
+		}
+		A_QuakeEx(6,6,6,5,0,200,"",QF_RELATIVE|QF_SCALEDOWN,falloff:90,rollIntensity:0.2);
 		A_PlaySound("shock/hit",CHAN_VOICE,attenuation:0.5);
 		A_PlaySound("sshock/blast",CHAN_6,attenuation:0.5);
 		A_AlertMonsters();
@@ -819,6 +828,7 @@ Class ShockBall : Actor
 	}
 	action void A_BallExplode()
 	{
+		UTMainHandler.DoBlast(self,70,70000);
 		A_Explode(Random[ASMD](40,50),70);
 		A_SprayDecal("ShockMarkBig",16);
 		Spawn("ShockExplLight",pos);
@@ -829,7 +839,7 @@ Class ShockBall : Actor
 		r.scale *= 1.5;
 		A_PlaySound("shock/hit",CHAN_VOICE);
 		A_PlaySound("shock/ball",CHAN_WEAPON);
-		A_QuakeEx(4,4,4,30,0,200,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.15);
+		A_QuakeEx(4,4,4,30,0,200,"",QF_RELATIVE|QF_SCALEDOWN,falloff:70,rollIntensity:0.15);
 		A_AlertMonsters();
 		int numpt = Random[ASMD](50,100);
 		for ( int i=0; i<numpt; i++ )
@@ -844,16 +854,17 @@ Class ShockBall : Actor
 		Obituary "%k inflicted mortal damage upon %o with the Shock Rifle";
 		RenderStyle "Add";
 		DamageType 'jolted';
-		DamageFunction Random[ASMD](50,60);
+		Damage 0;
 		Radius 2;
 		Height 2;
 		Scale 0.4;
 		Speed 20;
-		ProjectileKickback 250;
 		PROJECTILE;
 		+FORCEXYBILLBOARD;
 		+SKYEXPLODE;
 		+EXPLODEONWATER;
+		+FORCERADIUSDMG;
+		+NODAMAGETHRUST;
 	}
 	States
 	{
@@ -882,6 +893,7 @@ Class SuperShockBall : Actor
 	}
 	action void A_BallExplode()
 	{
+		UTMainHandler.DoBlast(self,120,70000);
 		A_Explode(Random[ASMD](4000,5000),120);
 		A_SprayDecal("ShockMarkBig",16);
 		Spawn("SuperShockExplLight",pos);
@@ -893,7 +905,7 @@ Class SuperShockBall : Actor
 		A_PlaySound("shock/hit",CHAN_VOICE,attenuation:0.5);
 		A_PlaySound("shock/ball",CHAN_WEAPON,attenuation:0.5);
 		A_PlaySound("sshock/blast",CHAN_6,attenuation:0.5);
-		A_QuakeEx(8,8,8,30,0,300,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
+		A_QuakeEx(8,8,8,30,0,300,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollIntensity:0.25);
 		A_AlertMonsters();
 		int numpt = Random[ASMD](50,100);
 		for ( int i=0; i<numpt; i++ )
@@ -908,7 +920,7 @@ Class SuperShockBall : Actor
 		Obituary "%k electrified %o with the Enhanced Shock Rifle.";
 		RenderStyle "Add";
 		DamageType 'joltedX';
-		DamageFunction Random[ASMD](5000,6000);
+		Damage 0;
 		Radius 2;
 		Height 2;
 		Scale 0.5;
@@ -919,6 +931,8 @@ Class SuperShockBall : Actor
 		+FORCERADIUSDMG;
 		+EXTREMEDEATH;
 		+EXPLODEONWATER;
+		+FORCERADIUSDMG;
+		+NODAMAGETHRUST;
 	}
 	States
 	{
@@ -1101,6 +1115,17 @@ Class ShockRifle : UTWeapon
 
 Class EnhancedShockAmmo : Ammo
 {
+	int ticcnt;
+
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !Owner ) return;
+		ticcnt++;
+		if ( ticcnt < 105 ) return;
+		ticcnt = 0;
+		if ( Amount > 0 ) Amount--;
+	}
 	Default
 	{
 		Tag "Enhanced Shock Core";
@@ -1132,17 +1157,6 @@ Class ViewSuperShockSpark : ViewShockSpark
 
 Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 {
-	int ticcnt;
-
-	override void Tick()
-	{
-		Super.Tick();
-		if ( !Owner ) return;
-		ticcnt++;
-		if ( ticcnt < 105 ) return;
-		ticcnt = 0;
-		DepleteAmmo(false,true,1);
-	}
 	action void A_SShockFire()
 	{
 		Weapon weap = Weapon(invoker);
@@ -1259,6 +1273,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		ASMF BCDEFGHIJJ 2;
 		Goto Idle;
 	AltFire:
+		ASMI A 0 A_JumpIf(CVar.GetCVar('flak_classicsshock').GetBool(),"Fire");
 		ASMI A 0 A_JumpIfNoAmmo("DryFire");
 		ASMA A 1 A_SShockAlt();
 		ASMA BCDFGHIJ 2;
