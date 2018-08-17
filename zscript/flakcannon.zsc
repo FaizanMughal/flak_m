@@ -133,7 +133,6 @@ Class FlakChunk : Actor
 	double rollvel, pitchvel, yawvel;
 	double lifetime, lifespeed;
 	int lifetics;
-	bool hasbounced;
 	Default
 	{
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
@@ -210,7 +209,6 @@ Class FlakChunk : Actor
 	}
 	action void A_HandleBounce()
 	{
-		invoker.hasbounced = true;
 		A_SprayDecal("WallCrack",-8);
 		int numpt = Random[Flak](2,3);
 		if ( frame < 10 )
@@ -359,16 +357,16 @@ Class FlakSlug : Actor
 	{
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
 		DamageType 'FlakDeath';
-		DamageFunction Random[Flak](100,110);
 		Radius 2;
 		Height 2;
 		Speed 40;
-		ProjectileKickback 320;
 		PROJECTILE;
 		-NOGRAVITY;
 		+SKYEXPLODE;
 		+EXPLODEONWATER;
 		+HITTRACER;
+		+FORCERADIUSDMG;
+		+NODAMAGETHRUST;
 	}
 	override void PostBeginPlay()
 	{
@@ -387,8 +385,9 @@ Class FlakSlug : Actor
 		A_SprayDecal("RocketBlast",150);
 		A_NoGravity();
 		A_SetScale(1.2);
+		UTMainHandler.DoBlast(self,80,75000);
 		A_Explode(Random[Flak](70,80),80);
-		A_QuakeEx(4,4,4,8,0,200,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
+		A_QuakeEx(4,4,4,8,0,200,"",QF_RELATIVE|QF_SCALEDOWN,falloff:80,rollIntensity:0.2);
 		A_PlaySound("flak/explode",CHAN_VOICE);
 		A_AlertMonsters();
 		if ( !Tracer ) Spawn("SlugSmoke",pos);

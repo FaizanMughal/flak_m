@@ -105,16 +105,16 @@ Class UTRocket : Actor
 	Default
 	{
 		Obituary "%o was smacked down by %k's Rocket Launcher.";
-		DamageFunction Random[Eightball](90,115);
 		DamageType 'RocketDeath';
 		Radius 2;
 		Height 2;
 		Speed 18;
-		ProjectileKickback 400;
 		PROJECTILE;
 		+SKYEXPLODE;
 		+EXPLODEONWATER;
 		+SEEKERMISSILE;
+		+FORCERADIUSDMG;
+		+NODAMAGETHRUST;
 	}
 	override void PostBeginPlay()
 	{
@@ -123,15 +123,16 @@ Class UTRocket : Actor
 		l.target = self;
 		A_PlaySound("utrl/fly",CHAN_VOICE,1.0,true,2.5);
 	}
-	action void A_RocketExplode()
+	action void A_RocketExplode( int dmg )
 	{
 		bFORCEXYBILLBOARD = true;
 		A_SetRenderStyle(1.0,STYLE_Add);
 		A_SprayDecal("RocketBlast",150);
 		A_NoGravity();
 		A_SetScale(0.75);
-		A_Explode(Random[Eightball](80,100),100);
-		A_QuakeEx(3,3,3,8,0,250,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
+		UTMainHandler.DoBlast(self,100,80000);
+		A_Explode(dmg,100);
+		A_QuakeEx(3,3,3,8,0,250,"",QF_RELATIVE|QF_SCALEDOWN,falloff:100,rollIntensity:0.2);
 		A_PlaySound("utrl/explode",CHAN_VOICE);
 		A_AlertMonsters();
 		Spawn("RocketExplLight",pos);
@@ -178,7 +179,7 @@ Class UTRocket : Actor
 		}
 		Wait;
 	Death:
-		TNT1 A 0 A_RocketExplode();
+		TNT1 A 0 A_RocketExplode(Random[Eightball](90,115));
 		SSMX ABCDEFGHIJ 2 Bright;
 		Stop;
 	}
@@ -190,7 +191,6 @@ Class UTGrenade : UTRocket
 
 	Default
 	{
-		DamageFunction Random[Eightball](90,120);
 		DamageType 'GrenadeDeath';
 		-NOGRAVITY;
 		+USEBOUNCESTATE;
@@ -231,6 +231,9 @@ Class UTGrenade : UTRocket
 			anglevel = FRandom[Eightball](-16,16);
 		}
 		Goto Spawn;
+	Death:
+		TNT1 A 0 A_RocketExplode(Random[Eightball](90,120));
+		Goto Super::Death+1;
 	}
 }
 

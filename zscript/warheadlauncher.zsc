@@ -42,7 +42,7 @@ Class ShockWave : Actor
 	{
 		lifespan = ReactionTime;
 		A_PlaySound("warhead/explode",CHAN_VOICE,attenuation:ATTN_NONE);
-		A_QuakeEx(9,9,9,100,0,12000,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.5);
+		A_QuakeEx(9,9,9,100,0,12000,"",QF_RELATIVE|QF_SCALEDOWN,falloff:1200,rollIntensity:0.5);
 	}
 	override void Tick()
 	{
@@ -61,7 +61,7 @@ Class ShockWave : Actor
 		t.Reinit();
 		while ( a = Actor(t.Next()) )
 		{
-			if ( !a.bShootable || !CheckSight(a) || (Distance3D(a) > dmgradius) ) continue;
+			if ( !a.bShootable || !CheckSight(a,0xf) || (Distance3D(a) > dmgradius) ) continue;
 			Vector3 dir = Vec3To(a);
 			double dist = max(1,dir.length());
 			dir = dir/dist+(0,0,0.3);

@@ -1012,4 +1012,25 @@ Class UTMainHandler : StaticEventHandler
 		let hnd = UTMainHandler(StaticEventHandler.Find("UTMainHandler"));
 		hnd.flashes.push(qf);
 	}
+
+	// Doom's explosions aren't fully 3D
+	static void DoBlast( Actor Source, double ExplosionRadius, double MomentumTransfer )
+	{
+		BlockThingsIterator bi = BlockThingsIterator.Create(Source,ExplosionRadius);
+		while ( bi.Next() )
+		{
+			Actor a = bi.Thing;
+			if ( !a || !a.bSHOOTABLE || !Source.CheckSight(a,0xf) || (a == Source) || (Source.Distance3D(a) > ExplosionRadius) )
+				continue;
+			Vector3 midpoint = a.Vec3Offset(0,0,a.height*0.5);
+			a.vel += Level.Vec3Diff(Source.pos,midpoint).unit()*(MomentumTransfer/(Thinker.TICRATE*a.mass));
+		}
+	}
+
+	// Same for this
+	static void DoKnockback( Actor Victim, Vector3 HitDirection, double MomentumTransfer )
+	{
+		if ( !Victim ) return;
+		Victim.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.Mass));
+	}
 }
