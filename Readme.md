@@ -47,7 +47,7 @@ This mod requires GZDoom 3.5.0 or later.
 
 ## In progress
 
- - General polishing and bugfixing
+ - General polishing, bugfixing and rebalancing
  - Add some more effects
    - Visual recoil affecting aim (time to recycle SM's A_Swing once again)
    - Lava/Slime footstep sounds?
@@ -65,6 +65,7 @@ This mod requires GZDoom 3.5.0 or later.
    scripted textures are implemented.
  - Add player models + weapon attachment support when that is also added in.
  - Add option to have UT-like player movement physics.
+ - Migrate RandomSpawners to CheckReplacement.
 
 ## Known bugs
 

@@ -58,6 +58,7 @@ Class DamageAmplifier : Powerup
 		l = Spawn("DamageAmpLight",Owner.pos);
 		l.target = Owner;
 		l.master = self;
+		if ( deathmatch ) EffectTics /= 2;
 	}
 
 	override void DoEffect()
