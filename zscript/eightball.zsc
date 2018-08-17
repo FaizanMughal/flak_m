@@ -192,7 +192,6 @@ Class UTGrenade : UTRocket
 	Default
 	{
 		DamageType 'GrenadeDeath';
-		Damage 1;	// needs to be nonzero for self-hit to work (might send a PR to fix this later)
 		-NOGRAVITY;
 		+USEBOUNCESTATE;
 		-BOUNCEAUTOOFF;
