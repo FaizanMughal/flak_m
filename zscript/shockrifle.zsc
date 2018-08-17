@@ -854,7 +854,6 @@ Class ShockBall : Actor
 		Obituary "%k inflicted mortal damage upon %o with the Shock Rifle";
 		RenderStyle "Add";
 		DamageType 'jolted';
-		Damage 0;
 		Radius 2;
 		Height 2;
 		Scale 0.4;
@@ -920,7 +919,6 @@ Class SuperShockBall : Actor
 		Obituary "%k electrified %o with the Enhanced Shock Rifle.";
 		RenderStyle "Add";
 		DamageType 'joltedX';
-		Damage 0;
 		Radius 2;
 		Height 2;
 		Scale 0.5;

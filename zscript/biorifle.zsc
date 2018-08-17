@@ -411,7 +411,7 @@ Class BioGel : Actor
 		s.args[3] = int(s.args[3]*Scale.x);
 		invoker.deadtimer = -2;
 		if ( invoker.atline ) invoker.atline.RemoteActivate(target,invoker.atside,SPAC_Impact,pos);
-		UTMainHandler.DoBlast(self,Min(150,int(Scale.x*25)),200000);
+		UTMainHandler.DoBlast(self,Min(150,int(Scale.x*25)),20000*Scale.x);
 		A_Explode(int(Random[GES](18,22)*max(1,(Scale.x-1)**2)),Min(150,int(Scale.x*25)));
 		A_PlaySound("ges/explode",CHAN_VOICE);
 		int numpt = Min(300,int(Scale.x*30))+Random[GES](-10,10);
@@ -438,7 +438,6 @@ Class BioGel : Actor
 	{
 		Obituary "%o drank a glass of %k's dripping green load.";
 		DamageType 'Slime';
-		Damage 0;
 		RenderStyle "Add";
 		Radius 3;
 		Height 3;

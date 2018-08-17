@@ -105,7 +105,6 @@ Class UTRocket : Actor
 	Default
 	{
 		Obituary "%o was smacked down by %k's Rocket Launcher.";
-		Damage 0;
 		DamageType 'RocketDeath';
 		Radius 2;
 		Height 2;

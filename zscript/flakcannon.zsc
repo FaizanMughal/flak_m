@@ -133,7 +133,6 @@ Class FlakChunk : Actor
 	double rollvel, pitchvel, yawvel;
 	double lifetime, lifespeed;
 	int lifetics;
-	bool hasbounced;
 	Default
 	{
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
@@ -210,7 +209,6 @@ Class FlakChunk : Actor
 	}
 	action void A_HandleBounce()
 	{
-		invoker.hasbounced = true;
 		A_SprayDecal("WallCrack",-8);
 		int numpt = Random[Flak](2,3);
 		if ( frame < 10 )
@@ -359,7 +357,6 @@ Class FlakSlug : Actor
 	{
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
 		DamageType 'FlakDeath';
-		Damage 0;
 		Radius 2;
 		Height 2;
 		Speed 40;

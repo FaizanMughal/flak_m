@@ -185,7 +185,7 @@ Class Razor2Alt : Razor2
 {
 	Default
 	{
-		Damage 0;
+		DamageFunction 0;
 		DamageType 'RipperAltDealth';
 		BounceType "None";
 		-CANBOUNCEWATER;
