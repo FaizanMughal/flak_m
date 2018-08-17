@@ -3,6 +3,7 @@ Class UTPlayer : DoomPlayer
 	bool lastground;
 	double lastvelz, prevvelz;
 	transient CVar footsteps;
+	Vector2 acceleration;
 
 	Default
 	{
@@ -183,6 +184,92 @@ Class UTPlayer : DoomPlayer
 		lastground = player.onground;
 		lastvelz = prevvelz;
 		prevvelz = vel.z;
+	}
+
+	override void MovePlayer()
+	{
+		UserCmd cmd = player.cmd;
+		if ( player.turnticks )
+		{
+			player.turnticks--;
+			Angle += (180./TURN180_TICKS);
+		}
+		else Angle += cmd.yaw*(360./65536.);
+		player.onground = (pos.z <= floorz) || bOnMobj || bMBFBouncer || (player.cheats & CF_NOCLIP2);
+		double friction, movefactor;
+		double forwardmove, sidemove;
+		double fm, sm;
+		double bobfactor;
+		[friction, movefactor] = GetFriction();
+		bobfactor = friction < ORIG_FRICTION ? movefactor : ORIG_FRICTION_FACTOR;
+		if ( !player.onground && !bNoGravity && !waterlevel )
+		{
+			// TODO replicate Unreal air control
+			movefactor *= level.aircontrol;
+			bobfactor *= level.aircontrol;
+		}
+		fm = cmd.forwardmove;
+		sm = cmd.sidemove;
+		[fm, sm] = TweakSpeeds (fm, sm);
+		fm *= Speed / 256;
+		sm *= Speed / 256;
+		if ( CanCrouch() && player.crouchfactor != 1 )
+		{
+			fm *= player.crouchfactor;
+			sm *= player.crouchfactor;
+			bobfactor *= player.crouchfactor;
+		}
+		forwardmove = fm*movefactor*(35/TICRATE);
+		sidemove = sm*movefactor*(35/TICRATE);
+		if ( forwardmove ) Bob(Angle,cmd.forwardmove*bobfactor/256.,true);
+		if ( sidemove ) Bob(Angle-90,cmd.sidemove*bobfactor/256.,false);
+		if ( player.onground )
+		{
+			// Hook in Unreal physics (code totally not shamelessly copied from any source code leaks no sir)
+			// TODO find a way to properly "convert" Doom friction values into Unreal friction values (where default ground friction is 8)
+			Vector2 dir = (0,0);
+			if ( vel.xy.length() > double.epsilon ) dir = vel.xy.unit();
+			acceleration = rotatevector((cmd.forwardmove,-cmd.sidemove),angle);
+			if ( acceleration.length() <= double.epsilon )
+			{
+				Vector2 oldvel = vel.xy;
+				vel.xy = vel.xy - (2 * dir) * vel.xy.length() * (1./TICRATE) * friction;
+				if ( oldvel dot vel.xy < 0.0 ) vel.xy *= 0;
+			}
+			else
+			{
+				Vector2 acceldir = acceleration.unit();
+				acceleration = acceldir * Min(acceleration.length(), 2048./TICRATE);
+				vel.xy = vel.xy - (dir - acceldir) * vel.xy.length() * (1./TICRATE) * friction;
+			}
+			vel.xy = vel.xy + acceleration * (1./TICRATE);
+			double maxvel = 400./TICRATE;
+			if ( CanCrouch() && player.crouchfactor != 1 )
+				maxvel *= player.crouchfactor;
+			if ( cmd.buttons&BT_SPEED )
+				maxvel *= 0.35;
+			if ( vel.xy.length() > maxvel ) vel.xy = vel.xy.unit()*maxvel;
+			double b = vel.x*cos(angle)+vel.y*sin(angle);
+			Bob(Angle,b/256.,true);
+			b = vel.x*cos(angle-90)+vel.y*sin(angle-90);
+			Bob(Angle-90,b/256.,false);
+			if ( !(player.cheats & CF_PREDICTING) )
+			{
+				if ( acceleration.length() <= double.epsilon ) PlayIdle();
+				else PlayRunning();
+			}
+		}
+		else
+		{
+			// TODO replicate Unreal air friction
+			if ( forwardmove ) ForwardThrust(forwardmove,Angle);
+			if ( sidemove ) Thrust(sidemove,Angle-90);
+		}
+		if ( player.cheats & CF_REVERTPLEASE )
+		{
+			player.cheats &= ~CF_REVERTPLEASE;
+			player.camera = player.mo;
+		}
 	}
 }
 
