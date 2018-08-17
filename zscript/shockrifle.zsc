@@ -336,10 +336,10 @@ Class ShockBeam : Actor
 			{
 				if ( target ) target.TakeInventory('ShockAmmo',2);
 				let b = t.Results.HitActor.target;
-				UTMainHandler.DoBlast(b,300,70000);
+				UTMainHandler.DoBlast(b,250,70000);
 				b.ExplodeMissile(null,self);
-				b.A_Explode(Random[ASMD](150,160),300);
-				b.A_QuakeEx(6,6,6,60,0,1200,"",QF_RELATIVE|QF_SCALEDOWN,falloff:300,rollIntensity:0.2);
+				b.A_Explode(Random[ASMD](150,180),250);
+				b.A_QuakeEx(6,6,6,60,0,1200,"",QF_RELATIVE|QF_SCALEDOWN,falloff:250,rollIntensity:0.2);
 				b.A_SprayDecal("BigShockMark1",100);
 				b.A_SprayDecal("BigShockMark2",100);
 				Spawn("ShockRifleWave",b.pos);
@@ -829,7 +829,7 @@ Class ShockBall : Actor
 	action void A_BallExplode()
 	{
 		UTMainHandler.DoBlast(self,70,70000);
-		A_Explode(Random[ASMD](40,50),70);
+		A_Explode(Random[ASMD](50,60),70);
 		A_SprayDecal("ShockMarkBig",16);
 		Spawn("ShockExplLight",pos);
 		A_SetScale(1.0);
@@ -1115,6 +1115,15 @@ Class EnhancedShockAmmo : Ammo
 {
 	int ticcnt;
 
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		if ( deathmatch )
+		{
+			MaxAmount /= 2;
+			BackpackMaxAmount /= 2;
+		}
+	}
 	override void Tick()
 	{
 		Super.Tick();
@@ -1129,9 +1138,9 @@ Class EnhancedShockAmmo : Ammo
 		Tag "Enhanced Shock Core";
 		Inventory.PickupMessage "You picked up an Enhanced Shock Core.";
 		Inventory.Amount 5;
-		Inventory.MaxAmount 25;
+		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 0;
-		Ammo.BackpackMaxAmount 25;
+		Ammo.BackpackMaxAmount 50;
 		Ammo.DropAmount 2;
 	}
 	States
@@ -1155,6 +1164,11 @@ Class ViewSuperShockSpark : ViewShockSpark
 
 Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 {
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		if ( deathmatch ) AmmoGive1 /= 2;
+	}
 	action void A_SShockFire()
 	{
 		Weapon weap = Weapon(invoker);
@@ -1247,7 +1261,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "EnhancedShockAmmo";
 		Weapon.AmmoUse2 1;
-		Weapon.AmmoGive 25;
+		Weapon.AmmoGive 50;
 		UTWeapon.DropAmmo 5;
 		+WEAPON.AMMO_OPTIONAL;
 		+WEAPON.ALT_AMMO_OPTIONAL;
