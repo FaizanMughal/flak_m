@@ -1,24 +1,29 @@
-user int flak_protomenu = 0;
-user bool flak_showmenu = true;
-server bool flak_pulsereload = false;
-server bool flak_enforcerreload = false;
-user bool flak_redeemerreadout = true;
-user int flak_colorprefs = 2;
-user color flak_colorcustom = "00 80 ff";
-user int flak_opacity = 15;	// UT's opacity is 1 <-> 16 in steps of 1 (default 15)
-				// 16 means fully opaque, everything else is just additive with gradually lowering alpha
-				// status is never fully opaque (clamped under 16)
-				// currently selected weapon and numbers are fully opaque until 8 opacity (their opacity is bumped by 7 basically)
-user bool flak_showweapons = true;	// if disabled, frags and ammo are shown centered, with a gap for armor and health
-user bool flak_showstatus = true;	// if disabled armor and health show on the top right (or center between frags and ammo if weapon display is disabled)
-user bool flak_showammo = true;
-user bool flak_showfrags = true;
-user bool flak_showinfo = true;
-user float flak_hudsize = 1.0;		// 0.2 <-> 1.0 in steps of 0.2 (default 1.0)
-user float flak_weaponsize = 0.8;	// 0.2 <-> 1.0 in steps of 0.2 (default 0.8)
-user float flak_statussize = 1.0;	// 0.5 <-> 1.5 in steps of 0.1 (default 1.0)
-user bool flak_footsteps = true;
-server bool flak_translocator = false;
-user bool flak_noswitchdeemer = true;	// don't switch to redeemer when out of ammo
-user bool flak_deemershader = false;
-server bool flak_classicsshock = false;	// classic enhanced shock rifle (no altfire, beams don't have splash damage)
+user int flak_protomenu = 0;			// version of main menu (0: final, 1: 22x betas, 2: same as 1, but with extended menu music)
+user bool flak_showmenu = true;			// show the UT main menu background whenever the menu is open
+server bool flak_pulsereload = false;		// pulsegun can reload (features unused animation from early versions)
+server bool flak_enforcerreload = false;	// enforcer can reload
+user bool flak_redeemerreadout = true;		// enable target readout, may cause slowdowns on weak CPUs
+user int flak_colorprefs = 2;			// 0: team color, 1: player color, 2: custom color
+user color flak_colorcustom = "00 80 ff";	// custom hud color
+user int flak_opacity = 15;			// UT's opacity is 1 <-> 16 in steps of 1 (default 15)
+						// 16 means fully opaque, everything else is just additive with gradually lowering alpha
+						// status is never fully opaque (clamped under 16)
+						// currently selected weapon and numbers are fully opaque until 8 opacity (their opacity is bumped by 7 basically)
+user bool flak_showweapons = true;		// if disabled, frags and ammo are shown centered, with a gap for armor and health
+user bool flak_showstatus = true;		// if disabled armor and health show on the top right (or center between frags and ammo if weapon display is disabled)
+user bool flak_showammo = true;			// show ammo counters
+user bool flak_showfrags = true;		// show kill/frag count
+user bool flak_showinfo = true;			// show name of aimed at player in mp (and their health if in coop or same team)
+user float flak_hudsize = 1.0;			// 0.2 <-> 1.0 in steps of 0.2 (default 1.0)
+user float flak_weaponsize = 0.8;		// 0.2 <-> 1.0 in steps of 0.2 (default 0.8)
+user float flak_statussize = 1.0;		// 0.5 <-> 1.5 in steps of 0.1 (default 1.0)
+user bool flak_footsteps = true;		// players make footstep sounds
+server bool flak_translocator = false;		// translocator is enabled (hello, sequence breaking)
+user bool flak_noswitchdeemer = true;		// don't switch to redeemer when out of ammo
+user bool flak_deemershader = false;		// fancy blur/grain/tint shader
+server bool flak_classicsshock = false;		// classic enhanced shock rifle (no altfire, beams don't have splash damage)
+server bool flak_utmovement = false;		// emulate UE1's air/ground movement physics
+server bool flak_doomspeed = false;		// keep Doomguy run speed when using UT movement
+server bool flak_doomaircontrol = false;	// keep Doom's limited air control when using UT movement
+server bool flak_nobosstelefrag = false;	// disable telefragging of boss monsters (useful when translocator is enabled)
+server bool flak_nowalkdrop = false;		// don't drop off ledges while holding walk key (glitchy)
