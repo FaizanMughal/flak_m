@@ -1115,9 +1115,9 @@ Class EnhancedShockAmmo : Ammo
 {
 	int ticcnt;
 
-	override void PostBeginPlay()
+	override void BeginPlay()
 	{
-		Super.PostBeginPlay();
+		Super.BeginPlay();
 		if ( deathmatch )
 		{
 			MaxAmount /= 2;
@@ -1167,7 +1167,6 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		if ( deathmatch ) AmmoGive1 /= 2;
 	}
 	action void A_SShockFire()
 	{
@@ -1266,6 +1265,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		+WEAPON.AMMO_OPTIONAL;
 		+WEAPON.ALT_AMMO_OPTIONAL;
 		+WEAPON.CHEATNOTWEAPON;
+		+INVENTORY.IGNORESKILL;
 	}
 	States
 	{

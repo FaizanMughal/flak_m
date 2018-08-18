@@ -11,6 +11,7 @@ Class WarheadAmmo : Ammo
 		Ammo.BackpackMaxAmount 3;
 		Ammo.DropAmount 1;
 		Inventory.RespawnTics 2100;
+		+INVENTORY.IGNORESKILL;
 	}
 	States
 	{
@@ -710,6 +711,7 @@ Class WarheadLauncher : UTWeapon replaces BFG9000
 		Weapon.AmmoGive 1;
 		Inventory.RespawnTics 2100;
 		+INVENTORY.ALWAYSPICKUP;
+		+INVENTORY.IGNORESKILL;
 		+WEAPON.NOAUTOFIRE;
 		UTWeapon.DropAmmo 1;
 	}

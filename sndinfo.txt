@@ -110,6 +110,7 @@ misc/chat2	newbeep
 misc/teleport	resp2a
 misc/ut_keg	utsuperh
 misc/ut_heal	uthealth
+$volume misc/ut_heal 0.7	// a bit too loud otherwise
 misc/ut_shard	shardpck
 misc/ut_armor	armorut
 belt/pickup	beltsnd

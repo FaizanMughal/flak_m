@@ -28,7 +28,6 @@ Class UTHealthBox : Health replaces Medikit
 		Tag "Health Box";
 		Inventory.Amount 50;
 		Inventory.PickupMessage "You picked up a Health Box.";
-		Health.LowMessage 25,"You picked up a Health Box that you REALLY need!";
 		Inventory.PickupSound "misc/ut_heal";
 	}
 	States
