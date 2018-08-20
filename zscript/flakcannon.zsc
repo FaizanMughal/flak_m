@@ -388,12 +388,12 @@ Class FlakSlug : Actor
 	{
 		bForceXYBillboard = true;
 		A_SetRenderStyle(1.0,STYLE_Add);
-		A_SprayDecal("RocketBlast",150);
+		A_SprayDecal("RocketBlast",50);
 		A_NoGravity();
 		A_SetScale(1.2);
-		UTMainHandler.DoBlast(self,150,75000);
-		A_Explode(Random[Flak](70,80),150);
-		A_QuakeEx(4,4,4,8,0,250,"",QF_RELATIVE|QF_SCALEDOWN,falloff:150,rollIntensity:0.2);
+		UTMainHandler.DoBlast(self,120,75000);
+		A_Explode(Random[Flak](70,80),120);
+		A_QuakeEx(4,4,4,8,0,170,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollIntensity:0.2);
 		A_PlaySound("flak/explode",CHAN_VOICE);
 		A_AlertMonsters();
 		if ( !Tracer ) Spawn("SlugSmoke",pos);
