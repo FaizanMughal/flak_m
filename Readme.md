@@ -44,6 +44,7 @@ This mod requires GZDoom 3.5.0 or later.
  - Rocket Launcher (slot 9)
    - "Instant Rocket" mode toggleable with reload
  - Scaling/Customization options for the HUD
+ - UT-like player movement physics.
 
 ## In progress
 
@@ -64,7 +65,6 @@ This mod requires GZDoom 3.5.0 or later.
  - Add ammo counters to Pulsegun, Minigun, Flak Cannon and Rocket Launcher once
    scripted textures are implemented.
  - Add player models + weapon attachment support when that is also added in.
- - Add option to have UT-like player movement physics.
  - Migrate RandomSpawners to CheckReplacement.
 
 ## Known bugs
