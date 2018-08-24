@@ -30,12 +30,16 @@ Class MiniAmmo : Ammo
 	Default
 	{
 		Tag "Large Bullets";
-		Inventory.PickupMessage "You picked up 50 bullets.";
+		Inventory.PickupMessage "You picked up %d bullets.";
 		Inventory.Amount 50;
 		Inventory.MaxAmount 200;
 		Ammo.BackpackAmount 100;
 		Ammo.BackpackMaxAmount 400;
 		Ammo.DropAmount 20;
+	}
+	override String PickupMessage()
+	{
+		return String.Format(pickupmsg,Amount);
 	}
 	States
 	{
@@ -102,7 +106,7 @@ Class Minigun : UTWeapon
 		A_Overlay(-2,"MuzzleFlash",true);
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);
-		if ( (alt && (invoker.bcnt++ < 3)) || (invoker.bcnt++ < 5) ) return;
+		if ( (alt && (invoker.bcnt++ < 2)) || (invoker.bcnt++ < 4) ) return;
 		invoker.bcnt = 0;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.FireEffect();

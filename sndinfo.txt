@@ -33,7 +33,8 @@ $playeralias	player	male	*pain75		ut/malepain2
 $playeralias	player	male	*pain50		ut/malepain3
 $playeralias	player	male	*pain25		ut/malepain4
 $playeralias	player	male	*grunt		ut/malegrunt
-$playeralias	player	male	*land		ut/land
+$playeralias	player	male	*land		DSEMPTY
+$playeralias	player	male	*uland		ut/land
 $playeralias	player	male	*jump		ut/malejump
 $playeralias	player	male	*usefail	ut/malehump
 $playeralias	player	male	*surface	ut/malesurface
@@ -74,7 +75,8 @@ $playeralias	player	female	*pain75		ut/femalepain2
 $playeralias	player	female	*pain50		ut/femalepain3
 $playeralias	player	female	*pain25		ut/femalepain4
 $playeralias	player	female	*grunt		ut/femalegrunt
-$playeralias	player	female	*land		ut/land
+$playeralias	player	female	*land		DSEMPTY
+$playeralias	player	female	*uland		ut/land
 $playeralias	player	female	*jump		ut/femalejump
 $playeralias	player	female	*usefail	ut/femalegrunt
 $playeralias	player	female	*surface	ut/femalesurf
@@ -108,6 +110,7 @@ misc/chat2	newbeep
 misc/teleport	resp2a
 misc/ut_keg	utsuperh
 misc/ut_heal	uthealth
+$volume misc/ut_heal 0.7	// a bit too loud otherwise
 misc/ut_shard	shardpck
 misc/ut_armor	armorut
 belt/pickup	beltsnd

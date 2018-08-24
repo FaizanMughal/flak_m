@@ -29,12 +29,16 @@ Class FlakAmmo : Ammo
 	Default
 	{
 		Tag "Flak Shells";
-		Inventory.PickupMessage "You picked up 10 Flak Shells.";
+		Inventory.PickupMessage "You picked up %d Flak Shells.";
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
 		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 5;
+	}
+	override String PickupMessage()
+	{
+		return String.Format(pickupmsg,Amount);
 	}
 	States
 	{
@@ -52,6 +56,7 @@ Class FlakAmmo2 : FlakAmmo
 		Inventory.PickupMessage "You picked up a Flak Shell.";
 		Inventory.Amount 1;
 		Ammo.DropAmount 1;
+		+INVENTORY.IGNORESKILL;
 	}
 	States
 	{
@@ -143,10 +148,10 @@ Class FlakChunk : Actor
 		DamageType 'Shredded';
 		BounceType "Doom";
 		BounceFactor 0.8;
+		WallBounceFactor 0.8;
 		PROJECTILE;
 		+USEBOUNCESTATE;
 		-BOUNCEAUTOOFF;
-		+BOUNCEAUTOOFFFLOORONLY;
 		+CANBOUNCEWATER;
 		+SKYEXPLODE;
 		Scale 0.3;
@@ -225,9 +230,10 @@ Class FlakChunk : Actor
 		invoker.rollvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
 		invoker.pitchvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
 		invoker.yawvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
-		vel = (vel.unit()+(FRandom[Flak](-0.4,0.4),FRandom[Flak](-0.4,0.4),FRandom[Flak](-0.4,0.4))).unit()*vel.length();
+		vel = (vel.unit()+(FRandom[Flak](-0.2,0.2),FRandom[Flak](-0.2,0.2),FRandom[Flak](-0.2,0.2))).unit()*vel.length();
 		A_PlaySound("flak/bounce",volume:0.3);
 		A_AlertMonsters();
+		bBOUNCEAUTOOFFFLOORONLY = true;
 		if ( vel.length() < 4.0 ) ExplodeMissile();
 	}
 	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
@@ -383,12 +389,12 @@ Class FlakSlug : Actor
 	{
 		bForceXYBillboard = true;
 		A_SetRenderStyle(1.0,STYLE_Add);
-		A_SprayDecal("RocketBlast",150);
+		A_SprayDecal("RocketBlast",50);
 		A_NoGravity();
 		A_SetScale(1.2);
-		UTMainHandler.DoBlast(self,150,75000);
-		A_Explode(Random[Flak](70,80),150);
-		A_QuakeEx(4,4,4,8,0,250,"",QF_RELATIVE|QF_SCALEDOWN,falloff:150,rollIntensity:0.2);
+		UTMainHandler.DoBlast(self,120,75000);
+		A_Explode(Random[Flak](70,80),120);
+		A_QuakeEx(4,4,4,8,0,170,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollIntensity:0.2);
 		A_PlaySound("flak/explode",CHAN_VOICE);
 		A_AlertMonsters();
 		if ( !Tracer ) Spawn("SlugSmoke",pos);

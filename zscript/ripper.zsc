@@ -58,7 +58,7 @@ Class Razor2 : Actor
 		Radius 2;
 		Height 2;
 		Speed 40;	// should be 26 but it looks way too slow
-		DamageFunction Random[Ripper](30,40);
+		DamageFunction (Random[Ripper](30,40)*((DamageType=='Decapitated')?3.5:1.0));
 		DamageType 'Ripper';
 		Obituary "%k ripped a chunk of meat out of %o with the Ripper.";
 		BounceType "Doom";
@@ -84,12 +84,11 @@ Class Razor2 : Actor
 	}
 	override int SpecialMissileHit( Actor victim )
 	{
-		if ( pos.z > victim.pos.z+victim.height*0.8 ) DamageType = 'Decapitated';
+		if ( pos.z > victim.pos.z+victim.height*0.75 ) DamageType = 'Decapitated';
 		return -1;
 	}
 	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
 	{
-		if ( pos.z > target.pos.z+target.height*0.8 ) damage *= 2;
 		if ( !target.bNOBLOOD )
 		{
 			target.SpawnBlood(pos,AngleTo(target),damage);
@@ -202,9 +201,9 @@ Class Razor2Alt : Razor2
 		Spawn("Razor2AltLight",pos);
 		A_AlertMonsters();
 		A_SprayDecal("RazorBlast",20);
-		UTMainHandler.DoBlast(self,120,87000);
-		A_Explode(Random[Ripper](30,50),180,damagetype:'RipperAltDeath');
-		A_QuakeEx(3,3,3,10,0,180,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollIntensity:0.1);
+		UTMainHandler.DoBlast(self,90,87000);
+		A_Explode(Random[Ripper](30,50),90,damagetype:'RipperAltDeath');
+		A_QuakeEx(3,3,3,10,0,140,"",QF_RELATIVE|QF_SCALEDOWN,falloff:90,rollIntensity:0.1);
 		int numpt = Random[Ripper](10,20);
 		Vector3 x = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
 		for ( int i=0; i<numpt; i++ )

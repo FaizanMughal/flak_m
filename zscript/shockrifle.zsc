@@ -619,10 +619,10 @@ Class SuperShockBeam : Actor
 		Spawn("SuperShockBeamLight",pos);
 		if ( !CVar.GetCVar('flak_classicsshock').GetBool() )
 		{
-			UTMainHandler.DoBlast(self,90,60000);
-			A_Explode(Random[ASMD](500,800),90);
+			UTMainHandler.DoBlast(self,50,60000);
+			A_Explode(Random[ASMD](500,800),50);
 		}
-		A_QuakeEx(6,6,6,5,0,200,"",QF_RELATIVE|QF_SCALEDOWN,falloff:90,rollIntensity:0.2);
+		A_QuakeEx(6,6,6,5,0,100,"",QF_RELATIVE|QF_SCALEDOWN,falloff:50,rollIntensity:0.2);
 		A_PlaySound("shock/hit",CHAN_VOICE,attenuation:0.5);
 		A_PlaySound("sshock/blast",CHAN_6,attenuation:0.5);
 		A_AlertMonsters();
@@ -1115,9 +1115,9 @@ Class EnhancedShockAmmo : Ammo
 {
 	int ticcnt;
 
-	override void PostBeginPlay()
+	override void BeginPlay()
 	{
-		Super.PostBeginPlay();
+		Super.BeginPlay();
 		if ( deathmatch )
 		{
 			MaxAmount /= 2;
@@ -1167,7 +1167,6 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		if ( deathmatch ) AmmoGive1 /= 2;
 	}
 	action void A_SShockFire()
 	{
@@ -1266,6 +1265,7 @@ Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
 		+WEAPON.AMMO_OPTIONAL;
 		+WEAPON.ALT_AMMO_OPTIONAL;
 		+WEAPON.CHEATNOTWEAPON;
+		+INVENTORY.IGNORESKILL;
 	}
 	States
 	{

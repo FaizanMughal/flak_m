@@ -27,6 +27,7 @@ Class UTRocketAmmo2 : UTRocketAmmo
 		Inventory.PickupMessage "You picked up a Single Rocket.";
 		Inventory.Amount 1;
 		Ammo.DropAmount 1;
+		+INVENTORY.IGNORESKILL;
 	}
 	States
 	{
@@ -102,13 +103,15 @@ Class RocketExplLight : SlugLight
 
 Class UTRocket : Actor
 {
+	Vector3 InitialDir, Acceleration;
+	int ticcnt;
 	Default
 	{
 		Obituary "%o was smacked down by %k's Rocket Launcher.";
 		DamageType 'RocketDeath';
 		Radius 2;
 		Height 2;
-		Speed 18;
+		Speed 20;
 		PROJECTILE;
 		+SKYEXPLODE;
 		+EXPLODEONWATER;
@@ -122,12 +125,14 @@ Class UTRocket : Actor
 		let l = Spawn("UTRocketTrail",pos);
 		l.target = self;
 		A_PlaySound("utrl/fly",CHAN_VOICE,1.0,true,2.5);
+		if ( tracer ) vel *= 0.9;
+		Acceleration = vel.unit()*50;
 	}
 	action void A_RocketExplode( int dmg, int rad )
 	{
 		bFORCEXYBILLBOARD = true;
 		A_SetRenderStyle(1.0,STYLE_Add);
-		A_SprayDecal("RocketBlast",150);
+		A_SprayDecal("RocketBlast",50);
 		A_NoGravity();
 		A_SetScale(0.75);
 		UTMainHandler.DoBlast(self,rad,80000);
@@ -159,17 +164,38 @@ Class UTRocket : Actor
 			s.scale *= FRandom[Eightball](0.9,2.7);
 		}
 	}
+	action void A_RocketSeek()
+	{
+		if ( invoker.InitialDir.length() < double.epsilon ) invoker.InitialDir = vel.unit();
+		if ( tracer && (tracer != target) )
+		{
+			Vector3 SeekingDir = level.Vec3Diff(pos,tracer.Vec3Offset(0,0,tracer.height/2)).unit();
+			if ( SeekingDir dot invoker.InitialDir > 0 )
+			{
+				double MagnitudeVel = Vel.length();
+				SeekingDir = (SeekingDir*0.5*MagnitudeVel+Vel).unit();
+				Vel = MagnitudeVel * SeekingDir;
+				invoker.Acceleration = 25 * SeekingDir;
+			}
+		}
+	}
 	States
 	{
 	Spawn:
 		RCKT B 1
 		{
 			A_SetRoll(roll+30,SPF_INTERPOLATE);
+			if ( invoker.ticcnt++ > 3 )
+			{
+				invoker.ticcnt = 0;
+				A_RocketSeek();
+			}
+			vel += invoker.Acceleration/TICRATE;
+			if ( vel.length() > 45. ) vel = Vel.unit()*45.;
 			Vector3 dir = vel.unit();
 			if ( waterlevel <= 0 ) vel = dir*min(vel.length()+1,32);
 			A_SetAngle(atan2(dir.y,dir.x),SPF_INTERPOLATE);
 			A_SetPitch(asin(-dir.z),SPF_INTERPOLATE);
-			if ( tracer ) A_SeekerMissile(0,2,SMF_PRECISE);
 			for ( int i=0; i<3; i++ )
 			{
 				let s = Spawn("UTSmoke",pos);
@@ -179,7 +205,7 @@ Class UTRocket : Actor
 		}
 		Wait;
 	Death:
-		TNT1 A 0 A_RocketExplode(Random[Eightball](90,120),220);
+		TNT1 A 0 A_RocketExplode(Random[Eightball](90,120),160);
 		SSMX ABCDEFGHIJ 2 Bright;
 		Stop;
 	}
@@ -233,7 +259,7 @@ Class UTGrenade : UTRocket
 		}
 		Goto Spawn;
 	Death:
-		TNT1 A 0 A_RocketExplode(Random[Eightball](100,150),200);
+		TNT1 A 0 A_RocketExplode(Random[Eightball](100,150),140);
 		Goto Super::Death+1;
 	}
 }
