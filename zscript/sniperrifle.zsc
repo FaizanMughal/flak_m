@@ -149,10 +149,15 @@ Class SniperRifle : UTWeapon
 		c.scale *= 1.25;
 		c.vel = x*FRandom[Junk](-2,2)+y*FRandom[Junk](3,6)+z*FRandom[Junk](3,5);
 	}
+	override String GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
+	{
+		if ( mod == 'Decapitated' ) return "%k put a bullet through %o's head.";
+		return Obituary;
+	}
 	Default
 	{
 		Tag "Sniper Rifle";
-		Obituary "%k put a bullet through %o's head.";
+		Obituary "%k put a bullet through %o.";
 		Inventory.PickupMessage "You got the Sniper Rifle.";
 		Weapon.UpSound "sniper/select";
 		Weapon.SlotNumber 0;

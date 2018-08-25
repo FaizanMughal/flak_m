@@ -49,7 +49,7 @@ Class DamageAmplifier : Powerup
 	Default
 	{
 		Powerup.Duration -60;
-		Powerup.Color "EE00FF", 0.15;
+		Powerup.Color "EE00FF", 0.05;
 	}
 
 	override void BeginPlay()
@@ -244,7 +244,7 @@ Class UTInvisibility : PowerupGiver replaces BlurSphere
 	States
 	{
 	Spawn:
-		INVS A -1 Bright;
+		INVS A -1;
 		Stop;
 	}
 }

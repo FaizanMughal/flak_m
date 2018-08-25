@@ -44,6 +44,7 @@ This mod requires GZDoom 3.5.0 or later.
  - Rocket Launcher (slot 9)
    - "Instant Rocket" mode toggleable with reload
  - Scaling/Customization options for the HUD
+ - UT-like player movement physics
 
 ## In progress
 
@@ -62,10 +63,15 @@ This mod requires GZDoom 3.5.0 or later.
 ## Future plans
 
  - Add ammo counters to Pulsegun, Minigun, Flak Cannon and Rocket Launcher once
-   scripted textures are implemented.
- - Add player models + weapon attachment support when that is also added in.
- - Add option to have UT-like player movement physics.
- - Migrate RandomSpawners to CheckReplacement.
+   scripted textures are implemented
+ - Add player models once GZDoom gets a well deserved model animation system
+   overhaul (at the moment this would require a monumental amount of work in
+   the current state-tied system)
+ - Add weapon attachment support to player models when that is also added in
+ - Migrate RandomSpawners to CheckReplacement
+ - Perhaps come up with an add-on that imitates UT's blood/gore system
+ - Unreal 1 weapons mod and maybe also a monsters mod
+ - Port some of my UT weapon mods
 
 ## Known bugs
 
@@ -79,6 +85,6 @@ This mod requires GZDoom 3.5.0 or later.
 
 ## Known bugs that are not this mod's fault
 
- - Pulse gun beams behave oddly when the player is moving or looking up and
-   down. This is a rendering interpolation bug in GZDoom that has been fixed
-   already in recent devbuilds
+ - Pulse gun beams behave oddly when the player is standing on a moving floor.
+   This is an interpolation quirk in GZDoom and I can probably find some hacky
+   way to fix it eventually
