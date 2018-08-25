@@ -240,3 +240,9 @@ warhead/explode	warexplo
 warhead/fly	warfly
 warhead/select	warhpick
 warhead/fire	warhshot
+
+testamb/slime	aslime2
+testamb/lava	lava31
+testamb/water	trickle1
+testamb/wind1	wind21
+testamb/wind2	wind23

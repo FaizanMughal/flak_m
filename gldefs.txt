@@ -580,3 +580,12 @@ HardwareShader PostProcess scene
 	Texture StaticTexture "textures/static1.png"
 	Uniform float Timer
 }
+SkyBox "BlueSky" fliptop
+{
+	"graphics/SkySetB_front.png"
+	"graphics/SkySetB_right.png"
+	"graphics/SkySetB_back.png"
+	"graphics/SkySetB_left.png"
+	"graphics/SkySetB_up.png"
+	"graphics/SkySetB_down.png"
+}
