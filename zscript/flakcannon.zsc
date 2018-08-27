@@ -1,29 +1,3 @@
-Class Tier5Ammo : RandomSpawner2 replaces RocketAmmo
-{
-	Default
-	{
-		DropItem "FlakAmmo2", 255, 1;
-		DropItem "UTRocketAmmo2", 255, 1;
-	}
-}
-Class Tier5Ammo2 : RandomSpawner2 replaces RocketBox
-{
-	Default
-	{
-		DropItem "FlakAmmo", 255, 1;
-		DropItem "UTRocketAmmo", 255, 1;
-	}
-}
-
-Class Tier5Weapon : RandomSpawner2 replaces RocketLauncher
-{
-	Default
-	{
-		DropItem "FlakCannon", 255, 1;
-		DropItem "UTRocketLauncher", 255, 1;
-	}
-}
-
 Class FlakAmmo : Ammo
 {
 	Default

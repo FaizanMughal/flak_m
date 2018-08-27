@@ -1162,7 +1162,7 @@ Class ViewSuperShockSpark : ViewShockSpark
 	}
 }
 
-Class EnhancedShockRifle : UTWeapon replaces InvulnerabilitySphere
+Class EnhancedShockRifle : UTWeapon
 {
 	override void PostBeginPlay()
 	{

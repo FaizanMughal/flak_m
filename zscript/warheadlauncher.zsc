@@ -609,7 +609,7 @@ Class RedeemerHUDHandler : EventHandler
 	}
 }
 
-Class WarheadLauncher : UTWeapon replaces BFG9000
+Class WarheadLauncher : UTWeapon
 {
 	transient CVar noswitchdeemer;
 	Actor guided;

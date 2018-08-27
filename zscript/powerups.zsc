@@ -1,4 +1,4 @@
-Class UDamage : PowerupGiver replaces Berserk
+Class UDamage : PowerupGiver
 {
 	Default
 	{
@@ -100,7 +100,7 @@ Class DamageAmplifier : Powerup
 }
 
 // Backpack that only gives ammo for valid weapons
-Class UTBackpack : BackpackItem replaces Backpack
+Class UTBackpack : BackpackItem
 {
 	override Inventory CreateCopy( Actor other )
 	{
@@ -219,7 +219,7 @@ Class PowerUTInvisibility : PowerInvisibility
 	}
 }
 
-Class UTInvisibility : PowerupGiver replaces BlurSphere
+Class UTInvisibility : PowerupGiver
 {
 	Default
 	{
@@ -280,7 +280,7 @@ Class UTInvisibilityX : Actor
 	}
 }
 
-Class UTMapRevealer : MapRevealer replaces Allmap
+Class UTMapRevealer : MapRevealer
 {
 	Default
 	{
@@ -299,7 +299,7 @@ Class UTMapRevealer : MapRevealer replaces Allmap
 	}
 }
 
-Class UTJumpBoots : Inventory replaces RadSuit
+Class UTJumpBoots : Inventory
 {
 	Default
 	{
@@ -383,7 +383,7 @@ Class PowerJumpBoots_IronFeet : PowerIronFeet
 	}
 }
 
-Class Searchlight : Inventory replaces Infrared
+Class Searchlight : Inventory
 {
 	Actor lt[3];
 	int ticcnt;

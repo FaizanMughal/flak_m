@@ -15,8 +15,9 @@ Class UTPlayer : DoomPlayer
 	const walkfactor = 0.3;
 	const utaircontrol = 0.35;
 	const groundspeed_doomish = 600.;
-	const fluidfriction = 1.2;
 	const terminalvelocity = 2500.;
+	const dodgez = 210.;
+	const utjumpz = 325.;
 
 	Default
 	{
@@ -278,7 +279,7 @@ Class UTPlayer : DoomPlayer
 			{
 				if ( doomspeed.GetBool() ) vel += dodge.unit()*(groundspeed_doomish*1.5)/TICRATE;
 				else vel += dodge.unit()*(groundspeed*1.5)/TICRATE;
-				vel.z += jumpz*0.5;
+				vel.z += dodgez/TICRATE;
 				bOnMobj = false;
 				if ( !(player.cheats&CF_PREDICTING) )
 					A_PlaySound("*jump",CHAN_BODY);
@@ -333,20 +334,22 @@ Class UTPlayer : DoomPlayer
 				acceleration = acceleration.unit()*maxaccel;
 			Vector2 dir = (0,0);
 			if ( vel.xy.length() > double.epsilon ) dir = vel.xy.unit();
-			if ( acceleration.length() <= double.epsilon )
-			{
-				Vector2 oldvel = vel.xy;
-				vel.xy = vel.xy - (2 * dir) * vel.xy.length() * fluidfriction/TICRATE;
-				if ( oldvel dot vel.xy < 0.0 ) vel.xy *= 0;
-			}
-			else
+			if ( acceleration.length() > double.epsilon )
 			{
 				Vector2 acceldir = acceleration.unit();
 				acceleration = acceldir * Min(acceleration.length(), accelrate/TICRATE);
-				vel.xy = vel.xy - (dir - acceldir) * vel.xy.length() * fluidfriction/TICRATE;
 			}
 			acceleration *= doomaircontrol.GetBool()?level.aircontrol:utaircontrol;
-			vel.xy = vel.xy + acceleration/TICRATE;
+			double maxvel;
+			if ( doomspeed.GetBool() ) maxvel = (groundspeed_doomish*fs)/TICRATE;
+			else maxvel = (groundspeed*fs)/TICRATE;
+			// if new velocity is higher than ground speed, steer but don't increase it
+			if ( (vel.xy+acceleration/TICRATE).length() > maxvel )
+			{
+				double vsiz = vel.xy.length();
+				vel.xy = (vel.xy+acceleration/TICRATE).unit()*vsiz;
+			}
+			else vel.xy = vel.xy+acceleration/TICRATE;
 			if ( vel.length() > terminalvelocity/TICRATE ) vel = vel.unit()*(terminalvelocity/TICRATE);
 			player.vel *= 0;
 		}
@@ -395,6 +398,7 @@ Class UTPlayer : DoomPlayer
 	override void CheckJump()
 	{
 		if ( !utmovement ) utmovement = CVar.GetCVar('flak_utmovement');
+		if ( !doomspeed ) doomspeed = CVar.GetCVar('flak_doomspeed');
 		if ( !utmovement.GetBool() )
 		{
 			Super.CheckJump();
@@ -407,7 +411,9 @@ Class UTPlayer : DoomPlayer
 			else if ( bNoGravity ) Vel.z = 3.;
 			else if ( level.IsJumpingAllowed() && player.onground && (player.jumpTics == 0) && (last_jump_held < gametic-1) )
 			{
-				double jumpvelz = JumpZ;
+				double jumpvelz;
+				if ( doomspeed.GetBool() ) jumpvelz = jumpz;
+				else jumpvelz = utjumpz/TICRATE;
 				double jumpfac = 0;
 				for ( let p = Inv; p != null; p = p.Inv )
 				{
@@ -627,7 +633,7 @@ Class UTItemLight : DynamicLight
 	}
 }
 
-Class UTTeleportFog : Actor replaces TeleportFog
+Class UTTeleportFog : Actor
 {
 	Default
 	{
@@ -651,7 +657,7 @@ Class UTTeleportFog : Actor replaces TeleportFog
 	}
 }
 
-Class UTItemFog : Actor replaces ItemFog
+Class UTItemFog : Actor
 {
 	Default
 	{
@@ -1000,7 +1006,7 @@ Class UTStaticViewSmoke : UTViewSmoke
 	}
 }
 
-Class UTRedSkull : RedSkull replaces RedSkull
+Class UTRedSkull : RedSkull
 {
 	Default
 	{
@@ -1016,7 +1022,7 @@ Class UTRedSkull : RedSkull replaces RedSkull
 	}
 }
 
-Class UTGoldSkull : YellowSkull replaces YellowSkull
+Class UTGoldSkull : YellowSkull
 {
 	Default
 	{
@@ -1032,7 +1038,7 @@ Class UTGoldSkull : YellowSkull replaces YellowSkull
 	}
 }
 
-Class UTBlueSkull : BlueSkull replaces BlueSkull
+Class UTBlueSkull : BlueSkull
 {
 	Default
 	{
@@ -1048,7 +1054,7 @@ Class UTBlueSkull : BlueSkull replaces BlueSkull
 	}
 }
 
-Class UTRedKey : RedCard replaces RedCard
+Class UTRedKey : RedCard
 {
 	Default
 	{
@@ -1064,7 +1070,7 @@ Class UTRedKey : RedCard replaces RedCard
 	}
 }
 
-Class UTGoldKey : YellowCard replaces YellowCard
+Class UTGoldKey : YellowCard
 {
 	Default
 	{
@@ -1080,7 +1086,7 @@ Class UTGoldKey : YellowCard replaces YellowCard
 	}
 }
 
-Class UTBlueKey : BlueCard replaces BlueCard
+Class UTBlueKey : BlueCard
 {
 	Default
 	{
@@ -1136,6 +1142,98 @@ Class UTMainHandler : StaticEventHandler
 	ui TextureID tex;
 	Array<QueuedFlash> flashes;
 	transient CVar nobosstelefrag;
+
+	override void CheckReplacement( ReplaceEvent e )
+	{
+		if ( e.Replacee == 'Chainsaw' )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'UTChainsaw';
+			else e.Replacement = 'Enforcer';
+		}
+		else if ( e.Replacee == 'Fist' ) e.Replacement = 'ImpactHammer';
+		else if ( e.Replacee == 'Pistol' ) e.Replacement = 'Enforcer';
+		else if ( (e.Replacee == 'Shotgun') || (e.Replacee == 'SuperShotgun') )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'BioRifle';
+			else e.Replacement = 'ShockRifle';
+		}
+		else if ( e.Replacee == 'Chaingun' )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'PulseGun';
+			else e.Replacement = 'Ripper2';
+		}
+		else if ( e.Replacee == 'RocketLauncher' )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'FlakCannon';
+			else e.Replacement = 'UTRocketLauncher';
+		}
+		else if ( e.Replacee == 'PlasmaRifle' )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'Minigun';
+			else e.Replacement = 'SniperRifle';
+		}
+		else if ( e.Replacee == 'BFG9000' ) e.Replacement = 'WarheadLauncher';
+		else if ( e.Replacee == 'Clip' ) e.Replacement = 'EClip';
+		else if ( e.Replacee == 'ClipBox' )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'PulseAmmo';
+			else e.Replacement = 'RipperAmmo';
+		}
+		else if ( e.Replacee == 'Shell' )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'BioAmmo2';
+			else e.Replacement = 'ShockAmmo2';
+		}
+		else if ( e.Replacee == 'ShellBox' )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'BioAmmo';
+			else e.Replacement = 'ShockAmmo';
+		}
+		else if ( e.Replacee == 'RocketAmmo' )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'FlakAmmo2';
+			else e.Replacement = 'UTRocketAmmo2';
+		}
+		else if ( e.Replacee == 'RocketBox' )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'FlakAmmo';
+			else e.Replacement = 'UTRocketAmmo';
+		}
+		else if ( e.Replacee == 'Cell' )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'EClip';
+			else e.Replacement = 'RifleAmmo2';
+		}
+		else if ( e.Replacee == 'CellPack' )
+		{
+			if ( !Random[Replacements](0,5) ) e.Replacement = 'WarheadAmmo';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'MiniAmmo';
+			else e.Replacement = 'RifleAmmo';
+		}
+		else if ( e.Replacee == 'InvulnerabilitySphere' ) e.Replacement = 'EnhancedShockRifle';
+		else if ( e.Replacee == 'Berserk' ) e.Replacement = 'UDamage';
+		else if ( e.Replacee == 'Soulsphere' ) e.Replacement = 'UTHealthPack';
+		else if ( e.Replacee == 'Megasphere' ) e.Replacement = 'UTShieldBelt';
+		else if ( e.Replacee == 'Allmap' ) e.Replacement = 'UTMapRevealer';
+		else if ( e.Replacee == 'BlurSphere' ) e.Replacement = 'UTInvisibility';
+		else if ( e.Replacee == 'Infrared' ) e.Replacement = 'Searchlight';
+		else if ( e.Replacee == 'RadSuit' ) e.Replacement = 'UTJumpBoots';
+		else if ( e.Replacee == 'Backpack' ) e.Replacement = 'UTBackpack';
+		else if ( e.Replacee == 'ArmorBonus' ) e.Replacement = 'UTArmorBonus';
+		else if ( e.Replacee == 'HealthBonus' ) e.Replacement = 'UTHealthBonus';
+		else if ( e.Replacee == 'GreenArmor' ) e.Replacement = 'UTThighPads';
+		else if ( e.Replacee == 'BlueArmor' ) e.Replacement = 'UTBodyArmor';
+		else if ( e.Replacee == 'Stimpack' ) e.Replacement = 'UTMedBox';
+		else if ( e.Replacee == 'Medikit' ) e.Replacement = 'UTHealthBox';
+		else if ( e.Replacee == 'RedCard' ) e.Replacement = 'UTRedKey';
+		else if ( e.Replacee == 'BlueCard' ) e.Replacement = 'UTBlueKey';
+		else if ( e.Replacee == 'YellowCard' ) e.Replacement = 'UTGoldKey';
+		else if ( e.Replacee == 'RedSkull' ) e.Replacement = 'UTRedSkull';
+		else if ( e.Replacee == 'BlueSkull' ) e.Replacement = 'UTBlueSkull';
+		else if ( e.Replacee == 'YellowSkull' ) e.Replacement = 'UTGoldSkull';
+		else if ( e.Replacee == 'TeleportFog' ) e.Replacement = 'UTTeleportFog';
+		else if ( e.Replacee == 'ItemFog' ) e.Replacement = 'UTItemFog';
+	}
 
 	private Actor AddLight( Vector3 pos, Color col, int radius )
 	{

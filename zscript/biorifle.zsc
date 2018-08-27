@@ -1,30 +1,3 @@
-Class Tier3Ammo : RandomSpawner2 replaces Shell
-{
-	Default
-	{
-		DropItem "BioAmmo2", 255, 1;
-		DropItem "ShockAmmo2", 255, 1;
-	}
-}
-Class Tier3Ammo2 : RandomSpawner2 replaces ShellBox
-{
-	Default
-	{
-		DropItem "BioAmmo", 255, 1;
-		DropItem "ShockAmmo", 255, 1;
-	}
-}
-
-Class Tier3Weapon : RandomSpawner2 replaces Shotgun
-{
-	Default
-	{
-		DropItem "BioRifle", 255, 1;
-		DropItem "ShockRifle", 255, 1;
-	}
-}
-Class Tier3Weapon2 : Tier3Weapon replaces SuperShotgun {}
-
 Class BioAmmo : Ammo
 {
 	Default
@@ -214,6 +187,9 @@ Class BioGel : Actor
 	double atz;
 	double rollvel, pitchvel, yawvel;
 	Vector3	normal;
+	Actor atbridge;
+	bool onbridge;
+	Vector3 atbridgeofs;
 
 	override void PostBeginPlay()
 	{
@@ -253,6 +229,15 @@ Class BioGel : Actor
 		}
 		if ( deadtimer > -2 )
 		{
+			if ( onbridge )	// attempt to follow the movement of the bridge (if it's moving)
+			{
+				if ( atbridge )
+				{
+					if ( !Warp(atbridge,atbridgeofs.x,atbridgeofs.y,atbridgeofs.z,0,WARPF_ABSOLUTEOFFSET|WARPF_USECALLERANGLE|WARPF_COPYINTERPOLATION) )
+						deadtimer = min(deadtimer,0);
+				}
+				else deadtimer = min(deadtimer,0);
+			}
 			if ( atline )	// attempt to follow the movement of the line
 			{
 				if ( atpart == 1 )
@@ -376,6 +361,105 @@ Class BioGel : Actor
 				hittype = HIT_CEILING;
 			else hittype = HIT_FLOOR;
 		}
+		else if ( tracer && tracer.bACTLIKEBRIDGE )
+		{
+			atbridge = tracer;
+			onbridge = true;
+			if ( (pos.x+radius) <= (atbridge.pos.x-atbridge.radius) )
+			{
+				// west side
+				normal = (-1,0,0);
+				SetOrigin((atbridge.pos.x-atbridge.radius,pos.y,pos.z),false);
+				atbridgeofs = pos-atbridge.pos;
+				angle = 180;
+				pitch = 0;
+				roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_WALL;
+			}
+			else if ( (pos.x-radius) >= (atbridge.pos.x+atbridge.radius) )
+			{
+				// east side
+				normal = (1,0,0);
+				SetOrigin((atbridge.pos.x+atbridge.radius,pos.y,pos.z),false);
+				atbridgeofs = pos-atbridge.pos;
+				angle = 0;
+				pitch = 0;
+				roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_WALL;
+			}
+			else if ( (pos.y+radius) <= (atbridge.pos.y-atbridge.radius) )
+			{
+				// north side
+				normal = (0,-1,0);
+				SetOrigin((pos.x,atbridge.pos.y-atbridge.radius,pos.z),false);
+				atbridgeofs = pos-atbridge.pos;
+				angle = 270;
+				pitch = 0;
+				roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_WALL;
+			}
+			else if ( (pos.y-radius) >= (atbridge.pos.y+atbridge.radius) )
+			{
+				// south side
+				normal = (0,1,0);
+				SetOrigin((pos.x,atbridge.pos.y+atbridge.radius,pos.z),false);
+				atbridgeofs = pos-atbridge.pos;
+				angle = 90;
+				pitch = 0;
+				roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_WALL;
+			}
+			else if ( pos.z >= (atbridge.pos.z+atbridge.height) )
+			{
+				// top of actor
+				normal = (0,0,1);
+				SetOrigin((pos.x,pos.y,atbridge.pos.z+atbridge.height),false);
+				atbridgeofs = pos-atbridge.pos;
+				pitch = -90;
+				angle = 0;
+				roll = FRandom[GES](0,360);
+				hittype = HIT_FLOOR;
+			}
+			else if ( (pos.z+height) <= atbridge.pos.z )
+			{
+				// bottom of actor
+				normal = (0,0,-1);
+				SetOrigin((pos.x,pos.y,atbridge.pos.z),false);
+				pitch = 90;
+				angle = 0;
+				roll = FRandom[GES](0,360);
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_CEILING;
+			}
+			else
+			{
+				// inside of actor, just shove to the top or bottom based on our Z velocity
+				if ( vel.z <= 0 )
+				{
+					normal = (0,0,1);
+					SetOrigin((pos.x,pos.y,atbridge.pos.z+atbridge.height),false);
+					atbridgeofs = pos-atbridge.pos;
+					pitch = -90;
+					angle = 0;
+					roll = FRandom[GES](0,360);
+					hittype = HIT_FLOOR;
+				}
+				else
+				{
+					normal = (0,0,-1);
+					SetOrigin((pos.x,pos.y,atbridge.pos.z),false);
+					pitch = 90;
+					angle = 0;
+					roll = FRandom[GES](0,360);
+					if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+					else hittype = HIT_CEILING;
+				}
+			}
+		}
 		else
 		{
 			SetStateLabel("XDeath");
@@ -453,6 +537,7 @@ Class BioGel : Actor
 		+FORCEXYBILLBOARD;
 		+MOVEWITHSECTOR;
 		+NODAMAGETHRUST;
+		+HITTRACER;
 	}
 	States
 	{

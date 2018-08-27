@@ -1,4 +1,4 @@
-Class UTHealthPack : Health replaces Soulsphere
+Class UTHealthPack : Health
 {
 	Default
 	{
@@ -21,7 +21,7 @@ Class UTHealthPack : Health replaces Soulsphere
 	}
 }
 
-Class UTHealthBox : Health replaces Medikit
+Class UTHealthBox : Health
 {
 	Default
 	{
@@ -38,7 +38,7 @@ Class UTHealthBox : Health replaces Medikit
 	}
 }
 
-Class UTMedBox : Health replaces Stimpack
+Class UTMedBox : Health
 {
 	Default
 	{
@@ -56,7 +56,7 @@ Class UTMedBox : Health replaces Stimpack
 	}
 }
 
-Class UTHealthBonus : Health replaces HealthBonus
+Class UTHealthBonus : Health
 {
 	Default
 	{

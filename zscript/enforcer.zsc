@@ -1,4 +1,4 @@
-Class EClip : MiniAmmo replaces Clip
+Class EClip : MiniAmmo
 {
 	Default
 	{
@@ -155,7 +155,7 @@ Class UTCasing : Actor
 	}
 }
 
-Class Enforcer : UTWeapon replaces Pistol
+Class Enforcer : UTWeapon
 {
 	int ClipCount, SlaveClipCount;
 	bool SlaveActive, SlaveDown, SlaveReload, SlaveAltFire;

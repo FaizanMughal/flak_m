@@ -54,6 +54,8 @@ Sprite "GELXI0",1,1{}
 Sprite "GELXJ0",1,1{}
 Sprite "GELXK0",1,1{}
 Sprite "GELXL0",1,1{}
+Sprite "BIOPA0",1,1{}
+Sprite "BIOPB0",1,1{}
 Sprite "BIOSA0",1,1{}
 Sprite "BIOSB0",1,1{}
 Sprite "BIOSC0",1,1{}

@@ -39,7 +39,7 @@ Class HammerImpact : Actor
 	}
 }
 
-Class ImpactHammer : UTWeapon replaces Fist
+Class ImpactHammer : UTWeapon
 {
 	double chargesize, count;
 
