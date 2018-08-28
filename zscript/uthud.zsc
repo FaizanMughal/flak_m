@@ -220,9 +220,10 @@ Class UTHud : BaseStatusBar
 	{
 		for ( int i=0; i<14; i++ )
 		{
+			Color halftint = Color(tintcolor.a,tintcolor.r/2,tintcolor.g/2,tintcolor.b/2);
 			if ( !(w is IconClasses[i]) ) continue;
 			if ( use ) UTDrawTintedTex(Uses[i],sx,opacity+7);
-			else UTDrawTintedTex(Icons[i],sx,opacity,tintcolor/2);
+			else UTDrawTintedTex(Icons[i],sx,opacity,halftint);
 			return true;
 		}
 		return false;
@@ -369,6 +370,7 @@ Class UTHud : BaseStatusBar
 	}
 	private void DrawWeapons()
 	{
+		Color halftint = Color(tintcolor.a,tintcolor.r/2,tintcolor.g/2,tintcolor.b/2);
 		double WeapScale = hudsize*weaponsize*HScale;
 		double BaseX = (Screen.GetWidth()-(1280*WeapScale))*0.5;
 		double BaseY = Screen.GetHeight()-64*WeapScale;
@@ -434,10 +436,10 @@ Class UTHud : BaseStatusBar
 			CurX = BaseX+i*WeaponOffset;
 			CurY = BaseY;
 			if ( !wslots[i] )
-				UTDrawTintedTex(Slots[i],2*hudsize*weaponsize,-1,tintcolor/2);
+				UTDrawTintedTex(Slots[i],2*hudsize*weaponsize,-1,halftint);
 			else if ( (i != cwslot) && (i != pwslot) )
 				if ( !UTDrawWeaponIcon(wslots[i],false,hudsize*weaponsize) )
-					UTDrawTintedTex(Slots[i],2*hudsize*weaponsize,-1,tintcolor/2);
+					UTDrawTintedTex(Slots[i],2*hudsize*weaponsize,-1,halftint);
 		}
 		for ( int i=0; i<10; i++ )
 		{
