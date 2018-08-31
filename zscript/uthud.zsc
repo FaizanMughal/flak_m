@@ -23,7 +23,7 @@ Class ViewTracer : LineTracer
 
 Class UTHud : BaseStatusBar
 {
-	TextureID AmmoBar, Boxes[4], Keys[4], BigNum[12], Flash, Slots[10], Icons[14], Uses[14], Man[5], Woman[5], WeaponBox;
+	TextureID AmmoBar, Boxes[4], Keys[5], BigNum[12], Flash, Slots[10], Icons[14], Uses[14], Man[5], Woman[5], WeaponBox;
 	Class<Weapon> IconClasses[14];
 	double HScale;
 	Color tintcolor, bgcolor;
@@ -64,8 +64,9 @@ Class UTHud : BaseStatusBar
 		Boxes[3] = TexMan.CheckForTexture("FragBox",TexMan.Type_Any);
 		Keys[0] = TexMan.CheckForTexture("RKey",TexMan.Type_Any);
 		Keys[1] = TexMan.CheckForTexture("BKey",TexMan.Type_Any);
-		Keys[2] = TexMan.CheckForTexture("GKey",TexMan.Type_Any);
+		Keys[2] = TexMan.CheckForTexture("YKey",TexMan.Type_Any);
 		Keys[3] = TexMan.CheckForTexture("Skul",TexMan.Type_Any);
+		Keys[4] = TexMan.CheckForTexture("GKey",TexMan.Type_Any);	// Heretic compat
 		BigNum[0] = TexMan.CheckForTexture("Big0",TexMan.Type_Any);
 		BigNum[1] = TexMan.CheckForTexture("Big1",TexMan.Type_Any);
 		BigNum[2] = TexMan.CheckForTexture("Big2",TexMan.Type_Any);
@@ -508,6 +509,7 @@ Class UTHud : BaseStatusBar
 
 	private void DrawKeys()
 	{
+		if ( gameinfo.gametype&(GAME_Hexen|GAME_Strife) ) return;	// no key display for these ATM (will do eventually)
 		bool locks[6];
 		for ( int i=0; i<6; i++ ) locks[i] = CPlayer.mo.CheckKeys(i+1,false,true);
 		int nrows = 0, nrowss = 0;
@@ -518,7 +520,8 @@ Class UTHud : BaseStatusBar
 		CurY -= max(0,nrows-1)*4*hudsize*HScale;
 		if ( locks[0] )
 		{
-			UTDrawTintedTex(Keys[0],hudsize,min(opacity,15),Color("Red"));
+			if ( gameinfo.gametype&GAME_Heretic ) UTDrawTintedTex(Keys[4],hudsize,min(opacity,15),Color("Green"));
+			else UTDrawTintedTex(Keys[0],hudsize,min(opacity,15),Color("Red"));
 			CurY += 72*hudsize*HScale;
 		}
 		if ( locks[1] )

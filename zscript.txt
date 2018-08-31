@@ -1,4 +1,4 @@
-version "3.5"
+version "3.6"
 
 #include "zscript/mk_matrix.zsc"
 #include "zscript/mk_coordutil.zsc"
@@ -21,3 +21,4 @@ version "3.5"
 #include "zscript/armoritems.zsc"
 #include "zscript/powerups.zsc"
 #include "zscript/uthud.zsc"
+#include "zscript/compat.zsc"
