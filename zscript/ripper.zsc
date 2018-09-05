@@ -57,9 +57,9 @@ Class Razor2 : Actor
 	{
 		Radius 2;
 		Height 2;
-		Speed 40;	// should be 26 but it looks way too slow
-		DamageFunction (Random[Ripper](30,40)*((DamageType=='Decapitated')?3.5:1.0));
-		DamageType 'Ripper';
+		Speed 27;
+		DamageFunction (Random[Ripper](25,35)*((DamageType=='Decapitated')?3.5:1.0));
+		DamageType 'Shredded';
 		Obituary "%k ripped a chunk of meat out of %o with the Ripper.";
 		BounceType "Doom";
 		ReactionTime 7;
@@ -84,7 +84,7 @@ Class Razor2 : Actor
 	}
 	override int SpecialMissileHit( Actor victim )
 	{
-		if ( pos.z > victim.pos.z+victim.height*0.75 ) DamageType = 'Decapitated';
+		if ( pos.z > victim.pos.z+victim.height*0.81 ) DamageType = 'Decapitated';
 		return -1;
 	}
 	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
@@ -135,7 +135,7 @@ Class Razor2 : Actor
 	Bounce:
 		RAZB A 0
 		{
-			bHITOWNER = true;
+			bHITOWNER = true;	// technically the UT version sets this 0.2 seconds after being fired, but this works better
 			Vector3 dir = vel.unit();
 			A_SetAngle(atan2(dir.y,dir.x));
 			A_SetPitch(asin(-dir.z));

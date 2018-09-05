@@ -69,7 +69,7 @@ Class MinigunTracer : Actor
 
 Class Minigun : UTWeapon
 {
-	int bcnt;
+	int bcnt, tcnt;
 
 	action void A_FireBullet( bool alt = false )
 	{
@@ -79,7 +79,8 @@ Class Minigun : UTWeapon
 		A_Overlay(-2,"MuzzleFlash",true);
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);
-		if ( (alt && (invoker.bcnt++ < 2)) || (invoker.bcnt++ < 4) ) return;
+		invoker.bcnt++;
+		if ( (alt && (invoker.bcnt < 2)) || (!alt && (invoker.bcnt < 4)) ) return;
 		invoker.bcnt = 0;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.FireEffect();
@@ -100,9 +101,11 @@ Class Minigun : UTWeapon
 		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Minigun](16,20); // fun fact: the Minigun is one of the few weapons that has actual RNG damage in UT
+			int dmg = Random[Minigun](9,18); // fun fact: the Minigun is one of the few weapons that has actual RNG damage in UT
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
-			UTMainHandler.DoKnockback(d.HitActor,d.HitDir,dmg*500);
+			double mm = 500;
+			if ( FRandom[Minigun](0,1) < 0.2 ) mm *= 2.5;
+			UTMainHandler.DoKnockback(d.HitActor,d.HitDir,dmg*mm);
 			if ( d.HitActor.bNOBLOOD )
 			{
 				let p = Spawn("BulletImpact",d.HitLocation);

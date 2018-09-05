@@ -72,7 +72,7 @@ Class ImpactHammer : UTWeapon
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
 		double realcharge = min(1.5,invoker.chargesize);
 		FLineTraceData d;
-		LineTrace(angle,80,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		LineTrace(angle,60,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = int(Random[Impact](90,120)*realcharge);
@@ -133,8 +133,8 @@ Class ImpactHammer : UTWeapon
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
 		FLineTraceData d;
-		LineTrace(angle,180,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
-		double dscale = d.Distance/180.;
+		LineTrace(angle,120,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		double dscale = d.Distance/120.;
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = int(Random[Impact](25,35)*dscale);
@@ -156,10 +156,10 @@ Class ImpactHammer : UTWeapon
 			if ( !m.bMISSILE ) continue;
 			double rdist = level.Vec3Diff(origin,m.pos).length();
 			Vector3 rdir = level.Vec3Diff(origin,m.pos).unit();
-			if ( LineTrace(atan2(rdir.y,rdir.x),rdist,asin(-rdir.z),TRF_THRUACTORS|TRF_ABSPOSITION,origin.z,origin.x,origin.y) || (rdist > 550) || (rdir dot x < 0.9) ) continue;
+			if ( LineTrace(atan2(rdir.y,rdir.x),rdist,asin(-rdir.z),TRF_THRUACTORS|TRF_ABSPOSITION,origin.z,origin.x,origin.y) || (rdist > 400) || (rdir dot x < 0.9) ) continue;
 			m.speed = m.vel.length();
-			if ( m.vel dot y > 0 ) m.vel = m.speed*(m.vel+(750-rdist)*y*0.01).unit();
-			else m.vel = m.speed*(m.vel-(750-rdist)*y*0.01).unit();
+			if ( m.vel dot y > 0 ) m.vel = m.speed*(m.vel+(560-rdist)*y*0.01).unit();
+			else m.vel = m.speed*(m.vel-(560-rdist)*y*0.01).unit();
 			if ( m.target == self ) continue;
 			if ( m.bSEEKERMISSILE ) m.tracer = m.target;
 			m.target = self;

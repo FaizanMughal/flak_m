@@ -1,6 +1,7 @@
 Class UTPlayer : DoomPlayer
 {
 	bool lastground;
+	int lastgroundtic;
 	double lastvelz, prevvelz;
 	transient CVar footsteps, utmovement, doomspeed, doomaircontrol, nowalkdrop;
 	Vector2 acceleration;
@@ -190,15 +191,15 @@ Class UTPlayer : DoomPlayer
 		if ( player.onground && !bNoGravity && !lastground && (waterlevel < 3) )
 		{
 			player.jumptics = 0;
-			if ( lastvelz < -4 )
+			if ( lastvelz < -8 )
 			{
-				double vol = clamp((-lastvelz-4)*0.05,0.01,1.0);
+				double vol = clamp((-lastvelz-8)*0.05,0.01,1.0);
 				if ( ((waterlevel > 0) || GetFloorTerrain().IsLiquid) && !bOnMobj ) A_PlaySound("ut/wetsplash",CHAN_AUTO,vol);
 				else A_PlaySound("*uland",CHAN_AUTO,vol);
 			}
 			else forcefootstep = true;
 		}
-		if ( forcefootstep || ((abs(sin(ang)) >= 1.0) && player.onground && (player.cmd.forwardmove || player.cmd.sidemove) && (waterlevel < 3)) )
+		if ( forcefootstep || ((abs(sin(ang)) >= 1.0) && player.onground && lastground && (player.jumptics == 0) && (player.cmd.forwardmove || player.cmd.sidemove) && (waterlevel < 3)) )
 		{
 			double vol = abs(vel.xy.length())*0.03;
 			if ( forcefootstep ) vol = clamp(-lastvelz*0.05,0.01,1.0);
@@ -237,6 +238,8 @@ Class UTPlayer : DoomPlayer
 		}
 		else Angle += cmd.yaw*(360./65536.);
 		player.onground = (pos.z <= floorz) || bOnMobj || bMBFBouncer || (player.cheats & CF_NOCLIP2);
+		if ( player.onground ) lastgroundtic = gametic;
+		if ( (abs(lastgroundtic-gametic) < 4) && (player.jumptics == 0) ) player.onground = true;
 		double friction = FrictionToUnreal();
 		double fs = TweakSpeeds(1.0,0.0);
 		if ( !doomspeed.GetBool() )
@@ -289,6 +292,7 @@ Class UTPlayer : DoomPlayer
 					player.camera = player.mo;
 				}
 				player.vel *= 0;
+				player.jumptics = -2;
 			}
 			else
 			{
@@ -1102,6 +1106,54 @@ Class UTBlueKey : BlueCard
 	}
 }
 
+Class ShredCorpseHitbox : Actor
+{
+	int accdamage;
+
+	Default
+	{
+		+NOGRAVITY;
+		-SOLID;
+		+DONTSPLASH;
+		+SHOOTABLE;
+		Health int.max;
+	}
+	override void PostBeginPlay()
+	{
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		accdamage = target.Health;
+		A_SetSize(target.radius,target.height);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target || (target.Health > 0) || target.InStateSequence(target.CurState,target.FindState("XDeath")) )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.pos,true);
+		A_SetSize(target.radius,target.height);
+	}
+	override int DamageMobj( Actor inflictor, Actor source, int damage, Name mod, int flags, double angle )
+	{
+		accdamage -= damage;
+		int gibhealth = (target.GibHealth==int.min)?-target.SpawnHealth():target.GibHealth;
+		if ( accdamage < gibhealth )
+		{
+			// force gib (cheap ATM)
+			State gib = target.FindState("XDeath");
+			if ( gib ) target.SetState(gib);
+			Destroy();
+		}
+		return 0;
+	}
+}
+
 Class GenericFlash : HUDMessageBase
 {
 	Color col;
@@ -1443,6 +1495,15 @@ Class UTMainHandler : StaticEventHandler
 		if ( !CVar.GetCVar('flak_showmenu',players[consoleplayer]).GetBool() ) return;
 		Screen.Dim("Black",1.0,0,0,Screen.GetWidth(),Screen.GetHeight());
 		Screen.DrawTexture(tex,true,0,0,DTA_VirtualWidth,1024,DTA_VirtualHeight,768);
+	}
+
+	override void WorldThingDied( WorldEvent e )
+	{
+		if ( e.Thing.bDONTGIB ) return;
+		// attach damage accumulator for corpses
+		if ( !CVar.GetCVar('flak_corpsedamage').GetBool() ) return;
+		let a = Actor.Spawn("ShredCorpseHitbox",e.Thing.pos);
+		a.target = e.Thing;
 	}
 
 	static void DoFlash( Actor camera, Color c, int duration )

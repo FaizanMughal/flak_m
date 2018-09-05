@@ -107,7 +107,6 @@ Class ChunkTrail : Actor
 
 Class FlakChunk : Actor
 {
-	Actor lasthit;
 	ChunkTrail trail;
 	double rollvel, pitchvel, yawvel;
 	double lifetime, lifespeed;
@@ -118,7 +117,7 @@ Class FlakChunk : Actor
 		Radius 2;
 		Height 2;
 		Speed 50;
-		DamageFunction int(Random[Flak](15,20)*max(0.1,1.0-lifetime*4.1));
+		DamageFunction Random[Flak](15,20);
 		DamageType 'Shredded';
 		BounceType "Doom";
 		BounceFactor 0.8;
@@ -129,10 +128,6 @@ Class FlakChunk : Actor
 		+CANBOUNCEWATER;
 		+SKYEXPLODE;
 		Scale 0.3;
-	}
-	override bool CanCollideWith( Actor other, bool passive )
-	{
-		return (vel.length()>4.0);
 	}
 	override void PostBeginPlay()
 	{
@@ -208,17 +203,17 @@ Class FlakChunk : Actor
 		A_PlaySound("flak/bounce",volume:0.3);
 		A_AlertMonsters();
 		bBOUNCEAUTOOFFFLOORONLY = true;
-		if ( vel.length() < 4.0 ) ExplodeMissile();
+		if ( vel.length() < 5.0 ) ExplodeMissile();
 	}
 	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
 	{
+		if ( vel.length() <= 5.0 ) return 0;
 		if ( !target.bNOBLOOD )
 		{
-			if ( target != lasthit ) target.SpawnBlood(pos,AngleTo(target),damage);
+			target.SpawnBlood(pos,AngleTo(target),damage);
 			A_PlaySound("flak/meat",volume:0.3);
 			A_AlertMonsters();
 		}
-		lasthit = target;
 		return damage;
 	}
 	States
@@ -377,7 +372,7 @@ Class FlakSlug : Actor
 		double a, s;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Actor p;
-		for ( int i=0; i<6; i++ )
+		for ( int i=0; i<5; i++ )
 		{
 			p = Spawn("FlakChunk",pos);
 			p.bHITOWNER = true;
@@ -475,7 +470,7 @@ Class FlakCannon : UTWeapon
 		A_OverlayRenderstyle(-2,STYLE_Add);
 		[x, y, z] = Matrix4.GetAxes(BulletSlope(),angle,roll);
 		Actor p;
-		for ( int i=0; i<10; i++ )
+		for ( int i=0; i<6; i++ )
 		{
 			p = Spawn("FlakChunk",origin);
 			a = FRandom[Flak](0,360);

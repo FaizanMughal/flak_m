@@ -306,6 +306,7 @@ Class Enforcer : UTWeapon
 		if ( alt ) origin = origin-z*3.0+ydir*y*1.0;
 		else origin = origin-z*1.0+ydir*y*4.0;
 		double a = FRandom[Enforcer](0,360), s = FRandom[Enforcer](0,alt?0.08:0.004);
+		if ( invoker.SlaveActive ) s *= 3;
 		[x2, y2, z2] = Matrix4.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 		FLineTraceData d;
@@ -314,7 +315,9 @@ Class Enforcer : UTWeapon
 		{
 			int dmg = Random[Enforcer](12,17);
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
-			UTMainHandler.DoKnockback(d.HitActor,d.HitDir,3000);
+			double mm = 3000;
+			if ( FRandom[Enforcer](0,1) < 0.2 ) mm *= 5;
+			UTMainHandler.DoKnockback(d.HitActor,d.HitDir,mm);
 			if ( d.HitActor.bNOBLOOD )
 			{
 				let p = Spawn("BulletImpact",d.HitLocation);

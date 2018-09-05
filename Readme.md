@@ -59,9 +59,12 @@ This mod requires a recent GZDoom devbuild (g3.6pre-31-gd965c9aa7 or later).
    - Fix some oddly-oriented triangles (e.g. some parts of the flak cannon, can
      be easily noticed when using invisibility)
    - Recenter the backpack mesh (it was a complete hack job to begin with)
+ - UT gore system (toggleable)
 
 ## Future plans
 
+ - Change the way inventory items are dropped to be more UT-like, this will
+   require GZDoom changes
  - Add ammo counters to Pulsegun, Minigun, Flak Cannon and Rocket Launcher once
    scripted textures are implemented
  - Add player models once GZDoom gets a well deserved model animation system
@@ -69,7 +72,6 @@ This mod requires a recent GZDoom devbuild (g3.6pre-31-gd965c9aa7 or later).
    the current state-tied system)
  - Add weapon attachment support to player models when that is also added in
  - Migrate RandomSpawners to CheckReplacement
- - Perhaps come up with an add-on that imitates UT's blood/gore system
  - Unreal 1 weapons mod and maybe also a monsters mod
  - Port some of my UT weapon mods
 

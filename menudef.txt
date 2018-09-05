@@ -53,6 +53,7 @@ OptionMenu "UTOptionMenu"
 	StaticText " "
 	StaticText "Misc Options", "Gold"
 	Option "UT Footsteps", "flak_footsteps", "YesNo"
+	Option "[WIP] Corpses Take Damage", "flak_corpsedamage", "YesNo"
 }
 
 AddOptionMenu "OptionsMenu"

@@ -27,3 +27,4 @@ server bool flak_doomspeed = false;		// keep Doomguy run speed when using UT mov
 server bool flak_doomaircontrol = false;	// keep Doom's limited air control when using UT movement
 server bool flak_nobosstelefrag = false;	// disable telefragging of boss monsters (useful when translocator is enabled)
 server bool flak_nowalkdrop = false;		// don't drop off ledges while holding walk key (glitchy)
+server bool flak_corpsedamage = false;		// [WIP/EXPERIMENTAL] allow corpses to take damage and be gibbed, currently just causes a jump to XDeath until gore system is implemented
