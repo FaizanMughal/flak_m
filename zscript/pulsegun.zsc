@@ -6,7 +6,7 @@ Class PulseAmmo : Ammo
 		Inventory.PickupMessage "You picked up a Pulse Cell.";
 		Inventory.Amount 25;
 		Inventory.MaxAmount 200;
-		Ammo.BackpackAmount 50;
+		Ammo.BackpackAmount 40;
 		Ammo.BackpackMaxAmount 400;
 		Ammo.DropAmount 10;
 	}
@@ -373,12 +373,12 @@ Class PulseBolt : Actor
 				if ( !damagedactor )
 				{
 					accdamage = min(0.5*(level.time-lasthit),0.1);
-					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](70,90)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
+					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](80,100)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 				else if ( t.Results.HitActor != damagedactor )
 				{
-					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](70,90)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
+					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](80,100)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 				lasthit = level.time;
@@ -386,7 +386,7 @@ Class PulseBolt : Actor
 				accdamage += 1./TICRATE;
 				if ( accdamage > 0.17 )
 				{
-					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](70,90)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
+					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](80,100)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 			}

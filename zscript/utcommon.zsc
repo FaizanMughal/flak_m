@@ -12,7 +12,7 @@ Class UTPlayer : DoomPlayer
 	int last_jump_held;
 
 	const groundspeed = 400.;
-	const accelrate = 2048.;
+	const baseaccelrate = 2048.;
 	const walkfactor = 0.3;
 	const utaircontrol = 0.35;
 	const groundspeed_doomish = 600.;
@@ -239,7 +239,7 @@ Class UTPlayer : DoomPlayer
 		else Angle += cmd.yaw*(360./65536.);
 		player.onground = (pos.z <= floorz) || bOnMobj || bMBFBouncer || (player.cheats & CF_NOCLIP2);
 		if ( player.onground ) lastgroundtic = gametic;
-		if ( (abs(lastgroundtic-gametic) < 4) && (player.jumptics == 0) ) player.onground = true;
+		if ( (abs(pos.z-floorz) <= maxdropoffheight) && (player.jumptics == 0) ) player.onground = true;
 		double friction = FrictionToUnreal();
 		double fs = TweakSpeeds(1.0,0.0);
 		if ( !doomspeed.GetBool() )
@@ -249,6 +249,7 @@ Class UTPlayer : DoomPlayer
 		else fs *= max(abs(cmd.forwardmove/12800.),abs(cmd.sidemove/10240.));
 		if ( CanCrouch() && (player.crouchfactor != -1) ) fs *= player.crouchfactor;
 		acceleration = rotatevector((cmd.forwardmove,-cmd.sidemove),angle);
+		double accelrate = baseaccelrate*fs;
 		Vector2 dodge = (0,0);
 		int fm = cmd.forwardmove;
 		int sm = cmd.sidemove;
@@ -301,6 +302,7 @@ Class UTPlayer : DoomPlayer
 				// Hook in Unreal physics
 				Vector2 dir = (0,0);
 				if ( vel.xy.length() > double.epsilon ) dir = vel.xy.unit();
+				double doomfriction = clamp(GetFriction()/ORIG_FRICTION,0.0,1.0);
 				if ( acceleration.length() <= double.epsilon )
 				{
 					Vector2 oldvel = vel.xy;
@@ -315,10 +317,9 @@ Class UTPlayer : DoomPlayer
 				}
 				vel.xy = vel.xy + acceleration/TICRATE;
 				double maxvel;
-				if ( doomspeed.GetBool() ) maxvel = (groundspeed_doomish*fs)/TICRATE;
-				else maxvel = (groundspeed*fs)/TICRATE;
-				double doomfriction = clamp(GetFriction()/ORIG_FRICTION,0.0,1.0);
-				maxvel *= doomfriction;
+				if ( doomspeed.GetBool() ) maxvel = groundspeed_doomish/TICRATE;
+				else maxvel = groundspeed/TICRATE;
+				maxvel *= fs*doomfriction;
 				if ( vel.xy.length() > maxvel ) vel.xy = vel.xy.unit()*maxvel;
 				if ( !(player.cheats & CF_PREDICTING) )
 				{
@@ -356,6 +357,7 @@ Class UTPlayer : DoomPlayer
 			else vel.xy = vel.xy+acceleration/TICRATE;
 			if ( vel.length() > terminalvelocity/TICRATE ) vel = vel.unit()*(terminalvelocity/TICRATE);
 			player.vel *= 0;
+			player.jumptics = -2;
 		}
 		else
 		{
@@ -1206,12 +1208,13 @@ Class UTMainHandler : StaticEventHandler
 		else if ( e.Replacee == 'Pistol' ) e.Replacement = 'Enforcer';
 		else if ( (e.Replacee == 'Shotgun') || (e.Replacee == 'SuperShotgun') )
 		{
-			if ( Random[Replacements](0,1) ) e.Replacement = 'BioRifle';
+			if ( !Random[Replacements](0,3) ) e.Replacement = 'Enforcer';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'BioRifle';
 			else e.Replacement = 'ShockRifle';
 		}
 		else if ( e.Replacee == 'Chaingun' )
 		{
-			if ( Random[Replacements](0,1) ) e.Replacement = 'PulseGun';
+			if ( Random[Replacements](0,2) ) e.Replacement = 'PulseGun';
 			else e.Replacement = 'Ripper2';
 		}
 		else if ( e.Replacee == 'RocketLauncher' )
@@ -1225,15 +1228,21 @@ Class UTMainHandler : StaticEventHandler
 			else e.Replacement = 'SniperRifle';
 		}
 		else if ( e.Replacee == 'BFG9000' ) e.Replacement = 'WarheadLauncher';
-		else if ( e.Replacee == 'Clip' ) e.Replacement = 'EClip';
+		else if ( e.Replacee == 'Clip' )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'RifleAmmo2';
+			else e.Replacement = 'EClip';
+		}
 		else if ( e.Replacee == 'ClipBox' )
 		{
-			if ( Random[Replacements](0,1) ) e.Replacement = 'PulseAmmo';
+			if ( !Random[Replacements](0,2) ) e.Replacement = 'EClip';
+			else if ( Random[Replacements](0,2) ) e.Replacement = 'PulseAmmo';
 			else e.Replacement = 'RipperAmmo';
 		}
 		else if ( e.Replacee == 'Shell' )
 		{
-			if ( Random[Replacements](0,1) ) e.Replacement = 'BioAmmo2';
+			if ( !Random[Replacements](0,2) ) e.Replacement = 'EClip';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'BioAmmo2';
 			else e.Replacement = 'ShockAmmo2';
 		}
 		else if ( e.Replacee == 'ShellBox' )
@@ -1243,8 +1252,16 @@ Class UTMainHandler : StaticEventHandler
 		}
 		else if ( e.Replacee == 'RocketAmmo' )
 		{
-			if ( Random[Replacements](0,1) ) e.Replacement = 'FlakAmmo2';
-			else e.Replacement = 'UTRocketAmmo2';
+			if ( Random[Replacements](0,1) )
+			{
+				if ( !Random[Replacements](0,3) ) e.Replacement = 'FlakAmmo';
+				else e.Replacement = 'FlakAmmo2';
+			}
+			else
+			{
+				if ( !Random[Replacements](0,3) ) e.Replacement = 'UTRocketAmmo';
+				else e.Replacement = 'UTRocketAmmo2';
+			}
 		}
 		else if ( e.Replacee == 'RocketBox' )
 		{
@@ -1254,11 +1271,12 @@ Class UTMainHandler : StaticEventHandler
 		else if ( e.Replacee == 'Cell' )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'EClip';
+			else if ( !Random[Replacements](0,3) ) e.Replacement = 'RifleAmmo';
 			else e.Replacement = 'RifleAmmo2';
 		}
 		else if ( e.Replacee == 'CellPack' )
 		{
-			if ( !Random[Replacements](0,5) ) e.Replacement = 'WarheadAmmo';
+			if ( !Random[Replacements](0,6) ) e.Replacement = 'WarheadAmmo';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'MiniAmmo';
 			else e.Replacement = 'RifleAmmo';
 		}

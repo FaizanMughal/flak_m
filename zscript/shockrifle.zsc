@@ -379,7 +379,7 @@ Class ShockBeam : Actor
 				t.Results.HitLine.RemoteActivate(target,t.Results.Side,SPAC_Impact,pos);
 				// calculate normal
 				HitNormal = (-t.Results.HitLine.delta.y,t.Results.HitLine.delta.x,0).unit();
-				if ( t.Results.Side == 1 ) HitNormal *= -1;
+				if ( t.Results.Side == 0 ) HitNormal *= -1;
 			}
 			else if ( t.Results.HitType == TRACE_HitFloor )
 				HitNormal = t.Results.HitSector.floorplane.Normal;
