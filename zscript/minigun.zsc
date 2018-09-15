@@ -86,8 +86,16 @@ Class Minigun : UTWeapon
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,255,255,0),1);
 		A_AlertMonsters();
-		if ( alt ) A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
-		else A_QuakeEx(1,1,1,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
+		if ( alt )
+		{
+			A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
+			UTMainHandler.DoSwing(self,(FRandom[Minigun](-1,1),FRandom[Minigun](-1,1)),0.5,0,1,SWING_Spring,0,3);
+		}
+		else
+		{
+			A_QuakeEx(1,1,1,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
+			UTMainHandler.DoSwing(self,(FRandom[Minigun](-1,1),FRandom[Minigun](-1,1)),0.3,0,1,SWING_Spring,0,3);
+		}
 		let l = Spawn("MinigunLight",pos);
 		l.target = self;
 		if ( !alt ) MinigunLight(l).cnt--;

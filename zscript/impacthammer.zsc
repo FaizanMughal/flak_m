@@ -67,7 +67,7 @@ Class ImpactHammer : UTWeapon
 		if ( !weap ) return;
 		A_PlaySound("impact/release",CHAN_WEAPON);
 		invoker.FireEffect();
-		UTMainHandler.DoSwing(self,(FRandom[Impact](-0.3,-1.5),FRandom[Impact](-1.2,-0.4)),3,-0.8,3,SWING_Spring2,3);
+		UTMainHandler.DoSwing(self,(FRandom[Impact](-0.3,-1.5),FRandom[Impact](-1.2,-0.4)),3,-0.8,3,SWING_Spring,3,2);
 		A_AlertMonsters();
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
@@ -129,7 +129,7 @@ Class ImpactHammer : UTWeapon
 		if ( !weap ) return;
 		A_PlaySound("impact/fire",CHAN_WEAPON);
 		invoker.FireEffect();
-		UTMainHandler.DoSwing(self,(FRandom[Impact](-0.3,-1.5),FRandom[Impact](-1.2,-0.4)),2,-0.6,2,SWING_Spring2,1);
+		UTMainHandler.DoSwing(self,(FRandom[Impact](-0.3,-1.5),FRandom[Impact](-1.2,-0.4)),2,-0.6,2,SWING_Spring,1,2);
 		A_AlertMonsters();
 		A_QuakeEx(2,2,2,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;

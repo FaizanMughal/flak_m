@@ -1160,15 +1160,13 @@ Enum ESwingMode
 {
 	SWING_Straight,	// constant increment
 	SWING_Spring,	// bounces back after a delay
-	SWING_Spring2,	// ... returning at half speed
-	SWING_Spring3,	// ... returning at third speed
 };
 
 Class Swinger : Thinker
 {
 	Actor target;
 	Vector2 dir;
-	double inc;
+	double inc, rmul;
 	int steps, mode, delay;
 	double str, tstr;
 	int cnt, cstate;
@@ -1178,8 +1176,6 @@ Class Swinger : Thinker
 		STATE_Initial,
 		STATE_Wait,
 		STATE_Return,
-		STATE_ReturnSlow,
-		STATE_ReturnSlower,
 	};
 
 	override void Tick()
@@ -1195,7 +1191,7 @@ Class Swinger : Thinker
 			{
 				cnt = 0;
 				str = tstr/steps;
-				cstate = (mode==SWING_Straight)?(-1):(delay>0)?STATE_Wait:(mode==SWING_Spring3)?STATE_ReturnSlower:(mode==SWING_Spring2)?STATE_ReturnSlow:STATE_Return;
+				cstate = (mode==SWING_Straight)?(-1):(delay>0)?STATE_Wait:STATE_Return;
 			}
 			else tstr += str;
 			break;
@@ -1203,31 +1199,13 @@ Class Swinger : Thinker
 			if ( ++cnt >= delay )
 			{
 				cnt = 0;
-				cstate = (mode==SWING_Spring3)?STATE_ReturnSlower:(mode==SWING_Spring2)?STATE_ReturnSlow:STATE_Return;
+				cstate = STATE_Return;
 			}
 			break;
 		case STATE_Return:
-			target.A_SetAngle(target.angle-dir.x*str,SPF_INTERPOLATE);
-			target.A_SetPitch(target.pitch-dir.y*str,SPF_INTERPOLATE);
-			if ( ++cnt >= steps )
-			{
-				cnt = 0;
-				cstate = -1;
-			}
-			break;
-		case STATE_ReturnSlow:
-			target.A_SetAngle(target.angle-dir.x*str/2.,SPF_INTERPOLATE);
-			target.A_SetPitch(target.pitch-dir.y*str/2.,SPF_INTERPOLATE);
-			if ( ++cnt >= steps*2 )
-			{
-				cnt = 0;
-				cstate = -1;
-			}
-			break;
-		case STATE_ReturnSlower:
-			target.A_SetAngle(target.angle-dir.x*str/3.,SPF_INTERPOLATE);
-			target.A_SetPitch(target.pitch-dir.y*str/3.,SPF_INTERPOLATE);
-			if ( ++cnt >= steps*3 )
+			target.A_SetAngle(target.angle-dir.x*str/rmul,SPF_INTERPOLATE);
+			target.A_SetPitch(target.pitch-dir.y*str/rmul,SPF_INTERPOLATE);
+			if ( ++cnt >= steps*rmul )
 			{
 				cnt = 0;
 				cstate = -1;
@@ -1640,13 +1618,14 @@ Class UTMainHandler : StaticEventHandler
 		Victim.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.Mass));
 	}
 
-	static void DoSwing( Actor target, Vector2 dir, double initial, double inc, int steps, int mode = 0, int delay = 0 )
+	static void DoSwing( Actor target, Vector2 dir, double initial, double inc, int steps, int mode = 0, int delay = 0, double rmul = 1.0 )
 	{
 		let s = new("Swinger");
 		s.ChangeStatNum(Thinker.STAT_USER);
 		s.target = target;
 		s.dir = dir;
 		s.inc = inc;
+		s.rmul = rmul;
 		s.steps = steps;
 		s.mode = mode;
 		s.delay = delay;

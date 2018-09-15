@@ -273,8 +273,16 @@ Class Ripper2 : UTWeapon
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(8,0,255,255),1);
 		A_AlertMonsters();
-		if ( alt ) A_QuakeEx(3,3,3,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
-		else A_QuakeEx(1,1,1,5,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
+		if ( alt )
+		{
+			A_QuakeEx(3,3,3,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+			UTMainHandler.DoSwing(self,(FRandom[Ripper](-0.3,-0.6),FRandom[Ripper](0.2,0.6)),3,-0.5,3,SWING_Spring,5,4);
+		}
+		else
+		{
+			A_QuakeEx(1,1,1,5,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
+			UTMainHandler.DoSwing(self,(FRandom[Ripper](-0.3,-0.6),FRandom[Ripper](0.2,0.6)),1,-0.3,2,SWING_Spring,2,2);
+		}
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+6.0*y-4.0*z;

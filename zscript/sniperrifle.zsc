@@ -77,10 +77,17 @@ Class SniperRifle : UTWeapon
 		UTMainHandler.DoFlash(self,Color(32,0,0,255),1);
 		A_PlaySound("sniper/fire",CHAN_WEAPON);
 		A_AlertMonsters();
-		if ( zoomed ) A_QuakeEx(2,2,2,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.09);
+		if ( zoomed )
+		{
+			A_QuakeEx(2,2,2,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.09);
+			for ( int i=0; i<3; i++ )
+				UTMainHandler.DoSwing(self,(FRandom[Sniper](-0.3,0.05),FRandom[Sniper](-0.3,0.1)),2,-0.5,Random[Sniper](3,4),SWING_Spring,Random[Sniper](3,4),Random[Sniper](4,5));
+		}
 		else
 		{
 			A_QuakeEx(3,3,3,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
+			for ( int i=0; i<3; i++ )
+				UTMainHandler.DoSwing(self,(FRandom[Sniper](-0.3,0.05),FRandom[Sniper](-0.3,0.1)),4,-1,Random[Sniper](3,4),SWING_Spring,Random[Sniper](3,4),Random[Sniper](4,5));
 			A_Overlay(-2,"MuzzleFlash");
 			A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 			A_OverlayRenderstyle(-2,STYLE_Add);

@@ -632,6 +632,8 @@ Class WarheadLauncher : UTWeapon
 		A_PlaySound("warhead/fire",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,128),1);
+		UTMainHandler.DoSwing(self,(FRandom[Warhead](0.6,1.2),FRandom[Warhead](0.2,0.5)),4,-1,3,SWING_Spring,2,5);
+		UTMainHandler.DoSwing(self,(FRandom[Warhead](0.2,0.5),FRandom[Warhead](-0.9,-1.5)),4,-0.6,5,SWING_Spring,3,3);
 		A_AlertMonsters();
 		A_QuakeEx(6,6,6,20,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
 		Vector3 x, y, z;

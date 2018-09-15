@@ -559,7 +559,7 @@ Class PulseGun : UTWeapon
 		if ( !CVar.GetCVar('flak_pulsereload').GetBool() && (invoker.clipcount <= 0) ) invoker.clipcount = (weap.Ammo1.Amount>0)?Min(50,weap.Ammo1.Amount):50;
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,128,255,128),1);
-		UTMainHandler.DoSwing(self,(FRandom[Pulse](-1,-1),FRandom[Pulse](-1,1)),0.1,-0.02,3,SWING_Spring2);
+		UTMainHandler.DoSwing(self,(FRandom[Pulse](-1,-1),FRandom[Pulse](-1,1)),0.1,-0.02,3,SWING_Spring,0,2);
 		A_AlertMonsters();
 		Vector3 x, y, z;
 		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
@@ -620,7 +620,7 @@ Class PulseGun : UTWeapon
 		if ( !CVar.GetCVar('flak_pulsereload').GetBool() && (invoker.clipcount <=0) ) invoker.clipcount = (weap.Ammo1.Amount>0)?Min(50,weap.Ammo1.Amount):50;
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,128,255,128),1);
-		UTMainHandler.DoSwing(self,(FRandom[Pulse](-1,-1),FRandom[Pulse](-1,1)),0.3,-0.1,2,SWING_Spring3);
+		UTMainHandler.DoSwing(self,(FRandom[Pulse](-1,-1),FRandom[Pulse](-1,1)),0.3,-0.1,2,SWING_Spring,0,3);
 		A_AlertMonsters();
 		A_QuakeEx(1,1,1,2,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
 		A_Overlay(-2,"MuzzleFlash");
