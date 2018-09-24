@@ -254,6 +254,7 @@ Class WarShell : Actor
 		+SKYEXPLODE;
 		+FORCERADIUSDMG;
 		+EXPLODEONWATER;
+		+INTERPOLATEANGLES;
 	}
 	override void PostBeginPlay()
 	{
@@ -402,9 +403,9 @@ Class GuidedWarShell : WarShell
 			orient = orient.qmul(angles);
 			double npitch, nangle, nroll;
 			[npitch, nangle, nroll] = orient.to_euler();
-			A_SetAngle(nangle,SPF_INTERPOLATE);
-			A_SetPitch(npitch,SPF_INTERPOLATE);
-			A_SetRoll(nroll,SPF_INTERPOLATE);
+			angle = nangle;
+			pitch = npitch;
+			roll = nroll;
 			vel = (vel+(cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch))*0.8).unit()*11;
 		}
 		lagangle2 = lagangle2*0.95+lagangle*0.05;

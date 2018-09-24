@@ -118,6 +118,7 @@ Class UTRocket : Actor
 		+SEEKERMISSILE;
 		+FORCERADIUSDMG;
 		+NODAMAGETHRUST;
+		+INTERPOLATEANGLES;
 	}
 	override void PostBeginPlay()
 	{
@@ -184,7 +185,7 @@ Class UTRocket : Actor
 	Spawn:
 		RCKT B 1
 		{
-			A_SetRoll(roll+30,SPF_INTERPOLATE);
+			roll += 30;
 			if ( invoker.ticcnt++ > 3 )
 			{
 				invoker.ticcnt = 0;
@@ -194,8 +195,8 @@ Class UTRocket : Actor
 			if ( vel.length() > 45. ) vel = Vel.unit()*45.;
 			Vector3 dir = vel.unit();
 			if ( waterlevel <= 0 ) vel = dir*min(vel.length()+1,32);
-			A_SetAngle(atan2(dir.y,dir.x),SPF_INTERPOLATE);
-			A_SetPitch(asin(-dir.z),SPF_INTERPOLATE);
+			angle = atan2(dir.y,dir.x);
+			pitch = asin(-dir.z);
 			for ( int i=0; i<3; i++ )
 			{
 				let s = Spawn("UTSmoke",pos);
@@ -242,9 +243,9 @@ Class UTGrenade : UTRocket
 	Spawn:
 		RCKT A 1
 		{
-			A_SetAngle(angle+anglevel,SPF_INTERPOLATE);
-			A_SetPitch(pitch+pitchvel,SPF_INTERPOLATE);
-			A_SetRoll(roll+rollvel,SPF_INTERPOLATE);
+			angle += anglevel;
+			pitch += pitchvel;
+			roll += rollvel;
 			A_Countdown();
 		}
 		Wait;

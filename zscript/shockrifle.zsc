@@ -625,7 +625,7 @@ Class SuperShockBeam : Actor
 	action void A_BeamExplode()
 	{
 		Spawn("SuperShockBeamLight",pos);
-		if ( !CVar.GetCVar('flak_classicsshock').GetBool() )
+		if ( !flak_classicsshock )
 		{
 			UTMainHandler.DoBlast(self,50,60000);
 			A_Explode(Random[ASMD](500,800),50);
@@ -1297,7 +1297,7 @@ Class EnhancedShockRifle : UTWeapon
 		ASMF BCDEFGHIJJ 2;
 		Goto Idle;
 	AltFire:
-		ASMI A 0 A_JumpIf(CVar.GetCVar('flak_classicsshock').GetBool(),"Fire");
+		ASMI A 0 A_JumpIf(flak_classicsshock,"Fire");
 		ASMI A 0 A_JumpIfNoAmmo("DryFire");
 		ASMA A 1 A_SShockAlt();
 		ASMA BCDFGHIJ 2;

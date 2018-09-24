@@ -34,7 +34,6 @@ Model "Razor2"
 	Scale 0.18 0.18 0.216
 	AngleOffset 90
 	USEACTORPITCH
-	USEACTORROLL
 
 	FrameIndex RAZB A 0 0
 }
@@ -48,7 +47,6 @@ Model "Razor2Trail"
 	Scale 0.36 0.18 0.216
 	AngleOffset 90
 	USEACTORPITCH
-	USEACTORROLL
 	DONTCULLBACKFACES
 
 	FrameIndex RAZB A 0 0

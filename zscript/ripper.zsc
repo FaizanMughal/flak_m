@@ -38,9 +38,8 @@ Class Razor2Trail : Actor
 			return;
 		}
 		SetOrigin(target.pos,true);
-		A_SetAngle(target.angle,SPF_INTERPOLATE);
-		A_SetPitch(target.pitch,SPF_INTERPOLATE);
-		A_SetRoll(target.roll,SPF_INTERPOLATE);
+		angle = target.angle;
+		pitch = target.pitch;
 		alpha = target.vel.length()/target.speed;
 	}
 	States

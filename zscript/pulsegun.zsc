@@ -538,7 +538,7 @@ Class PulseGun : UTWeapon
 
 	override void PostRender( double lbottom )
 	{
-		if ( !CVar.GetCVar('flak_pulsereload').GetBool() ) return;
+		if ( !flak_pulsereload ) return;
 		Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,lbottom-Screen.GetHeight()*0.01-confont.GetHeight(),String.Format("Clip: %2d / 50",clipcount));
 	}
 
@@ -556,7 +556,7 @@ Class PulseGun : UTWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.clipcount--;
-		if ( !CVar.GetCVar('flak_pulsereload').GetBool() && (invoker.clipcount <= 0) ) invoker.clipcount = (weap.Ammo1.Amount>0)?Min(50,weap.Ammo1.Amount):50;
+		if ( !flak_pulsereload && (invoker.clipcount <= 0) ) invoker.clipcount = (weap.Ammo1.Amount>0)?Min(50,weap.Ammo1.Amount):50;
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,128,255,128),1);
 		UTMainHandler.DoSwing(self,(FRandom[Pulse](-1,-1),FRandom[Pulse](-1,1)),0.1,-0.02,3,SWING_Spring,0,2);
@@ -617,7 +617,7 @@ Class PulseGun : UTWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.clipcount--;
-		if ( !CVar.GetCVar('flak_pulsereload').GetBool() && (invoker.clipcount <=0) ) invoker.clipcount = (weap.Ammo1.Amount>0)?Min(50,weap.Ammo1.Amount):50;
+		if ( !flak_pulsereload && (invoker.clipcount <=0) ) invoker.clipcount = (weap.Ammo1.Amount>0)?Min(50,weap.Ammo1.Amount):50;
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,128,255,128),1);
 		UTMainHandler.DoSwing(self,(FRandom[Pulse](-1,-1),FRandom[Pulse](-1,1)),0.3,-0.1,2,SWING_Spring,0,3);
@@ -715,7 +715,7 @@ Class PulseGun : UTWeapon
 		PGNI A 1
 		{
 			A_CheckReload();
-			if ( CVar.GetCVar('flak_pulsereload').GetBool() )
+			if ( flak_pulsereload )
 			{
 				if ( (invoker.clipcount <= 0) && (invoker.Ammo1.Amount > 0) ) return A_Jump(255,"Reload");
 				A_WeaponReady(WRF_ALLOWRELOAD);

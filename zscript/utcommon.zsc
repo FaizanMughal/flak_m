@@ -3,7 +3,7 @@ Class UTPlayer : DoomPlayer
 	bool lastground;
 	int lastgroundtic;
 	double lastvelz, prevvelz;
-	transient CVar footsteps, utmovement, doomspeed, doomaircontrol, nowalkdrop;
+	transient CVar footsteps;
 	Vector2 acceleration;
 	Vector3 acceleration3;
 	int last_fm, last_sm;
@@ -183,7 +183,7 @@ Class UTPlayer : DoomPlayer
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !player ) return;
+		if ( !player || (player.mo != self) ) return;
 		if ( !footsteps ) footsteps = CVar.GetCVar('flak_footsteps',players[consoleplayer]);
 		if ( !footsteps.GetBool() ) return;
 		double ang = level.time/(20*TICRATE/35.)*360.;
@@ -220,16 +220,12 @@ Class UTPlayer : DoomPlayer
 
 	override void MovePlayer()
 	{
-		if ( !utmovement ) utmovement = CVar.GetCVar('flak_utmovement');
-		if ( !doomspeed ) doomspeed = CVar.GetCVar('flak_doomspeed');
-		if ( !doomaircontrol ) doomaircontrol = CVar.GetCVar('flak_doomaircontrol');
-		if ( !nowalkdrop ) nowalkdrop = CVar.GetCVar('flak_nowalkdrop');
-		bNODROPOFF = false;
-		if ( !utmovement.GetBool() )
+		if ( !flak_utmovement || !player || (player.mo != self) )
 		{
 			Super.MovePlayer();
 			return;
 		}
+		bNODROPOFF = false;
 		UserCmd cmd = player.cmd;
 		if ( player.turnticks )
 		{
@@ -239,10 +235,14 @@ Class UTPlayer : DoomPlayer
 		else Angle += cmd.yaw*(360./65536.);
 		player.onground = (pos.z <= floorz) || bOnMobj || bMBFBouncer || (player.cheats & CF_NOCLIP2);
 		if ( player.onground ) lastgroundtic = gametic;
-		if ( (abs(pos.z-floorz) <= maxdropoffheight) && (player.jumptics == 0) ) player.onground = true;
+		if ( !player.onground && (abs(pos.z-floorz) <= maxdropoffheight) && (player.jumptics == 0) )
+		{
+			SetOrigin(Vec2OffsetZ(0,0,floorz),true);
+			player.onground = true;
+		}
 		double friction = FrictionToUnreal();
 		double fs = TweakSpeeds(1.0,0.0);
-		if ( !doomspeed.GetBool() )
+		if ( !flak_doomspeed )
 		{
 			if ( cmd.buttons&BT_SPEED ) fs *= walkfactor;
 		}
@@ -281,7 +281,7 @@ Class UTPlayer : DoomPlayer
 		{
 			if ( !waterlevel && (dodge.length() > 0) )
 			{
-				if ( doomspeed.GetBool() ) vel += dodge.unit()*(groundspeed_doomish*1.5)/TICRATE;
+				if ( flak_doomspeed ) vel += dodge.unit()*(groundspeed_doomish*1.5)/TICRATE;
 				else vel += dodge.unit()*(groundspeed*1.5)/TICRATE;
 				vel.z += dodgez/TICRATE;
 				bOnMobj = false;
@@ -297,7 +297,7 @@ Class UTPlayer : DoomPlayer
 			}
 			else
 			{
-				if ( nowalkdrop.GetBool() )
+				if ( flak_nowalkdrop )
 					bNODROPOFF = ((acceleration.length() > double.epsilon) && (cmd.buttons&BT_SPEED));
 				// Hook in Unreal physics
 				Vector2 dir = (0,0);
@@ -317,7 +317,7 @@ Class UTPlayer : DoomPlayer
 				}
 				vel.xy = vel.xy + acceleration/TICRATE;
 				double maxvel;
-				if ( doomspeed.GetBool() ) maxvel = groundspeed_doomish/TICRATE;
+				if ( flak_doomspeed ) maxvel = groundspeed_doomish/TICRATE;
 				else maxvel = groundspeed/TICRATE;
 				maxvel *= fs*doomfriction;
 				if ( vel.xy.length() > maxvel ) vel.xy = vel.xy.unit()*maxvel;
@@ -344,9 +344,9 @@ Class UTPlayer : DoomPlayer
 				Vector2 acceldir = acceleration.unit();
 				acceleration = acceldir * Min(acceleration.length(), accelrate/TICRATE);
 			}
-			acceleration *= doomaircontrol.GetBool()?level.aircontrol:utaircontrol;
+			acceleration *= flak_doomaircontrol?level.aircontrol:utaircontrol;
 			double maxvel;
-			if ( doomspeed.GetBool() ) maxvel = (groundspeed_doomish*fs)/TICRATE;
+			if ( flak_doomspeed ) maxvel = (groundspeed_doomish*fs)/TICRATE;
 			else maxvel = (groundspeed*fs)/TICRATE;
 			// if new velocity is higher than ground speed, steer but don't increase it
 			if ( (vel.xy+acceleration/TICRATE).length() > maxvel )
@@ -403,9 +403,7 @@ Class UTPlayer : DoomPlayer
 	}
 	override void CheckJump()
 	{
-		if ( !utmovement ) utmovement = CVar.GetCVar('flak_utmovement');
-		if ( !doomspeed ) doomspeed = CVar.GetCVar('flak_doomspeed');
-		if ( !utmovement.GetBool() )
+		if ( !flak_utmovement || !player || (player.mo != self) )
 		{
 			Super.CheckJump();
 			return;
@@ -418,7 +416,7 @@ Class UTPlayer : DoomPlayer
 			else if ( level.IsJumpingAllowed() && player.onground && (player.jumpTics == 0) && (last_jump_held < gametic-1) )
 			{
 				double jumpvelz;
-				if ( doomspeed.GetBool() ) jumpvelz = jumpz;
+				if ( flak_doomspeed ) jumpvelz = jumpz;
 				else jumpvelz = utjumpz/TICRATE;
 				double jumpfac = 0;
 				for ( let p = Inv; p != null; p = p.Inv )
@@ -772,6 +770,7 @@ Class UTChip : Actor
 		+THRUACTORS;
 		+NOTELEPORT;
 		+DONTSPLASH;
+		+INTERPOLATEANGLES;
 		BounceType "Doom";
 		BounceFactor 0.3;
 		Gravity 0.7;
@@ -803,9 +802,9 @@ Class UTChip : Actor
 	Spawn:
 		CHIP # 1
 		{
-			A_SetAngle(angle+anglevel,SPF_INTERPOLATE);
-			A_SetPitch(pitch+pitchvel,SPF_INTERPOLATE);
-			A_SetRoll(roll+rollvel,SPF_INTERPOLATE);
+			angle += anglevel;
+			pitch += pitchvel;
+			roll += rollvel;
 		}
 		Loop;
 	Bounce:
@@ -1184,8 +1183,8 @@ Class Swinger : Thinker
 		switch ( cstate )
 		{
 		case STATE_Initial:
-			target.A_SetAngle(target.angle+dir.x*str,SPF_INTERPOLATE);
-			target.A_SetPitch(target.pitch+dir.y*str,SPF_INTERPOLATE);
+			target.A_SetAngle(target.angle+dir.x*str*flak_swingerstrength,SPF_INTERPOLATE);
+			target.A_SetPitch(target.pitch+dir.y*str*flak_swingerstrength,SPF_INTERPOLATE);
 			str += inc;
 			if ( ++cnt >= steps )
 			{
@@ -1203,8 +1202,8 @@ Class Swinger : Thinker
 			}
 			break;
 		case STATE_Return:
-			target.A_SetAngle(target.angle-dir.x*str/rmul,SPF_INTERPOLATE);
-			target.A_SetPitch(target.pitch-dir.y*str/rmul,SPF_INTERPOLATE);
+			target.A_SetAngle(target.angle-dir.x*(str/rmul)*flak_swingerstrength,SPF_INTERPOLATE);
+			target.A_SetPitch(target.pitch-dir.y*(str/rmul)*flak_swingerstrength,SPF_INTERPOLATE);
 			if ( ++cnt >= steps*rmul )
 			{
 				cnt = 0;
@@ -1257,7 +1256,6 @@ Class UTMainHandler : StaticEventHandler
 {
 	ui TextureID tex;
 	Array<QueuedFlash> flashes;
-	transient CVar nobosstelefrag;
 
 	override void CheckReplacement( ReplaceEvent e )
 	{
@@ -1487,8 +1485,7 @@ Class UTMainHandler : StaticEventHandler
 
 	override void WorldThingSpawned( WorldEvent e )
 	{
-		if ( !nobosstelefrag ) nobosstelefrag = CVar.GetCVar('flak_nobosstelefrag');
-		if ( nobosstelefrag.GetBool() && e.Thing.bBOSS ) e.Thing.bNOTELEFRAG = true;
+		if ( flak_nobosstelefrag && e.Thing.bBOSS ) e.Thing.bNOTELEFRAG = true;
 	}
 
 	ui void StartMenu()
@@ -1513,12 +1510,12 @@ Class UTMainHandler : StaticEventHandler
 
 	override void PlayerEntered( PlayerEvent e )
 	{
-		if ( CVar.GetCVar('flak_translocator').GetBool() )
+		if ( flak_translocator )
 			players[e.playernumber].mo.GiveInventory("Translocator",1);
 	}
 	override void PlayerRespawned( PlayerEvent e )
 	{
-		if ( CVar.GetCVar('flak_translocator').GetBool() )
+		if ( flak_translocator )
 			players[e.playernumber].mo.GiveInventory("Translocator",1);
 	}
 
@@ -1526,7 +1523,7 @@ Class UTMainHandler : StaticEventHandler
 	{
 		if ( e.Name ~== "refreshtrans" )
 		{
-			if ( CVar.GetCVar('flak_translocator').GetBool() )
+			if ( flak_translocator )
 			{
 				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] ) players[i].mo.GiveInventory("Translocator",1);
 			}
@@ -1577,7 +1574,7 @@ Class UTMainHandler : StaticEventHandler
 	{
 		if ( e.Thing.bDONTGIB ) return;
 		// attach damage accumulator for corpses
-		if ( !CVar.GetCVar('flak_corpsedamage').GetBool() ) return;
+		if ( !flak_corpsedamage ) return;
 		let a = Actor.Spawn("ShredCorpseHitbox",e.Thing.pos);
 		a.target = e.Thing;
 	}
@@ -1616,6 +1613,7 @@ Class UTMainHandler : StaticEventHandler
 
 	static void DoSwing( Actor target, Vector2 dir, double initial, double inc, int steps, int mode = 0, int delay = 0, double rmul = 1.0 )
 	{
+		if ( !flak_swingers ) return;
 		let s = new("Swinger");
 		s.ChangeStatNum(Thinker.STAT_USER);
 		s.target = target;

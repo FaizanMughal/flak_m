@@ -174,6 +174,7 @@ Class FlakChunk : Actor
 		-BOUNCEAUTOOFF;
 		+CANBOUNCEWATER;
 		+SKYEXPLODE;
+		+INTERPOLATEANGLES;
 		Scale 0.3;
 	}
 	override void PostBeginPlay()
@@ -224,9 +225,9 @@ Class FlakChunk : Actor
 		}
 		if ( trail ) trail.alpha = max(0,11-frame)/11.;
 		if ( InStateSequence(CurState,FindState("Death")) ) return;
-		A_SetRoll(roll+rollvel,SPF_INTERPOLATE);
-		A_SetPitch(pitch+pitchvel,SPF_INTERPOLATE);
-		A_SetAngle(angle+pitchvel,SPF_INTERPOLATE);
+		roll += rollvel;
+		pitch += pitchvel;
+		angle += pitchvel;
 	}
 	action void A_HandleBounce()
 	{

@@ -268,8 +268,7 @@ Class UTInvisibilityX : Actor
 			Destroy();
 			return;
 		}
-		SetOrigin(target.pos,true);
-		A_SetAngle(target.angle,SPF_INTERPOLATE);
+		Warp(target,flags:WARPF_COPYINTERPOLATION|WARPF_NOCHECKPOSITION);
 		bInvisible = target.bInvisible;
 	}
 	States

@@ -42,6 +42,7 @@ Class MinigunTracer : Actor
 		+NOCLIP;
 		+NOGRAVITY;
 		+DONTSPLASH;
+		+INTERPOLATEANGLES;
 	}
 	override void Tick()
 	{
@@ -55,9 +56,9 @@ Class MinigunTracer : Actor
 		}
 		dir = dir.unit();
 		SetOrigin(Vec3Offset(dir.x*160,dir.y*160,dir.z*160),true);
-		A_SetAngle(atan2(dir.y,dir.x),SPF_INTERPOLATE);
-		A_SetPitch(asin(-dir.z),SPF_INTERPOLATE);
-		A_SetRoll(roll+60,SPF_INTERPOLATE);
+		angle = atan2(dir.y,dir.x);
+		pitch = asin(-dir.z);
+		roll += 60;
 	}
 	States
 	{

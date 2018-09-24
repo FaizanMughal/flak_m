@@ -216,9 +216,9 @@ Class BioGel : Actor
 		if ( globalfreeze || level.frozen ) return;
 		if ( !bNOGRAVITY )
 		{
-			A_SetRoll(roll+rollvel,SPF_INTERPOLATE);
-			A_SetPitch(pitch+pitchvel,SPF_INTERPOLATE);
-			A_SetPitch(pitch+yawvel,SPF_INTERPOLATE);
+			roll += rollvel;
+			pitch += pitchvel;
+			pitch += yawvel;
 			if ( waterlevel > 0 )
 			{
 				vel.xy *= 0.98;
@@ -288,6 +288,7 @@ Class BioGel : Actor
 	// align self to what surface was hit, currently does not support 3d floors + slopes properly
 	virtual void AlignSelf()
 	{
+		bINTERPOLATEANGLES = false;
 		bHITOWNER = true;
 		A_NoGravity();
 		A_Stop();
@@ -538,6 +539,7 @@ Class BioGel : Actor
 		+MOVEWITHSECTOR;
 		+NODAMAGETHRUST;
 		+HITTRACER;
+		+INTERPOLATEANGLES;
 	}
 	States
 	{
