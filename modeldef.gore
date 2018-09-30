@@ -1,0 +1,248 @@
+Model "UTGenericGib1"
+{
+	Path "models"
+	Model 0 "chunkM_d.3d"
+	Skin 0 "JGCow1.png"
+	Scale 0.04 0.04 0.048
+	Offset 0 0 2
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 2
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTGenericGib2"
+{
+	Path "models"
+	Model 0 "chunk2M_d.3d"
+	Skin 0 "JGCow1.png"
+	Scale 0.04 0.04 0.048
+	Offset 0 0 2
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 2
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTGenericGib3"
+{
+	Path "models"
+	Model 0 "chunk3M_d.3d"
+	Skin 0 "JGCow1.png"
+	Scale 0.04 0.04 0.048
+	Offset 0 0 2
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 2
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTGenericGib4"
+{
+	Path "models"
+	Model 0 "chunk4M_d.3d"
+	Skin 0 "JGCow1.png"
+	Scale 0.04 0.04 0.048
+	Offset 0 0 2
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 2
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTThigh"
+{
+	Path "models"
+	Model 0 "ThighUTM_d.3d"
+	Skin 0 "ThighT.png"
+	Scale 0.1 0.12 0.1
+	Offset 0 3.5 0
+	PitchOffset 90
+	AngleOffset -90
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 2
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTLiver"
+{
+	Path "models"
+	Model 0 "LiverM_d.3d"
+	Skin 0 "Jparts1.png"
+	Scale 0.04 0.04 0.048
+	Offset 0 0 1
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTStomach"
+{
+	Path "models"
+	Model 0 "stomachM_d.3d"
+	Skin 0 "Jparts1.png"
+	Scale 0.06 0.06 0.072
+	Offset 0 0 1
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTHeart"
+{
+	Path "models"
+	Model 0 "PHeartM_d.3d"
+	Skin 0 "Jmisc1.png"
+	Scale 0.03 0.03 0.036
+	Offset 0 0 0.5
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 0.5
+
+	FrameIndex UGIB A 0 0
+	FrameIndex UGIB B 0 1
+	FrameIndex UGIB C 0 2
+	FrameIndex UGIB D 0 3
+	FrameIndex UGIB E 0 4
+	FrameIndex UGIB F 0 5
+}
+
+Model "UTFemaleArm"
+{
+	Path "models"
+	Model 0 "femalearmm_d.3d"
+	Skin 0 "femalearmT.png"
+	Scale 0.16 0.16 0.192
+	Offset 0 0 1.5
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1.5
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTFemaleFoot"
+{
+	Path "models"
+	Model 0 "femalefootm_d.3d"
+	Skin 0 "femalefootT.png"
+	Scale 0.16 0.16 0.192
+	Offset 0 0 1.5
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1.5
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTFemaleTorso"
+{
+	Path "models"
+	Model 0 "femaletorsom_d.3d"
+	Skin 0 "femaletorsoT.png"
+	Scale 0.16 0.16 0.192
+	Offset 0 0 4
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 4
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTMaleArm"
+{
+	Path "models"
+	Model 0 "malearmm_d.3d"
+	Skin 0 "malearmT.png"
+	Scale 0.16 0.16 0.192
+	Offset 0 0 1.5
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1.5
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTMaleFoot"
+{
+	Path "models"
+	Model 0 "malefootm_d.3d"
+	Skin 0 "malefootT.png"
+	Scale 0.16 0.16 0.192
+	Offset 0 0 1.5
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1.5
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTMaleTorso"
+{
+	Path "models"
+	Model 0 "maletorsom_d.3d"
+	Skin 0 "maletorsoT.png"
+	Scale 0.16 0.16 0.192
+	Offset 0 0 4
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 4
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTHeadFemale"
+{
+	Path "models"
+	Model 0 "HeadFemaleM_d.3d"
+	Skin 0 "FMT1.png"
+	Scale 0.14 0.14 0.168
+	Offset 0 0 3
+	AngleOffset -90
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 3
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTHeadMale"
+{
+	Path "models"
+	Model 0 "headmalem_d.3d"
+	Skin 0 "MMT1.png"
+	Scale 0.14 0.14 0.168
+	Offset 0 0 3
+	AngleOffset -90
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 3
+
+	FrameIndex UGIB A 0 0
+}

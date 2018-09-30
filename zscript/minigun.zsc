@@ -222,12 +222,12 @@ Class Minigun : UTWeapon
 	Ready:
 		MGNS ABCDEFGHIJKLMNOPQRST 1 A_WeaponReady(WRF_NOFIRE);
 	Idle:
-		MGNI ABCDEFGHIJKLMNOPQRS 5
+		MGNI A 1
 		{
 			A_CheckReload();
 			A_WeaponReady();
 		}
-		Loop;
+		Wait;
 	Fire:
 	AltFire:
 		MGNI A 3 { invoker.bcnt = 5; }

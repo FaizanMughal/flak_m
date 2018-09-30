@@ -1,0 +1,87 @@
+// Blood
+Class UTBlood : Actor
+{
+}
+
+Class UTBloodDrop : Actor
+{
+}
+
+Class UTBloodSpurt : Actor
+{
+}
+
+Class UTBloodTrail : Actor
+{
+}
+
+// Chunks
+Class UTGib : Actor
+{
+	Default
+	{
+		Radius 4;
+		Height 4;
+		BounceType "Doom";
+		BounceFactor 0.5;
+		WallBounceFactor 0.5;
+		+ROLLSPRITE;
+		+ROLLCENTER;
+		+INTERPOLATEANGLES;
+		+MISSILE;
+		+SHOOTABLE;
+		+NODAMAGE;
+		+THRUACTORS;
+		+USEBOUNCESTATE;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		// TODO trails and stuff
+	}
+	States
+	{
+	Spawn:
+		UGIB A -1;
+		Stop;
+	Bounce:
+		UGIB A 0;
+		Goto Spawn;
+	Death:
+		UGIB A -1;
+		Stop;
+	}
+}
+Class UTGenericGib1 : UTGib {}
+Class UTGenericGib2 : UTGib {}
+Class UTGenericGib3 : UTGib {}
+Class UTGenericGib4 : UTGib {}
+Class UTThigh : UTGib {}
+Class UTFemaleArm : UTGib {}
+Class UTFemaleFoot : UTGib {}
+Class UTFemaleTorso : UTGib {}
+Class UTMaleArm : UTGib {}
+Class UTMaleFoot : UTGib {}
+Class UTMaleTorso : UTGib {}
+Class UTHeart : UTGib
+{
+	States
+	{
+	Spawn:
+		UGIB ABCDEF 2;
+		Loop;
+	Bounce:
+		UGIB A 0;
+		Goto Spawn;
+	Death:
+		UGIB ABCDEFABCDEFABCDEF 2;
+		UGIB ABCDEFABCDEF 4;
+		UGIB ABCDEF 8;
+		UGIB A -1;
+		Stop;
+	}
+}
+Class UTLiver : UTGib {}
+Class UTStomach : UTGib {}
+Class UTHeadFemale : UTGib {}
+Class UTHeadMale : UTGib {}

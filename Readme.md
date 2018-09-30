@@ -45,12 +45,13 @@ This mod requires a recent GZDoom devbuild (g3.6pre-31-gd965c9aa7 or later).
    - "Instant Rocket" mode toggleable with reload
  - Scaling/Customization options for the HUD
  - UT-like player movement physics
+ - Visual recoil affecting aim (improved A_Swing from Soundless Mound, can be
+   toggled)
 
 ## In progress
 
  - General polishing, bugfixing and rebalancing
  - Add some more effects
-   - Visual recoil affecting aim (time to recycle SM's A_Swing once again)
    - Lava/Slime footstep sounds?
  - Additional model optimization and cleanup (optional, not needed for 1.0)
    - Trim out unused animations (this one is going to be very time-consuming)
@@ -60,20 +61,20 @@ This mod requires a recent GZDoom devbuild (g3.6pre-31-gd965c9aa7 or later).
      be easily noticed when using invisibility)
    - Recenter the backpack mesh (it was a complete hack job to begin with)
  - UT gore system (toggleable)
+ - Change the way inventory items are dropped to be more UT-like (using the
+   freshly merged Inventory.OnDrop feature)
 
 ## Future plans
 
- - Change the way inventory items are dropped to be more UT-like, this will
-   require GZDoom changes
  - Add ammo counters to Pulsegun, Minigun, Flak Cannon and Rocket Launcher once
    scripted textures are implemented
  - Add player models once GZDoom gets a well deserved model animation system
    overhaul (at the moment this would require a monumental amount of work in
    the current state-tied system)
  - Add weapon attachment support to player models when that is also added in
- - Migrate RandomSpawners to CheckReplacement
  - Unreal 1 weapons mod and maybe also a monsters mod
- - Port some of my UT weapon mods
+ - Port some of my UT weapon mods (and maybe also some of my personal faves by
+   others, such as Psi Weapon Dreams)
 
 ## Known bugs
 
@@ -83,7 +84,7 @@ This mod requires a recent GZDoom devbuild (g3.6pre-31-gd965c9aa7 or later).
    even fix this)
  - Biorifle sludge doesn't handle 3d floors (especially sloped ones) properly.
    This is due to the unavailability of 3D floor data on ZScript and will be
-   fixed once 3D floors are exported to scripting
+   fixed once 3D floors are exported to scripting (still waiting on that PR)
 
 ## Known bugs that are not this mod's fault
 
