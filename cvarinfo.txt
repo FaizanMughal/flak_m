@@ -30,3 +30,4 @@ server bool flak_nowalkdrop = false;		// don't drop off ledges while holding wal
 server bool flak_corpsedamage = false;		// [WIP/EXPERIMENTAL] allow corpses to take damage and be gibbed, currently just causes a jump to XDeath until gore system is implemented
 server bool flak_swingers = true;		// weapon recoil that affects player view
 server float flak_swingerstrength = 0.5; 	// strength of visual recoil
+server bool flak_radboots = true;		// jump boots protect against damaging floors (this is to account for the lack of a radsuit)

@@ -182,6 +182,10 @@ HardwareShader Texture "models/JFA1.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
+HardwareShader Texture "models/Flak_t.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
 HardwareShader Texture "models/JMedBox1.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
@@ -264,11 +268,19 @@ HardwareShader Texture "models/JM21.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
+HardwareShader Texture "models/Mini_t.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
 HardwareShader Texture "models/JRocketPack1.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
 HardwareShader Texture "models/JuRocket1_.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/Eight_t.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }

@@ -36,7 +36,9 @@ Class DamageAmpLight : DynamicLight
 			Destroy();
 			return;
 		}
-		SetOrigin(target.pos,true);
+		if ( target.player )
+			SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
+		else SetOrigin(target.Vec3Offset(0,0,target.height/2),true);
 		args[LIGHT_INTENSITY] = Random[ASMD](10,12)*8;
 		bDORMANT = Powerup(master).isBlinking();
 	}
@@ -317,7 +319,8 @@ Class UTJumpBoots : Inventory
 		if ( pickup )
 		{
 			Owner.GiveInventory("PowerJumpBoots_HighJump",1);
-			Owner.GiveInventory("PowerJumpBoots_IronFeet",1);
+			if ( flak_radboots )
+				Owner.GiveInventory("PowerJumpBoots_IronFeet",1);
 		}
 		return false;
 	}
@@ -325,7 +328,8 @@ Class UTJumpBoots : Inventory
 	{
 		Super.Tick();
 		if ( !Owner || !Owner.player ) return;
-		amount--;
+		if ( flak_radboots )
+			amount--;
 		if ( (amount > 0) && (owner.player.jumptics == -1) )
 		{
 			Amount = max(0,Amount-700);
@@ -379,6 +383,8 @@ Class PowerJumpBoots_IronFeet : PowerIronFeet
 	override void DoEffect()
 	{
 		Powerup.DoEffect();
+		if ( !flak_radboots )
+			DepleteOrDestroy();
 	}
 }
 

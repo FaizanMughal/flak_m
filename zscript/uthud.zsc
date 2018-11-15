@@ -509,6 +509,7 @@ Class UTHud : BaseStatusBar
 
 	private void DrawKeys()
 	{
+		if ( deathmatch ) return;	// no need to draw in DM
 		if ( gameinfo.gametype&(GAME_Hexen|GAME_Strife) ) return;	// no key display for these ATM (will do eventually)
 		bool locks[6];
 		for ( int i=0; i<6; i++ ) locks[i] = CPlayer.mo.CheckKeys(i+1,false,true);
