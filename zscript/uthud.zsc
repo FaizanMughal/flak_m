@@ -405,6 +405,9 @@ Class UTHud : BaseStatusBar
 			UTDrawPlainTex(WeaponBox,hudsize*weaponsize,opacity+7);
 		}
 		Weapon wslots[10];
+		// zero-initialize, fixes asmjit crash
+		for ( int i=0; i<10; i++ )
+			wslots[i] = null;
 		// first run, populate the full array of weapons
 		for ( int i=0; i<10; i++ )
 		{
