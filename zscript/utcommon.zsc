@@ -440,23 +440,6 @@ Class UTPlayer : DoomPlayer
 	}
 }
 
-// Random Spawner that passes through dropped status to items
-Class RandomSpawner2 : RandomSpawner
-{
-	override void PostSpawn( Actor spawned )
-	{
-		if ( !bDROPPED ) return;
-		if ( spawned is 'Inventory' ) Inventory(spawned).bTOSSED = bDROPPED;
-		if ( spawned is 'UTWeapon' )
-		{
-			spawned.SetState(spawned.ResolveState("Spawn")+1);
-			Inventory(spawned).bALWAYSPICKUP = true;
-			if ( UTWeapon(spawned).DropAmmo > 0 )
-				Weapon(spawned).AmmoGive1 = min(UTWeapon(spawned).DropAmmo,Weapon(spawned).AmmoGive1);
-		}
-	}
-}
-
 Class UTWeapon : Weapon
 {
 	int DropAmmo;
@@ -1378,6 +1361,7 @@ Class UTMainHandler : StaticEventHandler
 		else if ( e.Replacee == 'YellowSkull' ) e.Replacement = 'UTGoldSkull';
 		else if ( e.Replacee == 'TeleportFog' ) e.Replacement = 'UTTeleportFog';
 		else if ( e.Replacee == 'ItemFog' ) e.Replacement = 'UTItemFog';
+		else if ( flak_blood && (e.Replacee == 'Blood') ) e.Replacement = 'UTBlood';
 	}
 
 	private Actor AddLight( Vector3 pos, Color col, int radius )
@@ -1592,6 +1576,28 @@ Class UTMainHandler : StaticEventHandler
 	override void WorldThingDied( WorldEvent e )
 	{
 		if ( e.Thing.bDONTGIB ) return;
+		// gibbers
+		if ( flak_gibs && !e.Thing.bNOBLOOD && ((e.Inflictor && e.Inflictor.bEXTREMEDEATH) || (e.Thing.Health < e.Thing.GetGibHealth())) && (!e.Inflictor || !e.Inflictor.bNOEXTREMEDEATH) )
+		{
+			// players have special gibbing
+			if ( e.Thing.player )
+			{
+				return;
+			}
+			// generic gibbing
+			let a = Actor.Spawn("UTGibber",e.Thing.pos);
+			a.vel = e.Thing.vel;
+			a.Scale = e.Thing.Scale;
+			a.Translation = e.Thing.BloodTranslation;
+			if ( e.Thing.BloodColor ) a.SetShade(e.Thing.BloodColor);
+			else a.SetShade(gameinfo.defaultbloodcolor);
+			a.A_SetSize(e.Thing.radius,e.Thing.height);
+			e.Thing.A_XScream();
+			e.Thing.A_NoBlocking();
+			e.Thing.A_BossDeath();
+			e.Thing.Destroy();
+			return;
+		}
 		// attach damage accumulator for corpses
 		if ( !flak_corpsedamage ) return;
 		let a = Actor.Spawn("ShredCorpseHitbox",e.Thing.pos);

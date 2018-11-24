@@ -129,15 +129,15 @@ misc/gibbed3	gib3
 misc/gibbed4	gib4
 misc/gibbed5	gib5
 $random misc/gibbed { misc/gibbed1 misc/gibbed2 misc/gibbed3 misc/gibbed4 misc/gibbed5 }
-// universal gibs compat
-$alias UniversalGibs/Gib misc/gibbed
-// droplets compat
 misc/gibp1	gibp1
 misc/gibp2	gibp3
 misc/gibp3	gibp4
 misc/gibp4	gibp5
 misc/gibp5	gibp6
 $random misc/gibp { misc/gibp1 misc/gibp2 misc/gibp3 misc/gibp4 misc/gibp5 }
+// universal gibs compat
+$alias UniversalGibs/Gib misc/gibbed
+// droplets compat
 $alias blood/hit misc/gibp
 
 impact/select	imppick

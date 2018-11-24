@@ -452,8 +452,8 @@ Class RedeemerHUD : HUDMessageBase
 	double ViewAngle, ViewPitch, ViewRoll, LagRoll, LagRoll2;
 	TextureID reticle1, reticle2, arrow, mark, readout;
 	Font whfont;
-	ThinkerIterator t;
-	MidTracer tr;
+	transient ThinkerIterator t;
+	transient MidTracer tr;
 	Array<TargetActor> ta;
 	Shape2D sshape, darrow;
 	bool dodim;
@@ -466,8 +466,6 @@ Class RedeemerHUD : HUDMessageBase
 		mark = TexMan.CheckForTexture("Crosshr6",TexMan.Type_Any);
 		readout = TexMan.CheckForTexture("Readout",TexMan.Type_Any);
 		whfont = Font.GetFont('WHFONT');
-		t = ThinkerIterator.Create("Actor");
-		tr = new("MidTracer");
 		sshape = new("Shape2D");
 		sshape.PushCoord((0,0));
 		sshape.PushCoord((1,0));
@@ -482,8 +480,10 @@ Class RedeemerHUD : HUDMessageBase
 		LagRoll = Quat.Normalize180(ViewRoll-LagRoll2);
 		LagRoll2 += Quat.Normalize180(LagRoll-LagRoll2)*0.1;
 		// shootable targetting
-		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() )
+		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() && !CVar.GetCVar('flak_redeemerreadout_perframe',players[consoleplayer]).GetBool() )
 		{
+			if ( !t ) t = ThinkerIterator.Create("Actor");
+			if ( !tr ) tr = new("MidTracer");
 			t.Reinit();
 			ta.Clear();
 			Actor a;
@@ -511,6 +511,28 @@ Class RedeemerHUD : HUDMessageBase
 		// shootable targetting
 		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() )
 		{
+			if ( CVar.GetCVar('flak_redeemerreadout_perframe',players[consoleplayer]).GetBool() )
+			{
+				if ( !t ) t = ThinkerIterator.Create("Actor");
+				if ( !tr ) tr = new("MidTracer");
+				t.Reinit();
+				ta.Clear();
+				Actor a;
+				Vector3 vdir = (cos(ViewAngle)*cos(ViewPitch),sin(ViewAngle)*cos(ViewPitch),-sin(ViewPitch));
+				while ( a = Actor(t.Next()) )
+				{
+					Vector3 tdir = Level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
+					if ( !a.bSHOOTABLE || (a.Health <= 0) || ((Camera is 'GuidedWarShell') && (a == GuidedWarShell(Camera).b)) || (tdir.length() > 2000) || (acos(tdir.unit() dot vdir) > players[consoleplayer].FOV) || tr.Trace(ViewPos,Camera.CurSector,tdir.unit(),tdir.length(),0) ) continue;
+					Vector3 wpos = ViewPos+tdir;
+					Vector3 spos = mkCoordUtil.WorldToScreen(wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
+					if ( spos.z > 1.0 ) continue;
+					TargetActor te = new("TargetActor");
+					te.vpos = mkCoordUtil.ToViewport(spos);
+					te.diststr = String.Format("%f",tdir.length());
+					te.diststr.Replace(".","");
+					ta.Push(te);
+				}
+			}
 			for ( int i=0; i<ta.Size(); i++ )
 			{
 				Screen.DrawTexture(mark,false,ta[i].vpos.x,ta[i].vpos.y,DTA_RenderStyle,(1|2<<8|1<<16));
