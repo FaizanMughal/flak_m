@@ -590,8 +590,12 @@ Class SuperShockBeam : Actor
 			}
 			else
 			{
-				t.Results.HitActor.DamageMobj(self,target,Random[ASMD](3500,5000),'joltedX',DMG_USEANGLE|DMG_THRUSTLESS,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
-				UTMainHandler.DoKnockback(t.Results.HitActor,t.Results.HitVector,60000);
+				// the actor may "cease to exist" if it dies after the call to ExplodeMissile, so guard against that
+				if ( t.Results.HitActor )
+				{
+					t.Results.HitActor.DamageMobj(self,target,Random[ASMD](3500,5000),'joltedX',DMG_USEANGLE|DMG_THRUSTLESS,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
+					UTMainHandler.DoKnockback(t.Results.HitActor,t.Results.HitVector,60000);
+				}
 				let r = Spawn("SuperShockBeamRing",pos);
 				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
 				r.pitch = asin(-t.Results.HitVector.z);

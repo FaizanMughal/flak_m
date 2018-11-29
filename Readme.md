@@ -47,25 +47,20 @@ This mod requires a recent GZDoom devbuild (g3.6pre-31-gd965c9aa7 or later).
  - UT-like player movement physics
  - Visual recoil affecting aim (improved A_Swing from Soundless Mound, can be
    toggled)
+ - UT-like weapon dropping style
 
 ## In progress
 
  - General polishing, bugfixing and rebalancing
  - Add some more effects
    - Lava/Slime footstep sounds?
- - Additional model optimization and cleanup (optional, not needed for 1.0)
-   - Trim out unused animations (this one is going to be very time-consuming)
-   - Re-export models using umodelextract to correct the "mangling" caused by
-     using umodel (inconsistent texture indices, extra texture groups)
-   - Fix some oddly-oriented triangles (e.g. some parts of the flak cannon, can
-     be easily noticed when using invisibility)
-   - Recenter the backpack mesh (it was a complete hack job to begin with)
  - UT gore system (toggleable)
- - Change the way inventory items are dropped to be more UT-like (using the
-   freshly merged Inventory.OnDrop feature)
 
 ## Future plans
 
+ - Additional model optimization and cleanup (optional, not needed for 1.0)
+   - Trim out unused animations (this one is going to be very time-consuming)
+   - Recenter the backpack mesh (it was a complete hack job to begin with)
  - Add ammo counters to Pulsegun, Minigun, Flak Cannon and Rocket Launcher once
    scripted textures are implemented
  - Add player models once GZDoom gets a well deserved model animation system

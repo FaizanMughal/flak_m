@@ -29,7 +29,8 @@ Model "Razor2"
 {
 	Path "models"
 	Model 0 "RazorBlade_d.3d"
-	SurfaceSkin 0 0 "RazSkin.png"
+	// indices start at 1 for this mesh
+	SurfaceSkin 0 1 "RazSkin.png"
 	Offset -9.5 0 0
 	Scale 0.18 0.18 0.216
 	AngleOffset 90
@@ -42,7 +43,8 @@ Model "Razor2Trail"
 {
 	Path "models"
 	Model 0 "RazorBlade_d.3d"
-	SurfaceSkin 0 1 "RazTrail.png"
+	// indices start at 1 for this mesh
+	SurfaceSkin 0 2 "RazTrail.png"
 	Offset -19 0 0
 	Scale 0.36 0.18 0.216
 	AngleOffset 90
@@ -56,7 +58,8 @@ Model "Razor2Alt"
 {
 	Path "models"
 	Model 0 "RazorBlade_d.3d"
-	SurfaceSkin 0 0 "RazSkin.png"
+	// indices start at 1 for this mesh
+	SurfaceSkin 0 1 "RazSkin.png"
 	Offset -9.5 0 0
 	Scale 0.18 0.18 0.216
 	AngleOffset 90
