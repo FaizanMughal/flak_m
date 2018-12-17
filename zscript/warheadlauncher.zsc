@@ -398,8 +398,8 @@ Class GuidedWarShell : WarShell
 			guideangle = lagangle2*0.95+lagangle*0.05;
 			guidepitch = lagpitch2*0.95+lagpitch*0.05;
 			guideroll = lagroll2*0.95+lagroll*0.05;
-			Quat orient = Quat.create_euler(pitch,angle,roll);
-			Quat angles = Quat.create_euler(guidepitch,guideangle,guideroll);
+			dt_Quat orient = dt_Quat.create_euler(pitch,angle,roll);
+			dt_Quat angles = dt_Quat.create_euler(guidepitch,guideangle,guideroll);
 			orient = orient.qmul(angles);
 			double npitch, nangle, nroll;
 			[npitch, nangle, nroll] = orient.to_euler();
@@ -477,8 +477,8 @@ Class RedeemerHUD : HUDMessageBase
 	}
 	override bool Tick()
 	{
-		LagRoll = Quat.Normalize180(ViewRoll-LagRoll2);
-		LagRoll2 += Quat.Normalize180(LagRoll-LagRoll2)*0.1;
+		LagRoll = dt_Quat.Normalize180(ViewRoll-LagRoll2);
+		LagRoll2 += dt_Quat.Normalize180(LagRoll-LagRoll2)*0.1;
 		// shootable targetting
 		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() && !CVar.GetCVar('flak_redeemerreadout_perframe',players[consoleplayer]).GetBool() )
 		{
@@ -493,10 +493,10 @@ Class RedeemerHUD : HUDMessageBase
 				Vector3 tdir = Level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
 				if ( !a.bSHOOTABLE || (a.Health <= 0) || ((Camera is 'GuidedWarShell') && (a == GuidedWarShell(Camera).b)) || (tdir.length() > 2000) || (acos(tdir.unit() dot vdir) > players[consoleplayer].FOV) || tr.Trace(ViewPos,Camera.CurSector,tdir.unit(),tdir.length(),0) ) continue;
 				Vector3 wpos = ViewPos+tdir;
-				Vector3 spos = mkCoordUtil.WorldToScreen(wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
+				Vector3 spos = dt_CoordUtil.WorldToScreen(wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
 				if ( spos.z > 1.0 ) continue;
 				TargetActor te = new("TargetActor");
-				te.vpos = mkCoordUtil.ToViewport(spos);
+				te.vpos = dt_CoordUtil.ToViewport(spos);
 				te.diststr = String.Format("%f",tdir.length());
 				te.diststr.Replace(".","");
 				ta.Push(te);
@@ -524,10 +524,10 @@ Class RedeemerHUD : HUDMessageBase
 					Vector3 tdir = Level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
 					if ( !a.bSHOOTABLE || (a.Health <= 0) || ((Camera is 'GuidedWarShell') && (a == GuidedWarShell(Camera).b)) || (tdir.length() > 2000) || (acos(tdir.unit() dot vdir) > players[consoleplayer].FOV) || tr.Trace(ViewPos,Camera.CurSector,tdir.unit(),tdir.length(),0) ) continue;
 					Vector3 wpos = ViewPos+tdir;
-					Vector3 spos = mkCoordUtil.WorldToScreen(wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
+					Vector3 spos = dt_CoordUtil.WorldToScreen(wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
 					if ( spos.z > 1.0 ) continue;
 					TargetActor te = new("TargetActor");
-					te.vpos = mkCoordUtil.ToViewport(spos);
+					te.vpos = dt_CoordUtil.ToViewport(spos);
 					te.diststr = String.Format("%f",tdir.length());
 					te.diststr.Replace(".","");
 					ta.Push(te);
@@ -660,7 +660,7 @@ Class WarheadLauncher : UTWeapon
 		A_AlertMonsters();
 		A_QuakeEx(6,6,6,20,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		vel -= x*10;
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
 		Actor p = Spawn("WarShell",origin);
@@ -674,7 +674,7 @@ Class WarheadLauncher : UTWeapon
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		vel -= x*0.2;
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
 		int numpt = Random[Warhead](10,20);
@@ -698,7 +698,7 @@ Class WarheadLauncher : UTWeapon
 		A_AlertMonsters();
 		A_QuakeEx(6,6,6,20,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		vel -= x*10;
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
 		Actor p = Spawn("GuidedWarShell",origin);

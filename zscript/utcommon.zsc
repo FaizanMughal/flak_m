@@ -574,7 +574,7 @@ Class UTWeapon : Weapon
 		Vector2 hofs = RotateVector((dropper.radius,0),dropper.angle);
 		SetOrigin(dropper.Vec3Offset(hofs.x,hofs.y,dropper.height*0.5),false);
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(dropper.pitch,dropper.angle,dropper.roll);
+		[x, y, z] = dt_Matrix4.GetAxes(dropper.pitch,dropper.angle,dropper.roll);
 		vel = x*12.0;
 		vel.z += 4.0;
 		angle = dropper.angle;
@@ -745,7 +745,7 @@ Class UTViewSpark : UTSpark
 			return;
 		}
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
@@ -990,7 +990,7 @@ Class UTViewSmoke : UTSmoke
 			return;
 		}
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);

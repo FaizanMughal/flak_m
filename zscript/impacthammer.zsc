@@ -70,7 +70,7 @@ Class ImpactHammer : UTWeapon
 		UTMainHandler.DoSwing(self,(FRandom[Impact](-0.3,-1.5),FRandom[Impact](-1.2,-0.4)),3,-0.8,3,SWING_Spring,3,2);
 		A_AlertMonsters();
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
 		double realcharge = min(1.5,invoker.chargesize);
 		FLineTraceData d;
@@ -133,7 +133,7 @@ Class ImpactHammer : UTWeapon
 		A_AlertMonsters();
 		A_QuakeEx(2,2,2,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
 		FLineTraceData d;
 		LineTrace(angle,120,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
@@ -188,7 +188,7 @@ Class ImpactHammer : UTWeapon
 	{
 		FLineTraceData d;
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-4.0*z;
 		LineTrace(angle,40,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( (invoker.chargesize > 1) && (d.HitType == TRACE_HitActor) )

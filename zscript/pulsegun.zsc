@@ -87,7 +87,7 @@ Class ViewPulseSpark : PulseSpark
 			return;
 		}
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
@@ -515,7 +515,7 @@ Class StarterBolt : PulseBolt
 		Vector3 x, y, z, origin;
 		if ( target.player )
 		{
-			[x, y, z] = Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+			[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
 			origin = target.Vec2OffsetZ(0,0,target.player.viewz)+8.0*x+4.1*y-2.7*z;
 		}
 		else origin = target.Vec3Offset(0,0,target.missileheight);
@@ -562,7 +562,7 @@ Class PulseGun : UTWeapon
 		UTMainHandler.DoSwing(self,(FRandom[Pulse](-1,-1),FRandom[Pulse](-1,1)),0.1,-0.02,3,SWING_Spring,0,2);
 		A_AlertMonsters();
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x+4.1*y-2.7*z;
 		for ( int i=0; i<4; i++ )
 		{
@@ -628,7 +628,7 @@ Class PulseGun : UTWeapon
 		A_OverlayRenderstyle(-2,STYLE_Add);
 		Vector3 x, y, z;
 		double a;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x+3.0*y-1.8*z;
 		origin += y*cos(invoker.sangle)*2.0+z*sin(invoker.sangle)*2.0;
 		invoker.sangle += 100;
@@ -660,7 +660,7 @@ Class PulseGun : UTWeapon
 	{
 		A_PlaySound("pulse/bolt",CHAN_WEAPON,1.0,true);
 		Vector3 x, y, z, origin;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x+4.1*y-2.7*z;
 		invoker.beam = Spawn("StarterBolt",origin);
 		invoker.beam.angle = angle;

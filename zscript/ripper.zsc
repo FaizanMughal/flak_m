@@ -283,7 +283,7 @@ Class Ripper2 : UTWeapon
 			UTMainHandler.DoSwing(self,(FRandom[Ripper](-0.3,-0.6),FRandom[Ripper](0.2,0.6)),1,-0.3,2,SWING_Spring,2,2);
 		}
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+6.0*y-4.0*z;
 		Actor p;
 		if ( alt ) p = Spawn("Razor2Alt",origin);
