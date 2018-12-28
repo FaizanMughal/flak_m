@@ -118,6 +118,7 @@ Class UTRocket : Actor
 		+SEEKERMISSILE;
 		+FORCERADIUSDMG;
 		+NODAMAGETHRUST;
+		+INTERPOLATEANGLES;
 	}
 	override void PostBeginPlay()
 	{
@@ -184,7 +185,7 @@ Class UTRocket : Actor
 	Spawn:
 		RCKT B 1
 		{
-			A_SetRoll(roll+30,SPF_INTERPOLATE);
+			roll += 30;
 			if ( invoker.ticcnt++ > 3 )
 			{
 				invoker.ticcnt = 0;
@@ -194,8 +195,8 @@ Class UTRocket : Actor
 			if ( vel.length() > 45. ) vel = Vel.unit()*45.;
 			Vector3 dir = vel.unit();
 			if ( waterlevel <= 0 ) vel = dir*min(vel.length()+1,32);
-			A_SetAngle(atan2(dir.y,dir.x),SPF_INTERPOLATE);
-			A_SetPitch(asin(-dir.z),SPF_INTERPOLATE);
+			angle = atan2(dir.y,dir.x);
+			pitch = asin(-dir.z);
 			for ( int i=0; i<3; i++ )
 			{
 				let s = Spawn("UTSmoke",pos);
@@ -242,9 +243,9 @@ Class UTGrenade : UTRocket
 	Spawn:
 		RCKT A 1
 		{
-			A_SetAngle(angle+anglevel,SPF_INTERPOLATE);
-			A_SetPitch(pitch+pitchvel,SPF_INTERPOLATE);
-			A_SetRoll(roll+rollvel,SPF_INTERPOLATE);
+			angle += anglevel;
+			pitch += pitchvel;
+			roll += rollvel;
 			A_Countdown();
 		}
 		Wait;
@@ -332,11 +333,13 @@ Class UTRocketLauncher : UTWeapon
 		UTMainHandler.DoFlash(self,Color(64,255,0,0),1);
 		A_AlertMonsters();
 		A_QuakeEx(2+num,2+num,2+num,6+num,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1+num*0.05);
+		for ( int i=0; i<num; i++ )
+			UTMainHandler.DoSwing(self,(FRandom[Eightball](0.4,-0.8),FRandom[Eightball](-0.5,0.5)),1,-0.2,Random[Eightball](3,4),SWING_Spring,Random[Eightball](2,5),Random[Eightball](2,4));
 		Vector3 x, y, z, x2, y2, z2;
 		double a, s;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-3.0*z;
-		[x2, y2, z2] = Matrix4.GetAxes(BulletSlope(),angle,roll);
+		[x2, y2, z2] = dt_Matrix4.GetAxes(BulletSlope(),angle,roll);
 		Actor p;
 		if ( weap.bAltFire )
 		{

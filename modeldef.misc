@@ -48,8 +48,9 @@ Model "UTHealthPack"
 {
 	Path "models"
 	Model 0 "hbox_d.3d"
-	SurfaceSkin 0 0 "jhbox1.png"
-	SurfaceSkin 0 1 "FIZZHP00"
+	// indices start at 1 for this mesh
+	SurfaceSkin 0 1 "jhbox1.png"
+	SurfaceSkin 0 2 "FIZZHP00"
 	Scale 0.2 0.24 0.2
 	RollOffset -90
 	ZOffset 16
@@ -61,9 +62,10 @@ Model "UTHealthBox"
 {
 	Path "models"
 	Model 0 "hboxbeta_d.3d"
-	SurfaceSkin 0 0 "jhboxbeta1.png"
-	SurfaceSkin 0 1 "FIZZHP10"
+	// indices start at 1 for this mesh
+	SurfaceSkin 0 1 "jhboxbeta1.png"
 	SurfaceSkin 0 2 "FIZZHP10"
+	SurfaceSkin 0 3 "FIZZHP10"
 	Scale 0.08 0.08 0.096
 	ZOffset 4
 
@@ -74,8 +76,9 @@ Model "UTMedBox"
 {
 	Path "models"
 	Model 0 "MedBox_d.3d"
-	SurfaceSkin 0 0 "JMedBox1.png"
-	SurfaceSkin 0 1 "FIZZHP10"
+	// indices start at 1 for this mesh
+	SurfaceSkin 0 1 "JMedBox1.png"
+	SurfaceSkin 0 2 "FIZZHP10"
 	Scale 0.06 0.06 0.072
 	ZOffset 5
 
@@ -244,7 +247,8 @@ Model "UTInvisibility"
 {
 	Path "models"
 	Model 0 "invis2M_d.3d"
-	SurfaceSkin 0 0 "jinvis.png"
+	// indices start at 1 for this mesh
+	SurfaceSkin 0 1 "jinvis.png"
 	Scale 0.1 0.1 0.12
 	ZOffset 9
 
@@ -254,7 +258,9 @@ Model "UTInvisibilityX"
 {
 	Path "models"
 	Model 0 "invis2M_d.3d"
-	SurfaceSkin 0 1 "invis00"
+	// gzdoom doesn't handle the environment mapped flag, so I had to edit
+	// it into a separate texnum
+	SurfaceSkin 0 2 "invis00"
 	Scale 0.1 0.1 0.12
 	ZOffset 9
 

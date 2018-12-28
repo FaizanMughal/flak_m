@@ -274,9 +274,43 @@ Class TranslocatorAfterimage : Actor
 	}
 }
 
+Class TranslocatorAmmo : Ammo
+{
+	Default
+	{
+		Tag "Translocator Ammo";
+		Inventory.Amount 6;
+		Inventory.MaxAmount 6;
+		Ammo.BackpackAmount 0;
+		Ammo.BackpackMaxAmount 6;
+	}
+}
+
 Class Translocator : UTWeapon
 {
 	Actor module;
+	double ammocharge;
+
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !Owner ) return;
+		if ( flak_transloc2k4 )
+		{
+			AmmoType1 = "TranslocatorAmmo";
+			if ( !Ammo1 ) Ammo1 = NonIdioticAddAmmo(Owner,AmmoType1,6);
+			if ( Ammo1.Amount >= Ammo1.MaxAmount ) return;
+			if ( ammocharge >= 1. )
+			{
+				ammocharge = 0.;
+				Ammo1.Amount = min(Ammo1.Amount+1,Ammo1.MaxAmount);
+			}
+			else ammocharge = min(1.,ammocharge+0.4/TICRATE);
+			return;
+		}
+		if ( Ammo1 ) Ammo1.Destroy();
+		if ( AmmoType1 ) AmmoType1 = null;
+	}
 
 	action void A_ThrowModule()
 	{
@@ -284,9 +318,10 @@ Class Translocator : UTWeapon
 		if ( !weap ) return;
 		A_PlaySound("transloc/throw",CHAN_WEAPON);
 		invoker.FireEffect();
+		UTMainHandler.DoSwing(self,(FRandom[Translocator](-0.2,0.4),FRandom[Translocator](-0.2,0.7)),2,-0.3,3,SWING_Spring,2,3);
 		A_AlertMonsters();
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x-8.0*y-12.0*z;
 		let p = Spawn("TranslocatorModule",origin);
 		p.target = self;
@@ -305,6 +340,7 @@ Class Translocator : UTWeapon
 		if ( !weap ) return;
 		A_PlaySound("transloc/return",CHAN_WEAPON);
 		invoker.FireEffect();
+		UTMainHandler.DoSwing(self,(FRandom[Translocator](-0.2,-0.4),FRandom[Translocator](-0.2,0.7)),3,-1,2,SWING_Spring,2,2);
 		A_AlertMonsters();
 		if ( invoker.module && invoker.module.bAMBUSH )
 		{
@@ -326,6 +362,8 @@ Class Translocator : UTWeapon
 			A_PlaySound("transloc/return",CHAN_WEAPON);
 			return;
 		}
+		// consume ammo if any
+		if ( weap.Ammo1 ) weap.Ammo1.Amount = max(0,weap.Ammo1.Amount-1);
 		// check if there's enough space
 		Vector3 oldpos = pos, newpos = invoker.module.pos;
 		double modulefloorz = invoker.module.floorz, moduleceilingz = invoker.module.ceilingz;
@@ -372,6 +410,8 @@ Class Translocator : UTWeapon
 		Weapon.SelectionOrder 10;
 		+WEAPON.NO_AUTO_SWITCH;
 		+WEAPON.CHEATNOTWEAPON;
+		+WEAPON.AMMO_OPTIONAL;
+		+WEAPON.ALT_AMMO_OPTIONAL;
 	}
 	States
 	{
@@ -409,10 +449,10 @@ Class Translocator : UTWeapon
 		TLI2 A 0;
 		Goto Idle2;
 	Fire:
-		TLCF A 0 A_JumpIf(invoker.module,"Return");
+		TLCF A 0 A_JumpIf(invoker.module||(invoker.Ammo1&&invoker.Ammo1.Amount<=0),"Return");
 		TLCF A 0 A_ThrowModule();
 		TLCF ABCDEFGH 1;
-		TLCF IJKLMNOPQRS 1 A_WeaponReady();
+		TLCF IJKLMNOPQRS 1 A_WeaponReady(WRF_NOPRIMARY);
 		Goto Idle;
 	Return:
 		TLCF A 0 A_ReturnModule();

@@ -3,7 +3,7 @@ Class UTPlayer : DoomPlayer
 	bool lastground;
 	int lastgroundtic;
 	double lastvelz, prevvelz;
-	transient CVar footsteps, utmovement, doomspeed, doomaircontrol, nowalkdrop;
+	transient CVar footsteps;
 	Vector2 acceleration;
 	Vector3 acceleration3;
 	int last_fm, last_sm;
@@ -11,14 +11,29 @@ Class UTPlayer : DoomPlayer
 	int last_tap_fm, last_tap_sm;
 	int last_jump_held;
 
+	int dolltype;
+
+	Property DollType : dolltype;
+
+	enum EDollType
+	{
+		DOLL_Male,
+		DOLL_Female,
+		DOLL_Boss
+	};
+
 	const groundspeed = 400.;
-	const accelrate = 2048.;
+	const swimspeed = 200.;
+	const baseaccelrate = 2048.;
 	const walkfactor = 0.3;
 	const utaircontrol = 0.35;
+	const swimspeed_doomish = 400.;
 	const groundspeed_doomish = 600.;
-	const terminalvelocity = 2500.;
 	const dodgez = 210.;
 	const utjumpz = 325.;
+	const groundfriction = 8.;
+	const fluidfriction = 1.2;
+	const terminalvelocity = 2500.;
 
 	Default
 	{
@@ -28,6 +43,12 @@ Class UTPlayer : DoomPlayer
 		Player.DamageScreenColor "FF 00 00";
 		Player.ViewHeight 46;
 		Player.GruntSpeed 20;
+		MaxDropoffHeight 18;
+		MaxStepHeight 18;
+		+NOFRICTION;
+		+NOFRICTIONBOUNCE;
+		+NOMENU;
+		UTPlayer.DollType DOLL_Male;
 	}
 
 	// Have to modify the give cheat to handle UT armor
@@ -183,12 +204,12 @@ Class UTPlayer : DoomPlayer
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !player ) return;
+		if ( !player || (player.mo != self) ) return;
 		if ( !footsteps ) footsteps = CVar.GetCVar('flak_footsteps',players[consoleplayer]);
 		if ( !footsteps.GetBool() ) return;
 		double ang = level.time/(20*TICRATE/35.)*360.;
 		bool forcefootstep = false;
-		if ( player.onground && !bNoGravity && !lastground && (waterlevel < 3) )
+		if ( player.onground && !bNoGravity && !lastground && (waterlevel < 2) )
 		{
 			player.jumptics = 0;
 			if ( lastvelz < -8 )
@@ -199,16 +220,17 @@ Class UTPlayer : DoomPlayer
 			}
 			else forcefootstep = true;
 		}
-		if ( forcefootstep || ((abs(sin(ang)) >= 1.0) && player.onground && lastground && (player.jumptics == 0) && (player.cmd.forwardmove || player.cmd.sidemove) && (waterlevel < 3)) )
+		if ( forcefootstep || ((abs(sin(ang)) >= 1.0) && player.onground && lastground && (player.jumptics == 0) && (player.cmd.forwardmove || player.cmd.sidemove) && (waterlevel < 2)) )
 		{
 			double vol = abs(vel.xy.length())*0.03;
 			if ( forcefootstep ) vol = clamp(-lastvelz*0.05,0.01,1.0);
 			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid && !bOnMobj ) A_PlaySound("ut/playerfootstepwet",CHAN_5,vol);
-			else A_PlaySound("ut/playerfootstep",CHAN_5,vol);
+			else PlayFootstep(vol);
 		}
 		lastground = player.onground;
 		lastvelz = prevvelz;
 		prevvelz = vel.z;
+		// TODO exit/entry sounds for water
 	}
 
 	double FrictionToUnreal()
@@ -220,16 +242,12 @@ Class UTPlayer : DoomPlayer
 
 	override void MovePlayer()
 	{
-		if ( !utmovement ) utmovement = CVar.GetCVar('flak_utmovement');
-		if ( !doomspeed ) doomspeed = CVar.GetCVar('flak_doomspeed');
-		if ( !doomaircontrol ) doomaircontrol = CVar.GetCVar('flak_doomaircontrol');
-		if ( !nowalkdrop ) nowalkdrop = CVar.GetCVar('flak_nowalkdrop');
-		bNODROPOFF = false;
-		if ( !utmovement.GetBool() )
+		if ( !flak_utmovement || !player || (player.mo != self) )
 		{
 			Super.MovePlayer();
 			return;
 		}
+		bNODROPOFF = false;
 		UserCmd cmd = player.cmd;
 		if ( player.turnticks )
 		{
@@ -239,16 +257,21 @@ Class UTPlayer : DoomPlayer
 		else Angle += cmd.yaw*(360./65536.);
 		player.onground = (pos.z <= floorz) || bOnMobj || bMBFBouncer || (player.cheats & CF_NOCLIP2);
 		if ( player.onground ) lastgroundtic = gametic;
-		if ( (abs(lastgroundtic-gametic) < 4) && (player.jumptics == 0) ) player.onground = true;
+		if ( !player.onground && !bNoGravity && (waterlevel < 2) && (abs(pos.z-floorz) <= maxdropoffheight) && (player.jumptics == 0) && (vel.z < 0) )
+		{
+			SetOrigin(Vec2OffsetZ(0,0,floorz),true);
+			player.onground = true;
+		}
 		double friction = FrictionToUnreal();
 		double fs = TweakSpeeds(1.0,0.0);
-		if ( !doomspeed.GetBool() )
+		if ( !flak_doomspeed )
 		{
 			if ( cmd.buttons&BT_SPEED ) fs *= walkfactor;
 		}
 		else fs *= max(abs(cmd.forwardmove/12800.),abs(cmd.sidemove/10240.));
 		if ( CanCrouch() && (player.crouchfactor != -1) ) fs *= player.crouchfactor;
 		acceleration = rotatevector((cmd.forwardmove,-cmd.sidemove),angle);
+		double accelrate = baseaccelrate*fs;
 		Vector2 dodge = (0,0);
 		int fm = cmd.forwardmove;
 		int sm = cmd.sidemove;
@@ -276,11 +299,11 @@ Class UTPlayer : DoomPlayer
 			}
 		}
 		last_sm = sm;
-		if ( !bNoGravity && player.onground )
+		if ( !bNoGravity && player.onground && (waterlevel < 2) )
 		{
-			if ( !waterlevel && (dodge.length() > 0) )
+			if ( dodge.length() > 0 )
 			{
-				if ( doomspeed.GetBool() ) vel += dodge.unit()*(groundspeed_doomish*1.5)/TICRATE;
+				if ( flak_doomspeed ) vel += dodge.unit()*(groundspeed_doomish*1.5)/TICRATE;
 				else vel += dodge.unit()*(groundspeed*1.5)/TICRATE;
 				vel.z += dodgez/TICRATE;
 				bOnMobj = false;
@@ -296,11 +319,12 @@ Class UTPlayer : DoomPlayer
 			}
 			else
 			{
-				if ( nowalkdrop.GetBool() )
+				if ( flak_nowalkdrop )
 					bNODROPOFF = ((acceleration.length() > double.epsilon) && (cmd.buttons&BT_SPEED));
 				// Hook in Unreal physics
 				Vector2 dir = (0,0);
 				if ( vel.xy.length() > double.epsilon ) dir = vel.xy.unit();
+				double doomfriction = clamp(GetFriction()/ORIG_FRICTION,0.0,1.0);
 				if ( acceleration.length() <= double.epsilon )
 				{
 					Vector2 oldvel = vel.xy;
@@ -315,10 +339,9 @@ Class UTPlayer : DoomPlayer
 				}
 				vel.xy = vel.xy + acceleration/TICRATE;
 				double maxvel;
-				if ( doomspeed.GetBool() ) maxvel = (groundspeed_doomish*fs)/TICRATE;
-				else maxvel = (groundspeed*fs)/TICRATE;
-				double doomfriction = clamp(GetFriction()/ORIG_FRICTION,0.0,1.0);
-				maxvel *= doomfriction;
+				if ( flak_doomspeed ) maxvel = groundspeed_doomish/TICRATE;
+				else maxvel = groundspeed/TICRATE;
+				maxvel *= fs*doomfriction;
 				if ( vel.xy.length() > maxvel ) vel.xy = vel.xy.unit()*maxvel;
 				if ( !(player.cheats & CF_PREDICTING) )
 				{
@@ -328,7 +351,7 @@ Class UTPlayer : DoomPlayer
 				player.vel = vel.xy;
 			}
 		}
-		else if ( !bNoGravity && !waterlevel )
+		else if ( !bNoGravity && (waterlevel < 2) )
 		{
 			// air acceleration when falling
 			float maxaccel = accelrate/TICRATE;
@@ -343,10 +366,11 @@ Class UTPlayer : DoomPlayer
 				Vector2 acceldir = acceleration.unit();
 				acceleration = acceldir * Min(acceleration.length(), accelrate/TICRATE);
 			}
-			acceleration *= doomaircontrol.GetBool()?level.aircontrol:utaircontrol;
+			acceleration *= flak_doomaircontrol?level.aircontrol:utaircontrol;
 			double maxvel;
-			if ( doomspeed.GetBool() ) maxvel = (groundspeed_doomish*fs)/TICRATE;
+			if ( flak_doomspeed ) maxvel = (groundspeed_doomish*fs)/TICRATE;
 			else maxvel = (groundspeed*fs)/TICRATE;
+			// TODO attempt to replicate walk on ice velocity increase glitch
 			// if new velocity is higher than ground speed, steer but don't increase it
 			if ( (vel.xy+acceleration/TICRATE).length() > maxvel )
 			{
@@ -356,42 +380,72 @@ Class UTPlayer : DoomPlayer
 			else vel.xy = vel.xy+acceleration/TICRATE;
 			if ( vel.length() > terminalvelocity/TICRATE ) vel = vel.unit()*(terminalvelocity/TICRATE);
 			player.vel *= 0;
+			player.jumptics = -2;
+		}
+		else if ( bFly || (player.cheats&CF_NOCLIP2) )
+		{
+			// fly cheat has infinite friction (player stops moving when movement keys are released)
+			Vector3 dir = (0,0,0);
+			if ( vel.length() > double.epsilon ) dir = vel.unit();
+			Vector3 x, y;
+			[x, y] = dt_Matrix4.GetAxes(pitch,angle,0);
+			acceleration3 = x*player.cmd.forwardmove+y*player.cmd.sidemove;
+			if ( player.cmd.buttons&BT_JUMP ) acceleration3.z = 0x500;
+			else if ( player.cmd.buttons&BT_CROUCH ) acceleration3.z = -0x500;
+			if ( acceleration3.length() <= double.epsilon ) vel *= 0;
+			else
+			{
+				Vector3 acceldir = acceleration3.unit();
+				acceleration3 = acceldir*Min(acceleration3.length(),accelrate/TICRATE);
+				vel = vel-(dir-acceldir)*vel.length();
+			}
+			vel = vel+acceleration3/TICRATE;
+			double maxvel;
+			if ( flak_doomspeed ) maxvel = groundspeed_doomish/TICRATE;
+			else maxvel = groundspeed/TICRATE;
+			maxvel *= fs;
+			if ( vel.length() > maxvel ) vel = vel.unit()*maxvel;
+			player.vel *= 0;
+			player.jumptics = -2;
+			if ( !(player.cheats & CF_PREDICTING) ) PlayIdle();
 		}
 		else
 		{
-			// swimming uses standard physics, otherwise things break
-			double forwardmove, sidemove;
-			double bobfactor;
-			double friction, movefactor;
-			double fm, sm;
-			[friction, movefactor] = GetFriction();
-			bobfactor = (friction<ORIG_FRICTION)?movefactor:ORIG_FRICTION_FACTOR;
-			fm = cmd.forwardmove;
-			sm = cmd.sidemove;
-			[fm, sm] = TweakSpeeds(fm,sm);
-			fm *= Speed/256;
-			sm *= Speed/256;
-			if ( CanCrouch() && (player.crouchfactor != 1) )
+			// swimming is pretty much like ground movement, but with much reduced friction and lower speed
+			friction *= fluidfriction/groundfriction;
+			Vector3 dir = (0,0,0);
+			if ( vel.length() > double.epsilon ) dir = vel.unit();
+			double doomfriction = clamp(GetFriction()/ORIG_FRICTION,0.0,1.0);
+			Vector3 x, y;
+			[x, y] = dt_Matrix4.GetAxes(pitch,angle,0);
+			acceleration3 = x*player.cmd.forwardmove+y*player.cmd.sidemove;
+			if ( player.cmd.buttons&BT_JUMP ) acceleration3.z = 0x500;
+			else if ( player.cmd.buttons&BT_CROUCH ) acceleration3.z = -0x500;
+			if ( acceleration3.length() <= double.epsilon )
 			{
-				fm *= player.crouchfactor;
-				sm *= player.crouchfactor;
-				bobfactor *= player.crouchfactor;
+				Vector3 oldvel = vel;
+				vel = vel-(2*dir)*vel.length()*friction/TICRATE;
+				if ( oldvel dot vel < 0.0 ) vel *= 0;
 			}
-			forwardmove = fm*movefactor*(35/TICRATE);
-			sidemove = sm*movefactor*(35/TICRATE);
-			if ( forwardmove )
+			else
 			{
-				Bob(Angle, cmd.forwardmove*bobfactor/256.,true);
-				ForwardThrust(forwardmove,Angle);
+				Vector3 acceldir = acceleration3.unit();
+				acceleration3 = acceldir*Min(acceleration3.length(),accelrate/TICRATE);
+				vel = vel-(dir-acceldir)*vel.length()*friction/TICRATE;
 			}
-			if ( sidemove )
+			vel = vel+acceleration3/TICRATE;
+			double maxvel;
+			if ( flak_doomspeed ) maxvel = swimspeed_doomish/TICRATE;
+			else maxvel = swimspeed/TICRATE;
+			maxvel *= fs*doomfriction;
+			if ( vel.length() > maxvel ) vel = vel.unit()*maxvel;
+			player.vel = vel.xy;
+			player.jumptics = -2;
+			if ( !(player.cheats & CF_PREDICTING) )
 			{
-				let a = Angle-90;
-				Bob(a,cmd.sidemove*bobfactor/256.,false);
-				Thrust(sidemove,a);
+				if ( acceleration3.length() <= double.epsilon ) PlayIdle();
+				else PlayRunning();
 			}
-			if ( !(player.cheats&CF_PREDICTING) && ((forwardmove != 0) || (sidemove != 0)) )
-				PlayRunning();
 		}
 		if ( player.cheats & CF_REVERTPLEASE )
 		{
@@ -399,11 +453,33 @@ Class UTPlayer : DoomPlayer
 			player.camera = player.mo;
 		}
 	}
+	override void CheckCrouch( bool totallyfrozen )
+	{
+		if ( !flak_utmovement || !player || (player.mo != self) )
+		{
+			Super.CheckCrouch(totallyfrozen);
+			return;
+		}
+		if ( player.cmd.buttons&BT_JUMP ) player.cmd.buttons &= ~BT_CROUCH;
+		if ( CanCrouch() && (player.health > 0) && level.IsCrouchingAllowed() && player.onground )	// in UT you can't crouch unless you're on the ground
+		{
+			if ( !totallyfrozen )
+			{
+				int crouchdir = player.crouching;
+				if ( !crouchdir ) crouchdir = (player.cmd.buttons&BT_CROUCH)?-1:1;
+				else if ( player.cmd.buttons&BT_CROUCH ) player.crouching = 0;
+				if ( (crouchdir == 1) && (player.crouchfactor < 1) && (pos.Z+height < ceilingz) )
+					CrouchMove(1);
+				else if ( (crouchdir == -1) && (player.crouchfactor > 0.5 ))
+					CrouchMove(-1);
+			}
+		}
+		else player.Uncrouch();
+		player.crouchoffset = -(ViewHeight)*(1-player.crouchfactor);
+	}
 	override void CheckJump()
 	{
-		if ( !utmovement ) utmovement = CVar.GetCVar('flak_utmovement');
-		if ( !doomspeed ) doomspeed = CVar.GetCVar('flak_doomspeed');
-		if ( !utmovement.GetBool() )
+		if ( !flak_utmovement || !player || (player.mo != self) )
 		{
 			Super.CheckJump();
 			return;
@@ -411,12 +487,10 @@ Class UTPlayer : DoomPlayer
 		if ( player.cmd.buttons&BT_JUMP )
 		{
 			if ( player.crouchoffset ) player.crouching = 1;
-			else if ( waterlevel >= 2 ) Vel.z = 4*Speed;
-			else if ( bNoGravity ) Vel.z = 3.;
-			else if ( level.IsJumpingAllowed() && player.onground && (player.jumpTics == 0) && (last_jump_held < gametic-1) )
+			else if ( level.IsJumpingAllowed() && player.onground && (player.jumpTics == 0) && (last_jump_held < gametic-1) && !bNoGravity && (waterlevel < 2) && !(player.cheats&(CF_FLY|CF_NOCLIP2)) )
 			{
 				double jumpvelz;
-				if ( doomspeed.GetBool() ) jumpvelz = jumpz;
+				if ( flak_doomspeed ) jumpvelz = jumpz;
 				else jumpvelz = utjumpz/TICRATE;
 				double jumpfac = 0;
 				for ( let p = Inv; p != null; p = p.Inv )
@@ -438,22 +512,75 @@ Class UTPlayer : DoomPlayer
 		if ( !player.onground || player.jumptics )
 			last_jump_held = gametic;
 	}
+
+	virtual void PlayFootstep( double vol )
+	{
+		A_PlaySound("ut/playerfootstep",CHAN_5,vol);
+	}
 }
 
-// Random Spawner that passes through dropped status to items
-Class RandomSpawner2 : RandomSpawner
+// these only exist for sound
+// female classes have identical sounds, so they use the same soundclass here
+Class UTPlayerTMale1 : UTPlayer
 {
-	override void PostSpawn( Actor spawned )
+	Default
 	{
-		if ( !bDROPPED ) return;
-		if ( spawned is 'Inventory' ) Inventory(spawned).bTOSSED = bDROPPED;
-		if ( spawned is 'UTWeapon' )
-		{
-			spawned.SetState(spawned.ResolveState("Spawn")+1);
-			Inventory(spawned).bALWAYSPICKUP = true;
-			if ( UTWeapon(spawned).DropAmmo > 0 )
-				Weapon(spawned).AmmoGive1 = min(UTWeapon(spawned).DropAmmo,Weapon(spawned).AmmoGive1);
-		}
+		Player.SoundClass "tmale1";
+		Player.DisplayName "M Commando";
+		Player.Portrait "Blake";
+		-NOMENU;
+	}
+}
+Class UTPlayerTMale2 : UTPlayer
+{
+	Default
+	{
+		Player.SoundClass "tmale2";
+		Player.DisplayName "M Soldier";
+		Player.Portrait "Brock";
+		-NOMENU;
+	}
+}
+Class UTPlayerTFemale1 : UTPlayer
+{
+	Default
+	{
+		Player.SoundClass "tfemale";
+		Player.DisplayName "F Commando";
+		Player.Portrait "Ivana";
+		UTPlayer.DollType DOLL_Female;
+		-NOMENU;
+	}
+}
+Class UTPlayerTFemale2 : UTPlayer
+{
+	Default
+	{
+		Player.SoundClass "tfemale";
+		Player.DisplayName "F Soldier";
+		Player.Portrait "Lauren";
+		UTPlayer.DollType DOLL_Female;
+		-NOMENU;
+	}
+}
+Class UTPlayerTBoss : UTPlayer
+{
+	transient CVar bossfootsteps;
+	Default
+	{
+		Player.SoundClass "tboss";
+		Player.DisplayName "Boss";
+		Player.Portrait "Xan";
+		UTPlayer.DollType DOLL_Boss;
+		// should have NOBLOOD, but Xan did bleed in vanilla UT so...
+		// (this is what gave birth to the theory that Xan was actually Jerl Liandri himself)
+		-NOMENU;
+	}
+	override void PlayFootstep( double vol )
+	{
+		if ( !bossfootsteps ) bossfootsteps = CVar.GetCVar('flak_bossfootsteps',players[consoleplayer]);
+		if ( bossfootsteps.GetBool() ) A_PlaySound("ut/bossfootstep",CHAN_5,vol);
+		else Super.PlayFootstep(vol);
 	}
 }
 
@@ -491,6 +618,12 @@ Class UTWeapon : Weapon
 	override void Tick()
 	{
 		Super.Tick();
+		// don't slide on floor when dropped
+		if ( CurState == ResolveState("Spawn")+1 )
+		{
+			if ( pos.z <= floorz )
+				vel.xy *= 0;
+		}
 		if ( !Owner || !Owner.player || (Owner.player.ReadyWeapon != self) ) return;
 		Owner.player.WeaponState |= WF_WEAPONBOBBING; // UT weapons always bob
 	}
@@ -578,6 +711,19 @@ Class UTWeapon : Weapon
 				ammoitem.Amount = ammoitem.MaxAmount;
 		}
 		return ammoitem;
+	}
+
+	override void OnDrop( Actor dropper )
+	{
+		Vector2 hofs = RotateVector((dropper.radius,0),dropper.angle);
+		SetOrigin(dropper.Vec3Offset(hofs.x,hofs.y,dropper.height*0.5),false);
+		Vector3 x, y, z;
+		[x, y, z] = dt_Matrix4.GetAxes(dropper.pitch,dropper.angle,dropper.roll);
+		vel = x*12.0;
+		vel.z += 4.0;
+		angle = dropper.angle;
+		pitch = 0;
+		roll = 0;
 	}
 
 	Default
@@ -743,7 +889,7 @@ Class UTViewSpark : UTSpark
 			return;
 		}
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
@@ -770,6 +916,7 @@ Class UTChip : Actor
 		+THRUACTORS;
 		+NOTELEPORT;
 		+DONTSPLASH;
+		+INTERPOLATEANGLES;
 		BounceType "Doom";
 		BounceFactor 0.3;
 		Gravity 0.7;
@@ -801,9 +948,9 @@ Class UTChip : Actor
 	Spawn:
 		CHIP # 1
 		{
-			A_SetAngle(angle+anglevel,SPF_INTERPOLATE);
-			A_SetPitch(pitch+pitchvel,SPF_INTERPOLATE);
-			A_SetRoll(roll+rollvel,SPF_INTERPOLATE);
+			angle += anglevel;
+			pitch += pitchvel;
+			roll += rollvel;
 		}
 		Loop;
 	Bounce:
@@ -987,7 +1134,7 @@ Class UTViewSmoke : UTSmoke
 			return;
 		}
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
@@ -1154,6 +1301,68 @@ Class ShredCorpseHitbox : Actor
 	}
 }
 
+Enum ESwingMode
+{
+	SWING_Straight,	// constant increment
+	SWING_Spring,	// bounces back after a delay
+};
+
+Class Swinger : Thinker
+{
+	Actor target;
+	Vector2 dir;
+	double inc, rmul;
+	int steps, mode, delay;
+	double str, tstr;
+	int cnt, cstate;
+
+	Enum ESwingerState
+	{
+		STATE_Initial,
+		STATE_Wait,
+		STATE_Return,
+	};
+
+	override void Tick()
+	{
+		if ( !target ) cstate = -1;
+		switch ( cstate )
+		{
+		case STATE_Initial:
+			target.A_SetAngle(target.angle+dir.x*str*flak_swingerstrength,SPF_INTERPOLATE);
+			target.A_SetPitch(target.pitch+dir.y*str*flak_swingerstrength,SPF_INTERPOLATE);
+			str += inc;
+			if ( ++cnt >= steps )
+			{
+				cnt = 0;
+				str = tstr/steps;
+				cstate = (mode==SWING_Straight)?(-1):(delay>0)?STATE_Wait:STATE_Return;
+			}
+			else tstr += str;
+			break;
+		case STATE_Wait:
+			if ( ++cnt >= delay )
+			{
+				cnt = 0;
+				cstate = STATE_Return;
+			}
+			break;
+		case STATE_Return:
+			target.A_SetAngle(target.angle-dir.x*(str/rmul)*flak_swingerstrength,SPF_INTERPOLATE);
+			target.A_SetPitch(target.pitch-dir.y*(str/rmul)*flak_swingerstrength,SPF_INTERPOLATE);
+			if ( ++cnt >= steps*rmul )
+			{
+				cnt = 0;
+				cstate = -1;
+			}
+			break;
+		default:
+			Destroy();
+			return;
+		}
+	}
+}
+
 Class GenericFlash : HUDMessageBase
 {
 	Color col;
@@ -1193,7 +1402,6 @@ Class UTMainHandler : StaticEventHandler
 {
 	ui TextureID tex;
 	Array<QueuedFlash> flashes;
-	transient CVar nobosstelefrag;
 
 	override void CheckReplacement( ReplaceEvent e )
 	{
@@ -1206,12 +1414,13 @@ Class UTMainHandler : StaticEventHandler
 		else if ( e.Replacee == 'Pistol' ) e.Replacement = 'Enforcer';
 		else if ( (e.Replacee == 'Shotgun') || (e.Replacee == 'SuperShotgun') )
 		{
-			if ( Random[Replacements](0,1) ) e.Replacement = 'BioRifle';
+			if ( !Random[Replacements](0,3) ) e.Replacement = 'Enforcer';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'BioRifle';
 			else e.Replacement = 'ShockRifle';
 		}
 		else if ( e.Replacee == 'Chaingun' )
 		{
-			if ( Random[Replacements](0,1) ) e.Replacement = 'PulseGun';
+			if ( Random[Replacements](0,2) ) e.Replacement = 'PulseGun';
 			else e.Replacement = 'Ripper2';
 		}
 		else if ( e.Replacee == 'RocketLauncher' )
@@ -1228,12 +1437,14 @@ Class UTMainHandler : StaticEventHandler
 		else if ( e.Replacee == 'Clip' ) e.Replacement = 'EClip';
 		else if ( e.Replacee == 'ClipBox' )
 		{
-			if ( Random[Replacements](0,1) ) e.Replacement = 'PulseAmmo';
+			if ( !Random[Replacements](0,2) ) e.Replacement = 'EClip';
+			else if ( Random[Replacements](0,2) ) e.Replacement = 'PulseAmmo';
 			else e.Replacement = 'RipperAmmo';
 		}
 		else if ( e.Replacee == 'Shell' )
 		{
-			if ( Random[Replacements](0,1) ) e.Replacement = 'BioAmmo2';
+			if ( !Random[Replacements](0,2) ) e.Replacement = 'EClip';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'BioAmmo2';
 			else e.Replacement = 'ShockAmmo2';
 		}
 		else if ( e.Replacee == 'ShellBox' )
@@ -1243,8 +1454,16 @@ Class UTMainHandler : StaticEventHandler
 		}
 		else if ( e.Replacee == 'RocketAmmo' )
 		{
-			if ( Random[Replacements](0,1) ) e.Replacement = 'FlakAmmo2';
-			else e.Replacement = 'UTRocketAmmo2';
+			if ( Random[Replacements](0,1) )
+			{
+				if ( !Random[Replacements](0,3) ) e.Replacement = 'FlakAmmo';
+				else e.Replacement = 'FlakAmmo2';
+			}
+			else
+			{
+				if ( !Random[Replacements](0,3) ) e.Replacement = 'UTRocketAmmo';
+				else e.Replacement = 'UTRocketAmmo2';
+			}
 		}
 		else if ( e.Replacee == 'RocketBox' )
 		{
@@ -1254,11 +1473,12 @@ Class UTMainHandler : StaticEventHandler
 		else if ( e.Replacee == 'Cell' )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'EClip';
+			else if ( !Random[Replacements](0,3) ) e.Replacement = 'RifleAmmo';
 			else e.Replacement = 'RifleAmmo2';
 		}
 		else if ( e.Replacee == 'CellPack' )
 		{
-			if ( !Random[Replacements](0,5) ) e.Replacement = 'WarheadAmmo';
+			if ( !Random[Replacements](0,6) ) e.Replacement = 'WarheadAmmo';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'MiniAmmo';
 			else e.Replacement = 'RifleAmmo';
 		}
@@ -1285,6 +1505,7 @@ Class UTMainHandler : StaticEventHandler
 		else if ( e.Replacee == 'YellowSkull' ) e.Replacement = 'UTGoldSkull';
 		else if ( e.Replacee == 'TeleportFog' ) e.Replacement = 'UTTeleportFog';
 		else if ( e.Replacee == 'ItemFog' ) e.Replacement = 'UTItemFog';
+		else if ( flak_blood && (e.Replacee == 'Blood') ) e.Replacement = 'UTBlood';
 	}
 
 	private Actor AddLight( Vector3 pos, Color col, int radius )
@@ -1411,8 +1632,7 @@ Class UTMainHandler : StaticEventHandler
 
 	override void WorldThingSpawned( WorldEvent e )
 	{
-		if ( !nobosstelefrag ) nobosstelefrag = CVar.GetCVar('flak_nobosstelefrag');
-		if ( nobosstelefrag.GetBool() && e.Thing.bBOSS ) e.Thing.bNOTELEFRAG = true;
+		if ( flak_nobosstelefrag && e.Thing.bBOSS ) e.Thing.bNOTELEFRAG = true;
 	}
 
 	ui void StartMenu()
@@ -1437,12 +1657,12 @@ Class UTMainHandler : StaticEventHandler
 
 	override void PlayerEntered( PlayerEvent e )
 	{
-		if ( CVar.GetCVar('flak_translocator').GetBool() )
+		if ( flak_translocator )
 			players[e.playernumber].mo.GiveInventory("Translocator",1);
 	}
 	override void PlayerRespawned( PlayerEvent e )
 	{
-		if ( CVar.GetCVar('flak_translocator').GetBool() )
+		if ( flak_translocator )
 			players[e.playernumber].mo.GiveInventory("Translocator",1);
 	}
 
@@ -1450,7 +1670,7 @@ Class UTMainHandler : StaticEventHandler
 	{
 		if ( e.Name ~== "refreshtrans" )
 		{
-			if ( CVar.GetCVar('flak_translocator').GetBool() )
+			if ( flak_translocator )
 			{
 				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] ) players[i].mo.GiveInventory("Translocator",1);
 			}
@@ -1500,8 +1720,30 @@ Class UTMainHandler : StaticEventHandler
 	override void WorldThingDied( WorldEvent e )
 	{
 		if ( e.Thing.bDONTGIB ) return;
+		// gibbers
+		if ( flak_gibs && !e.Thing.bNOBLOOD && ((e.Inflictor && e.Inflictor.bEXTREMEDEATH) || (e.Thing.Health < e.Thing.GetGibHealth())) && (!e.Inflictor || !e.Inflictor.bNOEXTREMEDEATH) )
+		{
+			// players have special gibbing
+			if ( e.Thing.player )
+			{
+				return;
+			}
+			// generic gibbing
+			let a = Actor.Spawn("UTGibber",e.Thing.pos);
+			a.vel = e.Thing.vel;
+			a.Scale = e.Thing.Scale;
+			a.Translation = e.Thing.BloodTranslation;
+			if ( e.Thing.BloodColor ) a.SetShade(e.Thing.BloodColor);
+			else a.SetShade(gameinfo.defaultbloodcolor);
+			a.A_SetSize(e.Thing.radius,e.Thing.height);
+			e.Thing.A_XScream();
+			e.Thing.A_NoBlocking();
+			e.Thing.A_BossDeath();
+			e.Thing.Destroy();
+			return;
+		}
 		// attach damage accumulator for corpses
-		if ( !CVar.GetCVar('flak_corpsedamage').GetBool() ) return;
+		if ( !flak_corpsedamage ) return;
 		let a = Actor.Spawn("ShredCorpseHitbox",e.Thing.pos);
 		a.target = e.Thing;
 	}
@@ -1536,5 +1778,23 @@ Class UTMainHandler : StaticEventHandler
 	{
 		if ( !Victim ) return;
 		Victim.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.Mass));
+	}
+
+	static void DoSwing( Actor target, Vector2 dir, double initial, double inc, int steps, int mode = 0, int delay = 0, double rmul = 1.0 )
+	{
+		if ( !flak_swingers ) return;
+		let s = new("Swinger");
+		s.ChangeStatNum(Thinker.STAT_USER);
+		s.target = target;
+		s.dir = dir;
+		s.inc = inc;
+		s.rmul = rmul;
+		s.steps = steps;
+		s.mode = mode;
+		s.delay = delay;
+		s.cnt = 0;
+		s.cstate = 0;
+		s.str = initial;
+		s.tstr = initial;
 	}
 }

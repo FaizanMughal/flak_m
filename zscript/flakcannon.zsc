@@ -105,6 +105,53 @@ Class ChunkTrail : Actor
 	}
 }
 
+Class FlakAccumulator : Thinker
+{
+	Actor victim;
+	int amount;
+	int cnt;
+
+	override void Tick()
+	{
+		Super.Tick();
+		cnt++;
+		if ( cnt < 5 ) return;
+		Destroy();
+	}
+
+	static void Accumulate( Actor victim, int amount )
+	{
+		let ti = ThinkerIterator.Create("FlakAccumulator",STAT_USER);
+		FlakAccumulator a, match = null;
+		while ( a = FlakAccumulator(ti.Next()) )
+		{
+			if ( a.victim != victim ) continue;
+			match = a;
+			break;
+		}
+		if ( !match )
+		{
+			match = new("FlakAccumulator");
+			match.ChangeStatNum(STAT_USER);
+			match.victim = victim;
+		}
+		match.cnt = 0;
+		match.amount += amount;
+	}
+
+	static int GetAmount( Actor victim )
+	{
+		let ti = ThinkerIterator.Create("FlakAccumulator",STAT_USER);
+		FlakAccumulator a;
+		while ( a = FlakAccumulator(ti.Next()) )
+		{
+			if ( a.victim != victim ) continue;
+			return a.amount;
+		}
+		return 0;
+	}
+}
+
 Class FlakChunk : Actor
 {
 	ChunkTrail trail;
@@ -127,6 +174,7 @@ Class FlakChunk : Actor
 		-BOUNCEAUTOOFF;
 		+CANBOUNCEWATER;
 		+SKYEXPLODE;
+		+INTERPOLATEANGLES;
 		Scale 0.3;
 	}
 	override void PostBeginPlay()
@@ -177,9 +225,9 @@ Class FlakChunk : Actor
 		}
 		if ( trail ) trail.alpha = max(0,11-frame)/11.;
 		if ( InStateSequence(CurState,FindState("Death")) ) return;
-		A_SetRoll(roll+rollvel,SPF_INTERPOLATE);
-		A_SetPitch(pitch+pitchvel,SPF_INTERPOLATE);
-		A_SetAngle(angle+pitchvel,SPF_INTERPOLATE);
+		roll += rollvel;
+		pitch += pitchvel;
+		angle += pitchvel;
 	}
 	action void A_HandleBounce()
 	{
@@ -208,6 +256,10 @@ Class FlakChunk : Actor
 	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
 	{
 		if ( vel.length() <= 5.0 ) return 0;
+		FlakAccumulator.Accumulate(target,damage);
+		int gibhealth = (target.GibHealth==int.min)?-target.SpawnHealth():target.GibHealth;
+		int calcdmg = FlakAccumulator.GetAmount(target);
+		if ( target.Health-calcdmg <= (gibhealth/2) ) bEXTREMEDEATH = true;
 		if ( !target.bNOBLOOD )
 		{
 			target.SpawnBlood(pos,AngleTo(target),damage);
@@ -370,7 +422,7 @@ Class FlakSlug : Actor
 		Spawn("SlugLight",pos);
 		Vector3 x, y, z;
 		double a, s;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Actor p;
 		for ( int i=0; i<5; i++ )
 		{
@@ -459,16 +511,17 @@ Class FlakCannon : UTWeapon
 		A_PlaySound("flak/fire",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(160,255,96,0),1);
+		UTMainHandler.DoSwing(self,(FRandom[Flak](-0.3,-0.8),FRandom[Flak](-0.5,0.5)),4,-1.5,2,SWING_Spring,2,2);
 		A_AlertMonsters();
 		A_QuakeEx(1,1,1,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
 		Vector3 x, y, z;
 		double a, s;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+4.0*y-3.0*z;
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);
-		[x, y, z] = Matrix4.GetAxes(BulletSlope(),angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(BulletSlope(),angle,roll);
 		Actor p;
 		for ( int i=0; i<6; i++ )
 		{
@@ -508,11 +561,12 @@ Class FlakCannon : UTWeapon
 		A_PlaySound("flak/altfire",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,96,0),1);
+		UTMainHandler.DoSwing(self,(FRandom[Flak](-0.4,-0.8),FRandom[Flak](0.4,0.8)),4,-1,3,SWING_Spring,3,5);
 		A_AlertMonsters();
 		A_QuakeEx(2,2,2,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		double a, s;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-3.0*z;
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);

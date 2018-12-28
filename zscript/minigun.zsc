@@ -42,6 +42,7 @@ Class MinigunTracer : Actor
 		+NOCLIP;
 		+NOGRAVITY;
 		+DONTSPLASH;
+		+INTERPOLATEANGLES;
 	}
 	override void Tick()
 	{
@@ -55,9 +56,9 @@ Class MinigunTracer : Actor
 		}
 		dir = dir.unit();
 		SetOrigin(Vec3Offset(dir.x*160,dir.y*160,dir.z*160),true);
-		A_SetAngle(atan2(dir.y,dir.x),SPF_INTERPOLATE);
-		A_SetPitch(asin(-dir.z),SPF_INTERPOLATE);
-		A_SetRoll(roll+60,SPF_INTERPOLATE);
+		angle = atan2(dir.y,dir.x);
+		pitch = asin(-dir.z);
+		roll += 60;
 	}
 	States
 	{
@@ -86,16 +87,24 @@ Class Minigun : UTWeapon
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,255,255,0),1);
 		A_AlertMonsters();
-		if ( alt ) A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
-		else A_QuakeEx(1,1,1,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
+		if ( alt )
+		{
+			A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
+			UTMainHandler.DoSwing(self,(FRandom[Minigun](-1,1),FRandom[Minigun](-1,1)),0.5,0,1,SWING_Spring,0,3);
+		}
+		else
+		{
+			A_QuakeEx(1,1,1,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
+			UTMainHandler.DoSwing(self,(FRandom[Minigun](-1,1),FRandom[Minigun](-1,1)),0.3,0,1,SWING_Spring,0,3);
+		}
 		let l = Spawn("MinigunLight",pos);
 		l.target = self;
 		if ( !alt ) MinigunLight(l).cnt--;
 		Vector3 x, y, z, x2, y2, z2;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+y*2.0-z*2.0;
 		double a = FRandom[Minigun](0,360), s = FRandom[Minigun](0,alt?0.05:0.02);
-		[x2, y2, z2] = Matrix4.GetAxes(BulletSlope(),angle,roll);
+		[x2, y2, z2] = dt_Matrix4.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 		FLineTraceData d;
 		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
@@ -213,12 +222,12 @@ Class Minigun : UTWeapon
 	Ready:
 		MGNS ABCDEFGHIJKLMNOPQRST 1 A_WeaponReady(WRF_NOFIRE);
 	Idle:
-		MGNI ABCDEFGHIJKLMNOPQRS 5
+		MGNI A 1
 		{
 			A_CheckReload();
 			A_WeaponReady();
 		}
-		Loop;
+		Wait;
 	Fire:
 	AltFire:
 		MGNI A 3 { invoker.bcnt = 5; }

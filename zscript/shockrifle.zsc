@@ -334,7 +334,11 @@ Class ShockBeam : Actor
 			ExplodeMissile(null,t.Results.HitActor);
 			if ( t.Results.HitActor is 'ShockHitbox' )
 			{
-				if ( target ) target.TakeInventory('ShockAmmo',2);
+				if ( target )
+				{
+					target.TakeInventory('ShockAmmo',2);
+					UTMainHandler.DoSwing(target,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),5,-1,3,SWING_Spring,3,6);
+				}
 				let b = t.Results.HitActor.target;
 				UTMainHandler.DoBlast(b,250,70000);
 				b.ExplodeMissile(null,self);
@@ -379,7 +383,7 @@ Class ShockBeam : Actor
 				t.Results.HitLine.RemoteActivate(target,t.Results.Side,SPAC_Impact,pos);
 				// calculate normal
 				HitNormal = (-t.Results.HitLine.delta.y,t.Results.HitLine.delta.x,0).unit();
-				if ( t.Results.Side == 1 ) HitNormal *= -1;
+				if ( t.Results.Side == 0 ) HitNormal *= -1;
 			}
 			else if ( t.Results.HitType == TRACE_HitFloor )
 				HitNormal = t.Results.HitSector.floorplane.Normal;
@@ -557,7 +561,11 @@ Class SuperShockBeam : Actor
 			ExplodeMissile(null,t.Results.HitActor);
 			if ( t.Results.HitActor is 'ShockHitbox' )
 			{
-				if ( target ) target.TakeInventory('EnhancedShockAmmo',1);
+				if ( target )
+				{
+					target.TakeInventory('EnhancedShockAmmo',1);
+					UTMainHandler.DoSwing(target,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),10,-2,3,SWING_Spring,3,6);
+				}
 				let b = t.Results.HitActor.target;
 				UTMainHandler.DoBlast(b,400,70000);
 				b.ExplodeMissile(null,self);
@@ -582,8 +590,12 @@ Class SuperShockBeam : Actor
 			}
 			else
 			{
-				t.Results.HitActor.DamageMobj(self,target,Random[ASMD](3500,5000),'joltedX',DMG_USEANGLE|DMG_THRUSTLESS,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
-				UTMainHandler.DoKnockback(t.Results.HitActor,t.Results.HitVector,60000);
+				// the actor may "cease to exist" if it dies after the call to ExplodeMissile, so guard against that
+				if ( t.Results.HitActor )
+				{
+					t.Results.HitActor.DamageMobj(self,target,Random[ASMD](3500,5000),'joltedX',DMG_USEANGLE|DMG_THRUSTLESS,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
+					UTMainHandler.DoKnockback(t.Results.HitActor,t.Results.HitVector,60000);
+				}
 				let r = Spawn("SuperShockBeamRing",pos);
 				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
 				r.pitch = asin(-t.Results.HitVector.z);
@@ -617,7 +629,7 @@ Class SuperShockBeam : Actor
 	action void A_BeamExplode()
 	{
 		Spawn("SuperShockBeamLight",pos);
-		if ( !CVar.GetCVar('flak_classicsshock').GetBool() )
+		if ( !flak_classicsshock )
 		{
 			UTMainHandler.DoBlast(self,50,60000);
 			A_Explode(Random[ASMD](500,800),50);
@@ -966,7 +978,7 @@ Class ViewShockSpark : ShockSpark
 			return;
 		}
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
@@ -996,10 +1008,11 @@ Class ShockRifle : UTWeapon
 		A_PlaySound("shock/fire",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,128,0,255),1);
+		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),2,-0.3,3,SWING_Spring,0,4);
 		A_AlertMonsters();
 		A_QuakeEx(2,2,2,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
 		Actor p = Spawn("ShockBeam",origin);
 		p.angle = angle;
@@ -1033,10 +1046,11 @@ Class ShockRifle : UTWeapon
 		A_PlaySound("shock/altfire",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,128,0,255),1);
+		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),3,-0.4,3,SWING_Spring,0,4);
 		A_AlertMonsters();
 		A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
 		Actor p = Spawn("ShockBall",origin);
 		p.angle = angle;
@@ -1177,10 +1191,11 @@ Class EnhancedShockRifle : UTWeapon
 		A_PlaySound("shock/fire",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,0),1);
+		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),4,-0.6,3,SWING_Spring,0,4);
 		A_AlertMonsters();
 		A_QuakeEx(3,3,3,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.15);
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
 		Actor p = Spawn("SuperShockBeam",origin);
 		p.angle = angle;
@@ -1214,10 +1229,11 @@ Class EnhancedShockRifle : UTWeapon
 		A_PlaySound("shock/altfire",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,0),1);
+		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),6,-0.8,3,SWING_Spring,0,4);
 		A_AlertMonsters();
 		A_QuakeEx(3,3,3,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.15);
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
 		Actor p = Spawn("SuperShockBall",origin);
 		p.angle = angle;
@@ -1285,7 +1301,7 @@ Class EnhancedShockRifle : UTWeapon
 		ASMF BCDEFGHIJJ 2;
 		Goto Idle;
 	AltFire:
-		ASMI A 0 A_JumpIf(CVar.GetCVar('flak_classicsshock').GetBool(),"Fire");
+		ASMI A 0 A_JumpIf(flak_classicsshock,"Fire");
 		ASMI A 0 A_JumpIfNoAmmo("DryFire");
 		ASMA A 1 A_SShockAlt();
 		ASMA BCDFGHIJ 2;

@@ -5,11 +5,11 @@
    See https://www.gnu.org/licenses/lgpl-3.0.txt for its terms.
 */
 
-Class Quat
+Class dt_Quat
 {
 	protected double W, X, Y, Z;
 
-	Quat init( double w, double x, double y, double z )
+	dt_Quat init( double w, double x, double y, double z )
 	{
 		self.W = w;
 		self.X = x;
@@ -18,7 +18,7 @@ Class Quat
 		return self;
 	}
 
-	void copy( Quat q )
+	void copy( dt_Quat q )
 	{
 		W = q.W;
 		X = q.X;
@@ -26,26 +26,26 @@ Class Quat
 		Z = q.Z;
 	}
 
-	static Quat create( double w, double x, double y, double z )
+	static dt_Quat create( double w, double x, double y, double z )
 	{
-		return new("Quat").init(w,x,y,z);
+		return new("dt_Quat").init(w,x,y,z);
 	}
 
-	static Quat create_axis( Vector3 axis, double theta )
+	static dt_Quat create_axis( Vector3 axis, double theta )
 	{
 		double scale = axis dot axis;
-		if ( scale < double.epsilon ) return Quat.create(1,0,0,0);
+		if ( scale < double.epsilon ) return dt_Quat.create(1,0,0,0);
 		theta *= 0.5;
 		double f = sin(theta)/sqrt(scale);
-		return Quat.create(cos(theta),axis.x*f,axis.y*f,axis.z*f);
+		return dt_Quat.create(cos(theta),axis.x*f,axis.y*f,axis.z*f);
 	}
 
-	static Quat create_euler( double pitch, double yaw, double roll )
+	static dt_Quat create_euler( double pitch, double yaw, double roll )
 	{
-		Quat zrot = Quat.create_axis((0,0,1),yaw);
-		Quat yrot = Quat.create_axis((0,1,0),pitch);
-		Quat xrot = Quat.create_axis((1,0,0),roll);
-		Quat sum = zrot.qmul(yrot);
+		dt_Quat zrot = dt_Quat.create_axis((0,0,1),yaw);
+		dt_Quat yrot = dt_Quat.create_axis((0,1,0),pitch);
+		dt_Quat xrot = dt_Quat.create_axis((1,0,0),roll);
+		dt_Quat sum = zrot.qmul(yrot);
 		sum = sum.qmul(xrot);
 		return sum;
 	}
@@ -89,9 +89,9 @@ Class Quat
 		return pitch, yaw, roll;
 	}
 
-	Quat qmul( Quat q )
+	dt_Quat qmul( dt_Quat q )
 	{
-		return Quat.create(w*q.w-x*q.x-y*q.y-z*q.z,w*q.x+x*q.w+y*q.z-z
+		return dt_Quat.create(w*q.w-x*q.x-y*q.y-z*q.z,w*q.x+x*q.w+y*q.z-z
 			*q.y,w*q.y+y*q.w+z*q.x-x*q.z,w*q.z+z*q.w+x*q.y-y*q.x);
 	}
 }
