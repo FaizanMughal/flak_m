@@ -1,7 +1,7 @@
 GameInfo
 {
 	AddEventHandlers = "RedeemerHUDHandler", "UTMainHandler"
-	PlayerClasses = "UTPlayer"
+	PlayerClasses = "UTPlayerTMale1", "UTPlayerTMale2", "UTPlayerTFemale1", "UTPlayerTFemale2", "UTPlayerTBoss"
 	StatusBarClass = "UTHud"
 	BackpackType = "UTBackpack"
 	BorderFlat = "TEMPBG"

@@ -19,6 +19,7 @@ user float flak_hudsize = 1.0;				// 0.2 <-> 1.0 in steps of 0.2 (default 1.0)
 user float flak_weaponsize = 0.8;			// 0.2 <-> 1.0 in steps of 0.2 (default 0.8)
 user float flak_statussize = 1.0;			// 0.5 <-> 1.5 in steps of 0.1 (default 1.0)
 user bool flak_footsteps = true;			// players make footstep sounds
+user bool flak_bossfootsteps = false;			// boss players play mechanic footsteps (unlike in vanilla UT)
 server bool flak_translocator = false;			// translocator is enabled (hello, sequence breaking)
 server bool flak_transloc2k4 = false;			// translocator has recharging ammo like in UT2k4 and up
 user bool flak_noswitchdeemer = true;			// don't switch to redeemer when out of ammo

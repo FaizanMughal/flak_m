@@ -3,7 +3,7 @@
 What began as a test for importing UT vertex meshes has turned into an actual
 full UT weapon and item mod.
 
-This mod requires a recent GZDoom devbuild (g3.6pre-31-gd965c9aa7 or later).
+This mod requires GZDoom 3.7.0 or later.
 
 ## Currently implemented
 
@@ -48,6 +48,7 @@ This mod requires a recent GZDoom devbuild (g3.6pre-31-gd965c9aa7 or later).
  - Visual recoil affecting aim (improved A_Swing from Soundless Mound, can be
    toggled)
  - UT-like weapon dropping style
+ - UT player classes (sound only, no models yet)
 
 ## In progress
 

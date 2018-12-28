@@ -23,7 +23,7 @@ Class ViewTracer : LineTracer
 
 Class UTHud : BaseStatusBar
 {
-	TextureID AmmoBar, Boxes[4], Keys[5], BigNum[12], Flash, Slots[10], Icons[14], Uses[14], Man[5], Woman[5], WeaponBox, IconTloc2, UseTloc2;
+	TextureID AmmoBar, Boxes[4], Keys[5], BigNum[12], Flash, Slots[10], Icons[14], Uses[14], Man[5], Woman[5], Boss[5], WeaponBox, IconTloc2, UseTloc2;
 	Class<Weapon> IconClasses[14];
 	double HScale;
 	Color tintcolor, bgcolor;
@@ -142,6 +142,11 @@ Class UTHud : BaseStatusBar
 		Woman[2] = TexMan.CheckForTexture("WomanPad",TexMan.Type_Any);
 		Woman[3] = TexMan.CheckForTexture("WomanBot",TexMan.Type_Any);
 		Woman[4] = TexMan.CheckForTexture("WomanBlt",TexMan.Type_Any);
+		Boss[0] = TexMan.CheckForTexture("Boss",TexMan.Type_Any);
+		Boss[1] = TexMan.CheckForTexture("BossArm",TexMan.Type_Any);
+		Boss[2] = TexMan.CheckForTexture("BossPad",TexMan.Type_Any);
+		Boss[3] = TexMan.CheckForTexture("BossBot",TexMan.Type_Any);
+		Boss[4] = TexMan.CheckForTexture("BossBlt",TexMan.Type_Any);
 		WeaponBox = TexMan.CheckForTexture("WpSel",TexMan.Type_Any);
 	}
 
@@ -330,7 +335,22 @@ Class UTHud : BaseStatusBar
 			d = DamageAmplifier(CPlayer.mo.FindInventory("DamageAmplifier"));
 			j = UTJumpBoots(CPlayer.mo.FindInventory("UTJumpBoots"));
 			if ( d && !d.isBlinking() ) dollcolor = d.BlendColor;
-			if ( CPlayer.GetGender() == 1 )
+			int dolltype = 0;
+			if ( CPlayer.mo is 'UTPlayer' ) dolltype = UTPlayer(CPlayer.mo).DollType;
+			else
+			{
+				// female doll for female, male doll for male/neutral, boss doll for object
+				dolltype = (CPlayer.GetGender()==3)?UTPlayer.DOLL_Boss:(CPlayer.GetGender()==1)?UTPlayer.DOLL_Female:UTPlayer.DOLL_Male;
+			}
+			if ( dolltype == UTPlayer.DOLL_Boss )
+			{
+				UTDrawTintedTex(Boss[0],hudsize*statussize,min(opacity,15),dollcolor);
+				if ( a ) UTDrawTintedTex(Boss[1],hudsize*statussize,int(min(opacity,15)*(a.Amount/double(a.MaxAmount))),dollcolor);
+				if ( t ) UTDrawTintedTex(Boss[2],hudsize*statussize,int(min(opacity,15)*(t.Amount/double(t.MaxAmount))),dollcolor);
+				if ( j ) UTDrawTintedTex(Boss[3],hudsize*statussize,int(min(opacity,15)*(j.Amount/double(j.MaxAmount))),dollcolor);
+				if ( s ) UTDrawTintedTex(Boss[4],hudsize*statussize,int(min(opacity,15)*(s.Amount/double(s.MaxAmount))),GoldColor);
+			}
+			else if ( dolltype == UTPlayer.DOLL_Female )
 			{
 				UTDrawTintedTex(Woman[0],hudsize*statussize,min(opacity,15),dollcolor);
 				if ( a ) UTDrawTintedTex(Woman[1],hudsize*statussize,int(min(opacity,15)*(a.Amount/double(a.MaxAmount))),dollcolor);

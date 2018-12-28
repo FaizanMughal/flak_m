@@ -16,8 +16,11 @@ ut/malepain3	injurm04
 ut/malepain4	injurh5
 ut/land		land1
 ut/malegrunt	land10
+ut/malegrunt1	mland3
 ut/malejump	jump1
+ut/malejump1	tmjump3
 ut/malehump	land01
+ut/malehump1	mland3
 ut/malesurf	gasp02
 ut/malegasp	hgasp1
 ut/maledrowned1	uwinjr41
@@ -25,27 +28,54 @@ ut/drowned	uwinjr42
 $random ut/maledrowned { ut/maledrowned1 ut/drowned }
 ut/maledrowning	drownm02
 
-$playeralias	player	male	*death		ut/maledie
-$playeralias	player	male	*xdeath		ut/malexdie
-$playeralias	player	male	*gibbed		ut/gibp
-$playeralias	player	male	*pain100	ut/malepain1
-$playeralias	player	male	*pain75		ut/malepain2
-$playeralias	player	male	*pain50		ut/malepain3
-$playeralias	player	male	*pain25		ut/malepain4
-$playeralias	player	male	*grunt		ut/malegrunt
-$playeralias	player	male	*land		DSEMPTY
-$playeralias	player	male	*uland		ut/land
-$playeralias	player	male	*jump		ut/malejump
-$playeralias	player	male	*usefail	ut/malehump
-$playeralias	player	male	*surface	ut/malesurface
-$playeralias	player	male	*gasp		ut/malegasp
+// hotfix for a doom glitch
+$playeralias player male *land DSEMPTY
+$playeralias player female *land DSEMPTY
+$playeralias player other *land DSEMPTY
 
-$playeralias	player	male	*death-drowning		ut/maledrowned
-$playeralias	player	male	*xdeath-drowning	ut/maledrowned
-$playeralias	player	male	*pain100-drowning	ut/maledrowning
-$playeralias	player	male	*pain75-drowning	ut/maledrowning
-$playeralias	player	male	*pain50-drowning	ut/maledrowning
-$playeralias	player	male	*pain25-drowning	ut/maledrowning
+$playeralias	tmale1	neutral	*death		ut/maledie
+$playeralias	tmale1	neutral	*xdeath		ut/malexdie
+$playeralias	tmale1	neutral	*gibbed		ut/gibp
+$playeralias	tmale1	neutral	*pain100	ut/malepain1
+$playeralias	tmale1	neutral	*pain75		ut/malepain2
+$playeralias	tmale1	neutral	*pain50		ut/malepain3
+$playeralias	tmale1	neutral	*pain25		ut/malepain4
+$playeralias	tmale1	neutral	*grunt		ut/malegrunt
+$playeralias	tmale1	neutral	*land		DSEMPTY
+$playeralias	tmale1	neutral	*uland		ut/land1
+$playeralias	tmale1	neutral	*jump		ut/malejump1
+$playeralias	tmale1	neutral	*usefail	ut/malehump1
+$playeralias	tmale1	neutral	*surface	ut/malesurface
+$playeralias	tmale1	neutral	*gasp		ut/malegasp
+
+$playeralias	tmale1	neutral	*death-drowning		ut/maledrowned
+$playeralias	tmale1	neutral	*xdeath-drowning	ut/maledrowned
+$playeralias	tmale1	neutral	*pain100-drowning	ut/maledrowning
+$playeralias	tmale1	neutral	*pain75-drowning	ut/maledrowning
+$playeralias	tmale1	neutral	*pain50-drowning	ut/maledrowning
+$playeralias	tmale1	neutral	*pain25-drowning	ut/maledrowning
+
+$playeralias	tmale2	neutral	*death		ut/maledie
+$playeralias	tmale2	neutral	*xdeath		ut/malexdie
+$playeralias	tmale2	neutral	*gibbed		ut/gibp
+$playeralias	tmale2	neutral	*pain100	ut/malepain1
+$playeralias	tmale2	neutral	*pain75		ut/malepain2
+$playeralias	tmale2	neutral	*pain50		ut/malepain3
+$playeralias	tmale2	neutral	*pain25		ut/malepain4
+$playeralias	tmale2	neutral	*grunt		ut/malegrunt
+$playeralias	tmale2	neutral	*land		DSEMPTY
+$playeralias	tmale2	neutral	*uland		ut/land
+$playeralias	tmale2	neutral	*jump		ut/malejump
+$playeralias	tmale2	neutral	*usefail	ut/malehump
+$playeralias	tmale2	neutral	*surface	ut/malesurface
+$playeralias	tmale2	neutral	*gasp		ut/malegasp
+
+$playeralias	tmale2	neutral	*death-drowning		ut/maledrowned
+$playeralias	tmale2	neutral	*xdeath-drowning	ut/maledrowned
+$playeralias	tmale2	neutral	*pain100-drowning	ut/maledrowning
+$playeralias	tmale2	neutral	*pain75-drowning	ut/maledrowning
+$playeralias	tmale2	neutral	*pain50-drowning	ut/maledrowning
+$playeralias	tmale2	neutral	*pain25-drowning	ut/maledrowning
 
 ut/femaledie1	decap01
 ut/femaledie2	death1d
@@ -67,32 +97,72 @@ ut/femaledrowned1	uwhit01
 $random ut/femaledrowned { ut/femaledroenwd1 ut/drowned }
 ut/femaledrowning	mdrown2f
 
-$playeralias	player	female	*death		ut/femaledie
-$playeralias	player	female	*xdeath		ut/femalexdie
-$playeralias	player	female	*gibbed		ut/gibp
-$playeralias	player	female	*pain100	ut/femalepain1
-$playeralias	player	female	*pain75		ut/femalepain2
-$playeralias	player	female	*pain50		ut/femalepain3
-$playeralias	player	female	*pain25		ut/femalepain4
-$playeralias	player	female	*grunt		ut/femalegrunt
-$playeralias	player	female	*land		DSEMPTY
-$playeralias	player	female	*uland		ut/land
-$playeralias	player	female	*jump		ut/femalejump
-$playeralias	player	female	*usefail	ut/femalegrunt
-$playeralias	player	female	*surface	ut/femalesurf
-$playeralias	player	female	*gasp		ut/femalegasp
+$playeralias	tfemale	neutral	*death		ut/femaledie
+$playeralias	tfemale	neutral	*xdeath		ut/femalexdie
+$playeralias	tfemale	neutral	*gibbed		ut/gibp
+$playeralias	tfemale	neutral	*pain100	ut/femalepain1
+$playeralias	tfemale	neutral	*pain75		ut/femalepain2
+$playeralias	tfemale	neutral	*pain50		ut/femalepain3
+$playeralias	tfemale	neutral	*pain25		ut/femalepain4
+$playeralias	tfemale	neutral	*grunt		ut/femalegrunt
+$playeralias	tfemale	neutral	*land		DSEMPTY
+$playeralias	tfemale	neutral	*uland		ut/land
+$playeralias	tfemale	neutral	*jump		ut/femalejump
+$playeralias	tfemale	neutral	*usefail	ut/femalegrunt
+$playeralias	tfemale	neutral	*surface	ut/femalesurf
+$playeralias	tfemale	neutral	*gasp		ut/femalegasp
 
-$playeralias	player	female	*death-drowning		ut/femaledrowned
-$playeralias	player	female	*xdeath-drowning	ut/femaledrowned
-$playeralias	player	female	*pain100-drowning	ut/femaledrowning
-$playeralias	player	female	*pain75-drowning	ut/femaledrowning
-$playeralias	player	female	*pain50-drowning	ut/femaledrowning
-$playeralias	player	female	*pain25-drowning	ut/femaledrowning
+$playeralias	tfemale	neutral	*death-drowning		ut/femaledrowned
+$playeralias	tfemale	neutral	*xdeath-drowning	ut/femaledrowned
+$playeralias	tfemale	neutral	*pain100-drowning	ut/femaledrowning
+$playeralias	tfemale	neutral	*pain75-drowning	ut/femaledrowning
+$playeralias	tfemale	neutral	*pain50-drowning	ut/femaledrowning
+$playeralias	tfemale	neutral	*pain25-drowning	ut/femaledrowning
+
+ut/bossdie1	bdeath1
+ut/bossdie2	bdeath2
+ut/bossdie3	bdeath3
+$random ut/bossdie { ut/bossdie1 ut/bossdie2 ut/bossdie3 }
+ut/bossxdie1	bdeath4
+ut/bossxdie2	bdeath3
+$random ut/bossxdie { ut/bossxdie1 ut/bossxdie2 }
+ut/gibpboss	bnewgib
+ut/bosspain1	binjur1
+ut/bosspain2	binjur2
+ut/bosspain3	binjur3
+ut/bosspain4	binjur4
+ut/bossgrunt	bland01
+ut/bossjump	bjump1
+ut/bosshump	bjump1
+
+$playeralias	tboss	neutral	*death		ut/bossdie
+$playeralias	tboss	neutral	*xdeath		ut/bossxdie
+$playeralias	tboss	neutral	*gibbed		ut/gibpboss
+$playeralias	tboss	neutral	*pain100	ut/bosspain1
+$playeralias	tboss	neutral	*pain75		ut/bosspain2
+$playeralias	tboss	neutral	*pain50		ut/bosspain3
+$playeralias	tboss	neutral	*pain25		ut/bosspain4
+$playeralias	tboss	neutral	*grunt		ut/bossgrunt
+$playeralias	tboss	neutral	*land		DSEMPTY
+$playeralias	tboss	neutral	*uland		ut/land
+$playeralias	tboss	neutral	*jump		ut/bossjump
+$playeralias	tboss	neutral	*usefail	ut/bosshump
+$playeralias	tboss	neutral	*surface	ut/malesurf
+$playeralias	tboss	neutral	*gasp		ut/malegasp
+
+$playeralias	tboss	neutral	*death-drowning		ut/maledrowned
+$playeralias	tboss	neutral	*xdeath-drowning	ut/maledrowned
+$playeralias	tboss	neutral	*pain100-drowning	ut/maledrowning
+$playeralias	tboss	neutral	*pain75-drowning	ut/maledrowning
+$playeralias	tboss	neutral	*pain50-drowning	ut/maledrowning
+$playeralias	tboss	neutral	*pain25-drowning	ut/maledrowning
 
 ut/playerfootstep1	stone02
 ut/playerfootstep2	stone04
 ut/playerfootstep3	stone05
 $random ut/playerfootstep { ut/playerfootstep1 ut/playerfootstep2 ut/playerfootstep3 }
+
+ut/bossfootstep	bfootstep
 
 ut/playerfootstepwet	lsplash
 ut/wetsplash		dsplash
