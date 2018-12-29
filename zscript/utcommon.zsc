@@ -45,8 +45,6 @@ Class UTPlayer : DoomPlayer
 		Player.GruntSpeed 20;
 		MaxDropoffHeight 18;
 		MaxStepHeight 18;
-		+NOFRICTION;
-		+NOFRICTIONBOUNCE;
 		+NOMENU;
 		UTPlayer.DollType DOLL_Male;
 	}
@@ -205,6 +203,16 @@ Class UTPlayer : DoomPlayer
 	{
 		Super.Tick();
 		if ( !player || (player.mo != self) ) return;
+		if ( flak_utmovement )
+		{
+			bNOFRICTION = true;
+			bNOFRICTIONBOUNCE = true;
+		}
+		else
+		{
+			bNOFRICTION = false;
+			bNOFRICTIONBOUNCE = false;
+		}
 		if ( !footsteps ) footsteps = CVar.GetCVar('flak_footsteps',players[consoleplayer]);
 		if ( !footsteps.GetBool() ) return;
 		double ang = level.time/(20*TICRATE/35.)*360.;
