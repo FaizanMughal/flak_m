@@ -74,8 +74,6 @@ This mod requires GZDoom 3.7.0 or later.
 
 ## Known bugs
 
- - Sometimes the slave enforcer has its psprite "lower" slightly while the main
-   enforcer is reloading. No idea what causes this (Could be bobbing-related)
  - Translocator allows telefragging other players in coop (no idea if I can
    even fix this)
  - Biorifle sludge doesn't handle 3d floors (especially sloped ones) properly.

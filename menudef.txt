@@ -44,6 +44,8 @@ OptionMenu "UTOptionMenu"
 	Option "Doom Player Speed", "flak_doomspeed", "YesNo", "flak_utmovement"
 	Option "Doom Air Control", "flak_doomaircontrol", "YesNo", "flak_utmovement"
 	Option "Walk Disables Dropoff (Glitchy)", "flak_nowalkdrop", "YesNo", "flak_utmovement"
+	Option "Double Tap Dodge", "flak_tapdodge", "YesNo", "flak_utmovement"
+	Slider "Double Tap Sensibility In Tics", "flak_taptics", 1, 10, 1, 0
 	StaticText " "
 	StaticText "HUD Options", "Gold"
 	Option "Show Weapon Bar", "flak_showweapons", "YesNo"
