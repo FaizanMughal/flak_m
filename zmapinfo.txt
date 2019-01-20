@@ -7,3 +7,8 @@ GameInfo
 	BorderFlat = "TEMPBG"
 	Border = 0,0,"","","","","","","",""
 }
+
+// titlemaps need a mapinfo entry in devbuilds
+map TITLEMAP "UT Logo Map"
+{
+}

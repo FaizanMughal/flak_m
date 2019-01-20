@@ -213,7 +213,7 @@ Class UTPlayer : DoomPlayer
 		}
 		if ( !footsteps ) footsteps = CVar.GetCVar('flak_footsteps',players[consoleplayer]);
 		if ( !footsteps.GetBool() ) return;
-		double ang = level.time/(20*TICRATE/35.)*360.;
+		double ang = level.maptime/(20*TICRATE/35.)*360.;
 		bool forcefootstep = false;
 		if ( player.onground && !bNoGravity && !lastground && (waterlevel < 2) )
 		{
@@ -899,7 +899,7 @@ Class UTViewSpark : UTSpark
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		ofs += vvel;
 		vvel.z -= 0.1;
 		scale *= 0.8;
@@ -941,7 +941,7 @@ Class UTChip : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		if ( InStateSequence(CurState,ResolveState("Death")) )
 		{
 			deadtimer++;
@@ -1004,7 +1004,7 @@ Class UTBubble : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		vel *= 0.96;
 		vel.z += 0.05;
 		if ( (waterlevel <= 0) || !Random[Puff](0,100) ) Destroy();
@@ -1052,7 +1052,7 @@ Class UTSmoke : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		vel *= 0.96;
 		vel.z += 0.01;
 		A_FadeOut(1/32.);
@@ -1144,7 +1144,7 @@ Class UTViewSmoke : UTSmoke
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		ofs += vvel;
 		vvel *= 0.96;
 		vvel.z += 0.01;
@@ -1516,7 +1516,7 @@ Class UTMainHandler : StaticEventHandler
 
 	private Actor AddLight( Vector3 pos, Color col, int radius )
 	{
-		Actor l = Actor.Spawn("PointLightAttenuated",pos);
+		Actor l = currentSession.levelinfo[0].Spawn("PointLightAttenuated",pos);
 		if ( !l ) return null;
 		l.args[0] = col.r;
 		l.args[1] = col.g;
@@ -1527,7 +1527,7 @@ Class UTMainHandler : StaticEventHandler
 
 	private Actor AddAmbient( Vector3 pos, String snd, double volume = 1., double attenuation = ATTN_NORM )
 	{
-		Actor a = Actor.Spawn("MapSpot",pos);
+		Actor a = currentSession.levelinfo[0].Spawn("MapSpot",pos);
 		if ( !a ) return null;
 		a.A_PlaySound(snd,CHAN_BODY,volume,true,attenuation);
 		return a;
@@ -1537,6 +1537,7 @@ Class UTMainHandler : StaticEventHandler
 	{
 		if ( gamestate != GS_LEVEL || e.IsSaveGame ) return;
 		// prettify Kinsie's test map for a more Unreal feel
+		let level = currentSession.levelinfo[0];
 		if ( level.GetChecksum() ~== "FBC3B6622A8B74AE06DE01E70007AC33" )
 		{
 			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
@@ -1735,7 +1736,7 @@ Class UTMainHandler : StaticEventHandler
 				return;
 			}
 			// generic gibbing
-			let a = Actor.Spawn("UTGibber",e.Thing.pos);
+			let a = e.Thing.level.Spawn("UTGibber",e.Thing.pos);
 			a.vel = e.Thing.vel;
 			a.Scale = e.Thing.Scale;
 			a.Translation = e.Thing.BloodTranslation;
@@ -1750,7 +1751,7 @@ Class UTMainHandler : StaticEventHandler
 		}
 		// attach damage accumulator for corpses
 		if ( !flak_corpsedamage ) return;
-		let a = Actor.Spawn("ShredCorpseHitbox",e.Thing.pos);
+		let a = e.Thing.level.Spawn("ShredCorpseHitbox",e.Thing.pos);
 		a.target = e.Thing;
 	}
 
@@ -1775,7 +1776,7 @@ Class UTMainHandler : StaticEventHandler
 			if ( !a || !a.bSHOOTABLE || !Source.CheckSight(a,0xf) || (a == Source) || (Source.Distance3D(a) > ExplosionRadius) )
 				continue;
 			Vector3 midpoint = a.Vec3Offset(0,0,a.height*0.5);
-			a.vel += Level.Vec3Diff(Source.pos,midpoint).unit()*(MomentumTransfer/(Thinker.TICRATE*a.mass));
+			a.vel += Source.level.Vec3Diff(Source.pos,midpoint).unit()*(MomentumTransfer/(Thinker.TICRATE*a.mass));
 		}
 	}
 
@@ -1789,7 +1790,7 @@ Class UTMainHandler : StaticEventHandler
 	static void DoSwing( Actor target, Vector2 dir, double initial, double inc, int steps, int mode = 0, int delay = 0, double rmul = 1.0 )
 	{
 		if ( !flak_swingers ) return;
-		let s = new("Swinger");
+		let s = new("Swinger");			// this looks unsafe, shouldn't there be a way to create thinkers in specifc level?
 		s.ChangeStatNum(Thinker.STAT_USER);
 		s.target = target;
 		s.dir = dir;

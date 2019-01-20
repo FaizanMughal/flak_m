@@ -152,7 +152,7 @@ Class ImpactHammer : UTWeapon
 			if ( d.HitType == TRACE_HitWall ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation-d.HitDir*4);
 		}
 		// push aside projectiles
-		let t = ThinkerIterator.Create("Actor");
+		let t = level.CreateThinkerIterator("Actor");
 		Actor m;
 		while ( m = Actor(t.Next()) )
 		{

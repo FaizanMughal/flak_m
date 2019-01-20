@@ -91,7 +91,7 @@ Class ViewPulseSpark : PulseSpark
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		ofs += vvel;
 		vvel *= 0.9;
 		scale *= 0.8;
@@ -149,7 +149,7 @@ Class PulseExplLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		args[LIGHT_RED] = int(64*lifetime);
 		args[LIGHT_GREEN] = int(255*lifetime);
 		lifetime -= 1./ReactionTime;
@@ -372,7 +372,7 @@ Class PulseBolt : Actor
 			{
 				if ( !damagedactor )
 				{
-					accdamage = min(0.5*(level.time-lasthit),0.1);
+					accdamage = min(0.5*(level.maptime-lasthit),0.1);
 					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](80,100)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
@@ -381,7 +381,7 @@ Class PulseBolt : Actor
 					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](80,100)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
-				lasthit = level.time;
+				lasthit = level.maptime;
 				damagedactor = t.Results.HitActor;
 				accdamage += 1./TICRATE;
 				if ( accdamage > 0.17 )
@@ -506,7 +506,7 @@ Class StarterBolt : PulseBolt
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( !target )
 		{
 			Destroy();

@@ -171,7 +171,7 @@ Class Razor2AltLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		args[LIGHT_RED] = int(255*lifetime);
 		args[LIGHT_GREEN] = int(240*lifetime);
 		args[LIGHT_BLUE] = int(224*lifetime);

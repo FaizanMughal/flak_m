@@ -48,9 +48,9 @@ Class ShockWave : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( alpha <= 0 ) return;
-		if ( !t ) t = ThinkerIterator.Create("Actor");
+		if ( !t ) t = level.CreateThinkerIterator("Actor");
 		icount++;
 		if ( icount == 4 ) Spawn("WarheadSubExplosion",pos);
 		lifespan--;
@@ -164,7 +164,7 @@ Class WarheadExplodLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		args[LIGHT_RED] = int(255*lifetime);
 		args[LIGHT_GREEN] = int(192*lifetime);
 		args[LIGHT_BLUE] = int(128*lifetime);
@@ -224,7 +224,7 @@ Class WarheadTrail : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		vel *= 0.99;
 		A_FadeOut(0.1);
 	}
@@ -275,7 +275,7 @@ Class WarShell : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( !bMISSILE ) return;
 		if ( vel.length() > 0 )
 		{
@@ -375,7 +375,7 @@ Class GuidedWarShell : WarShell
 			justleft = false;
 			bHITOWNER = true;
 		}
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( !bMISSILE ) return;
 		if ( !target || !target.player || (target.Health <= 0) )
 		{
@@ -482,7 +482,7 @@ Class RedeemerHUD : HUDMessageBase
 		// shootable targetting
 		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() && !CVar.GetCVar('flak_redeemerreadout_perframe',players[consoleplayer]).GetBool() )
 		{
-			if ( !t ) t = ThinkerIterator.Create("Actor");
+			if ( !t ) t = camera.level.CreateThinkerIterator("Actor");
 			if ( !tr ) tr = new("MidTracer");
 			t.Reinit();
 			ta.Clear();
@@ -490,10 +490,10 @@ Class RedeemerHUD : HUDMessageBase
 			Vector3 vdir = (cos(ViewAngle)*cos(ViewPitch),sin(ViewAngle)*cos(ViewPitch),-sin(ViewPitch));
 			while ( a = Actor(t.Next()) )
 			{
-				Vector3 tdir = Level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
+				Vector3 tdir = camera.level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
 				if ( !a.bSHOOTABLE || (a.Health <= 0) || ((Camera is 'GuidedWarShell') && (a == GuidedWarShell(Camera).b)) || (tdir.length() > 2000) || (acos(tdir.unit() dot vdir) > players[consoleplayer].FOV) || tr.Trace(ViewPos,Camera.CurSector,tdir.unit(),tdir.length(),0) ) continue;
 				Vector3 wpos = ViewPos+tdir;
-				Vector3 spos = dt_CoordUtil.WorldToScreen(wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
+				Vector3 spos = dt_CoordUtil.WorldToScreen(camera.level,wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
 				if ( spos.z > 1.0 ) continue;
 				TargetActor te = new("TargetActor");
 				te.vpos = dt_CoordUtil.ToViewport(spos);
@@ -513,7 +513,7 @@ Class RedeemerHUD : HUDMessageBase
 		{
 			if ( CVar.GetCVar('flak_redeemerreadout_perframe',players[consoleplayer]).GetBool() )
 			{
-				if ( !t ) t = ThinkerIterator.Create("Actor");
+				if ( !t ) t = camera.level.CreateThinkerIterator("Actor");
 				if ( !tr ) tr = new("MidTracer");
 				t.Reinit();
 				ta.Clear();
@@ -521,10 +521,10 @@ Class RedeemerHUD : HUDMessageBase
 				Vector3 vdir = (cos(ViewAngle)*cos(ViewPitch),sin(ViewAngle)*cos(ViewPitch),-sin(ViewPitch));
 				while ( a = Actor(t.Next()) )
 				{
-					Vector3 tdir = Level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
+					Vector3 tdir = camera.level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
 					if ( !a.bSHOOTABLE || (a.Health <= 0) || ((Camera is 'GuidedWarShell') && (a == GuidedWarShell(Camera).b)) || (tdir.length() > 2000) || (acos(tdir.unit() dot vdir) > players[consoleplayer].FOV) || tr.Trace(ViewPos,Camera.CurSector,tdir.unit(),tdir.length(),0) ) continue;
 					Vector3 wpos = ViewPos+tdir;
-					Vector3 spos = dt_CoordUtil.WorldToScreen(wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
+					Vector3 spos = dt_CoordUtil.WorldToScreen(camera.level,wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
 					if ( spos.z > 1.0 ) continue;
 					TargetActor te = new("TargetActor");
 					te.vpos = dt_CoordUtil.ToViewport(spos);

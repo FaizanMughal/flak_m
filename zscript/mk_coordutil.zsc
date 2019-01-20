@@ -9,7 +9,7 @@ Class dt_CoordUtil
 {
 	// projects a world point onto screen
 	// view matrix setup mostly pulled from gutawer's code
-	static Vector3 WorldToScreen( Vector3 vect, Vector3 eye, double pitch, double yaw, double roll, double vfov )
+	static Vector3 WorldToScreen( LevelLocals level, Vector3 vect, Vector3 eye, double pitch, double yaw, double roll, double vfov )
 	{
 		double ar = Screen.getWidth()/double(Screen.getHeight());
 		double fovr = (ar>=1.3)?1.333333:ar;

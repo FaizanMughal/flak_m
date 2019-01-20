@@ -42,9 +42,6 @@ Class UTHud : BaseStatusBar
 	double CurX, CurY;
 	double FracTic;
 
-	// Ugh...
-	const TINTSTYLE = (1|2<<8|1<<16|12<<24);
-
 	override void Init()
 	{
 		Super.Init();
@@ -211,7 +208,7 @@ Class UTHud : BaseStatusBar
 		if ( opacity == -1 ) opacity = self.opacity;
 		if ( opacity >= 16 ) Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor);
 		double alpha = clamp(opacity/15.,0.0,1.0);
-		Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_RenderStyle,TINTSTYLE,DTA_FillColor,(tint!="Black")?tint:tintcolor);
+		Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_LegacyRenderStyle,STYLE_AddShaded,DTA_FillColor,(tint!="Black")?tint:tintcolor);
 	}
 	private void UTDrawPlainTex( TextureID tx, double sx = 1.0, int opacity = -1 )
 	{
@@ -264,13 +261,13 @@ Class UTHud : BaseStatusBar
 		if ( value < 0 )
 		{
 			if ( opacity+7 > 15 ) Screen.DrawTexture(BigNum[11],false,CurX/ss,CurY/ss,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor);
-			Screen.DrawTexture(BigNum[11],false,CurX/ss,CurY/ss,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_RenderStyle,TINTSTYLE,DTA_FillColor,DrawColor);
+			Screen.DrawTexture(BigNum[11],false,CurX/ss,CurY/ss,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_LegacyRenderStyle,STYLE_AddShaded,DTA_FillColor,DrawColor);
 			CurX += step;
 		}
 		for ( int i=0; i<digits.length(); i++ )
 		{
 			if ( opacity+7 > 15 ) Screen.DrawTexture(BigNum[digits.CharCodeAt(i)-0x30],false,CurX/ss,CurY/ss,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor);
-			Screen.DrawTexture(BigNum[digits.CharCodeAt(i)-0x30],false,CurX/ss,CurY/ss,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_RenderStyle,TINTSTYLE,DTA_FillColor,DrawColor);
+			Screen.DrawTexture(BigNum[digits.CharCodeAt(i)-0x30],false,CurX/ss,CurY/ss,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_LegacyRenderStyle,STYLE_AddShaded,DTA_FillColor,DrawColor);
 			CurX += ((i<digits.length()-1)&&(digits.CharAt(i+1)=="1"))?step*0.5:step;
 		}
 	}
@@ -404,7 +401,7 @@ Class UTHud : BaseStatusBar
 		if ( CPlayer.mo.Health < CPlayer.mo.SpawnHealth()/2 )
 		{
 			Color blinkcolor;
-			double blinky = ((level.time+fractic)/Thinker.TICRATE)*1.5;
+			double blinky = ((currentsession.time+fractic)/Thinker.TICRATE)*1.5;
 			blinky = blinky-floor(blinky);
 			blinkcolor = LerpColor(tintcolor,WhiteColor,blinky);
 			UTDrawTintedTex(Boxes[2],hudsize,-1,blinkcolor);
@@ -520,7 +517,7 @@ Class UTHud : BaseStatusBar
 		CurY = Screen.GetHeight()-64*hudsize*HScale;
 		if ( showweapons && ((weaponsize*hudsize)>=1.0) ) CurY -= 64*hudsize*HScale;
 		DrawColor = tintcolor;
-		double whiten = ((level.time+fractic)-lastfrag)/Thinker.TICRATE;
+		double whiten = ((currentsession.time+fractic)-lastfrag)/Thinker.TICRATE;
 		if ( whiten < 3.0 )
 		{
 			if ( tintcolor == GoldColor )
@@ -542,7 +539,7 @@ Class UTHud : BaseStatusBar
 	}
 	private void DrawIdentifyInfo()
 	{
-		double lalpha = 2.0-((level.time+fractic)-lastseentic)/Thinker.TICRATE;
+		double lalpha = 2.0-((currentsession.time+fractic)-lastseentic)/Thinker.TICRATE;
 		if ( !lastseen || (lalpha <= 0) ) return;
 		String cl1 = "Teal", cl2 = "Cyan";
 		if ( deathmatch && (lastseen.player.GetTeam() < teams.size()) )
@@ -616,19 +613,19 @@ Class UTHud : BaseStatusBar
 		Super.Tick();
 		if ( deathmatch||teamplay )
 		{
-			if ( CPlayer.fragcount != lastfragcnt ) lastfrag = level.time;
+			if ( CPlayer.fragcount != lastfragcnt ) lastfrag = currentsession.time;
 			lastfragcnt = CPlayer.fragcount;
 		}
 		else
 		{
-			if ( CPlayer.killcount != lastfragcnt ) lastfrag = level.time;
+			if ( CPlayer.killcount != lastfragcnt ) lastfrag = currentsession.time;
 			lastfragcnt = CPlayer.killcount;
 		}
 		vtracer.ignore = CPlayer.mo;
 		vtracer.trace(CPlayer.mo.Vec2OffsetZ(0,0,CPlayer.viewz),CPlayer.mo.CurSector,(cos(CPlayer.mo.angle)*cos(CPlayer.mo.pitch),sin(CPlayer.mo.angle)*cos(CPlayer.mo.pitch),-sin(CPlayer.mo.pitch)),1000,0);
 		if ( vtracer.Results.HitType != TRACE_HitActor ) return;
 		lastseen = vtracer.Results.HitActor;
-		lastseentic = level.time;
+		lastseentic = currentsession.time;
 	}
 
 	private void DrawUTHUD()
