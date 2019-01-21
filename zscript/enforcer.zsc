@@ -88,7 +88,7 @@ Class BulletImpact : Actor
 
 Class UTCasing : Actor
 {
-	int deadtimer;
+	int deadtimer, numbounces;
 	double pitchvel, anglevel;
 	double heat;
 
@@ -102,7 +102,9 @@ Class UTCasing : Actor
 		+THRUACTORS;
 		+USEBOUNCESTATE;
 		+INTERPOLATEANGLES;
-		BounceType "Doom";
+		Mass 1;
+		BounceType "Hexen";
+		WallBounceFactor 0.65;
 		BounceFactor 0.65;
 		BounceSound "bullet/casing";
 	}
@@ -144,6 +146,12 @@ Class UTCasing : Actor
 			pitchvel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
 			anglevel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
 			vel = (vel.unit()+(FRandom[Junk](-.2,.2),FRandom[Junk](-.2,.2),FRandom[Junk](-.2,.2))).unit()*vel.length();
+			if ( numbounces && ((numbounces > 3) || (Random[Junk](1,20) < 17) || (vel.z > -1.4)) )
+			{
+				ClearBounce();
+				ExplodeMissile();
+			}
+			numbounces++;
 		}
 		Goto Spawn;
 	Death:

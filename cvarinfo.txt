@@ -38,3 +38,4 @@ server float flak_swingerstrength = 0.5; 		// strength of visual recoil
 server bool flak_radboots = true;			// jump boots protect against damaging floors (this is to account for the lack of a radsuit)
 server bool flak_blood = true;				// [WIP] use doom tournament blood (disable if using another gore mod)
 server bool flak_gibs = false;				// [WIP/UNSTABLE] use doom tournament gibbing (disable if using another gore mod)
+server bool flak_doomtest = false;			// made toggleable due to loud complaints

@@ -1,3 +1,10 @@
+Texture "DefTex",128,128
+{
+	XScale 4
+	YScale 4
+	WorldPanning
+	Patch "-noflat-", 0, 0
+}
 Sprite "HBOXA0",1,1{}
 Sprite "HBOXB0",1,1{}
 Sprite "HBOXC0",1,1{}

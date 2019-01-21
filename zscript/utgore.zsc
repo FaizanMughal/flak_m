@@ -8,6 +8,7 @@ Class UTBlood : Actor
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+NOTELEPORT;
+		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
 		+PUFFGETSOWNER;
 	}
@@ -61,6 +62,7 @@ Class UTBloodDrop : Actor
 	Default
 	{
 		Scale 0.24;
+		Mass 1;
 		Radius 2;
 		Height 2;
 		RenderStyle "Translucent";
@@ -99,6 +101,7 @@ Class UTBloodSpurt : Actor
 	{
 		+NOBLOCKMAP;
 		+NOGRAVITY;
+		+DONTSPLASH;
 		+NOTELEPORT;
 		+THRUACTORS;
 	}
@@ -134,6 +137,7 @@ Class UTBloodTrail : Actor
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+NOTELEPORT;
+		+DONTSPLASH;
 		+THRUACTORS;
 	}
 	override void PostBeginPlay()
@@ -183,6 +187,7 @@ Class UTBloodPuff : Actor
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+NOTELEPORT;
+		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
 	}
 	States
@@ -284,12 +289,13 @@ Class UTGib : Actor
 	{
 		Radius 4;
 		Height 4;
-		BounceType "Doom";
-		BounceFactor 0.7;
-		WallBounceFactor 0.7;
+		BounceType "Hexen";
+		BounceFactor 0.8;
+		WallBounceFactor 0.8;
 		+ROLLSPRITE;
 		+ROLLCENTER;
 		+INTERPOLATEANGLES;
+		+CANBOUNCEWATER;
 		+MISSILE;
 		+THRUACTORS;
 		+USEBOUNCESTATE;
@@ -297,19 +303,30 @@ Class UTGib : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		let t = Spawn("UTBloodTrail",pos);
-		t.target = self;
-		if ( bloodcolor ) t.SetShade(bloodcolor);
-		else t.SetShade(gameinfo.defaultbloodcolor);
-		t.translation = bloodtranslation;
+		tracer = Spawn("UTBloodTrail",pos);
+		tracer.target = self;
+		if ( bloodcolor ) tracer.SetShade(bloodcolor);
+		else tracer.SetShade(gameinfo.defaultbloodcolor);
+		tracer.translation = bloodtranslation;
 		rollvel = FRandom[Blod](5,15)*RandomPick[Blod](-1,1);
 		anglevel = FRandom[Blod](5,15)*RandomPick[Blod](-1,1);
 		pitchvel = FRandom[Blod](5,15)*RandomPick[Blod](-1,1);
 	}
 	void A_HandleBounce()
 	{
-		if ( vel.length() > double.epsilon )
-			vel = (vel.unit()+(FRandom[Blod](-0.2,0.2),FRandom[Blod](-0.2,0.2),FRandom[Blod](-0.2,0.2))).unit()*vel.length();
+		double spd = vel.length();
+		if ( spd > double.epsilon )
+			vel = (vel.unit()+(FRandom[Blod](-0.2,0.2),FRandom[Blod](-0.2,0.2),FRandom[Blod](-0.2,0.2))).unit()*spd;
+		if ( BlockingFloor && (vel.xy.length() < 1) )
+		{
+			ClearBounce();
+			ExplodeMissile();
+		}
+		if ( spd < 10 )
+		{
+			if ( tracer ) tracer.Destroy();
+		}
+		else if ( spd > 20 ) vel *= 0.8;
 		A_PlaySound("misc/gibp");
 		double ang, pt;
 		for ( int i=0; i<6; i++ )

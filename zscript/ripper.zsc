@@ -60,13 +60,12 @@ Class Razor2 : Actor
 		DamageFunction (Random[Ripper](20,25)*((DamageType=='Decapitated')?3:1.0));
 		DamageType 'Shredded';
 		Obituary "%k ripped a chunk of meat out of %o with the Ripper.";
-		BounceType "Doom";
+		BounceType "Hexen";
 		ReactionTime 7;
 		BounceFactor 1.0;
 		WallBounceFactor 1.0;
 		PROJECTILE;
 		+USEBOUNCESTATE;
-		-BOUNCEAUTOOFF;
 		+SKYEXPLODE;
 		+CANBOUNCEWATER;
 		+NODAMAGETHRUST;
