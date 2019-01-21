@@ -1,0 +1,14 @@
+GameInfo
+{
+	AddEventHandlers = "RedeemerHUDHandler", "UTMainHandler"
+	PlayerClasses = "UTPlayerHereticCompatTMale1", "UTPlayerHereticCompatTMale2", "UTPlayerHereticCompatTFemale1", "UTPlayerHereticCompatTFemale2", "UTPlayerHereticCompatTBoss"
+	StatusBarClass = "UTHud"
+	BackpackType = "UTBackpack"
+	BorderFlat = "TEMPBG"
+	Border = 0,0,"","","","","","","",""
+}
+
+// titlemaps need a mapinfo entry in devbuilds
+map TITLEMAP "UT Logo Map"
+{
+}

@@ -56,6 +56,7 @@ This mod requires GZDoom 3.7.0 or later.
  - Add some more effects
    - Lava/Slime footstep sounds?
  - UT gore system (toggleable)
+ - Heretic compatibility
 
 ## Future plans
 

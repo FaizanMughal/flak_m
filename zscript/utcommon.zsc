@@ -1411,54 +1411,64 @@ Class UTMainHandler : StaticEventHandler
 
 	override void CheckReplacement( ReplaceEvent e )
 	{
-		if ( e.Replacee == 'Chainsaw' )
+		if ( (e.Replacee == 'Chainsaw') || (e.Replacee == 'Gauntlets') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'UTChainsaw';
 			else e.Replacement = 'Enforcer';
 		}
-		else if ( e.Replacee == 'Fist' ) e.Replacement = 'ImpactHammer';
-		else if ( e.Replacee == 'Pistol' ) e.Replacement = 'Enforcer';
-		else if ( (e.Replacee == 'Shotgun') || (e.Replacee == 'SuperShotgun') )
+		else if ( (e.Replacee == 'Fist') || (e.Replacee == 'Staff') ) e.Replacement = 'ImpactHammer';
+		else if ( (e.Replacee == 'Pistol') || (e.Replacee == 'GoldWand') ) e.Replacement = 'Enforcer';
+		else if ( (e.Replacee == 'Shotgun') || (e.Replacee == 'SuperShotgun') || (e.Replacee == 'Crossbow') )
 		{
 			if ( !Random[Replacements](0,3) ) e.Replacement = 'Enforcer';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'BioRifle';
 			else e.Replacement = 'ShockRifle';
 		}
-		else if ( e.Replacee == 'Chaingun' )
+		else if ( (e.Replacee == 'Chaingun') || (e.Replacee == 'Blaster') )
 		{
 			if ( Random[Replacements](0,2) ) e.Replacement = 'PulseGun';
 			else e.Replacement = 'Ripper2';
 		}
-		else if ( e.Replacee == 'RocketLauncher' )
+		else if ( (e.Replacee == 'RocketLauncher') || (e.Replacee == 'PhoenixRod') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'FlakCannon';
 			else e.Replacement = 'UTRocketLauncher';
 		}
-		else if ( e.Replacee == 'PlasmaRifle' )
+		else if ( (e.Replacee == 'PlasmaRifle') || (e.Replacee == 'SkullRod') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'Minigun';
 			else e.Replacement = 'SniperRifle';
 		}
 		else if ( e.Replacee == 'BFG9000' ) e.Replacement = 'WarheadLauncher';
-		else if ( e.Replacee == 'Clip' ) e.Replacement = 'EClip';
-		else if ( e.Replacee == 'ClipBox' )
+		else if ( e.Replacee == 'Mace' )
+		{
+			if ( !Random[Replacements](0,6) ) e.Replacement = 'EnhancedShockRifle';
+			else e.Replacement = 'WarheadLauncher';
+		}
+		else if ( (e.Replacee == 'Clip') || (e.Replacee == 'GoldWandAmmo') || (e.Replacee == 'GoldWandHefty') ) e.Replacement = 'EClip';
+		else if ( (e.Replacee == 'ClipBox') )
 		{
 			if ( !Random[Replacements](0,2) ) e.Replacement = 'EClip';
 			else if ( Random[Replacements](0,2) ) e.Replacement = 'PulseAmmo';
 			else e.Replacement = 'RipperAmmo';
 		}
-		else if ( e.Replacee == 'Shell' )
+		else if ( (e.Replacee == 'BlasterAmmo') || (e.Replacee == 'BlasterHefty') )
+		{
+			if ( Random[Replacements](0,2) ) e.Replacement = 'PulseAmmo';
+			else e.Replacement = 'RipperAmmo';
+		}
+		else if ( (e.Replacee == 'Shell') || (e.Replacee == 'CrossbowAmmo') )
 		{
 			if ( !Random[Replacements](0,2) ) e.Replacement = 'EClip';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'BioAmmo2';
 			else e.Replacement = 'ShockAmmo2';
 		}
-		else if ( e.Replacee == 'ShellBox' )
+		else if ( (e.Replacee == 'ShellBox') || (e.Replacee == 'CrossbowHefty') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'BioAmmo';
 			else e.Replacement = 'ShockAmmo';
 		}
-		else if ( e.Replacee == 'RocketAmmo' )
+		else if ( (e.Replacee == 'RocketAmmo') || (e.Replacee == 'PhoenixRodAmmo') || (e.Replacee == 'MaceAmmo') )
 		{
 			if ( Random[Replacements](0,1) )
 			{
@@ -1471,38 +1481,51 @@ Class UTMainHandler : StaticEventHandler
 				else e.Replacement = 'UTRocketAmmo2';
 			}
 		}
-		else if ( e.Replacee == 'RocketBox' )
+		else if ( (e.Replacee == 'RocketBox') || (e.Replacee == 'PhoenixRodHefty') || (e.Replacee == 'MaceHefty') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'FlakAmmo';
 			else e.Replacement = 'UTRocketAmmo';
 		}
-		else if ( e.Replacee == 'Cell' )
+		else if ( (e.Replacee == 'Cell') || (e.Replacee == 'SkullRodAmmo') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'EClip';
 			else if ( !Random[Replacements](0,3) ) e.Replacement = 'RifleAmmo';
 			else e.Replacement = 'RifleAmmo2';
 		}
-		else if ( e.Replacee == 'CellPack' )
+		else if ( (e.Replacee == 'CellPack') || (e.Replacee == 'SkullRodHefty') )
 		{
 			if ( !Random[Replacements](0,6) ) e.Replacement = 'WarheadAmmo';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'MiniAmmo';
 			else e.Replacement = 'RifleAmmo';
 		}
 		else if ( e.Replacee == 'InvulnerabilitySphere' ) e.Replacement = 'EnhancedShockRifle';
-		else if ( e.Replacee == 'Berserk' ) e.Replacement = 'UDamage';
-		else if ( e.Replacee == 'Soulsphere' ) e.Replacement = 'UTHealthPack';
-		else if ( e.Replacee == 'Megasphere' ) e.Replacement = 'UTShieldBelt';
-		else if ( e.Replacee == 'Allmap' ) e.Replacement = 'UTMapRevealer';
-		else if ( e.Replacee == 'BlurSphere' ) e.Replacement = 'UTInvisibility';
-		else if ( e.Replacee == 'Infrared' ) e.Replacement = 'Searchlight';
-		else if ( e.Replacee == 'RadSuit' ) e.Replacement = 'UTJumpBoots';
-		else if ( e.Replacee == 'Backpack' ) e.Replacement = 'UTBackpack';
-		else if ( e.Replacee == 'ArmorBonus' ) e.Replacement = 'UTArmorBonus';
-		else if ( e.Replacee == 'HealthBonus' ) e.Replacement = 'UTHealthBonus';
-		else if ( e.Replacee == 'GreenArmor' ) e.Replacement = 'UTThighPads';
-		else if ( e.Replacee == 'BlueArmor' ) e.Replacement = 'UTBodyArmor';
+		else if ( (e.Replacee == 'Berserk') || (e.Replacee == 'ArtiTomeOfPower') || (e.Replacee == 'ArtiEgg') ) e.Replacement = 'UDamage';
+		else if ( (e.Replacee == 'Soulsphere') || (e.Replacee == 'ArtiSuperHealth') ) e.Replacement = 'UTHealthPack';
+		else if ( (e.Replacee == 'Megasphere') || (e.Replacee == 'ArtiInvulnerability') ) e.Replacement = 'UTShieldBelt';
+		else if ( (e.Replacee == 'Allmap') || (e.Replacee == 'SuperMap') ) e.Replacement = 'UTMapRevealer';
+		else if ( (e.Replacee == 'BlurSphere') || (e.Replacee == 'ArtiInvisibility') ) e.Replacement = 'UTInvisibility';
+		else if ( (e.Replacee == 'Infrared') || (e.Replacee == 'ArtiTorch') ) e.Replacement = 'Searchlight';
+		else if ( (e.Replacee == 'RadSuit') || (e.Replacee == 'ArtiFly') ) e.Replacement = 'UTJumpBoots';
+		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') ) e.Replacement = 'UTBackpack';
+		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') ) e.Replacement = 'UTArmorBonus';
+		else if ( (e.Replacee == 'HealthBonus') || (e.Replacee == 'CrystalVial') ) e.Replacement = 'UTHealthBonus';
+		else if ( (e.Replacee == 'GreenArmor') || (e.Replacee == 'Silvershield') ) e.Replacement = 'UTThighPads';
+		else if ( (e.Replacee == 'BlueArmor') || (e.Replacee == 'EnchantedShield') ) e.Replacement = 'UTBodyArmor';
 		else if ( e.Replacee == 'Stimpack' ) e.Replacement = 'UTMedBox';
 		else if ( e.Replacee == 'Medikit' ) e.Replacement = 'UTHealthBox';
+		else if ( e.Replacee == 'ArtiHealth' )
+		{
+			if ( !Random[Replacements](0,3) ) e.Replacement = 'UTHealthBox';
+			else e.Replacement = 'UTMedBox';
+		}
+		else if ( e.Replacee == 'ArtiTeleport' )
+		{
+			// I have no idea what to replace this with, so just have some random stuff
+			if ( Random[Replacements](0,1) ) e.Replacement = 'UTBackpack';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'UTShieldBelt';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'UTHealthPack';
+			else e.Replacement = 'UDamage';
+		}
 		else if ( e.Replacee == 'RedCard' ) e.Replacement = 'UTRedKey';
 		else if ( e.Replacee == 'BlueCard' ) e.Replacement = 'UTBlueKey';
 		else if ( e.Replacee == 'YellowCard' ) e.Replacement = 'UTGoldKey';
@@ -1512,6 +1535,9 @@ Class UTMainHandler : StaticEventHandler
 		else if ( e.Replacee == 'TeleportFog' ) e.Replacement = 'UTTeleportFog';
 		else if ( e.Replacee == 'ItemFog' ) e.Replacement = 'UTItemFog';
 		else if ( flak_blood && (e.Replacee == 'Blood') ) e.Replacement = 'UTBlood';
+		else if ( e.Replacee == 'KeyYellow' ) e.Replacement = 'UTHereticYellowKey';
+		else if ( e.Replacee == 'KeyGreen' ) e.Replacement = 'UTHereticGreenKey';
+		else if ( e.Replacee == 'KeyBlue' ) e.Replacement = 'UTHereticBlueKey';
 	}
 
 	private Actor AddLight( Vector3 pos, Color col, int radius )
@@ -1634,6 +1660,101 @@ Class UTMainHandler : StaticEventHandler
 			AddAmbient((2944,736,64),"testamb/slime",0.4,2.4);
 			AddAmbient((3584,736,64),"testamb/slime",0.4,2.4);
 			AddAmbient((3584,512,64),"testamb/lava",0.8,2.4);
+		}
+		else if ( level.GetChecksum() ~== "D8206A3414DA967F2159473B5791139E" )
+		{
+			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
+			TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
+			TextureID baseflor = TexMan.CheckForTexture("rClfFlr0",TexMan.Type_Any);
+			TextureID baseceil = TexMan.CheckForTexture("rClfBas0",TexMan.Type_Any);
+			TextureID basewall = TexMan.CheckForTexture("uAlnWl2b",TexMan.Type_Any);
+			TextureID xbasewall = TexMan.CheckForTexture("xAlnWl2b",TexMan.Type_Any);
+			TextureID glasstex = TexMan.CheckForTexture("Glassg",TexMan.Type_Any);
+			level.ChangeSky(skytx,skytx);
+			for ( int i=0; i<level.sectors.size(); i++ )
+			{
+				level.sectors[i].lightlevel = 0;
+				level.sectors[i].SetPlaneLight(0,0);
+				level.sectors[i].SetPlaneLight(1,0);
+				// open some ceilings
+				if ( level.sectors[i].ceilingplane.ZAtPoint(level.sectors[i].centerspot) == 1280 )
+					level.sectors[i].SetTexture(1,skyflatnum);
+				if ( level.sectors[i].GetTexture(0) == deftex )
+				{
+					level.sectors[i].SetTexture(0,(i==47)?baseceil:baseflor);
+					level.sectors[i].SetXScale(0,2.);
+					level.sectors[i].SetYScale(0,2.);
+				}
+				if ( level.sectors[i].GetTexture(1) == deftex )
+				{
+					level.sectors[i].SetTexture(1,(i==47)?baseflor:baseceil);
+					level.sectors[i].SetXScale(1,2.);
+					level.sectors[i].SetYScale(1,2.);
+				}
+			}
+			for ( int i=0; i<level.sides.size(); i++ )
+			{
+				level.sides[i].light = 0;
+				for ( int j=0; j<3; j++ )
+				{
+					if ( level.sides[i].GetTexture(j) != deftex ) continue;
+					if ( (i==295) || (i==296) || (i==309) || (i==310) )
+					{
+						level.sides[i].SetTexture(j,xbasewall);
+						level.sides[i].SetTextureYOffset(j,-2304);
+					}
+					else level.sides[i].SetTexture(j,basewall);
+					level.sides[i].SetTextureXScale(j,2.);
+					level.sides[i].SetTextureYScale(j,2.);
+				}
+			}
+			// fixup
+			for ( int i=104; i<134; i++ )
+			{
+				if ( (i==107) || (i==110) || (i==116)
+					|| (i==119) || (i==121) || (i==127)
+					|| (i==132) ) continue;
+				level.sectors[i].SetSpecialColor(0,"00 00 00");
+			}
+			level.sectors[53].SetFade("00 00 20");
+			level.sides[216].SetTexture(1,glasstex);
+			level.lines[125].alpha = 0.5;
+			AddLight((0,-288,128),"E0 E0 FF",256);
+			AddLight((-2560,1024,1280),"E0 E0 FF",1024);
+			AddLight((0,1024,1280),"E0 E0 FF",1024);
+			AddLight((2560,1024,1280),"E0 E0 FF",1024);
+			AddLight((-384,-160,64),"FF FF FF",128);
+			AddLight((-384,-288,64),"FF FF FF",128);
+			AddLight((-384,-416,64),"FF FF FF",128);
+			AddLight((0,2816,96),"FF FF FF",512);
+			AddLight((2904,1344,128),"80 80 FF",256);
+			AddLight((3408,1344,128),"80 80 FF",256);
+			AddLight((1568,1760,64),"20 20 80",128);
+			AddLight((1824,1760,64),"A0 A0 30",128);
+			AddLight((2080,1760,64),"80 80 20",128);
+			AddLight((2336,1760,64),"20 20 80",128);
+			AddLight((2592,1760,64),"FF 80 20",128);
+			AddLight((2944,960,64),"A0 A0 30",128);
+			AddLight((2944,736,64),"A0 A0 30",128);
+			AddLight((3264,960,64),"A0 A0 30",128);
+			AddLight((3264,736,64),"A0 A0 30",128);
+			AddLight((3264,512,64),"A0 A0 30",128);
+			AddLight((3264,288,64),"FF 80 20",128);
+			AddLight((3584,960,64),"A0 A0 30",128);
+			AddLight((3584,736,64),"80 80 20",128);
+			AddLight((3584,512,64),"FF 80 20",128);
+			AddLight((3584,288,64),"A0 A0 30",128);
+			AddAmbient((0,-288,192),"testamb/wind1",0.5,1.6);
+			AddAmbient((-2560,1024,768),"testamb/wind1",0.4,0.8);
+			AddAmbient((0,1024,768),"testamb/wind1",0.4,0.8);
+			AddAmbient((2560,1024,768),"testamb/wind1",0.4,0.8);
+			AddAmbient((768,1600,1280),"testamb/wind2",0.8,1.6);
+			AddAmbient((3174,1344,128),"testamb/water",0.4,1.6);
+			AddAmbient((1568,1760,64),"testamb/water",0.4,2.4);
+			AddAmbient((2336,1760,64),"testamb/water",0.4,2.4);
+			AddAmbient((2592,1760,64),"testamb/lava",0.8,2.4);
+			AddAmbient((3584,512,64),"testamb/lava",0.8,2.4);
+			AddAmbient((3264,288,64),"testamb/lava",0.8,2.4);
 		}
 	}
 

@@ -1,3 +1,199 @@
-// TODO Heretic keys
+// Heretic keys
+Class UTHereticYellowKey : KeyYellow
+{
+	Default
+	{
+		Tag "Red Key";
+		Species "KeyYellow";
+		Inventory.PickupMessage "You got the Yellow Key.";
+	}
+	States
+	{
+	Spawn:
+		UKEY B -1;
+		Stop;
+	}
+}
 
-// TODO Alternative player classes used for compatibility with Heretic, Hexen, Strife and Chex
+Class UTHereticGreenKey : KeyGreen
+{
+	Default
+	{
+		Tag "Green Key";
+		Species "KeyGreen";
+		Inventory.PickupMessage "You got the Green Key.";
+	}
+	States
+	{
+	Spawn:
+		UKEY D -1;
+		Stop;
+	}
+}
+
+Class UTHereticBlueKey : KeyBlue
+{
+	Default
+	{
+		Tag "Blue Key";
+		Species "KeyBlue";
+		Inventory.PickupMessage "You got the Blue Key.";
+	}
+	States
+	{
+	Spawn:
+		UKEY C -1;
+		Stop;
+	}
+}
+
+// Alternative player classes for compatibility with Heretic sprites
+Class UTPlayerHereticCompat : UTPlayer
+{
+	Default
+	{
+		Player.ColorRange 225, 240;
+		Player.Colorset 0, "Green",		225, 240,  238;
+		Player.Colorset 1, "Yellow",		114, 129,  127;
+		Player.Colorset 2, "Red",		145, 160,  158;
+		Player.Colorset 3, "Blue",		190, 205,  203;
+		Player.Colorset 4, "Brown",		 67,  82,   80;
+		Player.Colorset 5, "Light Gray",	  9,  24,   22;
+		Player.Colorset 6, "Light Brown",	 74,  89,   87;
+		Player.Colorset 7, "Light Red",		150, 165,  163;
+		Player.Colorset 8, "Light Blue",	192, 207,  205;
+		Player.Colorset 9, "Beige",		 95, 110,  108;
+	}
+	States
+	{
+	Spawn:
+		PLAY A -1;
+		Stop;
+	See:
+		PLAY ABCD 4;
+		Loop;
+	Melee:
+	Missile:
+		PLAY F 6 BRIGHT;
+		PLAY E 12;
+		Goto Spawn;
+	Pain:
+		PLAY G 4;
+		PLAY G 4 A_Pain;
+		Goto Spawn;
+	Death:
+		PLAY H 6 A_PlayerSkinCheck("AltSkinDeath");
+		PLAY I 6 A_PlayerScream;
+		PLAY JK 6;
+		PLAY L 6 A_NoBlocking;
+		PLAY MNO 6;
+		PLAY P -1;
+		Stop;
+	XDeath:
+		PLAY Q 0 A_PlayerSkinCheck("AltSkinXDeath");
+		PLAY Q 5 A_PlayerScream;
+		PLAY R 0 A_NoBlocking;
+		PLAY R 5 A_SkullPop;
+		PLAY STUVWX 5;
+		PLAY Y -1;
+		Stop;
+	Burn:
+		FDTH A 5 BRIGHT A_PlaySound("*burndeath");
+		FDTH B 4 BRIGHT;
+		FDTH C 5 BRIGHT;
+		FDTH D 4 BRIGHT A_PlayerScream;
+		FDTH E 5 BRIGHT;
+		FDTH F 4 BRIGHT;
+		FDTH G 5 BRIGHT A_PlaySound("*burndeath");
+		FDTH H 4 BRIGHT;
+		FDTH I 5 BRIGHT;
+		FDTH J 4 BRIGHT;
+		FDTH K 5 BRIGHT;
+		FDTH L 4 BRIGHT;
+		FDTH M 5 BRIGHT;
+		FDTH N 4 BRIGHT;
+		FDTH O 5 BRIGHT A_NoBlocking;
+		FDTH P 4 BRIGHT;
+		FDTH Q 5 BRIGHT;
+		FDTH R 4 BRIGHT;
+		ACLO E 35 A_CheckPlayerDone;
+		Wait;
+	AltSkinDeath:
+		PLAY H 10;
+		PLAY I 10 A_PlayerScream;
+		PLAY J 10 A_NoBlocking;
+		PLAY KLM 10;
+		PLAY N -1;
+		Stop;
+	AltSkinXDeath:
+		PLAY O 5;
+		PLAY P 5 A_XScream;
+		PLAY Q 5 A_NoBlocking;
+		PLAY RSTUV 5;
+		PLAY W -1;
+		Stop;
+	}
+}
+
+Class UTPlayerHereticCompatTMale1 : UTPlayerHereticCompat
+{
+	Default
+	{
+		Player.SoundClass "tmale1";
+		Player.DisplayName "M Commando";
+		Player.Portrait "Blake";
+		-NOMENU;
+	}
+}
+Class UTPlayerHereticCompatTMale2 : UTPlayerHereticCompat
+{
+	Default
+	{
+		Player.SoundClass "tmale2";
+		Player.DisplayName "M Soldier";
+		Player.Portrait "Brock";
+		-NOMENU;
+	}
+}
+Class UTPlayerHereticCompatTFemale1 : UTPlayerHereticCompat
+{
+	Default
+	{
+		Player.SoundClass "tfemale";
+		Player.DisplayName "F Commando";
+		Player.Portrait "Ivana";
+		UTPlayer.DollType DOLL_Female;
+		-NOMENU;
+	}
+}
+Class UTPlayerHereticCompatTFemale2 : UTPlayerHereticCompat
+{
+	Default
+	{
+		Player.SoundClass "tfemale";
+		Player.DisplayName "F Soldier";
+		Player.Portrait "Lauren";
+		UTPlayer.DollType DOLL_Female;
+		-NOMENU;
+	}
+}
+Class UTPlayerHereticCompatTBoss : UTPlayerHereticCompat
+{
+	transient CVar bossfootsteps;
+	Default
+	{
+		Player.SoundClass "tboss";
+		Player.DisplayName "Boss";
+		Player.Portrait "Xan";
+		UTPlayer.DollType DOLL_Boss;
+		// should have NOBLOOD, but Xan did bleed in vanilla UT so...
+		// (this is what gave birth to the theory that Xan was actually Jerl Liandri himself)
+		-NOMENU;
+	}
+	override void PlayFootstep( double vol )
+	{
+		if ( !bossfootsteps ) bossfootsteps = CVar.GetCVar('flak_bossfootsteps',players[consoleplayer]);
+		if ( bossfootsteps.GetBool() ) A_PlaySound("ut/bossfootstep",CHAN_5,vol);
+		else Super.PlayFootstep(vol);
+	}
+}

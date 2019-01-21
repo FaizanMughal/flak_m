@@ -2,53 +2,20 @@ HardwareShader Texture "models/Jgreen.png"
 {
 	Shader "shaders/glsl/MeshEnviroMap.fp"
 }
-Brightmap Texture "FIZZHP00"
+HardwareShader Texture "fizzside"
 {
-	Map "brightmaps/fullbright.png"
+	Shader "shaders/glsl/FizzDistortX.fp"
+	Texture "warptex" "textures/warptex.png"
 }
-Brightmap Texture "FIZZHP01"
+HardwareShader Texture "fizztop"
 {
-	Map "brightmaps/fullbright.png"
+	Shader "shaders/glsl/FizzDistortXY.fp"
+	Texture "warptex" "textures/warptex.png"
 }
-Brightmap Texture "FIZZHP02"
+HardwareShader Texture "fizzfull"
 {
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP03"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP10"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP11"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP12"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP13"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP20"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP21"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP22"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP23"
-{
-	Map "brightmaps/fullbright.png"
+	Shader "shaders/glsl/FizzDistortXY.fp"
+	Texture "warptex" "textures/warptex.png"
 }
 HardwareShader Texture "models/jhbox1.png"
 {
@@ -249,6 +216,10 @@ HardwareShader Texture "models/BlueSkin2.png"
 	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
 }
 HardwareShader Texture "models/RedSkin2.png"
+{
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
+HardwareShader Texture "models/NewGreen.png"
 {
 	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
 }
@@ -561,6 +532,14 @@ PulseLight "UTGoldKeyLight"
 	Interval 2.0
 	Offset 0 16 0
 }
+PulseLight "UTGreenKeyLight"
+{
+	Color 0.0 1.0 0.0
+	Size 15
+	SecondarySize 20
+	Interval 2.0
+	Offset 0 16 0
+}
 Object "UTRedSkull"
 {
 	Frame "USKL" { light "UTRedKeyLight" }
@@ -584,6 +563,18 @@ Object "UTBlueKey"
 Object "UTGoldKey"
 {
 	Frame "UKEY" { light "UTGoldKeyLight" }
+}
+Object "UTHereticYellowKey"
+{
+	Frame "UKEY" { light "UTGoldKeyLight" }
+}
+Object "UTHereticGreenKey"
+{
+	Frame "UKEY" { light "UTGreenKeyLight" }
+}
+Object "UTHereticBlueKey"
+{
+	Frame "UKEY" { light "UTBlueKeyLight" }
 }
 HardwareShader PostProcess scene
 {
