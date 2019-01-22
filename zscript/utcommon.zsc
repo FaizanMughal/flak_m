@@ -601,6 +601,8 @@ Class UTWeapon : Weapon
 	virtual ui void PreRender( double lbottom ) {}
 	// Drawstuffs over HUD
 	virtual ui void PostRender( double lbottom ) {}
+	// Future preparations for scripted textures
+	virtual ui void RenderOverlay( RenderEvent e ) {}
 
 	override Inventory CreateTossable( int amt )
 	{
@@ -1284,7 +1286,7 @@ Class ShredCorpseHitbox : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !target || (target.Health > 0) || target.InStateSequence(target.CurState,target.FindState("XDeath")) )
+		if ( !flak_corpsedamage || !target || (target.Health > 0) || target.InStateSequence(target.CurState,target.FindState("XDeath")) )
 		{
 			Destroy();
 			return;
@@ -1300,6 +1302,7 @@ Class ShredCorpseHitbox : Actor
 		{
 			// force gib (cheap ATM)
 			State gib = target.FindState("XDeath");
+			if ( !gib ) gib = target.FindState("Death.Extreme");
 			if ( gib ) target.SetState(gib);
 			Destroy();
 		}
@@ -1539,6 +1542,12 @@ Class UTMainHandler : StaticEventHandler
 		// prettify Kinsie's test map for a more Unreal feel
 		if ( level.GetChecksum() ~== "FBC3B6622A8B74AE06DE01E70007AC33" )
 		{
+			// just replace the -noflat- with a better scaled version
+			if ( !flak_doomtest )
+			{
+				TexMan.ReplaceTextures("-noflat-","DefTex",0);
+				return;
+			}
 			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
 			TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
 			TextureID baseflor = TexMan.CheckForTexture("rClfFlr0",TexMan.Type_Any);
@@ -1716,6 +1725,9 @@ Class UTMainHandler : StaticEventHandler
 
 	override void RenderOverlay( RenderEvent e )
 	{
+		// well this if sure is a long one
+		if ( players[consoleplayer].camera.player && players[consoleplayer].camera.player.ReadyWeapon && (players[consoleplayer].camera.player.ReadyWeapon is 'UTWeapon') )
+			UTWeapon(players[consoleplayer].camera.player.ReadyWeapon).RenderOverlay(e);
 		if ( !menuactive ) return;
 		if ( tex.IsNull() || !tex.IsValid() ) return;
 		if ( !CVar.GetCVar('flak_showmenu',players[consoleplayer]).GetBool() ) return;
@@ -1727,11 +1739,12 @@ Class UTMainHandler : StaticEventHandler
 	{
 		if ( e.Thing.bDONTGIB ) return;
 		// gibbers
-		if ( flak_gibs && !e.Thing.bNOBLOOD && ((e.Inflictor && e.Inflictor.bEXTREMEDEATH) || (e.Thing.Health < e.Thing.GetGibHealth())) && (!e.Inflictor || !e.Inflictor.bNOEXTREMEDEATH) )
+		if ( flak_gibs && !e.Thing.bNOBLOOD && (e.Thing.FindState("XDeath") || e.Thing.FindState("Death.Extreme")) && ((e.Inflictor && e.Inflictor.bEXTREMEDEATH) || (e.Thing.Health < e.Thing.GetGibHealth())) && (!e.Inflictor || !e.Inflictor.bNOEXTREMEDEATH) )
 		{
 			// players have special gibbing
 			if ( e.Thing.player )
 			{
+				// TODO
 				return;
 			}
 			// generic gibbing

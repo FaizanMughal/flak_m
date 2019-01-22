@@ -166,12 +166,11 @@ Class FlakChunk : Actor
 		Speed 50;
 		DamageFunction Random[Flak](15,20);
 		DamageType 'Shredded';
-		BounceType "Doom";
+		BounceType "Hexen";
 		BounceFactor 0.8;
 		WallBounceFactor 0.8;
 		PROJECTILE;
 		+USEBOUNCESTATE;
-		-BOUNCEAUTOOFF;
 		+CANBOUNCEWATER;
 		+SKYEXPLODE;
 		+INTERPOLATEANGLES;
@@ -232,9 +231,8 @@ Class FlakChunk : Actor
 	action void A_HandleBounce()
 	{
 		bHITOWNER = true;
-		A_SprayDecal("WallCrack",-8);
 		int numpt = Random[Flak](2,3);
-		if ( frame < 10 )
+		if ( (frame < 10) && Random[Flak](0,1) )
 		{
 			for ( int i=0; i<numpt; i++ )
 			{
@@ -243,6 +241,7 @@ Class FlakChunk : Actor
 				s.vel = pvel;
 			}
 		}
+		else A_SprayDecal("WallCrack",-8);
 		A_Gravity();
 		invoker.rollvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
 		invoker.pitchvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
@@ -255,7 +254,7 @@ Class FlakChunk : Actor
 	}
 	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
 	{
-		if ( vel.length() <= 5.0 ) return 0;
+		if ( vel.length() <= 5.0 ) return -1;
 		FlakAccumulator.Accumulate(target,damage);
 		int gibhealth = (target.GibHealth==int.min)?-target.SpawnHealth():target.GibHealth;
 		int calcdmg = FlakAccumulator.GetAmount(target);

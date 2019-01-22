@@ -66,6 +66,7 @@ OptionMenu "UTOptionMenu"
 	Option "UT Blood", "flak_blood", "YesNo"
 	Option "[WIP] UT Gibbing", "flak_gibs", "YesNo"
 	Option "[WIP] Corpses Take Damage", "flak_corpsedamage", "YesNo"
+	Option "Edit Kinsie's Test Map", "flak_doomtest", "YesNo"
 }
 
 AddOptionMenu "OptionsMenu"

@@ -50,7 +50,7 @@ Model "UTHealthPack"
 	Model 0 "hbox_d.3d"
 	// indices start at 1 for this mesh
 	SurfaceSkin 0 1 "jhbox1.png"
-	SurfaceSkin 0 2 "FIZZHP00"
+	SurfaceSkin 0 2 "fizzfull"
 	Scale 0.2 0.24 0.2
 	RollOffset -90
 	ZOffset 16
@@ -64,8 +64,8 @@ Model "UTHealthBox"
 	Model 0 "hboxbeta_d.3d"
 	// indices start at 1 for this mesh
 	SurfaceSkin 0 1 "jhboxbeta1.png"
-	SurfaceSkin 0 2 "FIZZHP10"
-	SurfaceSkin 0 3 "FIZZHP10"
+	SurfaceSkin 0 2 "fizzfull"
+	SurfaceSkin 0 3 "fizzfull"
 	Scale 0.08 0.08 0.096
 	ZOffset 4
 
@@ -78,7 +78,7 @@ Model "UTMedBox"
 	Model 0 "MedBox_d.3d"
 	// indices start at 1 for this mesh
 	SurfaceSkin 0 1 "JMedBox1.png"
-	SurfaceSkin 0 2 "FIZZHP10"
+	SurfaceSkin 0 2 "fizzfull"
 	Scale 0.06 0.06 0.072
 	ZOffset 5
 
@@ -90,8 +90,8 @@ Model "UTHealthBonus"
 	Path "models"
 	Model 0 "Vial_d.3d"
 	SurfaceSkin 0 0 "JVial0.png"
-	SurfaceSkin 0 1 "FIZZHP20"
-	SurfaceSkin 0 2 "FIZZHP20"
+	SurfaceSkin 0 1 "fizzside"
+	SurfaceSkin 0 2 "fizztop"
 	Scale 0.04 0.04 0.048
 	ZOffset 8
 	DONTCULLBACKFACES

@@ -221,11 +221,11 @@ Class UTGrenade : UTRocket
 		DamageType 'GrenadeDeath';
 		-NOGRAVITY;
 		+USEBOUNCESTATE;
-		-BOUNCEAUTOOFF;
-		+BOUNCEAUTOOFFFLOORONLY;
 		-EXPLODEONWATER;
 		+CANBOUNCEWATER;
-		BounceType "Doom";
+		+NOEXPLODEFLOOR;
+		BounceType "Hexen";
+		WallBounceFactor 0.75;
 		BounceFactor 0.75;
 		ReactionTime 85;
 		Speed 20;
@@ -243,20 +243,37 @@ Class UTGrenade : UTRocket
 	Spawn:
 		RCKT A 1
 		{
-			angle += anglevel;
-			pitch += pitchvel;
-			roll += rollvel;
+			if ( !bNOGRAVITY )
+			{
+				angle += anglevel;
+				pitch += pitchvel;
+				roll += rollvel;
+			}
+			let s = Spawn("UTSmoke",pos);
+			s.scale *= 2.0;
+			s.alpha *= 0.6;
+			s.vel = (FRandom[Eightball](-0.1,0.1),FRandom[Eightball](-0.1,0.1),FRandom[Eightball](-0.1,0.3));
+			s.vel += vel*0.05;
+			s.SetShade("000000");
 			A_Countdown();
 		}
 		Wait;
 	Bounce:
 		RCKT A 0
 		{
+			bHITOWNER = true;
 			A_PlaySound("utrl/bounce");
 			rollvel = FRandom[Eightball](-16,16);
 			pitchvel = FRandom[Eightball](-16,16);
 			anglevel = FRandom[Eightball](-16,16);
-			bHITOWNER = true;
+			if ( vel.z > 10 ) vel.z = 0.5*(10+vel.z);
+			else if ( BlockingFloor && (vel.xy.length() < 0.5) )
+			{
+				vel *= 0;
+				bNOGRAVITY = true;
+				bMOVEWITHSECTOR = true;
+				ClearBounce();
+			}
 		}
 		Goto Spawn;
 	Death:

@@ -2,53 +2,20 @@ HardwareShader Texture "models/Jgreen.png"
 {
 	Shader "shaders/glsl/MeshEnviroMap.fp"
 }
-Brightmap Texture "FIZZHP00"
+HardwareShader Texture "fizzside"
 {
-	Map "brightmaps/fullbright.png"
+	Shader "shaders/glsl/FizzDistortX.fp"
+	Texture "warptex" "textures/warptex.png"
 }
-Brightmap Texture "FIZZHP01"
+HardwareShader Texture "fizztop"
 {
-	Map "brightmaps/fullbright.png"
+	Shader "shaders/glsl/FizzDistortXY.fp"
+	Texture "warptex" "textures/warptex.png"
 }
-Brightmap Texture "FIZZHP02"
+HardwareShader Texture "fizzfull"
 {
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP03"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP10"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP11"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP12"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP13"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP20"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP21"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP22"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "FIZZHP23"
-{
-	Map "brightmaps/fullbright.png"
+	Shader "shaders/glsl/FizzDistortXY.fp"
+	Texture "warptex" "textures/warptex.png"
 }
 HardwareShader Texture "models/jhbox1.png"
 {
