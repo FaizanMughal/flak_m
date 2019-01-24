@@ -56,7 +56,7 @@ Class Razor2 : Actor
 	{
 		Radius 2;
 		Height 2;
-		Speed 27;
+		Speed 25;
 		DamageFunction (Random[Ripper](20,25)*((DamageType=='Decapitated')?3:1.0));
 		DamageType 'Shredded';
 		Obituary "%k ripped a chunk of meat out of %o with the Ripper.";

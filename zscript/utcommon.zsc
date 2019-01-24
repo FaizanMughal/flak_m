@@ -853,7 +853,7 @@ Class UTSpark : Actor
 		+DONTSPLASH;
 		BounceType "Doom";
 		BounceFactor 0.4;
-		Gravity 0.5;
+		Gravity 0.2;
 		Scale 0.05;
 	}
 	override void Tick()
@@ -927,7 +927,7 @@ Class UTChip : Actor
 		+INTERPOLATEANGLES;
 		BounceType "Doom";
 		BounceFactor 0.3;
-		Gravity 0.7;
+		Gravity 0.35;
 		Scale 0.2;
 	}
 	override void PostBeginPlay()
@@ -1570,7 +1570,7 @@ Class UTMainHandler : StaticEventHandler
 		{
 			if ( (level.GetChecksum() ~== "FBC3B6622A8B74AE06DE01E70007AC33") || (level.GetChecksum() ~== "D8206A3414DA967F2159473B5791139E") )
 			{
-				level.ReplaceTextures("-noflat-","DefTex",0);
+				TexMan.ReplaceTextures("-noflat-","DefTex",0);
 				TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
 				level.ChangeSky(skytx,skytx);
 			}
@@ -1580,7 +1580,7 @@ Class UTMainHandler : StaticEventHandler
 		if ( level.GetChecksum() ~== "FBC3B6622A8B74AE06DE01E70007AC33" )
 		{
 			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
-			TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
+			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
 			TextureID baseflor = TexMan.CheckForTexture("rClfFlr0",TexMan.Type_Any);
 			TextureID baseceil = TexMan.CheckForTexture("rClfBas0",TexMan.Type_Any);
 			TextureID basewall = TexMan.CheckForTexture("uAlnWl2b",TexMan.Type_Any);
@@ -1589,7 +1589,7 @@ Class UTMainHandler : StaticEventHandler
 			level.ChangeSky(skytx,skytx);
 			for ( int i=0; i<level.sectors.size(); i++ )
 			{
-				level.sectors[i].lightlevel = 0;
+				level.sectors[i].lightlevel = min(level.sectors[i].lightlevel,64);
 				level.sectors[i].SetPlaneLight(0,0);
 				level.sectors[i].SetPlaneLight(1,0);
 				// open some ceilings
@@ -1677,7 +1677,7 @@ Class UTMainHandler : StaticEventHandler
 		else if ( level.GetChecksum() ~== "D8206A3414DA967F2159473B5791139E" )
 		{
 			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
-			TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
+			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
 			TextureID baseflor = TexMan.CheckForTexture("rClfFlr0",TexMan.Type_Any);
 			TextureID baseceil = TexMan.CheckForTexture("rClfBas0",TexMan.Type_Any);
 			TextureID basewall = TexMan.CheckForTexture("uAlnWl2b",TexMan.Type_Any);

@@ -154,7 +154,7 @@ Class SniperRifle : UTWeapon
 		origin += x*8.0+y*6.0-z*9.0;
 		let c = Spawn("UTCasing",origin);
 		c.scale *= 1.25;
-		c.vel = x*FRandom[Junk](-2,2)+y*FRandom[Junk](3,6)+z*FRandom[Junk](3,5);
+		c.vel = x*FRandom[Junk](-1.5,1.5)+y*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
 	}
 	override String GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
 	{

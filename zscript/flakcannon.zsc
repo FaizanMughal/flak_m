@@ -163,7 +163,7 @@ Class FlakChunk : Actor
 		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
 		Radius 2;
 		Height 2;
-		Speed 50;
+		Speed 32;
 		DamageFunction Random[Flak](15,20);
 		DamageType 'Shredded';
 		BounceType "Hexen";
@@ -243,13 +243,16 @@ Class FlakChunk : Actor
 		}
 		else A_SprayDecal("WallCrack",-8);
 		A_Gravity();
+		gravity = 0.35;
 		invoker.rollvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
 		invoker.pitchvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
 		invoker.yawvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
 		vel = (vel.unit()+(FRandom[Flak](-0.2,0.2),FRandom[Flak](-0.2,0.2),FRandom[Flak](-0.2,0.2))).unit()*vel.length();
+		// TODO chunks in vanilla have a special variation on the standard reflect formula that causes them to bounce differently when hitting a surface head-on
+		// (0.5 to 0.8 reduction perpendicular to the surface normal, to be specific)
+		// I have no idea how I'll even implement this reduction reliably
 		A_PlaySound("flak/bounce",volume:0.3);
 		A_AlertMonsters();
-		bBOUNCEAUTOOFFFLOORONLY = true;
 		if ( vel.length() < 5.0 ) ExplodeMissile();
 	}
 	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
@@ -386,7 +389,8 @@ Class FlakSlug : Actor
 		DamageType 'FlakDeath';
 		Radius 2;
 		Height 2;
-		Speed 40;
+		Gravity 0.35;
+		Speed 20;
 		PROJECTILE;
 		-NOGRAVITY;
 		+SKYEXPLODE;
@@ -398,7 +402,7 @@ Class FlakSlug : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		vel.z += 4;
+		vel.z += 3;
 	}
 	override void Tick()
 	{
@@ -423,16 +427,26 @@ Class FlakSlug : Actor
 		double a, s;
 		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Actor p;
+		Vector3 spawnofs;
+		if ( BlockingMobj ) spawnofs = level.Vec3Diff(pos,BlockingMobj.Vec3Offset(0,0,BlockingMobj.height/2)).unit()*8;
+		else if ( BlockingFloor ) spawnofs = BlockingFloor.floorplane.Normal*8;
+		else if ( BlockingCeiling ) spawnofs = BlockingCeiling.ceilingplane.Normal*8;
+		else if ( BlockingLine )
+		{
+			spawnofs = (-BlockingLine.delta.y,BlockingLine.delta.x,0).unit()*8;
+			if ( !BlockingLine.sidedef[1] || (CurSector == BlockingLine.frontsector) )
+				spawnofs *= -1;
+		}
 		for ( int i=0; i<5; i++ )
 		{
-			p = Spawn("FlakChunk",pos);
+			p = Spawn("FlakChunk",Vec3Offset(spawnofs.x,spawnofs.y,spawnofs.z));
 			p.bHITOWNER = true;
 			a = FRandom[Flak](0,360);
-			s = FRandom[Flak](0,0.2);
+			s = FRandom[Flak](0,0.1);
 			Vector3 dir = (x+y*cos(a)*s+z*sin(a)*s).unit();
 			p.angle = atan2(dir.y,dir.x);
 			p.pitch = -asin(dir.z);
-			p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed*FRandom[Flak](0.5,1.5);
+			p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*(p.speed+FRandom[Flak](-3,3));
 			p.target = target;
 		}
 		int numpt = Random[Flak](8,12);
@@ -521,16 +535,25 @@ Class FlakCannon : UTWeapon
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);
 		[x, y, z] = dt_Matrix4.GetAxes(BulletSlope(),angle,roll);
+		Vector3 offsets[8];	// vanilla adds these to each chunk
+		offsets[0] = (0,0,0);
+		offsets[1] = -z;
+		offsets[2] = 2*y+z;
+		offsets[3] = -y;
+		offsets[4] = 2*y-z;
+		offsets[5] = (0,0,0);
+		offsets[6] = y-z;
+		offsets[7] = 2*y+z;
 		Actor p;
-		for ( int i=0; i<6; i++ )
+		for ( int i=0; i<8; i++ )
 		{
-			p = Spawn("FlakChunk",origin);
+			p = Spawn("FlakChunk",level.Vec3Offset(origin,offsets[i]));
 			a = FRandom[Flak](0,360);
-			s = FRandom[Flak](0,0.2);
+			s = FRandom[Flak](0,0.1);
 			Vector3 dir = (x+y*cos(a)*s+z*sin(a)*s).unit();
 			p.angle = atan2(dir.y,dir.x);
 			p.pitch = -asin(dir.z);
-			p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
+			p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*(p.speed+FRandom[Flak](-3,3));
 			p.target = self;
 		}
 		int numpt = Random[Flak](20,30);

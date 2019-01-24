@@ -62,6 +62,7 @@ Class UTBloodDrop : Actor
 	Default
 	{
 		Scale 0.24;
+		Gravity 0.8;
 		Mass 1;
 		Radius 2;
 		Height 2;
@@ -119,8 +120,8 @@ Class UTBloodSpurt : Actor
 			ang = angle+FRandom[Blood](-3,3)*str;
 			pt = pitch+FRandom[Blood](-3,3)*str;
 			Vector3 dir = (cos(pt)*cos(ang),cos(pt)*sin(ang),-sin(pt));
-			d.vel = dir*str*FRandom[Blood](0.8,1.2);
-			d.vel.z += str*0.8;
+			d.vel = dir*str*FRandom[Blood](0.4,0.8);
+			d.vel.z += str*0.5;
 			d.scale *= str*0.15*FRandom[Blood](0.6,1.4);
 		}
 		Destroy();
@@ -292,6 +293,7 @@ Class UTGib : Actor
 		BounceType "Hexen";
 		BounceFactor 0.8;
 		WallBounceFactor 0.8;
+		Gravity 0.6;
 		+ROLLSPRITE;
 		+ROLLCENTER;
 		+INTERPOLATEANGLES;
