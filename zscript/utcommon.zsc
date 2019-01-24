@@ -1553,12 +1553,6 @@ Class UTMainHandler : StaticEventHandler
 		// prettify Kinsie's test map for a more Unreal feel
 		if ( level.GetChecksum() ~== "FBC3B6622A8B74AE06DE01E70007AC33" )
 		{
-			// just replace the -noflat- with a better scaled version
-			if ( !flak_doomtest )
-			{
-				TexMan.ReplaceTextures("-noflat-","DefTex",0);
-				return;
-			}
 			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
 			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
 			TextureID baseflor = TexMan.CheckForTexture("rClfFlr0",TexMan.Type_Any);
