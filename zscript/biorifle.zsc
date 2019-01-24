@@ -158,7 +158,7 @@ Class BioXLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( globalfreeze || level.frozen ) return;
 		args[LIGHT_RED] = int(64*lifetime);
 		args[LIGHT_GREEN] = int(255*lifetime);
 		args[LIGHT_BLUE] = int(48*lifetime);
@@ -211,7 +211,7 @@ Class BioGel : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( globalfreeze || level.frozen ) return;
 		if ( !bNOGRAVITY )
 		{
 			roll += rollvel;
@@ -608,7 +608,7 @@ Class BioGlob : BioGel
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( globalfreeze || level.frozen ) return;
 		Vector3 ofs = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
 		for ( int i=0; i<2; i++ )
 		{

@@ -428,7 +428,7 @@ Class UTRocketLauncher : UTWeapon
 	// lock-on check
 	action void A_CheckTarget()
 	{
-		let t = level.CreateThinkerIterator("Actor");
+		let t = ThinkerIterator.Create("Actor");
 		Actor a;
 		double closest = double.max;
 		invoker.LockedTarget = null;

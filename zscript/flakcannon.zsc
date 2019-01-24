@@ -55,7 +55,7 @@ Class ChunkLight : DynamicLight
 			Destroy();
 			return;
 		}
-		if ( isFrozen() ) return;
+		if ( globalfreeze || level.frozen ) return;
 		args[LIGHT_RED] = int(255*(10-target.frame)*0.1);
 		args[LIGHT_GREEN] = int(224*(10-target.frame)*0.1);
 		args[LIGHT_BLUE] = int(128*(10-target.frame)*0.1);
@@ -84,7 +84,7 @@ Class ChunkTrail : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( globalfreeze || level.frozen ) return;
 		if ( InStateSequence(CurState,FindState("Death")) ) return;
 		if ( !target )
 		{
@@ -121,7 +121,7 @@ Class FlakAccumulator : Thinker
 
 	static void Accumulate( Actor victim, int amount )
 	{
-		let ti = victim.level.CreateThinkerIterator("FlakAccumulator",STAT_USER);
+		let ti = ThinkerIterator.Create("FlakAccumulator",STAT_USER);
 		FlakAccumulator a, match = null;
 		while ( a = FlakAccumulator(ti.Next()) )
 		{
@@ -131,7 +131,7 @@ Class FlakAccumulator : Thinker
 		}
 		if ( !match )
 		{
-			match = new("FlakAccumulator");	// another thinker created through new(), this all looks like a big catastrophe waiting to happen
+			match = new("FlakAccumulator");
 			match.ChangeStatNum(STAT_USER);
 			match.victim = victim;
 		}
@@ -141,7 +141,7 @@ Class FlakAccumulator : Thinker
 
 	static int GetAmount( Actor victim )
 	{
-		let ti = victim.level.CreateThinkerIterator("FlakAccumulator",STAT_USER);
+		let ti = ThinkerIterator.Create("FlakAccumulator",STAT_USER);
 		FlakAccumulator a;
 		while ( a = FlakAccumulator(ti.Next()) )
 		{
@@ -193,7 +193,7 @@ Class FlakChunk : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( globalfreeze || level.frozen ) return;
 		if ( waterlevel > 0 )
 		{
 			vel.xy *= 0.98;
@@ -335,7 +335,7 @@ Class SlugSmoke : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( globalfreeze || level.frozen ) return;
 		lifetime += lifespeed;
 		let s = Spawn("UTSmoke",pos);
 		s.vel = (FRandom[Flak](-0.5,0.5),FRandom[Flak](-0.5,0.5),FRandom[Flak](-0.5,0.5));
@@ -369,7 +369,7 @@ Class SlugLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( globalfreeze || level.frozen ) return;
 		args[LIGHT_RED] = int(255*lifetime);
 		args[LIGHT_GREEN] = int(224*lifetime);
 		args[LIGHT_BLUE] = int(128*lifetime);

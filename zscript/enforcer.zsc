@@ -119,7 +119,7 @@ Class UTCasing : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( level.frozen || globalfreeze ) return;
 		if ( InStateSequence(CurState,ResolveState("Death")) )
 		{
 			deadtimer++;

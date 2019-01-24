@@ -48,9 +48,9 @@ Class ShockWave : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( globalfreeze || level.frozen ) return;
 		if ( alpha <= 0 ) return;
-		if ( !t ) t = level.CreateThinkerIterator("Actor");
+		if ( !t ) t = ThinkerIterator.Create("Actor");
 		icount++;
 		if ( icount == 4 ) Spawn("WarheadSubExplosion",pos);
 		lifespan--;
@@ -164,7 +164,7 @@ Class WarheadExplodLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( globalfreeze || level.frozen ) return;
 		args[LIGHT_RED] = int(255*lifetime);
 		args[LIGHT_GREEN] = int(192*lifetime);
 		args[LIGHT_BLUE] = int(128*lifetime);
@@ -224,7 +224,7 @@ Class WarheadTrail : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( level.frozen || globalfreeze ) return;
 		vel *= 0.99;
 		A_FadeOut(0.1);
 	}
@@ -275,7 +275,7 @@ Class WarShell : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( globalfreeze || level.frozen ) return;
 		if ( !bMISSILE ) return;
 		if ( vel.length() > 0 )
 		{
@@ -375,7 +375,7 @@ Class GuidedWarShell : WarShell
 			justleft = false;
 			bHITOWNER = true;
 		}
-		if ( isFrozen() ) return;
+		if ( globalfreeze || level.frozen ) return;
 		if ( !bMISSILE ) return;
 		if ( !target || !target.player || (target.Health <= 0) )
 		{
@@ -482,7 +482,7 @@ Class RedeemerHUD : HUDMessageBase
 		// shootable targetting
 		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() && !CVar.GetCVar('flak_redeemerreadout_perframe',players[consoleplayer]).GetBool() )
 		{
-			if ( !t ) t = camera.level.CreateThinkerIterator("Actor");
+			if ( !t ) t = ThinkerIterator.Create("Actor");
 			if ( !tr ) tr = new("MidTracer");
 			t.Reinit();
 			ta.Clear();
@@ -490,10 +490,10 @@ Class RedeemerHUD : HUDMessageBase
 			Vector3 vdir = (cos(ViewAngle)*cos(ViewPitch),sin(ViewAngle)*cos(ViewPitch),-sin(ViewPitch));
 			while ( a = Actor(t.Next()) )
 			{
-				Vector3 tdir = camera.level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
+				Vector3 tdir = Level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
 				if ( !a.bSHOOTABLE || (a.Health <= 0) || ((Camera is 'GuidedWarShell') && (a == GuidedWarShell(Camera).b)) || (tdir.length() > 2000) || (acos(tdir.unit() dot vdir) > players[consoleplayer].FOV) || tr.Trace(ViewPos,Camera.CurSector,tdir.unit(),tdir.length(),0) ) continue;
 				Vector3 wpos = ViewPos+tdir;
-				Vector3 spos = dt_CoordUtil.WorldToScreen(camera.level,wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
+				Vector3 spos = dt_CoordUtil.WorldToScreen(wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
 				if ( spos.z > 1.0 ) continue;
 				TargetActor te = new("TargetActor");
 				te.vpos = dt_CoordUtil.ToViewport(spos);
@@ -513,7 +513,7 @@ Class RedeemerHUD : HUDMessageBase
 		{
 			if ( CVar.GetCVar('flak_redeemerreadout_perframe',players[consoleplayer]).GetBool() )
 			{
-				if ( !t ) t = camera.level.CreateThinkerIterator("Actor");
+				if ( !t ) t = ThinkerIterator.Create("Actor");
 				if ( !tr ) tr = new("MidTracer");
 				t.Reinit();
 				ta.Clear();
@@ -521,10 +521,10 @@ Class RedeemerHUD : HUDMessageBase
 				Vector3 vdir = (cos(ViewAngle)*cos(ViewPitch),sin(ViewAngle)*cos(ViewPitch),-sin(ViewPitch));
 				while ( a = Actor(t.Next()) )
 				{
-					Vector3 tdir = camera.level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
+					Vector3 tdir = Level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
 					if ( !a.bSHOOTABLE || (a.Health <= 0) || ((Camera is 'GuidedWarShell') && (a == GuidedWarShell(Camera).b)) || (tdir.length() > 2000) || (acos(tdir.unit() dot vdir) > players[consoleplayer].FOV) || tr.Trace(ViewPos,Camera.CurSector,tdir.unit(),tdir.length(),0) ) continue;
 					Vector3 wpos = ViewPos+tdir;
-					Vector3 spos = dt_CoordUtil.WorldToScreen(camera.level,wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
+					Vector3 spos = dt_CoordUtil.WorldToScreen(wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
 					if ( spos.z > 1.0 ) continue;
 					TargetActor te = new("TargetActor");
 					te.vpos = dt_CoordUtil.ToViewport(spos);
@@ -535,8 +535,8 @@ Class RedeemerHUD : HUDMessageBase
 			}
 			for ( int i=0; i<ta.Size(); i++ )
 			{
-				Screen.DrawTexture(mark,false,ta[i].vpos.x,ta[i].vpos.y,DTA_RenderStyle,(1|2<<8|1<<16));
-				Screen.DrawText(whfont,Font.CR_UNTRANSLATED,(ta[i].vpos.x-whfont.StringWidth(ta[i].diststr)/2)-12,ta[i].vpos.y+8,ta[i].diststr,DTA_RenderStyle,(1|2<<8|1<<16));
+				Screen.DrawTexture(mark,false,ta[i].vpos.x,ta[i].vpos.y,DTA_LegacyRenderStyle,STYLE_Add);
+				Screen.DrawText(whfont,Font.CR_UNTRANSLATED,(ta[i].vpos.x-whfont.StringWidth(ta[i].diststr)/2)-12,ta[i].vpos.y+8,ta[i].diststr,DTA_LegacyRenderStyle,STYLE_Add);
 			}
 		}
 		// reticle
@@ -553,7 +553,7 @@ Class RedeemerHUD : HUDMessageBase
 		double rrot = -LagRoll2*2;
 		for ( int i=0; i<4; i++ )
 			sshape.PushVertex(mid+(verts[i].x*cos(rrot)-verts[i].y*sin(rrot),verts[i].x*sin(rrot)+verts[i].y*cos(rrot)));
-		Screen.DrawShape(reticle1,false,sshape,DTA_RenderStyle,(1|2<<8|1<<16));
+		Screen.DrawShape(reticle1,false,sshape,DTA_LegacyRenderStyle,STYLE_Add);
 		sshape.Clear(Shape2D.C_Verts);
 		verts[0] = (-siz2.x,siz.y+siz2.y);
 		verts[1] = (siz2.x,siz.y+siz2.y);
@@ -561,14 +561,14 @@ Class RedeemerHUD : HUDMessageBase
 		verts[3] = (siz2.x,siz.y+3*siz2.y);
 		for ( int i=0; i<4; i++ )
 			sshape.PushVertex(mid+(verts[i].x*cos(rrot)-verts[i].y*sin(rrot),verts[i].x*sin(rrot)+verts[i].y*cos(rrot)));
-		Screen.DrawShape(arrow,false,sshape,DTA_RenderStyle,(1|2<<8|1<<16));
-		Screen.DrawTexture(reticle2,false,vs.x*0.5,vs.y*0.5,DTA_VirtualWidthF,vs.x,DTA_VirtualHeightF,vs.y,DTA_KeepRatio,true,DTA_RenderStyle,(1|2<<8|1<<16));
+		Screen.DrawShape(arrow,false,sshape,DTA_LegacyRenderStyle,STYLE_Add);
+		Screen.DrawTexture(reticle2,false,vs.x*0.5,vs.y*0.5,DTA_VirtualWidthF,vs.x,DTA_VirtualHeightF,vs.y,DTA_KeepRatio,true,DTA_LegacyRenderStyle,STYLE_Add);
 		// faux assembly readout
 		int numreadouts = int(vs.y/128+2);
 		for ( int i=0; i<numreadouts; i++ )
 		{
 			int scroll = (gametic*5)%128;
-			Screen.DrawTexture(readout,false,0,i*128-scroll,DTA_VirtualWidthF,vs.x,DTA_VirtualHeightF,vs.y,DTA_KeepRatio,true,DTA_RenderStyle,(1|2<<8|1<<16));
+			Screen.DrawTexture(readout,false,0,i*128-scroll,DTA_VirtualWidthF,vs.x,DTA_VirtualHeightF,vs.y,DTA_KeepRatio,true,DTA_LegacyRenderStyle,STYLE_Add);
 		}
 	}
 }

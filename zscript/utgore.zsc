@@ -155,7 +155,7 @@ Class UTBloodTrail : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( level.frozen || globalfreeze ) return;
 		if ( !target ) return;
 		SetOrigin(target.pos,true);
 		double ang, pt;

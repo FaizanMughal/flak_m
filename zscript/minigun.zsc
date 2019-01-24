@@ -47,7 +47,7 @@ Class MinigunTracer : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( isFrozen() ) return;
+		if ( level.frozen || globalfreeze ) return;
 		Vector3 dir = level.Vec3Diff(pos,dest);
 		if ( dir.length() < 160 )
 		{
