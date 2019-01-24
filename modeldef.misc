@@ -64,7 +64,7 @@ Model "UTHealthBox"
 	Model 0 "hboxbeta_d.3d"
 	// indices start at 1 for this mesh
 	SurfaceSkin 0 1 "jhboxbeta1.png"
-	SurfaceSkin 0 2 "fizzfull"
+	SurfaceSkin 0 2 "fizzside"
 	SurfaceSkin 0 3 "fizzfull"
 	Scale 0.08 0.08 0.096
 	ZOffset 4

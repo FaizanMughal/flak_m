@@ -170,7 +170,7 @@ Class PulseBall : Actor
 		+SKYEXPLODE;
 		+FORCEXYBILLBOARD;
 		Scale 0.19;
-		Speed 29;
+		Speed 22;
 		Radius 2;
 		Height 2;
 	}

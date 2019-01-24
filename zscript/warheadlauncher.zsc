@@ -246,7 +246,7 @@ Class WarShell : Actor
 		Obituary "%o was vaporized by %k's Redeemer!!";
 		Radius 2;
 		Height 2;
-		Speed 12;
+		Speed 6;
 		DamageType 'RedeemerDeath';
 		DamageFactor 1000;
 		PROJECTILE;
@@ -282,9 +282,9 @@ Class WarShell : Actor
 			if ( waterlevel > 0 )
 			{
 				vel *= 0.98;
-				if ( vel.length() < 12 ) vel += vel.unit();
+				if ( vel.length() < 6 ) vel += vel.unit()*0.35;
 			}
-			else if ( vel.length() < 40 ) vel += vel.unit();
+			else if ( vel.length() < 20 ) vel += vel.unit()*0.35;
 		}
 	}
 	action void A_Trail()
@@ -535,8 +535,8 @@ Class RedeemerHUD : HUDMessageBase
 			}
 			for ( int i=0; i<ta.Size(); i++ )
 			{
-				Screen.DrawTexture(mark,false,ta[i].vpos.x,ta[i].vpos.y,DTA_RenderStyle,(1|2<<8|1<<16));
-				Screen.DrawText(whfont,Font.CR_UNTRANSLATED,(ta[i].vpos.x-whfont.StringWidth(ta[i].diststr)/2)-12,ta[i].vpos.y+8,ta[i].diststr,DTA_RenderStyle,(1|2<<8|1<<16));
+				Screen.DrawTexture(mark,false,ta[i].vpos.x,ta[i].vpos.y,DTA_LegacyRenderStyle,STYLE_Add);
+				Screen.DrawText(whfont,Font.CR_UNTRANSLATED,(ta[i].vpos.x-whfont.StringWidth(ta[i].diststr)/2)-12,ta[i].vpos.y+8,ta[i].diststr,DTA_LegacyRenderStyle,STYLE_Add);
 			}
 		}
 		// reticle
@@ -553,7 +553,7 @@ Class RedeemerHUD : HUDMessageBase
 		double rrot = -LagRoll2*2;
 		for ( int i=0; i<4; i++ )
 			sshape.PushVertex(mid+(verts[i].x*cos(rrot)-verts[i].y*sin(rrot),verts[i].x*sin(rrot)+verts[i].y*cos(rrot)));
-		Screen.DrawShape(reticle1,false,sshape,DTA_RenderStyle,(1|2<<8|1<<16));
+		Screen.DrawShape(reticle1,false,sshape,DTA_LegacyRenderStyle,STYLE_Add);
 		sshape.Clear(Shape2D.C_Verts);
 		verts[0] = (-siz2.x,siz.y+siz2.y);
 		verts[1] = (siz2.x,siz.y+siz2.y);
@@ -561,14 +561,14 @@ Class RedeemerHUD : HUDMessageBase
 		verts[3] = (siz2.x,siz.y+3*siz2.y);
 		for ( int i=0; i<4; i++ )
 			sshape.PushVertex(mid+(verts[i].x*cos(rrot)-verts[i].y*sin(rrot),verts[i].x*sin(rrot)+verts[i].y*cos(rrot)));
-		Screen.DrawShape(arrow,false,sshape,DTA_RenderStyle,(1|2<<8|1<<16));
-		Screen.DrawTexture(reticle2,false,vs.x*0.5,vs.y*0.5,DTA_VirtualWidthF,vs.x,DTA_VirtualHeightF,vs.y,DTA_KeepRatio,true,DTA_RenderStyle,(1|2<<8|1<<16));
+		Screen.DrawShape(arrow,false,sshape,DTA_LegacyRenderStyle,STYLE_Add);
+		Screen.DrawTexture(reticle2,false,vs.x*0.5,vs.y*0.5,DTA_VirtualWidthF,vs.x,DTA_VirtualHeightF,vs.y,DTA_KeepRatio,true,DTA_LegacyRenderStyle,STYLE_Add);
 		// faux assembly readout
 		int numreadouts = int(vs.y/128+2);
 		for ( int i=0; i<numreadouts; i++ )
 		{
 			int scroll = (gametic*5)%128;
-			Screen.DrawTexture(readout,false,0,i*128-scroll,DTA_VirtualWidthF,vs.x,DTA_VirtualHeightF,vs.y,DTA_KeepRatio,true,DTA_RenderStyle,(1|2<<8|1<<16));
+			Screen.DrawTexture(readout,false,0,i*128-scroll,DTA_VirtualWidthF,vs.x,DTA_VirtualHeightF,vs.y,DTA_KeepRatio,true,DTA_LegacyRenderStyle,STYLE_Add);
 		}
 	}
 }

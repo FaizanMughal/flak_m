@@ -103,6 +103,7 @@ Class UTCasing : Actor
 		+USEBOUNCESTATE;
 		+INTERPOLATEANGLES;
 		Mass 1;
+		Gravity 0.35;
 		BounceType "Hexen";
 		WallBounceFactor 0.65;
 		BounceFactor 0.65;
@@ -126,7 +127,7 @@ Class UTCasing : Actor
 			if ( deadtimer > 300 ) A_FadeOut(0.05);
 			return;
 		}
-		heat -= 0.02;
+		heat -= 0.05;
 		if ( heat <= 0 ) return;
 		let s = Spawn("UTSmallSmoke",pos);
 		s.alpha *= heat;
@@ -376,7 +377,7 @@ Class Enforcer : UTWeapon
 		}
 		origin += x*8.0+ydir*y*6.0-z*2.0;
 		let c = Spawn("UTCasing",origin);
-		c.vel = x*FRandom[Junk](-2,2)+y*ydir*FRandom[Junk](3,6)+z*FRandom[Junk](3,5);
+		c.vel = x*FRandom[Junk](-1.5,1.5)+y*ydir*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
 	}
 
 	override String GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
