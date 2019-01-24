@@ -422,8 +422,7 @@ Class BioGel : Actor
 				hittype = HIT_CEILING;
 			else hittype = HIT_FLOOR;
 		}
-		else
-		if ( BlockingLine )
+		else if ( BlockingLine )
 		{
 			atline = BlockingLine;
 			normal = (-BlockingLine.delta.y,BlockingLine.delta.x,0).unit();
