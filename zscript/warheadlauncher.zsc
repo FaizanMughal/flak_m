@@ -246,7 +246,7 @@ Class WarShell : Actor
 		Obituary "%o was vaporized by %k's Redeemer!!";
 		Radius 2;
 		Height 2;
-		Speed 12;
+		Speed 6;
 		DamageType 'RedeemerDeath';
 		DamageFactor 1000;
 		PROJECTILE;
@@ -282,9 +282,9 @@ Class WarShell : Actor
 			if ( waterlevel > 0 )
 			{
 				vel *= 0.98;
-				if ( vel.length() < 12 ) vel += vel.unit();
+				if ( vel.length() < 6 ) vel += vel.unit()*0.35;
 			}
-			else if ( vel.length() < 40 ) vel += vel.unit();
+			else if ( vel.length() < 20 ) vel += vel.unit()*0.35;
 		}
 	}
 	action void A_Trail()

@@ -151,7 +151,7 @@ Class Minigun : UTWeapon
 			t.pitch = asin(-dir.z);
 			MinigunTracer(t).dest = d.HitLocation;
 		}
-		for ( int i=0; i<4; i++ )
+		for ( int i=0; i<2; i++ )
 		{
 			let s = Spawn("UTViewSmoke",origin);
 			UTViewSmoke(s).ofs = (10,2,-2);
@@ -162,7 +162,7 @@ Class Minigun : UTWeapon
 		}
 		origin += x*8.0+y*5.0-z*5.0;
 		let c = Spawn("UTCasing",origin);
-		c.vel = x*FRandom[Junk](-2,2)+y*FRandom[Junk](3,6)+z*FRandom[Junk](3,5);
+		c.vel = x*FRandom[Junk](-1.5,1.5)+y*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
 		c.Scale *= 0.5;
 	}
 

@@ -5,14 +5,12 @@ void main()
 	vec2 sz = textureSize(InputTexture,0);
 	vec2 px = 1.0/vec2(1920.0);
 	px.y *= sz.x/sz.y;
-	float cnt = 1.0;
-	for ( int j=-5; j<=5; j++ ) for ( int i=-5; i<=5; i++ )
+	for ( int j=-1; j<=1; j++ ) for ( int i=-1; i<=1; i++ )
 	{
 		nc = TexCoord+px*vec2(i,j);
 		tinted += texture(InputTexture,nc);
-		cnt += 1.0;
 	}
-	tinted /= cnt;
+	tinted /= 10.0;
 	vec2 coord = TexCoord;
 	coord *= 4.0;
 	coord.y *= px.x/px.y;

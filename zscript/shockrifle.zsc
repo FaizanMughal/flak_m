@@ -934,7 +934,7 @@ Class SuperShockBall : Actor
 		Radius 2;
 		Height 2;
 		Scale 0.5;
-		Speed 25;
+		Speed 24;
 		PROJECTILE;
 		+FORCEXYBILLBOARD;
 		+SKYEXPLODE;
