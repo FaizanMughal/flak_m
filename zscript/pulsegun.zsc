@@ -473,6 +473,7 @@ Class PulseBolt : Actor
 	}
 	void UpdateBeam( PulseBolt parent, Vector3 x )
 	{
+		bRELATIVETOFLOOR = parent.bRELATIVETOFLOOR;
 		frame = parent.frame;
 		SetOrigin(parent.Vec3Offset(x.x*beamsize,x.y*beamsize,x.z*beamsize),true);
 		A_SetAngle(parent.angle);
@@ -513,6 +514,7 @@ Class StarterBolt : PulseBolt
 			return;
 		}
 		Vector3 x, y, z, origin;
+		bRELATIVETOFLOOR = (target.pos.z <= target.floorz);	// hack, but kinda works
 		if ( target.player )
 		{
 			[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
