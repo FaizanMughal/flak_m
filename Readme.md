@@ -80,9 +80,3 @@ This mod requires GZDoom 3.7.0 or later.
  - Biorifle sludge doesn't handle 3d floors (especially sloped ones) properly.
    This is due to the unavailability of 3D floor data on ZScript and will be
    fixed once 3D floors are exported to scripting (still waiting on that PR)
-
-## Known bugs that are not this mod's fault
-
- - Pulse gun beams behave oddly when the player is standing on a moving floor.
-   This is an interpolation quirk in GZDoom and I can probably find some hacky
-   way to fix it eventually
