@@ -1,40 +1,6 @@
 texture static1
 	allowdecals
 	random
-	pic static1 tics 1
-	pic static2 tics 1
-	pic static3 tics 1
-	pic static4 tics 1
+	range static4 tics 1
 texture invis00
-	pic invis00 tics 2
-	pic invis01 tics 2
-	pic invis02 tics 2
-	pic invis03 tics 2
-	pic invis04 tics 2
-	pic invis05 tics 2
-	pic invis06 tics 2
-	pic invis07 tics 2
-	pic invis08 tics 2
-	pic invis09 tics 2
-	pic invis10 tics 2
-	pic invis11 tics 2
-	pic invis12 tics 2
-	pic invis13 tics 2
-	pic invis14 tics 2
-	pic invis15 tics 2
-	pic invis16 tics 2
-	pic invis17 tics 2
-	pic invis18 tics 2
-	pic invis19 tics 2
-	pic invis20 tics 2
-	pic invis21 tics 2
-	pic invis22 tics 2
-	pic invis23 tics 2
-	pic invis24 tics 2
-	pic invis25 tics 2
-	pic invis26 tics 2
-	pic invis27 tics 2
-	pic invis28 tics 2
-	pic invis29 tics 2
-	pic invis30 tics 2
-	pic invis31 tics 2
+	range invis31 tics 2
