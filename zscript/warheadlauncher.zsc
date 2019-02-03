@@ -784,4 +784,3 @@ Class WarheadLauncher : UTWeapon
 		Wait;
 	}
 }
-

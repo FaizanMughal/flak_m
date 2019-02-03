@@ -348,6 +348,7 @@ Class UTPlayer : DoomPlayer
 				if ( flak_doomspeed ) maxvel = groundspeed_doomish/TICRATE;
 				else maxvel = groundspeed/TICRATE;
 				maxvel *= fs*doomfriction;
+				// TODO attempt to replicate walk on ice velocity increase glitch
 				if ( vel.xy.length() > maxvel ) vel.xy = vel.xy.unit()*maxvel;
 				if ( !(player.cheats & CF_PREDICTING) )
 				{
@@ -376,7 +377,6 @@ Class UTPlayer : DoomPlayer
 			double maxvel;
 			if ( flak_doomspeed ) maxvel = (groundspeed_doomish*fs)/TICRATE;
 			else maxvel = (groundspeed*fs)/TICRATE;
-			// TODO attempt to replicate walk on ice velocity increase glitch
 			// if new velocity is higher than ground speed, steer but don't increase it
 			if ( (vel.xy+acceleration/TICRATE).length() > maxvel )
 			{
@@ -517,6 +517,64 @@ Class UTPlayer : DoomPlayer
 		}
 		if ( !player.onground || player.jumptics )
 			last_jump_held = gametic;
+	}
+
+	override void DeathThink()
+	{
+		Super.DeathThink();
+		if ( !flak_utmovement ) return;
+		// unreal physics while dead
+		double friction = FrictionToUnreal();
+		if ( !bNoGravity && player.onground && (waterlevel < 2) )
+		{
+			// Hook in Unreal physics
+			Vector2 dir = (0,0);
+			if ( vel.xy.length() > double.epsilon ) dir = vel.xy.unit();
+			double doomfriction = clamp(GetFriction()/ORIG_FRICTION,0.0,1.0);
+			Vector2 oldvel = vel.xy;
+			vel.xy = vel.xy - (2 * dir) * vel.xy.length() * friction/TICRATE;
+			if ( oldvel dot vel.xy < 0.0 ) vel.xy *= 0;
+			double maxvel;
+			if ( flak_doomspeed ) maxvel = groundspeed_doomish/TICRATE;
+			else maxvel = groundspeed/TICRATE;
+			maxvel *= doomfriction;
+			if ( vel.xy.length() > maxvel ) vel.xy = vel.xy.unit()*maxvel;
+			player.vel *= 0;
+		}
+		else if ( !bNoGravity && (waterlevel < 2) )
+		{
+			// air acceleration when falling
+			Vector2 dir = (0,0);
+			if ( vel.xy.length() > double.epsilon ) dir = vel.xy.unit();
+			double maxvel;
+			if ( flak_doomspeed ) maxvel = groundspeed_doomish/TICRATE;
+			else maxvel = groundspeed/TICRATE;
+			// if new velocity is higher than ground speed, steer but don't increase it
+			if ( vel.xy.length() > maxvel )
+			{
+				double vsiz = vel.xy.length();
+				vel.xy = vel.xy.unit()*vsiz;
+			}
+			if ( vel.length() > terminalvelocity/TICRATE ) vel = vel.unit()*(terminalvelocity/TICRATE);
+			player.vel *= 0;
+		}
+		else
+		{
+			// swimming is pretty much like ground movement, but with much reduced friction and lower speed
+			friction *= fluidfriction/groundfriction;
+			Vector3 dir = (0,0,0);
+			if ( vel.length() > double.epsilon ) dir = vel.unit();
+			double doomfriction = clamp(GetFriction()/ORIG_FRICTION,0.0,1.0);
+			Vector3 oldvel = vel;
+			vel = vel-(2*dir)*vel.length()*friction/TICRATE;
+			if ( oldvel dot vel < 0.0 ) vel *= 0;
+			double maxvel;
+			if ( flak_doomspeed ) maxvel = swimspeed_doomish/TICRATE;
+			else maxvel = swimspeed/TICRATE;
+			maxvel *= doomfriction;
+			if ( vel.length() > maxvel ) vel = vel.unit()*maxvel;
+			player.vel *= 0;
+		}
 	}
 
 	virtual void PlayFootstep( double vol )
@@ -1407,9 +1465,55 @@ Class QueuedFlash
 	Actor cam;
 }
 
-Class UTMainHandler : StaticEventHandler
+Class UTStaticHandler : StaticEventHandler
 {
 	ui TextureID tex;
+
+	ui void StartMenu()
+	{
+		CVar protomenu = CVar.GetCVar('flak_protomenu',players[consoleplayer]);
+		if ( !protomenu ) return;	// this can happen
+		int proto = protomenu.GetInt();
+		if ( proto )
+		{
+			tex = TexMan.CheckForTexture("protobg",TexMan.Type_Any);
+			if ( gamestate != GS_TITLELEVEL ) return;
+			if ( proto > 1 ) S_ChangeMusic("menu2");
+			else S_ChangeMusic("xyzdMenu");
+		}
+		else
+		{
+			tex = TexMan.CheckForTexture("finalbg",TexMan.Type_Any);
+			if ( gamestate != GS_TITLELEVEL ) return;
+			S_ChangeMusic("utmenu23");
+		}
+	}
+
+	override void ConsoleProcess( ConsoleEvent e )
+	{
+		if ( e.Name ~== "refreshmenu" ) StartMenu();
+	}
+
+	override void PostUiTick()
+	{
+		if ( gametic <= 0 ) StartMenu();
+	}
+
+	override void RenderOverlay( RenderEvent e )
+	{
+		// well this if sure is a long one
+		if ( players[consoleplayer].camera.player && players[consoleplayer].camera.player.ReadyWeapon && (players[consoleplayer].camera.player.ReadyWeapon is 'UTWeapon') )
+			UTWeapon(players[consoleplayer].camera.player.ReadyWeapon).RenderOverlay(e);
+		if ( !menuactive ) return;
+		if ( tex.IsNull() || !tex.IsValid() ) return;
+		if ( !CVar.GetCVar('flak_showmenu',players[consoleplayer]).GetBool() ) return;
+		Screen.Dim("Black",1.0,0,0,Screen.GetWidth(),Screen.GetHeight());
+		Screen.DrawTexture(tex,true,0,0,DTA_VirtualWidth,1024,DTA_VirtualHeight,768);
+	}
+}
+
+Class UTMainHandler : EventHandler
+{
 	Array<QueuedFlash> flashes;
 
 	override void CheckReplacement( ReplaceEvent e )
@@ -1564,7 +1668,6 @@ Class UTMainHandler : StaticEventHandler
 
 	override void WorldLoaded( WorldEvent e )
 	{
-		if ( gamestate != GS_LEVEL || e.IsSaveGame ) return;
 		// just replace the -noflat- with a better scaled version and change the sky
 		if ( !flak_doomtest )
 		{
@@ -1776,26 +1879,6 @@ Class UTMainHandler : StaticEventHandler
 		if ( flak_nobosstelefrag && e.Thing.bBOSS ) e.Thing.bNOTELEFRAG = true;
 	}
 
-	ui void StartMenu()
-	{
-		CVar protomenu = CVar.GetCVar('flak_protomenu',players[consoleplayer]);
-		if ( !protomenu ) return;	// this can happen
-		int proto = protomenu.GetInt();
-		if ( proto )
-		{
-			tex = TexMan.CheckForTexture("protobg",TexMan.Type_Any);
-			if ( gamestate != GS_TITLELEVEL ) return;
-			if ( proto > 1 ) S_ChangeMusic("menu2");
-			else S_ChangeMusic("xyzdMenu");
-		}
-		else
-		{
-			tex = TexMan.CheckForTexture("finalbg",TexMan.Type_Any);
-			if ( gamestate != GS_TITLELEVEL ) return;
-			S_ChangeMusic("utmenu23");
-		}
-	}
-
 	override void PlayerEntered( PlayerEvent e )
 	{
 		if ( flak_translocator )
@@ -1822,12 +1905,6 @@ Class UTMainHandler : StaticEventHandler
 		}
 	}
 
-	override void ConsoleProcess( ConsoleEvent e )
-	{
-		if ( e.Name ~== "refreshmenu" ) StartMenu();
-		if ( e.Name ~== "refreshtrans" ) EventHandler.SendNetworkEvent("refreshtrans");
-	}
-
 	override void WorldTick()
 	{
 		for ( int i=0; i<flashes.size(); i++ )
@@ -1846,19 +1923,6 @@ Class UTMainHandler : StaticEventHandler
 			GenericFlash gf = new("GenericFlash").Setup(flashes[i].cam,flashes[i].c,flashes[i].duration);
 			StatusBar.AttachMessage(gf,0,BaseStatusBar.HUDMSGLayer_UnderHUD);
 		}
-		if ( gametic <= 0 ) StartMenu();
-	}
-
-	override void RenderOverlay( RenderEvent e )
-	{
-		// well this if sure is a long one
-		if ( players[consoleplayer].camera.player && players[consoleplayer].camera.player.ReadyWeapon && (players[consoleplayer].camera.player.ReadyWeapon is 'UTWeapon') )
-			UTWeapon(players[consoleplayer].camera.player.ReadyWeapon).RenderOverlay(e);
-		if ( !menuactive ) return;
-		if ( tex.IsNull() || !tex.IsValid() ) return;
-		if ( !CVar.GetCVar('flak_showmenu',players[consoleplayer]).GetBool() ) return;
-		Screen.Dim("Black",1.0,0,0,Screen.GetWidth(),Screen.GetHeight());
-		Screen.DrawTexture(tex,true,0,0,DTA_VirtualWidth,1024,DTA_VirtualHeight,768);
 	}
 
 	override void WorldThingDied( WorldEvent e )
