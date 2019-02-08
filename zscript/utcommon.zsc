@@ -1964,7 +1964,7 @@ Class UTMainHandler : EventHandler
 		qf.c = c;
 		qf.tic = gametic;
 		qf.cam = camera;
-		let hnd = UTMainHandler(StaticEventHandler.Find("UTMainHandler"));
+		let hnd = UTMainHandler(EventHandler.Find("UTMainHandler"));
 		hnd.flashes.push(qf);
 	}
 
