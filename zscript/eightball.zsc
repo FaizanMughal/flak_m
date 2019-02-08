@@ -306,7 +306,14 @@ Class UTRocketLauncher : UTWeapon
 	{
 		Super.Tick();
 		if ( !Owner ) return;
-		if ( LockedOn && (!LockedTarget || (LockedTarget.Health <= 0) || !LockedTarget.bIsMonster || LockedTarget.bKilled || LockedTarget.bCorpse || !LockedTarget.bShootable) )
+		if ( Owner.Health <= 0 )
+		{
+			LockedTarget = null;
+			LockedOn = false;
+			crosshair = 0;
+			return;
+		}
+		if ( LockedOn && (!LockedTarget || (LockedTarget.Health <= 0) || !LockedTarget.bIsMonster || LockedTarget.bKilled || LockedTarget.bCorpse || !LockedTarget.bShootable || (Owner.player.ReadyWeapon != self)) )
 		{
 			LockedTarget = null;
 			LockedOn = false;
