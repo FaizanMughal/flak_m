@@ -386,9 +386,15 @@ Class ShockBeam : Actor
 				if ( t.Results.Side == 0 ) HitNormal *= -1;
 			}
 			else if ( t.Results.HitType == TRACE_HitFloor )
-				HitNormal = t.Results.HitSector.floorplane.Normal;
+			{
+				if ( t.Results.ffloor ) HitNormal = -t.Results.ffloor.top.Normal;
+				else HitNormal = t.Results.HitSector.floorplane.Normal;
+			}
 			else if ( t.Results.HitType == TRACE_HitCeiling )
-				HitNormal = t.Results.HitSector.ceilingplane.Normal;
+			{
+				if ( t.Results.ffloor ) HitNormal = -t.Results.ffloor.bottom.Normal;
+				else HitNormal = t.Results.HitSector.ceilingplane.Normal;
+			}
 			let r = Spawn("ShockBeamRing",pos);
 			r.angle = atan2(HitNormal.y,HitNormal.x);
 			r.pitch = asin(-HitNormal.z);
@@ -618,9 +624,15 @@ Class SuperShockBeam : Actor
 				if ( t.Results.Side == 1 ) HitNormal *= -1;
 			}
 			else if ( t.Results.HitType == TRACE_HitFloor )
-				HitNormal = t.Results.HitSector.floorplane.Normal;
+			{
+				if ( t.Results.ffloor ) HitNormal = -t.Results.ffloor.top.Normal;
+				else HitNormal = t.Results.HitSector.floorplane.Normal;
+			}
 			else if ( t.Results.HitType == TRACE_HitCeiling )
-				HitNormal = t.Results.HitSector.ceilingplane.Normal;
+			{
+				if ( t.Results.ffloor ) HitNormal = -t.Results.ffloor.bottom.Normal;
+				else HitNormal = t.Results.HitSector.ceilingplane.Normal;
+			}
 			let r = Spawn("SuperShockBeamRing",pos);
 			r.angle = atan2(HitNormal.y,HitNormal.x);
 			r.pitch = asin(-HitNormal.z);

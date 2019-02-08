@@ -397,8 +397,16 @@ Class PulseBolt : Actor
 				if ( t.Results.Side ) norm *= -1;
 				t.Results.HitLine.RemoteActivate(tracer,t.Results.Side,SPAC_Impact,t.Results.HitPos);
 			}
-			else if ( t.Results.HitType == TRACE_HitFloor ) norm = t.Results.HitSector.floorplane.Normal;
-			else if ( t.Results.HitType == TRACE_HitCeiling ) norm = t.Results.HitSector.ceilingplane.Normal;
+			else if ( t.Results.HitType == TRACE_HitFloor )
+			{
+				if ( t.Results.ffloor ) norm = -t.Results.ffloor.top.Normal;
+				else norm = t.Results.HitSector.floorplane.Normal;
+			}
+			else if ( t.Results.HitType == TRACE_HitCeiling )
+			{
+				if ( t.Results.ffloor ) norm = -t.Results.ffloor.bottom.Normal;
+				else norm = t.Results.HitSector.ceilingplane.Normal;
+			}
 			int numpt = Random[Pulse](10,20)*!Random[Pulse](0,2);
 			for ( int i=0; i<numpt; i++ )
 			{

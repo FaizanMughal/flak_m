@@ -1,8 +1,8 @@
-version "3.7"
+version "3.8"
 
-#include "zscript/mk_matrix.zsc"
-#include "zscript/mk_coordutil.zsc"
-#include "zscript/mk_quaternion.zsc"
+#include "zscript/dt_matrix.zsc"
+#include "zscript/dt_coordutil.zsc"
+#include "zscript/dt_quaternion.zsc"
 #include "zscript/utgore.zsc"
 #include "zscript/utcommon.zsc"
 #include "zscript/impacthammer.zsc"
