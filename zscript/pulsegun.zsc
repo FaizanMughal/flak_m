@@ -164,7 +164,7 @@ Class PulseBall : Actor
 		Obituary "%o ate %k's burning plasma death.";
 		DamageType 'Pulsed';
 		RenderStyle "Add";
-		DamageFunction Random[Pulse](20,30);
+		DamageFunction 20;
 		PROJECTILE;
 		+EXPLODEONWATER;
 		+SKYEXPLODE;
@@ -373,12 +373,12 @@ Class PulseBolt : Actor
 				if ( !damagedactor )
 				{
 					accdamage = min(0.5*(level.time-lasthit),0.1);
-					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](80,100)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
+					t.Results.HitActor.DamageMobj(self,target,int(72*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 				else if ( t.Results.HitActor != damagedactor )
 				{
-					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](80,100)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
+					t.Results.HitActor.DamageMobj(self,target,int(72*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 				lasthit = level.time;
@@ -386,7 +386,7 @@ Class PulseBolt : Actor
 				accdamage += 1./TICRATE;
 				if ( accdamage > 0.17 )
 				{
-					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](80,100)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
+					t.Results.HitActor.DamageMobj(self,target,int(72*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 			}
@@ -436,7 +436,7 @@ Class PulseBolt : Actor
 		}
 		else if ( damagedactor )
 		{
-			damagedactor.DamageMobj(self,target,int(Random[Pulse](65,75)*accdamage),'zapped');
+			damagedactor.DamageMobj(self,target,int(72*accdamage),'zapped');
 			accdamage = 0;
 			damagedactor = null;
 		}

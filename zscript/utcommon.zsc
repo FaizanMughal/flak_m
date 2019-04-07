@@ -1549,7 +1549,7 @@ Class UTMainHandler : EventHandler
 		else if ( e.Replacee == 'BFG9000' ) e.Replacement = 'WarheadLauncher';
 		else if ( e.Replacee == 'Mace' )
 		{
-			if ( !Random[Replacements](0,6) ) e.Replacement = 'EnhancedShockRifle';
+			if ( (!deathmatch || flak_dmsshock) && !Random[Replacements](0,6) ) e.Replacement = 'EnhancedShockRifle';
 			else e.Replacement = 'WarheadLauncher';
 		}
 		else if ( (e.Replacee == 'Clip') || (e.Replacee == 'GoldWandAmmo') || (e.Replacee == 'GoldWandHefty') ) e.Replacement = 'EClip';
@@ -1605,7 +1605,7 @@ Class UTMainHandler : EventHandler
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'MiniAmmo';
 			else e.Replacement = 'RifleAmmo';
 		}
-		else if ( e.Replacee == 'InvulnerabilitySphere' ) e.Replacement = 'EnhancedShockRifle';
+		else if ( e.Replacee == 'InvulnerabilitySphere' ) e.Replacement = (!deathmatch||flak_dmsshock)?'EnhancedShockRifle':'UDamage';
 		else if ( (e.Replacee == 'Berserk') || (e.Replacee == 'ArtiTomeOfPower') || (e.Replacee == 'ArtiEgg') ) e.Replacement = 'UDamage';
 		else if ( (e.Replacee == 'Soulsphere') || (e.Replacee == 'ArtiSuperHealth') ) e.Replacement = 'UTHealthPack';
 		else if ( (e.Replacee == 'Megasphere') || (e.Replacee == 'ArtiInvulnerability') ) e.Replacement = 'UTShieldBelt';
@@ -1877,15 +1877,38 @@ Class UTMainHandler : EventHandler
 	override void WorldThingSpawned( WorldEvent e )
 	{
 		if ( flak_nobosstelefrag && e.Thing.bBOSS ) e.Thing.bNOTELEFRAG = true;
+		if ( deathmatch && flak_instagib )
+		{
+			if ( (e.Thing is 'EnhancedShockRifle') || (e.Thing is 'EnhancedShockAmmo') ) return;
+			if ( e.Thing is 'Inventory' ) e.Thing.Destroy();
+		}
 	}
 
 	override void PlayerEntered( PlayerEvent e )
 	{
+		if ( deathmatch && flak_instagib )
+		{
+			players[e.playernumber].mo.GiveInventory("EnhancedShockRifle",1);
+			if ( players[e.playernumber].bot )
+			{
+				// fix bots not having the weapon raised when changing map
+				let ess = Weapon(players[e.playernumber].mo.FindInventory("EnhancedShockRifle"));
+				players[e.playernumber].ReadyWeapon = ess;
+				players[e.playernumber].PendingWeapon = WP_NOCHANGE;
+				players[e.playernumber].mo.BringUpWeapon();
+			}
+			return;
+		}
 		if ( flak_translocator )
 			players[e.playernumber].mo.GiveInventory("Translocator",1);
 	}
 	override void PlayerRespawned( PlayerEvent e )
 	{
+		if ( deathmatch && flak_instagib )
+		{
+			players[e.playernumber].mo.GiveInventory("EnhancedShockRifle",1);
+			return;
+		}
 		if ( flak_translocator )
 			players[e.playernumber].mo.GiveInventory("Translocator",1);
 	}

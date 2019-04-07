@@ -514,7 +514,7 @@ Class BioGel : Actor
 		invoker.deadtimer = -2;
 		if ( invoker.atline ) invoker.atline.RemoteActivate(target,invoker.atside,SPAC_Impact,pos);
 		UTMainHandler.DoBlast(self,Min(175,int(Scale.x*50)),20000*Scale.x);
-		A_Explode(int(Random[GES](18,26)*Scale.x),Min(175,int(Scale.x*50)));
+		A_Explode(int(20*Scale.x),Min(175,int(Scale.x*50)));
 		A_PlaySound("ges/explode",CHAN_VOICE);
 		int numpt = Min(300,int(Scale.x*30))+Random[GES](-10,10);
 		for ( int i=0; i<numpt; i++ )

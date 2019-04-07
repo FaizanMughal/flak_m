@@ -165,7 +165,7 @@ Class FlakChunk : Actor
 		Radius 2;
 		Height 2;
 		Speed 32;
-		DamageFunction Random[Flak](15,20);
+		DamageFunction 16;
 		DamageType 'Shredded';
 		BounceType "Hexen";
 		BounceFactor 1.0;
@@ -475,7 +475,7 @@ Class FlakSlug : Actor
 		A_NoGravity();
 		A_SetScale(1.2);
 		UTMainHandler.DoBlast(self,120,75000);
-		A_Explode(Random[Flak](70,80),120);
+		A_Explode(70,120);
 		A_QuakeEx(4,4,4,8,0,170,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollIntensity:0.2);
 		A_PlaySound("flak/explode",CHAN_VOICE);
 		A_AlertMonsters();
