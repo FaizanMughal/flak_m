@@ -342,7 +342,7 @@ Class ShockBeam : Actor
 				let b = t.Results.HitActor.target;
 				UTMainHandler.DoBlast(b,250,70000);
 				b.ExplodeMissile(null,self);
-				b.A_Explode(Random[ASMD](150,180),250);
+				b.A_Explode(165,250);
 				b.A_QuakeEx(6,6,6,60,0,1200,"",QF_RELATIVE|QF_SCALEDOWN,falloff:250,rollIntensity:0.2);
 				b.A_SprayDecal("BigShockMark1",100);
 				b.A_SprayDecal("BigShockMark2",100);
@@ -362,7 +362,7 @@ Class ShockBeam : Actor
 			}
 			else
 			{
-				t.Results.HitActor.DamageMobj(self,target,Random[ASMD](35,50),'jolted',DMG_USEANGLE,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
+				t.Results.HitActor.DamageMobj(self,target,40,'jolted',DMG_USEANGLE,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
 				UTMainHandler.DoKnockback(t.Results.HitActor,t.Results.HitVector,60000);
 				let r = Spawn("ShockBeamRing",pos);
 				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
@@ -569,7 +569,7 @@ Class SuperShockBeam : Actor
 				let b = t.Results.HitActor.target;
 				UTMainHandler.DoBlast(b,400,70000);
 				b.ExplodeMissile(null,self);
-				b.A_Explode(Random[ASMD](15000,16000),400);
+				b.A_Explode(int.max,400);
 				b.A_QuakeEx(9,9,9,60,0,2400,"",QF_RELATIVE|QF_SCALEDOWN,falloff:400,rollIntensity:0.4);
 				b.A_SprayDecal("BigShockMark1",100);
 				b.A_SprayDecal("SBigShockMark2",100);
@@ -593,7 +593,10 @@ Class SuperShockBeam : Actor
 				// the actor may "cease to exist" if it dies after the call to ExplodeMissile, so guard against that
 				if ( t.Results.HitActor )
 				{
-					t.Results.HitActor.DamageMobj(self,target,Random[ASMD](3500,5000),'joltedX',DMG_USEANGLE|DMG_THRUSTLESS,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
+					// damage was 1000 in UT but it's meant to be instakill and players couldn't reach that health legitimately anyway, so rather than
+					// some absurd number they settled for that
+					// we ain't goin' that way here
+					t.Results.HitActor.DamageMobj(self,target,int.max,'joltedX',DMG_USEANGLE|DMG_THRUSTLESS,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
 					UTMainHandler.DoKnockback(t.Results.HitActor,t.Results.HitVector,60000);
 				}
 				let r = Spawn("SuperShockBeamRing",pos);
@@ -632,7 +635,7 @@ Class SuperShockBeam : Actor
 		if ( !flak_classicsshock )
 		{
 			UTMainHandler.DoBlast(self,50,60000);
-			A_Explode(Random[ASMD](500,800),50);
+			A_Explode(int.max,50);
 		}
 		A_QuakeEx(6,6,6,5,0,100,"",QF_RELATIVE|QF_SCALEDOWN,falloff:50,rollIntensity:0.2);
 		A_PlaySound("shock/hit",CHAN_VOICE,attenuation:0.5);
@@ -841,7 +844,7 @@ Class ShockBall : Actor
 	action void A_BallExplode()
 	{
 		UTMainHandler.DoBlast(self,70,70000);
-		A_Explode(Random[ASMD](50,60),70);
+		A_Explode(55,70);
 		A_SprayDecal("ShockMarkBig",16);
 		Spawn("ShockExplLight",pos);
 		A_SetScale(1.0);
@@ -905,7 +908,7 @@ Class SuperShockBall : Actor
 	action void A_BallExplode()
 	{
 		UTMainHandler.DoBlast(self,120,70000);
-		A_Explode(Random[ASMD](4000,5000),120);
+		A_Explode(int.max,120);
 		A_SprayDecal("ShockMarkBig",16);
 		Spawn("SuperShockExplLight",pos);
 		A_SetScale(1.5);
@@ -1129,23 +1132,23 @@ Class EnhancedShockAmmo : Ammo
 {
 	int ticcnt;
 
-	override void BeginPlay()
-	{
-		Super.BeginPlay();
-		if ( deathmatch )
-		{
-			MaxAmount /= 2;
-			BackpackMaxAmount /= 2;
-		}
-	}
 	override void Tick()
 	{
 		Super.Tick();
 		if ( !Owner ) return;
 		ticcnt++;
-		if ( ticcnt < 105 ) return;
-		ticcnt = 0;
-		if ( Amount > 0 ) Amount--;
+		if ( deathmatch && flak_instagib )
+		{
+			if ( ticcnt < 35 ) return;
+			ticcnt = 0;
+			if ( Amount < MaxAmount ) Amount++;
+		}
+		else
+		{
+			if ( ticcnt < 105 ) return;
+			ticcnt = 0;
+			if ( Amount > 0 ) Amount--;
+		}
 	}
 	Default
 	{

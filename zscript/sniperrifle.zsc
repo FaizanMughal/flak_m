@@ -102,10 +102,10 @@ Class SniperRifle : UTWeapon
 		LineTrace(angle,10000,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Sniper](45,60);
+			int dmg = 45;
 			if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.81) )
 			{
-				dmg = d.HitActor.DamageMobj(invoker,self,dmg+70,'Decapitated',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
+				dmg = d.HitActor.DamageMobj(invoker,self,100,'Decapitated',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
 				UTMainHandler.DoKnockback(d.HitActor,d.HitDir,35000);
 			}
 			else

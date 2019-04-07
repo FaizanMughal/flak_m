@@ -335,7 +335,7 @@ Class Enforcer : UTWeapon
 		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Enforcer](12,17);
+			int dmg = 17;
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
 			double mm = 3000;
 			if ( FRandom[Enforcer](0,1) < 0.2 ) mm *= 5;

@@ -77,7 +77,7 @@ Class ImpactHammer : UTWeapon
 		LineTrace(angle,60,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = int(Random[Impact](90,120)*realcharge);
+			int dmg = int(60*realcharge);
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
 			d.HitActor.vel = x*(8000/d.HitActor.mass)*realcharge;
 			if ( d.HitActor.bNOBLOOD )
@@ -95,7 +95,7 @@ Class ImpactHammer : UTWeapon
 		else if ( d.HitType != TRACE_HitNone )
 		{
 			realcharge = max(1.0,realcharge);
-			int dmg = int(Random[Impact](16,24)*realcharge);	// It's a flat damage of 36 on UT, but I think it's more fair for it to scale
+			int dmg = int(24*realcharge);	// It's a flat damage on UT, but I think it's more fair for it to scale
 			dmg = DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
 			TraceBleed(dmg,invoker);
 			vel -= x*(1200/mass)*realcharge;
@@ -140,13 +140,13 @@ Class ImpactHammer : UTWeapon
 		double dscale = d.Distance/120.;
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = int(Random[Impact](25,35)*dscale);
+			int dmg = int(20*dscale);
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
 			d.HitActor.vel = x*(4000/d.HitActor.mass)*dscale;
 		}
 		else if ( d.HitType != TRACE_HitNone )
 		{
-			int dmg = int(Random[Impact](16,24)*dscale);
+			int dmg = int(24*dscale);
 			dmg = DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
 			vel -= x*(600/mass)*dscale;
 			if ( d.HitType == TRACE_HitWall ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation-d.HitDir*4);

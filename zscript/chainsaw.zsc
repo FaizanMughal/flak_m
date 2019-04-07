@@ -59,7 +59,7 @@ Class UTChainsaw : UTWeapon
 		LineTrace(angle,90,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Chainsaw](20,30);
+			int dmg = 20;
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
 			d.HitActor.vel -= x*(500/d.HitActor.mass);
 			vel += x*(100/mass);
@@ -98,9 +98,9 @@ Class UTChainsaw : UTWeapon
 		LineTrace(ang,90,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Chainsaw](20,30);
+			int dmg = 20;
 			if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.8) )
-				dmg = d.HitActor.DamageMobj(invoker,self,dmg*2,'Decapitated',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
+				dmg = d.HitActor.DamageMobj(invoker,self,dmg*3,'Decapitated',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
 			else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
 			d.HitActor.vel = -y*(1200/d.HitActor.mass);
 			vel += x*(100/mass);
@@ -164,6 +164,7 @@ Class UTChainsaw : UTWeapon
 		Weapon.SelectionOrder 9;
 		+WEAPON.MELEEWEAPON;
 		+FORCEPAIN;
+		+NOEXTREMEDEATH;
 	}
 	States
 	{
