@@ -2,8 +2,8 @@ Class ShockAmmo : Ammo
 {
 	Default
 	{
-		Tag "Shock Core";
-		Inventory.PickupMessage "You picked up a Shock Core.";
+		Tag "$T_SHOCKAMMO";
+		Inventory.PickupMessage "$I_SHOCKAMMO";
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
@@ -22,8 +22,8 @@ Class ShockAmmo2 : ShockAmmo
 {
 	Default
 	{
-		Tag "Used Shock Core";
-		Inventory.PickupMessage "You picked up a used Shock Core.";
+		Tag "$T_SHOCKAMMO2";
+		Inventory.PickupMessage "$I_SHOCKAMMO2";
 		Inventory.Amount 3;
 		Ammo.DropAmount 3;
 	}
@@ -271,7 +271,7 @@ Class ShockBeam : Actor
 
 	Default
 	{
-		Obituary "%k inflicted mortal damage upon %o with the Shock Rifle";
+		Obituary "$O_SHOCKRIFLE";
 		DamageType 'jolted';
 		RenderStyle "Add";
 		Radius 0.1;
@@ -503,7 +503,7 @@ Class SuperShockBeam : Actor
 
 	Default
 	{
-		Obituary "%k electrified %o with the Enhanced Shock Rifle.";
+		Obituary "$O_SSHOCKRIFLE";
 		DamageType 'joltedX';
 		RenderStyle "Add";
 		Radius 0.1;
@@ -878,7 +878,7 @@ Class ShockBall : Actor
 	}
 	Default
 	{
-		Obituary "%k inflicted mortal damage upon %o with the Shock Rifle";
+		Obituary "$O_SHOCKRIFLE";
 		RenderStyle "Add";
 		DamageType 'jolted';
 		Radius 2;
@@ -943,7 +943,7 @@ Class SuperShockBall : Actor
 	}
 	Default
 	{
-		Obituary "%k electrified %o with the Enhanced Shock Rifle.";
+		Obituary "$O_SSHOCKRIFLE";
 		RenderStyle "Add";
 		DamageType 'joltedX';
 		Radius 2;
@@ -1094,8 +1094,8 @@ Class ShockRifle : UTWeapon
 
 	Default
 	{
-		Tag "Shock Rifle";
-		Inventory.PickupMessage "You got the ASMD Shock Rifle.";
+		Tag "$T_SHOCKRIFLE";
+		Inventory.PickupMessage "$I_SHOCKRIFLE";
 		Weapon.UpSound "shock/select";
 		Weapon.SlotNumber 4;
 		Weapon.SelectionOrder 6;
@@ -1164,8 +1164,8 @@ Class EnhancedShockAmmo : Ammo
 	}
 	Default
 	{
-		Tag "Enhanced Shock Core";
-		Inventory.PickupMessage "You picked up an Enhanced Shock Core.";
+		Tag "$T_SSHOCKAMMO";
+		Inventory.PickupMessage "$I_SSHOCKAMMO";
 		Inventory.Amount 5;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 0;
@@ -1281,8 +1281,8 @@ Class EnhancedShockRifle : UTWeapon
 	}
 	Default
 	{
-		Tag "Enhanced Shock Rifle";
-		Inventory.PickupMessage "You got an Enhanced Shock Rifle!";
+		Tag "$T_SSHOCKRIFLE";
+		Inventory.PickupMessage "$I_SSHOCKRIFLE";
 		Weapon.UpSound "shock/select";
 		Weapon.SlotNumber 4;
 		Weapon.SelectionOrder 6;

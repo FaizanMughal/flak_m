@@ -3,9 +3,9 @@ Class UTHereticYellowKey : KeyYellow
 {
 	Default
 	{
-		Tag "Red Key";
+		Tag "$T_YELLOWKEY";
 		Species "KeyYellow";
-		Inventory.PickupMessage "You got the Yellow Key.";
+		Inventory.PickupMessage "$I_YELLOWKEY";
 	}
 	States
 	{
@@ -19,9 +19,9 @@ Class UTHereticGreenKey : KeyGreen
 {
 	Default
 	{
-		Tag "Green Key";
+		Tag "$T_GREENKEY";
 		Species "KeyGreen";
-		Inventory.PickupMessage "You got the Green Key.";
+		Inventory.PickupMessage "$I_GREENKEY";
 	}
 	States
 	{
@@ -35,9 +35,9 @@ Class UTHereticBlueKey : KeyBlue
 {
 	Default
 	{
-		Tag "Blue Key";
+		Tag "$T_BLUEKEY";
 		Species "KeyBlue";
-		Inventory.PickupMessage "You got the Blue Key.";
+		Inventory.PickupMessage "$I_BLUEKEY";
 	}
 	States
 	{
@@ -140,7 +140,7 @@ Class UTPlayerHereticCompatTMale1 : UTPlayerHereticCompat
 	Default
 	{
 		Player.SoundClass "tmale1";
-		Player.DisplayName "M Commando";
+		Player.DisplayName "$N_TMALE1";
 		Player.Portrait "Blake";
 		-NOMENU;
 	}
@@ -150,7 +150,7 @@ Class UTPlayerHereticCompatTMale2 : UTPlayerHereticCompat
 	Default
 	{
 		Player.SoundClass "tmale2";
-		Player.DisplayName "M Soldier";
+		Player.DisplayName "$N_TMALE2";
 		Player.Portrait "Brock";
 		-NOMENU;
 	}
@@ -160,7 +160,7 @@ Class UTPlayerHereticCompatTFemale1 : UTPlayerHereticCompat
 	Default
 	{
 		Player.SoundClass "tfemale";
-		Player.DisplayName "F Commando";
+		Player.DisplayName "$N_TFEMALE1";
 		Player.Portrait "Ivana";
 		UTPlayer.DollType DOLL_Female;
 		-NOMENU;
@@ -171,7 +171,7 @@ Class UTPlayerHereticCompatTFemale2 : UTPlayerHereticCompat
 	Default
 	{
 		Player.SoundClass "tfemale";
-		Player.DisplayName "F Soldier";
+		Player.DisplayName "$N_TFEMALE2";
 		Player.Portrait "Lauren";
 		UTPlayer.DollType DOLL_Female;
 		-NOMENU;
@@ -183,7 +183,7 @@ Class UTPlayerHereticCompatTBoss : UTPlayerHereticCompat
 	Default
 	{
 		Player.SoundClass "tboss";
-		Player.DisplayName "Boss";
+		Player.DisplayName "$N_TBOSS";
 		Player.Portrait "Xan";
 		UTPlayer.DollType DOLL_Boss;
 		// should have NOBLOOD, but Xan did bleed in vanilla UT so...

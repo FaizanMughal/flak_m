@@ -3,8 +3,8 @@ Class WarheadAmmo : Ammo
 {
 	Default
 	{
-		Tag "Redeemer Missile";
-		Inventory.PickupMessage "You picked up a Redeemer Missile.";
+		Tag "$T_WARHEADAMMO";
+		Inventory.PickupMessage "$I_WARHEADAMMO";
 		Inventory.Amount 1;
 		Inventory.MaxAmount 2;
 		Ammo.BackpackAmount 0;
@@ -29,7 +29,7 @@ Class ShockWave : Actor
 	transient ThinkerIterator t;
 	Default
 	{
-		Obituary "%o was vaporized by %k's Redeemer!!";
+		Obituary "$O_REDEEMER";
 		RenderStyle "Add";
 		Radius 0.1;
 		Height 0;
@@ -243,7 +243,7 @@ Class WarShell : Actor
 
 	Default
 	{
-		Obituary "%o was vaporized by %k's Redeemer!!";
+		Obituary "$O_REDEEMER";
 		Radius 2;
 		Height 2;
 		Speed 6;
@@ -731,8 +731,8 @@ Class WarheadLauncher : UTWeapon
 
 	Default
 	{
-		Tag "Redeemer";
-		Inventory.PickupMessage "You got the Redeemer.";
+		Tag "$T_REDEEMER";
+		Inventory.PickupMessage "$I_REDEEMER";
 		Weapon.UpSound "warhead/select";
 		Weapon.SlotNumber 0;
 		Weapon.SelectionOrder 0;

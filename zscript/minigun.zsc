@@ -2,8 +2,8 @@ Class MiniAmmo : Ammo
 {
 	Default
 	{
-		Tag "Large Bullets";
-		Inventory.PickupMessage "You picked up %d bullets.";
+		Tag "$T_MINIAMMO";
+		Inventory.PickupMessage "";
 		Inventory.Amount 50;
 		Inventory.MaxAmount 200;
 		Ammo.BackpackAmount 100;
@@ -12,7 +12,7 @@ Class MiniAmmo : Ammo
 	}
 	override String PickupMessage()
 	{
-		return String.Format(pickupmsg,Amount);
+		return String.Format("%s%d%s",StringTable.Localize("$I_MINIAMMOL"),Amount,StringTable.Localize("$I_MINIAMMOR"));
 	}
 	States
 	{
@@ -203,9 +203,9 @@ Class Minigun : UTWeapon
 
 	Default
 	{
-		Tag "Minigun";
-		Obituary "%k's Minigun turned %o into a leaky piece of meat.";
-		Inventory.PickupMessage "You got the Minigun.";
+		Tag "$T_MINIGUN";
+		Obituary "$O_MINIGUN";
+		Inventory.PickupMessage "$I_MINIGUN";
 		Weapon.UpSound "minigun/select";
 		Weapon.SlotNumber 7;
 		Weapon.SelectionOrder 3;

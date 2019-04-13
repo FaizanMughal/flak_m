@@ -287,7 +287,7 @@ Class TranslocatorAmmo : Ammo
 {
 	Default
 	{
-		Tag "Translocator Ammo";
+		Tag "$T_TRANSLOCATORAMMO";
 		Inventory.Amount 6;
 		Inventory.MaxAmount 6;
 		Ammo.BackpackAmount 0;
@@ -413,8 +413,8 @@ Class Translocator : UTWeapon
 
 	Default
 	{
-		Tag "Translocator";
-		Inventory.PickupMessage "You got the Translocator Source Module.";
+		Tag "$T_TRANSLOCATOR";
+		Inventory.PickupMessage "$I_TRANSLOCATOR";
 		Weapon.SlotNumber 1;
 		Weapon.SelectionOrder 10;
 		+WEAPON.NO_AUTO_SWITCH;

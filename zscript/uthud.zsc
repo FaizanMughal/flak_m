@@ -35,7 +35,7 @@ Class UTHud : BaseStatusBar
 	bool showweapons, showfrags, showammo, showstatus, showinfo;
 	double hudsize, weaponsize, statussize;
 
-	HUDFont mConFont;
+	HUDFont mUTFont12;
 
 	// For easier UT Canvas drawing
 	Color DrawColor, WhiteColor, GoldColor;
@@ -49,7 +49,7 @@ Class UTHud : BaseStatusBar
 		lastfrag = int.min;
 		lastfragcnt = 0;
 		vtracer = new("ViewTracer");
-		mConFont = HUDFont.Create("confont");
+		mUTFont12 = HUDFont.Create("UTFONT12");
 		// Set defaults
 		DrawColor = WhiteColor = "White";
 		GoldColor = "Gold";
@@ -303,6 +303,7 @@ Class UTHud : BaseStatusBar
 				double alpha = clamp((opacity+7)/15.,0.0,1.0);
 				Screen.DrawTexture(AmmoBar,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_WindowRightF,ddw,DTA_Alpha,alpha);
 			}
+			// TODO try also drawing enforcer and pulsegun clips as bars
 		}
 		if ( ammotype2 && (ammotype2 != ammotype1) )
 		{
@@ -541,21 +542,21 @@ Class UTHud : BaseStatusBar
 	{
 		double lalpha = 2.0-((level.time+fractic)-lastseentic)/Thinker.TICRATE;
 		if ( !lastseen || (lalpha <= 0) ) return;
-		String cl1 = "Teal", cl2 = "Cyan";
+		String cl1 = "UTHUDTextLight", cl2 = "UTHUDText";
 		if ( deathmatch && (lastseen.player.GetTeam() < teams.size()) )
 		{
 			cl2 = teams[lastseen.player.GetTeam()].mName;
 			cl1 = String.Format("Dark%s",cl2);
 		}
-		String tname = String.Format("\c[%s]Name:\c[%s] %s",cl1,cl2,lastseen.player.GetUserName());
-		CurX = (640-confont.StringWidth(tname))*0.5;
+		String tname = String.Format("\c[%s]%s:\c[%s] %s",cl1,StringTable.Localize("$M_NAME"),cl2,lastseen.player.GetUserName());
+		CurX = (640-mUTFont12.mFont.StringWidth(tname))*0.5;
 		CurY = 480*0.75;
-		Screen.DrawText(confont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_Alpha,lalpha/2.);
+		Screen.DrawText(mUTFont12.mFont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_Alpha,lalpha/2.);
 		if ( !deathmatch || (lastseen.IsTeammate(CPlayer.mo)) )
 		{
-			CurY += 1.2*confont.GetHeight();
-			tname = String.Format("\c[%s]Health:\c[%s] %d",cl1,cl2,lastseen.Health);
-			Screen.DrawText(confont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_Alpha,lalpha/2.);
+			CurY += 1.2*mUTFont12.mFont.GetHeight();
+			tname = String.Format("\c[%s]%s:\c[%s] %d",cl1,StringTable.Localize("$M_HEALTH"),cl2,lastseen.Health);
+			Screen.DrawText(mUTFont12.mFont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_Alpha,lalpha/2.);
 		}
 	}
 
@@ -646,8 +647,8 @@ Class UTHud : BaseStatusBar
 
 	override void DrawAutomapHUD( double ticFrac )
 	{
-		int crdefault = Font.CR_TEAL;
-		int highlight = Font.CR_CYAN;
+		int crdefault = Font.FindFontColor('UTHUDTextLight');
+		int highlight = Font.FindFontColor('UTHUDText');
 		HScale = Screen.GetWidth()/1280.;
 		showweapons = CVar.GetCVar('flak_showweapons',players[consoleplayer]).GetBool();
 		showstatus = CVar.GetCVar('flak_showstatus',players[consoleplayer]).GetBool();
@@ -656,12 +657,12 @@ Class UTHud : BaseStatusBar
 		double cbottom = Screen.GetHeight()*0.99;
 		let scale = GetHUDScale();
 		double textdist = 8./scale.Y;
-		int height = ConFont.GetHeight();
+		int height = mUTFont12.mFont.GetHeight();
 		String printtext;
 		int SCREENWIDTH = screen.GetWidth();
 		BeginHUD();
 		let y = textdist;
-		let width = ConFont.StringWidth("00:00:00");
+		let width = mUTFont12.mFont.StringWidth("00:00:00");
 		double tmp, hres;
 		[tmp,tmp,hres] = StatusbarToRealCoords(0,0,HorizontalResolution);
 		double swidth = 0;
@@ -678,36 +679,36 @@ Class UTHud : BaseStatusBar
 		if ( am_showtime )
 		{
 			printtext = level.TimeFormatted();
-			DrawString(mConFont,level.TimeFormatted(),(-textdist-width,y),0,crdefault);
+			DrawString(mUTFont12,level.TimeFormatted(),(-textdist-width,y),0,crdefault);
 			y += height;
 		}
-		if ( am_showtotaltime ) DrawString(mConFont,level.TimeFormatted(true),(-textdist-width,y),0,crdefault);
+		if ( am_showtotaltime ) DrawString(mUTFont12,level.TimeFormatted(true),(-textdist-width,y),0,crdefault);
 		if ( !deathmatch )
 		{
 			y = textdist;
 			if ( am_showmonsters )
 			{
-				DrawString(mConFont,String.Format("%s\34%c %d/%d",Stringtable.Localize("$AM_MONSTERS"),crdefault+65,level.killed_monsters,level.total_monsters),(textdist,y),0,highlight);
+				DrawString(mUTFont12,String.Format("%s\34%c %d/%d",Stringtable.Localize("$AM_MONSTERS"),crdefault+65,level.killed_monsters,level.total_monsters),(textdist,y),0,highlight);
 				y += height;
 			}
 			if ( am_showsecrets )
 			{
-				DrawString(mConFont,String.Format("%s\34%c %d/%d",Stringtable.Localize("$AM_SECRETS"),crdefault+65,level.found_secrets,level.total_secrets),(textdist,y),0,highlight);
+				DrawString(mUTFont12,String.Format("%s\34%c %d/%d",Stringtable.Localize("$AM_SECRETS"),crdefault+65,level.found_secrets,level.total_secrets),(textdist,y),0,highlight);
 				y += height;
 			}
-			if ( am_showitems ) DrawString(mConFont,String.Format("%s\34%c %d/%d",Stringtable.Localize("$AM_ITEMS"),crdefault+65,level.found_items,level.total_items),(textdist,y),0,highlight);
+			if ( am_showitems ) DrawString(mUTFont12,String.Format("%s\34%c %d/%d",Stringtable.Localize("$AM_ITEMS"),crdefault+65,level.found_items,level.total_items),(textdist,y),0,highlight);
 		}
 		String mapname = level.FormatMapName(crdefault);
-		BrokenLines lines = ConFont.BreakLines(mapname,int(SCREENWIDTH/scale.X));
+		BrokenLines lines = mUTFont12.mFont.BreakLines(mapname,int(SCREENWIDTH/scale.X));
 		int numlines = lines.Count();
-		int finalwidth = int(ConFont.StringWidth(lines.StringAt(numlines-1))*scale.X);
+		int finalwidth = int(mUTFont12.mFont.StringWidth(lines.StringAt(numlines-1))*scale.X);
 		[tmp,tmp,hres] = StatusbarToRealCoords(0,0,HorizontalResolution);
 		protrusion = GetProtrusion(finalwidth/hres);
 		[tmp,tmp,tmp,hres] = StatusbarToRealCoords(0,0,0,protrusion);
 		y = (cbottom-hres)/scale.Y-height*numlines;
 		for ( int i = 0; i < numlines; i++ )
 		{
-			DrawString(mConFont,lines.StringAt(i),(0,y),DI_TEXT_ALIGN_CENTER|DI_SCREEN_HCENTER|DI_SCREEN_TOP,highlight);
+			DrawString(mUTFont12,lines.StringAt(i),(0,y),DI_TEXT_ALIGN_CENTER|DI_SCREEN_HCENTER|DI_SCREEN_TOP,highlight);
 			y += height;
 		}
 	}
