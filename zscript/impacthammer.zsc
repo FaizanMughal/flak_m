@@ -206,9 +206,9 @@ Class ImpactHammer : UTWeapon
 
 	Default
 	{
-		Tag "Impact Hammer";
-		Obituary "%o was smeared by %k's piston.";
-		Inventory.PickupMessage "You got the Impact Hammer.";
+		Tag "$T_IMPACTHAMMER";
+		Obituary "$O_IMPACTHAMMER";
+		Inventory.PickupMessage "$I_IMPACTHAMMER";
 		Weapon.UpSound "impact/select";
 		Weapon.SlotNumber 1;
 		Weapon.SelectionOrder 9;

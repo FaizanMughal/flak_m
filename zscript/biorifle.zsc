@@ -2,8 +2,8 @@ Class BioAmmo : Ammo
 {
 	Default
 	{
-		Tag "Biosludge Ammo";
-		Inventory.PickupMessage "You picked up the Biosludge Ammo.";
+		Tag "$T_BIOAMMO";
+		Inventory.PickupMessage "$I_BIOAMMO";
 		Inventory.Amount 25;
 		Inventory.MaxAmount 100;
 		Ammo.BackpackAmount 50;
@@ -22,8 +22,8 @@ Class BioAmmo2 : BioAmmo	// small variant
 {
 	Default
 	{
-		Tag "Biosludge Ammo";
-		Inventory.PickupMessage "You picked up the Small Biosludge Ammo.";
+		Tag "$T_BIOAMMO2";
+		Inventory.PickupMessage "$I_BIOAMMO2";
 		Inventory.Amount 10;
 		Ammo.DropAmount 5;
 		Scale 0.5;
@@ -521,7 +521,7 @@ Class BioGel : Actor
 	}
 	Default
 	{
-		Obituary "%o drank a glass of %k's dripping green load.";
+		Obituary "$O_BIORIFLE";
 		DamageType 'Slime';
 		RenderStyle "Add";
 		Radius 3;
@@ -712,8 +712,8 @@ Class BioRifle : UTWeapon
 	}
 	Default
 	{
-		Tag "GES Bio Rifle";
-		Inventory.PickupMessage "You got the GES BioRifle.";
+		Tag "$T_BIORIFLE";
+		Inventory.PickupMessage "$I_BIORIFLE";
 		Weapon.UpSound "ges/select";
 		Weapon.SlotNumber 3;
 		Weapon.SelectionOrder 7;

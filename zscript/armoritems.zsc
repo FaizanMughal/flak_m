@@ -36,13 +36,13 @@ Class UTArmorBonus : UTArmor
 
 	Default
 	{
-		Tag "Armor Bonus";
+		Tag "$T_ARMORBONUS";
 		+COUNTITEM;
 		Inventory.Amount 1;
 		Inventory.MaxAmount 50;
 		Inventory.InterHubAmount 50;
 		UTArmor.ArmorAbsorption 25;
-		Inventory.PickupMessage "You picked up an Armor Bonus.";
+		Inventory.PickupMessage "$I_ARMORBONUS";
 		Inventory.PickupSound "misc/ut_shard";
 	}
 	States
@@ -76,12 +76,12 @@ Class UTThighPads : UTArmor
 	}
 	Default
 	{
-		Tag "Thigh Pads";
+		Tag "$T_THIGHPADS";
 		Inventory.Amount 50;
 		Inventory.MaxAmount 50;
 		Inventory.InterHubAmount 50;
 		UTArmor.ArmorAbsorption 50;
-		Inventory.PickupMessage "You got the Thigh Pads.";
+		Inventory.PickupMessage "$I_THIGHPADS";
 		Inventory.PickupSound "misc/ut_armor";
 	}
 	States
@@ -115,12 +115,12 @@ Class UTBodyArmor : UTArmor
 	}
 	Default
 	{
-		Tag "Body Armor";
+		Tag "$T_BODYARMOR";
 		Inventory.Amount 100;
 		Inventory.MaxAmount 100;
 		Inventory.InterHubAmount 100;
 		UTArmor.ArmorAbsorption 75;
-		Inventory.PickupMessage "You got the Body Armor.";
+		Inventory.PickupMessage "$I_BODYARMOR";
 		Inventory.PickupSound "misc/ut_armor";
 	}
 	States
@@ -142,7 +142,7 @@ Class UTShieldBelt : UTArmor
 		}
 		int oldamt = amount;
 		Super.AbsorbDamage(damage,damageType,newdamage);
-		if ( (oldamt > 0) && (amount <= 0) ) PrintPickupMessage(true,"The Shield Belt has depleted.");
+		if ( (oldamt > 0) && (amount <= 0) ) PrintPickupMessage(true,StringTable.Localize("$D_SHIELDBELT"));
 	}
 	override bool HandlePickup( Inventory item )
 	{
@@ -173,14 +173,14 @@ Class UTShieldBelt : UTArmor
 	}
 	Default
 	{
-		Tag "Shield Belt";
+		Tag "$T_SHIELDBELT";
 		+COUNTITEM;
 		+INVENTORY.BIGPOWERUP;
 		Inventory.Amount 150;
 		Inventory.MaxAmount 150;
 		Inventory.InterHubAmount 150;
 		UTArmor.ArmorAbsorption 100;
-		Inventory.PickupMessage "You got the Shield Belt.";
+		Inventory.PickupMessage "$I_SHIELDBELT";
 		Inventory.PickupSound "belt/pickup";
 		Inventory.RespawnTics 2100;
 	}

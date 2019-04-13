@@ -156,9 +156,9 @@ Class UTChainsaw : UTWeapon
 	}
 	Default
 	{
-		Tag "Chainsaw";
-		Obituary "%k ripped into %o with a blood soaked Chainsaw.";
-		Inventory.PickupMessage "It's been twenty five years since I've seen one of these.";	// was five years in UT99
+		Tag "$T_CHAINSAW";
+		Obituary "$O_CHAINSAW";
+		Inventory.PickupMessage "$I_CHAINSAW";
 		Weapon.UpSound "chainsaw/select";
 		Weapon.SlotNumber 1;
 		Weapon.SelectionOrder 9;

@@ -2,8 +2,8 @@ Class EClip : MiniAmmo
 {
 	Default
 	{
-		Tag "Clip";	// "Large Bullets" in UT, but I think that's an oversight, since it's the same as the Minigun ammo
-		Inventory.PickupMessage "You picked up a Clip.";
+		Tag "$T_CLIP";	// "Large Bullets" in UT, but I think that's an oversight, since it's the same as the Minigun ammo
+		Inventory.PickupMessage "$I_CLIP";
 		Inventory.Amount 20;
 		Ammo.DropAmount 5;
 	}
@@ -170,6 +170,7 @@ Class Enforcer : UTWeapon
 	int ClipCount, SlaveClipCount;
 	bool SlaveActive, SlaveDown, SlaveReload, SlaveAltFire;
 	int SlaveRefire;
+	transient ui Font usmf;
 
 	property ClipCount : ClipCount;
 	property SlaveClipCount : SlaveClipCount;
@@ -177,15 +178,16 @@ Class Enforcer : UTWeapon
 	override void PostRender( double lbottom )
 	{
 		if ( !flak_enforcerreload ) return;
-		if ( Amount > 1 ) Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,lbottom-Screen.GetHeight()*0.01-confont.GetHeight()*2,String.Format("L Clip: %2d / 20\nR Clip: %2d / 20",slaveclipcount,clipcount));
-		else Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,lbottom-Screen.GetHeight()*0.01-confont.GetHeight(),String.Format("Clip: %2d / 20",clipcount));
+		if ( !usmf ) usmf = Font.GetFont('USMALLFONT');
+		if ( Amount > 1 ) Screen.DrawText(usmf,Font.FindFontColor('UGreen'),Screen.GetWidth()*0.01,lbottom-Screen.GetHeight()*0.01-usmf.GetHeight()*2,String.Format("%s: %2d / 20\n%s: %2d / 20",StringTable.Localize("$M_LCLIP"),slaveclipcount,StringTable.Localize("$M_RCLIP"),clipcount));
+		else Screen.DrawText(usmf,Font.FindFontColor('UGreen'),Screen.GetWidth()*0.01,lbottom-Screen.GetHeight()*0.01-usmf.GetHeight(),String.Format("%s: %2d / 20",StringTable.Localize("$M_CLIP"),clipcount));
 	}
 
 	override bool HandlePickup( Inventory item )
 	{
 		if ( item.GetClass() == GetClass() )
 		{
-			SetTag("Dual Enforcers");
+			SetTag(StringTable.Localize("$T_ENFORCER2"));
 			return Super.HandlePickup(item);
 		}
 		return false;
@@ -196,8 +198,8 @@ Class Enforcer : UTWeapon
 		Inventory inv = Super.CreateTossable(amt);
 		if ( inv )
 		{
-			SetTag("Enforcer");
-			inv.SetTag("Enforcer");
+			SetTag(StringTable.Localize("$T_ENFORCER"));
+			inv.SetTag(StringTable.Localize("$T_ENFORCER"));
 			if ( Owner && (Owner.player.ReadyWeapon == self) )
 			{
 				// delete the slave overlay
@@ -382,8 +384,8 @@ Class Enforcer : UTWeapon
 
 	override String GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
 	{
-		if ( Amount > 1 ) return "%k riddled %o full of holes with the Dual Enforcers.";
-		return "%k riddled %o full of holes with the Enforcer.";
+		if ( Amount > 1 ) return StringTable.Localize("$O_ENFORCER2");
+		return StringTable.Localize("$O_ENFORCER");
 	}
 
 	override void Travelled()
@@ -400,8 +402,8 @@ Class Enforcer : UTWeapon
 
 	Default
 	{
-		Tag "Enforcer";
-		Inventory.PickupMessage "You picked up another Enforcer!";
+		Tag "$T_ENFORCER";
+		Inventory.PickupMessage "$I_ENFORCER";
 		Inventory.MaxAmount 2;
 		Inventory.InterHubAmount 2;
 		Weapon.UpSound "enforcer/select";

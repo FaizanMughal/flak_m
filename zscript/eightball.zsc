@@ -2,8 +2,8 @@ Class UTRocketAmmo : Ammo
 {
 	Default
 	{
-		Tag "Rocket Pack";
-		Inventory.PickupMessage "You picked up a Rocket Pack.";
+		Tag "$T_ROCKETAMMO";
+		Inventory.PickupMessage "$I_ROCKETAMMO";
 		Inventory.Amount 12;
 		Inventory.MaxAmount 48;
 		Ammo.BackpackAmount 12;
@@ -23,8 +23,8 @@ Class UTRocketAmmo2 : UTRocketAmmo
 {
 	Default
 	{
-		Tag "Single Rocket";
-		Inventory.PickupMessage "You picked up a Single Rocket.";
+		Tag "$T_ROCKETAMMO2";
+		Inventory.PickupMessage "$I_ROCKETAMMO2";
 		Inventory.Amount 1;
 		Ammo.DropAmount 1;
 		+INVENTORY.IGNORESKILL;
@@ -107,7 +107,7 @@ Class UTRocket : Actor
 	int ticcnt;
 	Default
 	{
-		Obituary "%o was smacked down by %k's Rocket Launcher.";
+		Obituary "$O_EIGHTBALL";
 		DamageType 'RocketDeath';
 		Radius 2;
 		Height 2;
@@ -462,8 +462,8 @@ Class UTRocketLauncher : UTWeapon
 
 	Default
 	{
-		Tag "Rocket Launcher";
-		Inventory.PickupMessage "You got the Rocket Launcher.";
+		Tag "$T_EIGHTBALL";
+		Inventory.PickupMessage "$I_EIGHTBALL";
 		Weapon.UpSound "utrl/select";
 		Weapon.SlotNumber 9;
 		Weapon.SelectionOrder 1;
@@ -509,8 +509,9 @@ Class UTRocketLauncher : UTWeapon
 		EBLI A 5
 		{
 			A_PlaySound("utrl/load",CHAN_6,0.3);
-			if ( invoker.bSingleRocket = !invoker.bSingleRocket ) A_Print("Instant Rocket mode enabled");
-			else A_Print("Instant Rocket mode disabled");
+			if ( invoker.bSingleRocket = !invoker.bSingleRocket )
+				A_Print(StringTable.Localize("$M_SINGLEROCKETON"));
+			else A_Print(StringTable.Localize("$M_SINGLEROCKETOFF"));
 		}
 		Goto Idle;
 	Fire:

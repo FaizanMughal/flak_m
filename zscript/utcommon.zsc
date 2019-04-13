@@ -50,8 +50,6 @@ Class UTPlayer : DoomPlayer
 	// Have to modify the give cheat to handle UT armor
 	override void CheatGive( String name, int amount )
 	{
-		if ( PlayerNumber() != consoleplayer )
-			A_Log(String.Format("%s is a cheater: give %s\n",player.GetUserName(),name));
 		if ( !player.mo || (player.health <= 0) ) return;
 		int giveall = ALL_NO;
 		if ( name ~== "all" ) giveall = ALL_YES;
@@ -590,7 +588,7 @@ Class UTPlayerTMale1 : UTPlayer
 	Default
 	{
 		Player.SoundClass "tmale1";
-		Player.DisplayName "M Commando";
+		Player.DisplayName "$N_TMALE1";
 		Player.Portrait "Blake";
 		-NOMENU;
 	}
@@ -600,7 +598,7 @@ Class UTPlayerTMale2 : UTPlayer
 	Default
 	{
 		Player.SoundClass "tmale2";
-		Player.DisplayName "M Soldier";
+		Player.DisplayName "$N_TMALE2";
 		Player.Portrait "Brock";
 		-NOMENU;
 	}
@@ -610,7 +608,7 @@ Class UTPlayerTFemale1 : UTPlayer
 	Default
 	{
 		Player.SoundClass "tfemale";
-		Player.DisplayName "F Commando";
+		Player.DisplayName "$N_TFEMALE1";
 		Player.Portrait "Ivana";
 		UTPlayer.DollType DOLL_Female;
 		-NOMENU;
@@ -621,7 +619,7 @@ Class UTPlayerTFemale2 : UTPlayer
 	Default
 	{
 		Player.SoundClass "tfemale";
-		Player.DisplayName "F Soldier";
+		Player.DisplayName "$N_TFEMALE2";
 		Player.Portrait "Lauren";
 		UTPlayer.DollType DOLL_Female;
 		-NOMENU;
@@ -633,7 +631,7 @@ Class UTPlayerTBoss : UTPlayer
 	Default
 	{
 		Player.SoundClass "tboss";
-		Player.DisplayName "Boss";
+		Player.DisplayName "$N_TBOSS";
 		Player.Portrait "Xan";
 		UTPlayer.DollType DOLL_Boss;
 		// should have NOBLOOD, but Xan did bleed in vanilla UT so...
@@ -1227,9 +1225,9 @@ Class UTRedSkull : RedSkull
 {
 	Default
 	{
-		Tag "Red Skull";
+		Tag "$T_REDSKULL";
 		Species "RedSkull";
-		Inventory.PickupMessage "You got the Red Skull.";
+		Inventory.PickupMessage "$I_REDSKULL";
 	}
 	States
 	{
@@ -1243,9 +1241,9 @@ Class UTGoldSkull : YellowSkull
 {
 	Default
 	{
-		Tag "Gold Skull";
+		Tag "$T_GOLDSKULL";
 		Species "YellowSkull";
-		Inventory.PickupMessage "You got the Gold Skull.";
+		Inventory.PickupMessage "$I_GOLDSKULL";
 	}
 	States
 	{
@@ -1259,9 +1257,9 @@ Class UTBlueSkull : BlueSkull
 {
 	Default
 	{
-		Tag "Blue Skull";
+		Tag "$T_BLUESKULL";
 		Species "BlueSkull";
-		Inventory.PickupMessage "You got the Blue Skull.";
+		Inventory.PickupMessage "$I_BLUESKULL";
 	}
 	States
 	{
@@ -1275,9 +1273,9 @@ Class UTRedKey : RedCard
 {
 	Default
 	{
-		Tag "Red Key";
+		Tag "%T_REDKEY";
 		Species "RedCard";
-		Inventory.PickupMessage "You got the Red Key.";
+		Inventory.PickupMessage "$I_REDKEY";
 	}
 	States
 	{
@@ -1291,9 +1289,9 @@ Class UTGoldKey : YellowCard
 {
 	Default
 	{
-		Tag "Gold Key";
+		Tag "$T_GOLDKEY";
 		Species "YellowCard";
-		Inventory.PickupMessage "You got the Gold Key.";
+		Inventory.PickupMessage "$I_GOLDKEY";
 	}
 	States
 	{
@@ -1307,9 +1305,9 @@ Class UTBlueKey : BlueCard
 {
 	Default
 	{
-		Tag "Blue Key";
+		Tag "$T_BLUEKEY";
 		Species "BlueCard";
-		Inventory.PickupMessage "You got the Blue Key.";
+		Inventory.PickupMessage "$I_BLUEKEY";
 	}
 	States
 	{
@@ -1889,14 +1887,6 @@ Class UTMainHandler : EventHandler
 		if ( deathmatch && flak_instagib )
 		{
 			players[e.playernumber].mo.GiveInventory("EnhancedShockRifle",1);
-			if ( players[e.playernumber].bot )
-			{
-				// fix bots not having the weapon raised when changing map
-				let ess = Weapon(players[e.playernumber].mo.FindInventory("EnhancedShockRifle"));
-				players[e.playernumber].ReadyWeapon = ess;
-				players[e.playernumber].PendingWeapon = WP_NOCHANGE;
-				players[e.playernumber].mo.BringUpWeapon();
-			}
 			return;
 		}
 		if ( flak_translocator )
@@ -1988,6 +1978,7 @@ Class UTMainHandler : EventHandler
 		qf.tic = gametic;
 		qf.cam = camera;
 		let hnd = UTMainHandler(EventHandler.Find("UTMainHandler"));
+		if ( !hnd ) return;	// not supposed to happen
 		hnd.flashes.push(qf);
 	}
 
@@ -2001,7 +1992,11 @@ Class UTMainHandler : EventHandler
 			if ( !a || !a.bSHOOTABLE || !Source.CheckSight(a,0xf) || (a == Source) || (Source.Distance3D(a) > ExplosionRadius) )
 				continue;
 			Vector3 midpoint = a.Vec3Offset(0,0,a.height*0.5);
-			a.vel += Level.Vec3Diff(Source.pos,midpoint).unit()*(MomentumTransfer/(Thinker.TICRATE*a.mass));
+			Vector3 dir = Level.Vec3Diff(Source.pos,midpoint);
+			double dist = max(1,dir.length());
+			double damagescale = 1-max(0,(dist-a.radius)/ExplosionRadius);
+			dir = dir/dist;
+			a.vel += dir*damagescale*(MomentumTransfer/(Thinker.TICRATE*a.mass));
 		}
 	}
 

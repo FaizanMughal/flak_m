@@ -2,8 +2,8 @@ Class FlakAmmo : Ammo
 {
 	Default
 	{
-		Tag "Flak Shells";
-		Inventory.PickupMessage "You picked up %d Flak Shells.";
+		Tag "$T_FLAKAMMO";
+		Inventory.PickupMessage "";
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
@@ -12,7 +12,7 @@ Class FlakAmmo : Ammo
 	}
 	override String PickupMessage()
 	{
-		return String.Format(pickupmsg,Amount);
+		return String.Format("%s%d%s",StringTable.Localize("$I_FLAKAMMOL"),Amount,StringTable.Localize("$I_FLAKAMMOR"));
 	}
 	States
 	{
@@ -26,8 +26,8 @@ Class FlakAmmo2 : FlakAmmo
 {
 	Default
 	{
-		Tag "Flak Shell";
-		Inventory.PickupMessage "You picked up a Flak Shell.";
+		Tag "$T_FLAKAMMO2";
+		Inventory.PickupMessage "$I_FLAKAMMO2";
 		Inventory.Amount 1;
 		Ammo.DropAmount 1;
 		+INVENTORY.IGNORESKILL;
@@ -161,7 +161,7 @@ Class FlakChunk : Actor
 	Vector3 oldvel;
 	Default
 	{
-		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
+		Obituary "$O_FLAKCANNON";
 		Radius 2;
 		Height 2;
 		Speed 32;
@@ -420,7 +420,7 @@ Class FlakSlug : Actor
 {
 	Default
 	{
-		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
+		Obituary "$O_FLAKCANNON";
 		DamageType 'FlakDeath';
 		Radius 2;
 		Height 2;
@@ -654,8 +654,8 @@ Class FlakCannon : UTWeapon
 
 	Default
 	{
-		Tag "Flak Cannon";
-		Inventory.PickupMessage "You got the Flak Cannon.";
+		Tag "$T_FLAKCANNON";
+		Inventory.PickupMessage "$I_FLAKCANNON";
 		Weapon.UpSound "flak/select";
 		Weapon.SlotNumber 8;
 		Weapon.SelectionOrder 2;

@@ -2,8 +2,8 @@ Class PulseAmmo : Ammo
 {
 	Default
 	{
-		Tag "Pulse Cell";
-		Inventory.PickupMessage "You picked up a Pulse Cell.";
+		Tag "$T_PULSEAMMO";
+		Inventory.PickupMessage "$I_PULSEAMMO";
 		Inventory.Amount 25;
 		Inventory.MaxAmount 200;
 		Ammo.BackpackAmount 40;
@@ -161,7 +161,7 @@ Class PulseBall : Actor
 {
 	Default
 	{
-		Obituary "%o ate %k's burning plasma death.";
+		Obituary "$O_PULSEGUN";
 		DamageType 'Pulsed';
 		RenderStyle "Add";
 		DamageFunction 20;
@@ -483,7 +483,7 @@ Class PulseBolt : Actor
 	Default
 	{
 		RenderStyle "Add";
-		Obituary "%o ate %k's burning plasma death.";
+		Obituary "$O_PULSEGUN";
 		Radius 0.1;
 		Height 0;
 		+NOGRAVITY;
@@ -535,13 +535,15 @@ Class PulseGun : UTWeapon
 	int clipcount;
 	double sangle;
 	Actor beam;
+	transient ui Font usmf;
 
 	Property ClipCount : clipcount;
 
 	override void PostRender( double lbottom )
 	{
 		if ( !flak_pulsereload ) return;
-		Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,lbottom-Screen.GetHeight()*0.01-confont.GetHeight(),String.Format("Clip: %2d / 50",clipcount));
+		if ( !usmf ) usmf = Font.GetFont('USMALLFONT');
+		Screen.DrawText(usmf,Font.FindFontColor('UGreen'),Screen.GetWidth()*0.01,lbottom-Screen.GetHeight()*0.01-usmf.GetHeight(),String.Format("%s: %2d / 50",StringTable.Localize("$M_CLIP"),clipcount));
 	}
 
 	action void A_Reloading()
@@ -691,8 +693,8 @@ Class PulseGun : UTWeapon
 	}
 	Default
 	{
-		Tag "Pulse Gun";
-		Inventory.PickupMessage "You got a Pulse Gun";
+		Tag "$T_PULSEGUN";
+		Inventory.PickupMessage "$I_PULSEGUN";
 		Weapon.UpSound "pulse/select";
 		Weapon.SlotNumber 5;
 		Weapon.SelectionOrder 5;

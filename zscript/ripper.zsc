@@ -2,8 +2,8 @@ Class RipperAmmo : Ammo
 {
 	Default
 	{
-		Tag "Razor Blades";
-		Inventory.PickupMessage "You picked up Razor Blades.";
+		Tag "$T_RIPPERAMO";
+		Inventory.PickupMessage "$I_RIPPERAMMO";
 		Inventory.Amount 10;
 		Inventory.MaxAmount 40;
 		Ammo.BackpackAmount 20;
@@ -59,7 +59,7 @@ Class Razor2 : Actor
 		Speed 25;
 		DamageFunction (int(30*((DamageType=='Decapitated')?3.5:1.0)));
 		DamageType 'Shredded';
-		Obituary "%k ripped a chunk of meat out of %o with the Ripper.";
+		Obituary "$O_RIPPER";
 		BounceType "Hexen";
 		ReactionTime 7;
 		BounceFactor 1.0;
@@ -248,8 +248,8 @@ Class Ripper2 : UTWeapon
 {
 	Default
 	{
-		Tag "Ripper";
-		Inventory.PickupMessage "You got the Ripper.";
+		Tag "$T_RIPPER";
+		Inventory.PickupMessage "$I_RIPPER";
 		Weapon.UpSound "ripper/select";
 		Weapon.SlotNumber 6;
 		Weapon.SelectionOrder 4;

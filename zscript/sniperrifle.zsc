@@ -2,8 +2,8 @@ Class RifleAmmo : Ammo
 {
 	Default
 	{
-		Tag "Box of Rifle Rounds";
-		Inventory.PickupMessage "You picked up a Box of Rifle Rounds.";
+		Tag "$T_RIFLEAMMO";
+		Inventory.PickupMessage "$I_RIFLEAMMO";
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
@@ -22,8 +22,8 @@ Class RifleAmmo2 : RifleAmmo
 {
 	Default
 	{
-		Tag "Rifle Round";
-		Inventory.PickupMessage "You got a Rifle Round.";
+		Tag "$T_RIFLEAMMO2";
+		Inventory.PickupMessage "$I_RIFLEAMMO2";
 		Inventory.Amount 1;
 		Ammo.DropAmount 1;
 		+INVENTORY.IGNORESKILL;
@@ -48,6 +48,7 @@ Class SniperRifle : UTWeapon
 {
 	double sniperzoom;
 	TextureID reticle;
+	transient ui Font zfont;
 
 	override void PostBeginPlay()
 	{
@@ -57,8 +58,9 @@ Class SniperRifle : UTWeapon
 	override void PreRender( double lbottom )
 	{
 		if ( sniperzoom <= 1.0 ) return;
-		Screen.DrawTexture(reticle,false,320,240,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_RenderStyle,(1|2<<8|1<<16));
-		Screen.DrawText(confont,Font.CR_DARKGREEN,192,160,String.Format("X%.1f",sniperzoom),DTA_Clean,true);
+		Screen.DrawTexture(reticle,false,320,240,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_LegacyRenderStyle,STYLE_Add);
+		if ( !zfont ) zfont = Font.GetFont('UTFont40');
+		Screen.DrawText(zfont,Font.FindFontColor('UGreen'),960,960,String.Format("X%.1f",sniperzoom),DTA_VirtualWidth,1600,DTA_VirtualHeight,1200,DTA_LegacyRenderStyle,STYLE_Add);
 	}
 	override void Tick()
 	{
@@ -158,14 +160,14 @@ Class SniperRifle : UTWeapon
 	}
 	override String GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
 	{
-		if ( mod == 'Decapitated' ) return "%k put a bullet through %o's head.";
+		if ( mod == 'Decapitated' ) return StringTable.Localize("$O_SNIPERDECAP");
 		return Obituary;
 	}
 	Default
 	{
-		Tag "Sniper Rifle";
-		Obituary "%k put a bullet through %o.";
-		Inventory.PickupMessage "You got the Sniper Rifle.";
+		Tag "$T_SNIPER";
+		Obituary "$O_SNIPER";
+		Inventory.PickupMessage "$I_SNIPER";
 		Weapon.UpSound "sniper/select";
 		Weapon.SlotNumber 0;
 		Weapon.SelectionOrder 5;
