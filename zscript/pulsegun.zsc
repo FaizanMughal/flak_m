@@ -91,7 +91,7 @@ Class ViewPulseSpark : PulseSpark
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		ofs += vvel;
 		vvel *= 0.9;
 		scale *= 0.8;
@@ -149,7 +149,7 @@ Class PulseExplLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		args[LIGHT_RED] = int(64*lifetime);
 		args[LIGHT_GREEN] = int(255*lifetime);
 		lifetime -= 1./ReactionTime;
@@ -507,7 +507,7 @@ Class StarterBolt : PulseBolt
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( !target )
 		{
 			Destroy();

@@ -72,7 +72,7 @@ Class ShockRifleWave : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		alpha -= 1/50.;
 	}
 	States
@@ -99,7 +99,7 @@ Class SuperShockRifleWave : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		alpha -= 1/50.;
 	}
 	States
@@ -127,7 +127,7 @@ Class ShockBeamRing : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		alpha -= 1./ReactionTime;
 	}
 	States
@@ -154,7 +154,7 @@ Class SuperShockBeamRing : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		alpha -= 1./ReactionTime;
 	}
 	States
@@ -295,7 +295,7 @@ Class ShockBeam : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( !moving ) return;
 		// step trace
 		tracedir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
@@ -522,7 +522,7 @@ Class SuperShockBeam : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( !moving ) return;
 		// step trace
 		tracedir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
@@ -768,7 +768,7 @@ Class ShockExplLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		args[LIGHT_RED] = int(160*lifetime);
 		args[LIGHT_GREEN] = int(128*lifetime);
 		args[LIGHT_BLUE] = int(255*lifetime);
@@ -794,7 +794,7 @@ Class SuperShockExplLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		args[LIGHT_RED] = int(255*lifetime);
 		args[LIGHT_GREEN] = int(160*lifetime);
 		args[LIGHT_BLUE] = int(128*lifetime);
@@ -985,7 +985,7 @@ Class ViewShockSpark : ShockSpark
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		ofs += vvel;
 		vvel *= 0.9;
 		scale *= 0.8;

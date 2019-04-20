@@ -213,6 +213,7 @@ FLAK_UBLOD = "UT blood";
 FLAK_UGIB = "[WIP] UT gibbing";
 FLAK_UCORPS = "[WIP] Corpses take damage";
 FLAK_DTEST = "Edit Kinsie's test map";
+FLAK_FSTRENGTH = "Screen flash strength";
 
 [es esm esn esg esc esa esd esv eso esr ess esf esl esy esz esb ese esh esi esu]
 /* Obituaries */
@@ -413,6 +414,7 @@ FLAK_UBLOD = "Sangre de UT";
 FLAK_UGIB = "[WIP] Vísceras de UT";
 FLAK_UCORPS = "[WIP] Los cadáveres reciben daño";
 FLAK_DTEST = "Editar mapa de pruebas de Kinsie";
+FLAK_FSTRENGTH = "Intensidad de destellos en pantalla";
 
 [fr]
 

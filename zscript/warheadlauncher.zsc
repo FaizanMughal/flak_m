@@ -48,7 +48,7 @@ Class ShockWave : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( alpha <= 0 ) return;
 		if ( !t ) t = ThinkerIterator.Create("Actor");
 		icount++;
@@ -164,7 +164,7 @@ Class WarheadExplodLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		args[LIGHT_RED] = int(255*lifetime);
 		args[LIGHT_GREEN] = int(192*lifetime);
 		args[LIGHT_BLUE] = int(128*lifetime);
@@ -224,7 +224,7 @@ Class WarheadTrail : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		vel *= 0.99;
 		A_FadeOut(0.1);
 	}
@@ -275,7 +275,7 @@ Class WarShell : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( !bMISSILE ) return;
 		if ( vel.length() > 0 )
 		{
@@ -375,7 +375,7 @@ Class GuidedWarShell : WarShell
 			justleft = false;
 			bHITOWNER = true;
 		}
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( !bMISSILE ) return;
 		if ( !target || !target.player || (target.Health <= 0) )
 		{

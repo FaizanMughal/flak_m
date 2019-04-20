@@ -55,7 +55,7 @@ Class ChunkLight : DynamicLight
 			Destroy();
 			return;
 		}
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		args[LIGHT_RED] = int(255*(10-target.frame)*0.1);
 		args[LIGHT_GREEN] = int(224*(10-target.frame)*0.1);
 		args[LIGHT_BLUE] = int(128*(10-target.frame)*0.1);
@@ -84,7 +84,7 @@ Class ChunkTrail : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( InStateSequence(CurState,FindState("Death")) ) return;
 		if ( !target )
 		{
@@ -196,7 +196,7 @@ Class FlakChunk : Actor
 	{
 		oldvel = vel;
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( waterlevel > 0 )
 		{
 			vel.xy *= 0.98;
@@ -373,7 +373,7 @@ Class SlugSmoke : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		lifetime += lifespeed;
 		let s = Spawn("UTSmoke",pos);
 		s.vel = (FRandom[Flak](-0.5,0.5),FRandom[Flak](-0.5,0.5),FRandom[Flak](-0.5,0.5));
@@ -407,7 +407,7 @@ Class SlugLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		args[LIGHT_RED] = int(255*lifetime);
 		args[LIGHT_GREEN] = int(224*lifetime);
 		args[LIGHT_BLUE] = int(128*lifetime);

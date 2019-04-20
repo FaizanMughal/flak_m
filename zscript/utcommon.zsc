@@ -957,7 +957,7 @@ Class UTViewSpark : UTSpark
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		ofs += vvel;
 		vvel.z -= 0.1;
 		scale *= 0.8;
@@ -999,7 +999,7 @@ Class UTChip : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		if ( InStateSequence(CurState,ResolveState("Death")) )
 		{
 			deadtimer++;
@@ -1062,7 +1062,7 @@ Class UTBubble : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		vel *= 0.96;
 		vel.z += 0.05;
 		if ( (waterlevel <= 0) || !Random[Puff](0,100) ) Destroy();
@@ -1110,7 +1110,7 @@ Class UTSmoke : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		vel *= 0.96;
 		vel.z += 0.01;
 		A_FadeOut(1/32.);
@@ -1202,7 +1202,7 @@ Class UTViewSmoke : UTSmoke
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		ofs += vvel;
 		vvel *= 0.96;
 		vvel.z += 0.01;
@@ -1434,6 +1434,7 @@ Class GenericFlash : HUDMessageBase
 	int duration;
 	double alpha;
 	Actor cam;
+	transient CVar str;
 	GenericFlash Setup( Actor camera, Color c, int d )
 	{
 		alpha = 1.0;
@@ -1451,7 +1452,8 @@ Class GenericFlash : HUDMessageBase
 	{
 		if ( automapactive || (visibility != BaseStatusBar.HUDMSGLayer_UnderHUD) ) return;
 		if ( cam && (players[consoleplayer].camera != cam) ) return;
-		Screen.Dim(col,(col.a/255.)*alpha,0,0,Screen.GetWidth(),Screen.GetHeight());
+		if ( !str ) str = CVar.GetCVar('flak_flashstrength',players[consoleplayer]);
+		Screen.Dim(col,(col.a/255.)*alpha*str.GetFloat(),0,0,Screen.GetWidth(),Screen.GetHeight());
 	}
 }
 
@@ -1671,7 +1673,7 @@ Class UTMainHandler : EventHandler
 		{
 			if ( (level.GetChecksum() ~== "FBC3B6622A8B74AE06DE01E70007AC33") || (level.GetChecksum() ~== "D8206A3414DA967F2159473B5791139E") )
 			{
-				TexMan.ReplaceTextures("-noflat-","DefTex",0);
+				Level.ReplaceTextures("-noflat-","DefTex",0);
 				TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
 				level.ChangeSky(skytx,skytx);
 			}
