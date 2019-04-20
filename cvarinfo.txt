@@ -41,3 +41,4 @@ server bool flak_gibs = false;				// [WIP/UNSTABLE] use doom tournament gibbing 
 server bool flak_doomtest = false;			// made toggleable due to loud complaints
 server bool flak_dmsshock = false;			// allow enhanced shock rifle on deathmatch (otherwise they are replaced with udamage)
 server noarchive bool flak_instagib = false;		// instagib mode (only for dm) - this cvar has to be set from the command line
+user float flak_flashstrength = 1.0;			// strength of screen flashes
