@@ -57,6 +57,7 @@ This mod requires GZDoom 4.0.0 or later.
    - Lava/Slime footstep sounds?
  - UT gore system (toggleable)
  - Heretic compatibility
+ - Localization in all languages supported by the original game
 
 ## Future plans
 
@@ -72,6 +73,7 @@ This mod requires GZDoom 4.0.0 or later.
  - Unreal 1 weapons mod and maybe also a monsters mod
  - Port some of my UT weapon mods (and maybe also some of my personal faves by
    others, such as Psi Weapon Dreams)
+ - Hexen compatibility ???
 
 ## Known bugs
 

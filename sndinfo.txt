@@ -162,7 +162,7 @@ ut/playerfootstep2	stone04
 ut/playerfootstep3	stone05
 $random ut/playerfootstep { ut/playerfootstep1 ut/playerfootstep2 ut/playerfootstep3 }
 
-ut/bossfootstep	bfootstep
+ut/bossfootstep	bfootstp
 
 ut/playerfootstepwet	lsplash
 ut/wetsplash		dsplash
@@ -205,10 +205,6 @@ misc/gibp3	gibp4
 misc/gibp4	gibp5
 misc/gibp5	gibp6
 $random misc/gibp { misc/gibp1 misc/gibp2 misc/gibp3 misc/gibp4 misc/gibp5 }
-// universal gibs compat
-$alias UniversalGibs/Gib misc/gibbed
-// droplets compat
-$alias blood/hit misc/gibp
 
 impact/select	imppick
 impact/pull	impaltst

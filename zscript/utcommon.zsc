@@ -160,7 +160,10 @@ Class UTPlayer : DoomPlayer
 			{
 				let type = (class<Inventory>)(AllActorClasses[i]);
 				if ( !type ) continue;
-				let def = GetDefaultByType (type);
+				let def = GetDefaultByType(type);
+				if ( !(self is "UTPlayerHereticCompat")
+					&& ((type is "UTActivatable") || (type is "UTActivatableHealth")) )
+					continue;	// don't give these outside of Heretic/Hexen
 				if ( def.Icon.isValid() && (def.MaxAmount > 1) &&
 					!(type is "PuzzleItem") && !(type is "Powerup") && !(type is "Ammo") &&	!(type is "Armor"))
 				{
