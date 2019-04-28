@@ -47,6 +47,23 @@ Class UTHereticBlueKey : KeyBlue
 	}
 }
 
+// TODO Base class for items that can be activated from the inventory bar
+Class UTActivatable : Inventory
+{
+	Default
+	{
+		+INVENTORY.INVBAR;
+	}
+}
+
+// These have to be subclassed from HealthPickup for auto-use
+Class UTActivatableHealth : HealthPickup
+{
+	Default
+	{
+	}
+}
+
 // Alternative player classes for compatibility with Heretic sprites
 Class UTPlayerHereticCompat : UTPlayer
 {
