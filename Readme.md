@@ -3,7 +3,7 @@
 What began as a test for importing UT vertex meshes has turned into an actual
 full UT weapon and item mod.
 
-This mod requires GZDoom 3.7.0 or later.
+This mod requires GZDoom 4.1 or later.
 
 ## Currently implemented
 
@@ -49,6 +49,8 @@ This mod requires GZDoom 3.7.0 or later.
    toggled)
  - UT-like weapon dropping style
  - UT player classes (sound only, no models yet)
+ - Heretic compatibility
+ - Spanish localization
 
 ## In progress
 
@@ -56,6 +58,12 @@ This mod requires GZDoom 3.7.0 or later.
  - Add some more effects
    - Lava/Slime footstep sounds?
  - UT gore system (toggleable)
+ - French localization
+ - Italian localization
+
+## Ideas
+
+ - Chainsaw balancing (maybe give it ammo?)
 
 ## Future plans
 
@@ -71,6 +79,8 @@ This mod requires GZDoom 3.7.0 or later.
  - Unreal 1 weapons mod and maybe also a monsters mod
  - Port some of my UT weapon mods (and maybe also some of my personal faves by
    others, such as Psi Weapon Dreams)
+ - Hexen compatibility ???
+ - Relics?
 
 ## Known bugs
 

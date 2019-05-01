@@ -287,7 +287,7 @@ Class TranslocatorAmmo : Ammo
 {
 	Default
 	{
-		Tag "Translocator Ammo";
+		Tag "$T_TRANSLOCATORAMMO";
 		Inventory.Amount 6;
 		Inventory.MaxAmount 6;
 		Ammo.BackpackAmount 0;
@@ -330,7 +330,7 @@ Class Translocator : UTWeapon
 		UTMainHandler.DoSwing(self,(FRandom[Translocator](-0.2,0.4),FRandom[Translocator](-0.2,0.7)),2,-0.3,3,SWING_Spring,2,3);
 		A_AlertMonsters();
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x-8.0*y-12.0*z;
 		let p = Spawn("TranslocatorModule",origin);
 		p.target = self;
@@ -413,8 +413,8 @@ Class Translocator : UTWeapon
 
 	Default
 	{
-		Tag "Translocator";
-		Inventory.PickupMessage "You got the Translocator Source Module.";
+		Tag "$T_TRANSLOCATOR";
+		Inventory.PickupMessage "$I_TRANSLOCATOR";
 		Weapon.SlotNumber 1;
 		Weapon.SelectionOrder 10;
 		+WEAPON.NO_AUTO_SWITCH;

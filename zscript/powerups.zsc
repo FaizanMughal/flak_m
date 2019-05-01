@@ -2,8 +2,8 @@ Class UDamage : PowerupGiver
 {
 	Default
 	{
-		Tag "Damage Amplifier";
-		Inventory.PickupMessage "You got the Damage Amplifier!";
+		Tag "$T_UDAMAGE";
+		Inventory.PickupMessage "$I_UDAMAGE";
 		+COUNTITEM;
 		+INVENTORY.AUTOACTIVATE;
 		+INVENTORY.ALWAYSPICKUP;
@@ -78,7 +78,7 @@ Class DamageAmplifier : Powerup
 	override void EndEffect()
 	{
 		Super.EndEffect();
-		if ( EffectTics <= 0 ) PrintPickupMessage(true,"Damage Amplifier has worn off.");
+		if ( EffectTics <= 0 ) PrintPickupMessage(true,StringTable.Localize("$D_UDAMAGE"));
 	}
 
 	override bool isBlinking()
@@ -188,8 +188,8 @@ Class UTBackpack : BackpackItem
 	}
 	Default
 	{
-		Tag "Backpack";
-		Inventory.PickupMessage "You got a Backpack.";
+		Tag "$T_BACKPACK";
+		Inventory.PickupMessage "$I_BACKPACK";
 		Inventory.RespawnTics 2100;
 	}
 	States
@@ -217,7 +217,7 @@ Class PowerUTInvisibility : PowerInvisibility
 	override void EndEffect()
 	{
 		Super.EndEffect();
-		if ( EffectTics <= 0 ) PrintPickupMessage(true,"Invisibility has worn off.");
+		if ( EffectTics <= 0 ) PrintPickupMessage(true,StringTable.Localize("$D_INVISIBILITY"));
 	}
 }
 
@@ -225,14 +225,14 @@ Class UTInvisibility : PowerupGiver
 {
 	Default
 	{
-		Tag "Invisibility";
+		Tag "$T_INVISIBILITY";
 		+COUNTITEM;
 		+INVENTORY.AUTOACTIVATE;
 		+INVENTORY.ALWAYSPICKUP;
 		+INVENTORY.BIGPOWERUP;
 		Inventory.MaxAmount 0;
 		Powerup.Type "PowerUTInvisibility";
-		Inventory.PickupMessage "You have Invisibility.";
+		Inventory.PickupMessage "$I_INVISIBILITY";
 		Inventory.PickupSound "invis/pickup";
 		Inventory.RespawnTics 4200;
 	}
@@ -290,7 +290,7 @@ Class UTMapRevealer : MapRevealer
 		+INVENTORY.ALWAYSPICKUP;
 		Inventory.MaxAmount 0;
 		Inventory.PickupSound "trans/pickup";
-		Inventory.PickupMessage "You got the Computer Map.";
+		Inventory.PickupMessage "$I_MAPREVEALER";
 	}
 	States
 	{
@@ -304,13 +304,13 @@ Class UTJumpBoots : Inventory
 {
 	Default
 	{
-		Tag "AntiGrav Boots";
+		Tag "$T_JUMPBOOTS";
 		+INVENTORY.AUTOACTIVATE;
 		+INVENTORY.ALWAYSPICKUP;
 		Inventory.Amount 2100;
 		Inventory.MaxAmount 2100;
 		Inventory.InterHubAmount 2100;
-		Inventory.PickupMessage "You picked up the AntiGrav boots.";
+		Inventory.PickupMessage "$I_JUMPBOOTS";
 		Inventory.PickupSound "boot/pickup";
 		Inventory.RespawnTics 1050;
 	}
@@ -337,7 +337,7 @@ Class UTJumpBoots : Inventory
 		}
 		else if ( (Amount <= 0) && owner.player.onground )
 		{
-			PrintPickupMessage(true,"The AntiGrav Boots have drained.");
+			PrintPickupMessage(true,StringTable.Localize("$D_JUMPBOOTS"));
 			DepleteOrDestroy();
 		}
 	}
@@ -394,7 +394,7 @@ Class Searchlight : Inventory
 	int ticcnt;
 	Default
 	{
-		Tag "Searchligh";
+		Tag "$T_SEARCHLIGHT";
 		+COUNTITEM;
 		+INVENTORY.UNTOSSABLE;
 		+INVENTORY.FANCYPICKUPSOUND;
@@ -403,7 +403,9 @@ Class Searchlight : Inventory
 		Inventory.Amount 200;
 		Inventory.MaxAmount 200;
 		Inventory.InterHubAmount 0;
-		Inventory.PickupMessage "You picked up the Searchlight.";
+		Inventory.PickupMessage "$I_SEARCHLIGHT";
+		Inventory.PickupSound "lite/pickup";
+		Inventory.RespawnTics 1050;
 	}
 
 	override bool Use( bool pickup )
@@ -434,7 +436,7 @@ Class Searchlight : Inventory
 		ticcnt = 0;
 		if ( --Amount <= 0 )
 		{
-			PrintPickupMessage(true,"Searchlight batteries have died.");
+			PrintPickupMessage(true,StringTable.Localize("$D_SEARCHLIGHT"));
 			DepleteOrDestroy();
 		}
 	}

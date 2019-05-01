@@ -2,8 +2,8 @@ Class MiniAmmo : Ammo
 {
 	Default
 	{
-		Tag "Large Bullets";
-		Inventory.PickupMessage "You picked up %d bullets.";
+		Tag "$T_MINIAMMO";
+		Inventory.PickupMessage "";
 		Inventory.Amount 50;
 		Inventory.MaxAmount 200;
 		Ammo.BackpackAmount 100;
@@ -12,7 +12,7 @@ Class MiniAmmo : Ammo
 	}
 	override String PickupMessage()
 	{
-		return String.Format(pickupmsg,Amount);
+		return String.Format("%s%d%s",StringTable.Localize("$I_MINIAMMOL"),Amount,StringTable.Localize("$I_MINIAMMOR"));
 	}
 	States
 	{
@@ -47,7 +47,7 @@ Class MinigunTracer : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		Vector3 dir = level.Vec3Diff(pos,dest);
 		if ( dir.length() < 160 )
 		{
@@ -101,10 +101,10 @@ Class Minigun : UTWeapon
 		l.target = self;
 		if ( !alt ) MinigunLight(l).cnt--;
 		Vector3 x, y, z, x2, y2, z2;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+y*2.0-z*2.0;
 		double a = FRandom[Minigun](0,360), s = FRandom[Minigun](0,alt?0.05:0.02);
-		[x2, y2, z2] = dt_Matrix4.GetAxes(BulletSlope(),angle,roll);
+		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 		FLineTraceData d;
 		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
@@ -195,9 +195,9 @@ Class Minigun : UTWeapon
 
 	Default
 	{
-		Tag "Minigun";
-		Obituary "%k's Minigun turned %o into a leaky piece of meat.";
-		Inventory.PickupMessage "You got the Minigun.";
+		Tag "$T_MINIGUN";
+		Obituary "$O_MINIGUN";
+		Inventory.PickupMessage "$I_MINIGUN";
 		Weapon.UpSound "minigun/select";
 		Weapon.SlotNumber 7;
 		Weapon.SelectionOrder 3;

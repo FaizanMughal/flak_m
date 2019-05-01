@@ -53,13 +53,13 @@ Class UTChainsaw : UTWeapon
 		invoker.FireEffect();
 		A_AlertMonsters();
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x-4.0*z;
 		FLineTraceData d;
 		LineTrace(angle,90,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Chainsaw](20,30);
+			int dmg = 20;
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
 			d.HitActor.vel -= x*(500/d.HitActor.mass);
 			vel += x*(100/mass);
@@ -91,16 +91,16 @@ Class UTChainsaw : UTWeapon
 		if ( initial ) invoker.FireEffect();
 		A_AlertMonsters();
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x-2.0*z;
 		FLineTraceData d;
 		double ang = (angle-60)+120*invoker.sawcnt;
 		LineTrace(ang,90,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Chainsaw](20,30);
+			int dmg = 20;
 			if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.8) )
-				dmg = d.HitActor.DamageMobj(invoker,self,dmg*2,'Decapitated',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
+				dmg = d.HitActor.DamageMobj(invoker,self,dmg*3,'Decapitated',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
 			else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed',DMG_USEANGLE,atan2(d.HitDir.y,d.HitDir.x));
 			d.HitActor.vel = -y*(1200/d.HitActor.mass);
 			vel += x*(100/mass);
@@ -141,7 +141,7 @@ Class UTChainsaw : UTWeapon
 		UTMainHandler.DoSwing(self,(FRandom[Chainsaw](-1,1),FRandom[Chainsaw](-1,1)),0.25,-0.1,2,SWING_Spring);
 		if ( bAlt || Random[Chainsaw](0,2) ) return;
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+5.0*x+1.0*y-3.0*z;
 		for ( int i=0; i<5; i++ )
 		{
@@ -156,14 +156,15 @@ Class UTChainsaw : UTWeapon
 	}
 	Default
 	{
-		Tag "Chainsaw";
-		Obituary "%k ripped into %o with a blood soaked Chainsaw.";
-		Inventory.PickupMessage "It's been twenty five years since I've seen one of these.";	// was five years in UT99
+		Tag "$T_CHAINSAW";
+		Obituary "$O_CHAINSAW";
+		Inventory.PickupMessage "$I_CHAINSAW";
 		Weapon.UpSound "chainsaw/select";
 		Weapon.SlotNumber 1;
 		Weapon.SelectionOrder 9;
 		+WEAPON.MELEEWEAPON;
 		+FORCEPAIN;
+		+NOEXTREMEDEATH;
 	}
 	States
 	{

@@ -2,8 +2,8 @@ Class EClip : MiniAmmo
 {
 	Default
 	{
-		Tag "Clip";	// "Large Bullets" in UT, but I think that's an oversight, since it's the same as the Minigun ammo
-		Inventory.PickupMessage "You picked up a Clip.";
+		Tag "$T_CLIP";	// "Large Bullets" in UT, but I think that's an oversight, since it's the same as the Minigun ammo
+		Inventory.PickupMessage "$I_CLIP";
 		Inventory.Amount 20;
 		Ammo.DropAmount 5;
 	}
@@ -120,7 +120,7 @@ Class UTCasing : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		if ( InStateSequence(CurState,ResolveState("Death")) )
 		{
 			deadtimer++;
@@ -170,22 +170,16 @@ Class Enforcer : UTWeapon
 	int ClipCount, SlaveClipCount;
 	bool SlaveActive, SlaveDown, SlaveReload, SlaveAltFire;
 	int SlaveRefire;
+	transient ui Font usmf;
 
 	property ClipCount : ClipCount;
 	property SlaveClipCount : SlaveClipCount;
-
-	override void PostRender( double lbottom )
-	{
-		if ( !flak_enforcerreload ) return;
-		if ( Amount > 1 ) Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,lbottom-Screen.GetHeight()*0.01-confont.GetHeight()*2,String.Format("L Clip: %2d / 20\nR Clip: %2d / 20",slaveclipcount,clipcount));
-		else Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,lbottom-Screen.GetHeight()*0.01-confont.GetHeight(),String.Format("Clip: %2d / 20",clipcount));
-	}
 
 	override bool HandlePickup( Inventory item )
 	{
 		if ( item.GetClass() == GetClass() )
 		{
-			SetTag("Dual Enforcers");
+			SetTag(StringTable.Localize("$T_ENFORCER2"));
 			return Super.HandlePickup(item);
 		}
 		return false;
@@ -196,8 +190,8 @@ Class Enforcer : UTWeapon
 		Inventory inv = Super.CreateTossable(amt);
 		if ( inv )
 		{
-			SetTag("Enforcer");
-			inv.SetTag("Enforcer");
+			SetTag(StringTable.Localize("$T_ENFORCER"));
+			inv.SetTag(StringTable.Localize("$T_ENFORCER"));
 			if ( Owner && (Owner.player.ReadyWeapon == self) )
 			{
 				// delete the slave overlay
@@ -322,20 +316,20 @@ Class Enforcer : UTWeapon
 			UTMainHandler.DoSwing(self,(FRandom[Enforcer](-0.2,-0.5),FRandom[Enforcer](-0.3,0.2)),2,0,1,SWING_Spring,0,2);
 		}
 		Vector3 x, y, z, x2, y2, z2;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x;
 		int ydir = slave?-1:1;
 		if ( alt ) origin = origin-z*3.0+ydir*y*1.0;
 		else origin = origin-z*1.0+ydir*y*4.0;
 		double a = FRandom[Enforcer](0,360), s = FRandom[Enforcer](0,alt?0.08:0.004);
 		if ( invoker.SlaveActive ) s *= 3;
-		[x2, y2, z2] = dt_Matrix4.GetAxes(BulletSlope(),angle,roll);
+		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 		FLineTraceData d;
 		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Enforcer](12,17);
+			int dmg = 17;
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
 			double mm = 3000;
 			if ( FRandom[Enforcer](0,1) < 0.2 ) mm *= 5;
@@ -382,8 +376,8 @@ Class Enforcer : UTWeapon
 
 	override String GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
 	{
-		if ( Amount > 1 ) return "%k riddled %o full of holes with the Dual Enforcers.";
-		return "%k riddled %o full of holes with the Enforcer.";
+		if ( Amount > 1 ) return StringTable.Localize("$O_ENFORCER2");
+		return StringTable.Localize("$O_ENFORCER");
 	}
 
 	override void Travelled()
@@ -400,8 +394,8 @@ Class Enforcer : UTWeapon
 
 	Default
 	{
-		Tag "Enforcer";
-		Inventory.PickupMessage "You picked up another Enforcer!";
+		Tag "$T_ENFORCER";
+		Inventory.PickupMessage "$I_ENFORCER";
 		Inventory.MaxAmount 2;
 		Inventory.InterHubAmount 2;
 		Weapon.UpSound "enforcer/select";

@@ -2,8 +2,8 @@ Class PulseAmmo : Ammo
 {
 	Default
 	{
-		Tag "Pulse Cell";
-		Inventory.PickupMessage "You picked up a Pulse Cell.";
+		Tag "$T_PULSEAMMO";
+		Inventory.PickupMessage "$I_PULSEAMMO";
 		Inventory.Amount 25;
 		Inventory.MaxAmount 200;
 		Ammo.BackpackAmount 40;
@@ -87,11 +87,11 @@ Class ViewPulseSpark : PulseSpark
 			return;
 		}
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		ofs += vvel;
 		vvel *= 0.9;
 		scale *= 0.8;
@@ -149,7 +149,7 @@ Class PulseExplLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		args[LIGHT_RED] = int(64*lifetime);
 		args[LIGHT_GREEN] = int(255*lifetime);
 		lifetime -= 1./ReactionTime;
@@ -161,10 +161,10 @@ Class PulseBall : Actor
 {
 	Default
 	{
-		Obituary "%o ate %k's burning plasma death.";
+		Obituary "$O_PULSEGUN";
 		DamageType 'Pulsed';
 		RenderStyle "Add";
-		DamageFunction Random[Pulse](20,30);
+		DamageFunction 20;
 		PROJECTILE;
 		+EXPLODEONWATER;
 		+SKYEXPLODE;
@@ -373,12 +373,12 @@ Class PulseBolt : Actor
 				if ( !damagedactor )
 				{
 					accdamage = min(0.5*(level.time-lasthit),0.1);
-					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](80,100)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
+					t.Results.HitActor.DamageMobj(self,target,int(72*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 				else if ( t.Results.HitActor != damagedactor )
 				{
-					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](80,100)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
+					t.Results.HitActor.DamageMobj(self,target,int(72*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 				lasthit = level.time;
@@ -386,7 +386,7 @@ Class PulseBolt : Actor
 				accdamage += 1./TICRATE;
 				if ( accdamage > 0.17 )
 				{
-					t.Results.HitActor.DamageMobj(self,target,int(Random[Pulse](80,100)*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
+					t.Results.HitActor.DamageMobj(self,target,int(72*accdamage),'zapped',DMG_USEANGLE,atan2(x.y,x.x));
 					accdamage = 0;
 				}
 			}
@@ -428,7 +428,7 @@ Class PulseBolt : Actor
 		}
 		else if ( damagedactor )
 		{
-			damagedactor.DamageMobj(self,target,int(Random[Pulse](65,75)*accdamage),'zapped');
+			damagedactor.DamageMobj(self,target,int(72*accdamage),'zapped');
 			accdamage = 0;
 			damagedactor = null;
 		}
@@ -483,7 +483,7 @@ Class PulseBolt : Actor
 	Default
 	{
 		RenderStyle "Add";
-		Obituary "%o ate %k's burning plasma death.";
+		Obituary "$O_PULSEGUN";
 		Radius 0.1;
 		Height 0;
 		+NOGRAVITY;
@@ -507,7 +507,7 @@ Class StarterBolt : PulseBolt
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( !target )
 		{
 			Destroy();
@@ -517,7 +517,7 @@ Class StarterBolt : PulseBolt
 		bRELATIVETOFLOOR = (target.pos.z <= target.floorz);	// hack, but kinda works
 		if ( target.player )
 		{
-			[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+			[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
 			origin = target.Vec2OffsetZ(0,0,target.player.viewz)+8.0*x+4.1*y-2.7*z;
 		}
 		else origin = target.Vec3Offset(0,0,target.missileheight);
@@ -535,14 +535,9 @@ Class PulseGun : UTWeapon
 	int clipcount;
 	double sangle;
 	Actor beam;
+	transient ui Font usmf;
 
 	Property ClipCount : clipcount;
-
-	override void PostRender( double lbottom )
-	{
-		if ( !flak_pulsereload ) return;
-		Screen.DrawText(confont,Font.CR_GREEN,Screen.GetWidth()*0.01,lbottom-Screen.GetHeight()*0.01-confont.GetHeight(),String.Format("Clip: %2d / 50",clipcount));
-	}
 
 	action void A_Reloading()
 	{
@@ -564,7 +559,7 @@ Class PulseGun : UTWeapon
 		UTMainHandler.DoSwing(self,(FRandom[Pulse](-1,-1),FRandom[Pulse](-1,1)),0.1,-0.02,3,SWING_Spring,0,2);
 		A_AlertMonsters();
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x+4.1*y-2.7*z;
 		for ( int i=0; i<4; i++ )
 		{
@@ -630,7 +625,7 @@ Class PulseGun : UTWeapon
 		A_OverlayRenderstyle(-2,STYLE_Add);
 		Vector3 x, y, z;
 		double a;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x+3.0*y-1.8*z;
 		origin += y*cos(invoker.sangle)*2.0+z*sin(invoker.sangle)*2.0;
 		invoker.sangle += 100;
@@ -662,7 +657,7 @@ Class PulseGun : UTWeapon
 	{
 		A_PlaySound("pulse/bolt",CHAN_WEAPON,1.0,true);
 		Vector3 x, y, z, origin;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x+4.1*y-2.7*z;
 		invoker.beam = Spawn("StarterBolt",origin);
 		invoker.beam.angle = angle;
@@ -691,8 +686,8 @@ Class PulseGun : UTWeapon
 	}
 	Default
 	{
-		Tag "Pulse Gun";
-		Inventory.PickupMessage "You got a Pulse Gun";
+		Tag "$T_PULSEGUN";
+		Inventory.PickupMessage "$I_PULSEGUN";
 		Weapon.UpSound "pulse/select";
 		Weapon.SlotNumber 5;
 		Weapon.SelectionOrder 5;

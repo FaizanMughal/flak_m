@@ -34,6 +34,7 @@ Class UTPlayer : DoomPlayer
 	const groundfriction = 8.;
 	const fluidfriction = 1.2;
 	const terminalvelocity = 2500.;
+	const slantnormal = 0.7;	// slope sliding will have to be handled eventually, but currently due to how much is hardcoded this is impossible
 
 	Default
 	{
@@ -50,8 +51,6 @@ Class UTPlayer : DoomPlayer
 	// Have to modify the give cheat to handle UT armor
 	override void CheatGive( String name, int amount )
 	{
-		if ( PlayerNumber() != consoleplayer )
-			A_Log(String.Format("%s is a cheater: give %s\n",player.GetUserName(),name));
 		if ( !player.mo || (player.health <= 0) ) return;
 		int giveall = ALL_NO;
 		if ( name ~== "all" ) giveall = ALL_YES;
@@ -162,7 +161,10 @@ Class UTPlayer : DoomPlayer
 			{
 				let type = (class<Inventory>)(AllActorClasses[i]);
 				if ( !type ) continue;
-				let def = GetDefaultByType (type);
+				let def = GetDefaultByType(type);
+				if ( !(self is "UTPlayerHereticCompat")
+					&& ((type is "UTActivatable") || (type is "UTActivatableHealth")) )
+					continue;	// don't give these outside of Heretic/Hexen
 				if ( def.Icon.isValid() && (def.MaxAmount > 1) &&
 					!(type is "PuzzleItem") && !(type is "Powerup") && !(type is "Ammo") &&	!(type is "Armor"))
 				{
@@ -394,7 +396,7 @@ Class UTPlayer : DoomPlayer
 			Vector3 dir = (0,0,0);
 			if ( vel.length() > double.epsilon ) dir = vel.unit();
 			Vector3 x, y;
-			[x, y] = dt_Matrix4.GetAxes(pitch,angle,0);
+			[x, y] = dt_CoordUtil.GetAxes(pitch,angle,0);
 			acceleration3 = x*player.cmd.forwardmove+y*player.cmd.sidemove;
 			if ( player.cmd.buttons&BT_JUMP ) acceleration3.z = 0x500;
 			else if ( player.cmd.buttons&BT_CROUCH ) acceleration3.z = -0x500;
@@ -423,7 +425,7 @@ Class UTPlayer : DoomPlayer
 			if ( vel.length() > double.epsilon ) dir = vel.unit();
 			double doomfriction = clamp(GetFriction()/ORIG_FRICTION,0.0,1.0);
 			Vector3 x, y;
-			[x, y] = dt_Matrix4.GetAxes(pitch,angle,0);
+			[x, y] = dt_CoordUtil.GetAxes(pitch,angle,0);
 			acceleration3 = x*player.cmd.forwardmove+y*player.cmd.sidemove;
 			if ( player.cmd.buttons&BT_JUMP ) acceleration3.z = 0x500;
 			else if ( player.cmd.buttons&BT_CROUCH ) acceleration3.z = -0x500;
@@ -590,7 +592,7 @@ Class UTPlayerTMale1 : UTPlayer
 	Default
 	{
 		Player.SoundClass "tmale1";
-		Player.DisplayName "M Commando";
+		Player.DisplayName "$N_TMALE1";
 		Player.Portrait "Blake";
 		-NOMENU;
 	}
@@ -600,7 +602,7 @@ Class UTPlayerTMale2 : UTPlayer
 	Default
 	{
 		Player.SoundClass "tmale2";
-		Player.DisplayName "M Soldier";
+		Player.DisplayName "$N_TMALE2";
 		Player.Portrait "Brock";
 		-NOMENU;
 	}
@@ -610,7 +612,7 @@ Class UTPlayerTFemale1 : UTPlayer
 	Default
 	{
 		Player.SoundClass "tfemale";
-		Player.DisplayName "F Commando";
+		Player.DisplayName "$N_TFEMALE1";
 		Player.Portrait "Ivana";
 		UTPlayer.DollType DOLL_Female;
 		-NOMENU;
@@ -621,7 +623,7 @@ Class UTPlayerTFemale2 : UTPlayer
 	Default
 	{
 		Player.SoundClass "tfemale";
-		Player.DisplayName "F Soldier";
+		Player.DisplayName "$N_TFEMALE2";
 		Player.Portrait "Lauren";
 		UTPlayer.DollType DOLL_Female;
 		-NOMENU;
@@ -633,7 +635,7 @@ Class UTPlayerTBoss : UTPlayer
 	Default
 	{
 		Player.SoundClass "tboss";
-		Player.DisplayName "Boss";
+		Player.DisplayName "$N_TBOSS";
 		Player.Portrait "Xan";
 		UTPlayer.DollType DOLL_Boss;
 		// should have NOBLOOD, but Xan did bleed in vanilla UT so...
@@ -784,7 +786,7 @@ Class UTWeapon : Weapon
 		Vector2 hofs = RotateVector((dropper.radius,0),dropper.angle);
 		SetOrigin(dropper.Vec3Offset(hofs.x,hofs.y,dropper.height*0.5),false);
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(dropper.pitch,dropper.angle,dropper.roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(dropper.pitch,dropper.angle,dropper.roll);
 		vel = x*12.0;
 		vel.z += 4.0;
 		angle = dropper.angle;
@@ -955,11 +957,11 @@ Class UTViewSpark : UTSpark
 			return;
 		}
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		ofs += vvel;
 		vvel.z -= 0.1;
 		scale *= 0.8;
@@ -1001,7 +1003,7 @@ Class UTChip : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		if ( InStateSequence(CurState,ResolveState("Death")) )
 		{
 			deadtimer++;
@@ -1064,7 +1066,7 @@ Class UTBubble : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		vel *= 0.96;
 		vel.z += 0.05;
 		if ( (waterlevel <= 0) || !Random[Puff](0,100) ) Destroy();
@@ -1112,7 +1114,7 @@ Class UTSmoke : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		vel *= 0.96;
 		vel.z += 0.01;
 		A_FadeOut(1/32.);
@@ -1200,11 +1202,11 @@ Class UTViewSmoke : UTSmoke
 			return;
 		}
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
-		if ( level.frozen || globalfreeze ) return;
+		if ( isFrozen() ) return;
 		ofs += vvel;
 		vvel *= 0.96;
 		vvel.z += 0.01;
@@ -1227,9 +1229,9 @@ Class UTRedSkull : RedSkull
 {
 	Default
 	{
-		Tag "Red Skull";
+		Tag "$T_REDSKULL";
 		Species "RedSkull";
-		Inventory.PickupMessage "You got the Red Skull.";
+		Inventory.PickupMessage "$I_REDSKULL";
 	}
 	States
 	{
@@ -1243,9 +1245,9 @@ Class UTGoldSkull : YellowSkull
 {
 	Default
 	{
-		Tag "Gold Skull";
+		Tag "$T_GOLDSKULL";
 		Species "YellowSkull";
-		Inventory.PickupMessage "You got the Gold Skull.";
+		Inventory.PickupMessage "$I_GOLDSKULL";
 	}
 	States
 	{
@@ -1259,9 +1261,9 @@ Class UTBlueSkull : BlueSkull
 {
 	Default
 	{
-		Tag "Blue Skull";
+		Tag "$T_BLUESKULL";
 		Species "BlueSkull";
-		Inventory.PickupMessage "You got the Blue Skull.";
+		Inventory.PickupMessage "$I_BLUESKULL";
 	}
 	States
 	{
@@ -1275,9 +1277,9 @@ Class UTRedKey : RedCard
 {
 	Default
 	{
-		Tag "Red Key";
+		Tag "%T_REDKEY";
 		Species "RedCard";
-		Inventory.PickupMessage "You got the Red Key.";
+		Inventory.PickupMessage "$I_REDKEY";
 	}
 	States
 	{
@@ -1291,9 +1293,9 @@ Class UTGoldKey : YellowCard
 {
 	Default
 	{
-		Tag "Gold Key";
+		Tag "$T_GOLDKEY";
 		Species "YellowCard";
-		Inventory.PickupMessage "You got the Gold Key.";
+		Inventory.PickupMessage "$I_GOLDKEY";
 	}
 	States
 	{
@@ -1307,9 +1309,9 @@ Class UTBlueKey : BlueCard
 {
 	Default
 	{
-		Tag "Blue Key";
+		Tag "$T_BLUEKEY";
 		Species "BlueCard";
-		Inventory.PickupMessage "You got the Blue Key.";
+		Inventory.PickupMessage "$I_BLUEKEY";
 	}
 	States
 	{
@@ -1436,6 +1438,7 @@ Class GenericFlash : HUDMessageBase
 	int duration;
 	double alpha;
 	Actor cam;
+	transient CVar str;
 	GenericFlash Setup( Actor camera, Color c, int d )
 	{
 		alpha = 1.0;
@@ -1453,7 +1456,8 @@ Class GenericFlash : HUDMessageBase
 	{
 		if ( automapactive || (visibility != BaseStatusBar.HUDMSGLayer_UnderHUD) ) return;
 		if ( cam && (players[consoleplayer].camera != cam) ) return;
-		Screen.Dim(col,(col.a/255.)*alpha,0,0,Screen.GetWidth(),Screen.GetHeight());
+		if ( !str ) str = CVar.GetCVar('flak_flashstrength',players[consoleplayer]);
+		Screen.Dim(col,(col.a/255.)*alpha*str.GetFloat(),0,0,Screen.GetWidth(),Screen.GetHeight());
 	}
 }
 
@@ -1547,8 +1551,13 @@ Class UTMainHandler : EventHandler
 			else e.Replacement = 'SniperRifle';
 		}
 		else if ( e.Replacee == 'BFG9000' ) e.Replacement = 'WarheadLauncher';
-		else if ( e.Replacee == 'Clip' ) e.Replacement = 'EClip';
-		else if ( e.Replacee == 'ClipBox' )
+		else if ( e.Replacee == 'Mace' )
+		{
+			if ( (!deathmatch || flak_dmsshock) && !Random[Replacements](0,6) ) e.Replacement = 'EnhancedShockRifle';
+			else e.Replacement = 'WarheadLauncher';
+		}
+		else if ( (e.Replacee == 'Clip') || (e.Replacee == 'GoldWandAmmo') || (e.Replacee == 'GoldWandHefty') ) e.Replacement = 'EClip';
+		else if ( (e.Replacee == 'ClipBox') )
 		{
 			if ( !Random[Replacements](0,2) ) e.Replacement = 'EClip';
 			else if ( Random[Replacements](0,2) ) e.Replacement = 'PulseAmmo';
@@ -1595,21 +1604,40 @@ Class UTMainHandler : EventHandler
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'MiniAmmo';
 			else e.Replacement = 'RifleAmmo';
 		}
-		else if ( e.Replacee == 'InvulnerabilitySphere' ) e.Replacement = 'EnhancedShockRifle';
+		else if ( e.Replacee == 'InvulnerabilitySphere' ) e.Replacement = (!deathmatch||flak_dmsshock)?'EnhancedShockRifle':'UDamage';
 		else if ( e.Replacee == 'Berserk' ) e.Replacement = 'UDamage';
+		else if ( (e.Replacee == 'ArtiTomeOfPower') || (e.Replacee == 'ArtiEgg') ) e.Replacement = 'ActUDamage';
 		else if ( e.Replacee == 'Soulsphere' ) e.Replacement = 'UTHealthPack';
+		else if ( e.Replacee == 'ArtiSuperHealth' ) e.Replacement = 'ActHealthPack';
 		else if ( e.Replacee == 'Megasphere' ) e.Replacement = 'UTShieldBelt';
-		else if ( e.Replacee == 'Allmap' ) e.Replacement = 'UTMapRevealer';
+		else if ( e.Replacee == 'ArtiInvulnerability' ) e.Replacement = 'ActShieldBelt';
+		else if ( (e.Replacee == 'Allmap') || (e.Replacee == 'SuperMap') ) e.Replacement = 'UTMapRevealer';
 		else if ( e.Replacee == 'BlurSphere' ) e.Replacement = 'UTInvisibility';
+		else if ( e.Replacee == 'ArtiInvisibility' ) e.Replacement = 'ActInvisibility';
 		else if ( e.Replacee == 'Infrared' ) e.Replacement = 'Searchlight';
+		else if ( e.Replacee == 'ArtiTorch' ) e.Replacement = 'ActSearchlight';
 		else if ( e.Replacee == 'RadSuit' ) e.Replacement = 'UTJumpBoots';
-		else if ( e.Replacee == 'Backpack' ) e.Replacement = 'UTBackpack';
-		else if ( e.Replacee == 'ArmorBonus' ) e.Replacement = 'UTArmorBonus';
-		else if ( e.Replacee == 'HealthBonus' ) e.Replacement = 'UTHealthBonus';
-		else if ( e.Replacee == 'GreenArmor' ) e.Replacement = 'UTThighPads';
-		else if ( e.Replacee == 'BlueArmor' ) e.Replacement = 'UTBodyArmor';
+		else if ( e.Replacee == 'ArtiFly' ) e.Replacement = 'ActJumpBoots';
+		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') ) e.Replacement = 'UTBackpack';
+		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') ) e.Replacement = 'UTArmorBonus';
+		else if ( (e.Replacee == 'HealthBonus') || (e.Replacee == 'CrystalVial') ) e.Replacement = 'UTHealthBonus';
+		else if ( (e.Replacee == 'GreenArmor') || (e.Replacee == 'Silvershield') ) e.Replacement = 'UTThighPads';
+		else if ( (e.Replacee == 'BlueArmor') || (e.Replacee == 'EnchantedShield') ) e.Replacement = 'UTBodyArmor';
 		else if ( e.Replacee == 'Stimpack' ) e.Replacement = 'UTMedBox';
 		else if ( e.Replacee == 'Medikit' ) e.Replacement = 'UTHealthBox';
+		else if ( e.Replacee == 'ArtiHealth' )
+		{
+			if ( !Random[Replacements](0,3) ) e.Replacement = 'ActHealthBox';
+			else e.Replacement = 'ActMedBox';
+		}
+		else if ( e.Replacee == 'ArtiTeleport' )
+		{
+			// I have no idea what to replace this with, so just have some random stuff
+			if ( Random[Replacements](0,1) ) e.Replacement = 'UTBackpack';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'ActShieldBelt';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'ActHealthPack';
+			else e.Replacement = 'ActUDamage';
+		}
 		else if ( e.Replacee == 'RedCard' ) e.Replacement = 'UTRedKey';
 		else if ( e.Replacee == 'BlueCard' ) e.Replacement = 'UTBlueKey';
 		else if ( e.Replacee == 'YellowCard' ) e.Replacement = 'UTGoldKey';
@@ -1645,16 +1673,16 @@ Class UTMainHandler : EventHandler
 		// just replace the -noflat- with a better scaled version and change the sky
 		if ( !flak_doomtest )
 		{
-			if ( level.GetChecksum() ~== "FBC3B6622A8B74AE06DE01E70007AC33" )
+			if ( (level.GetChecksum() ~== "959A613006CC3AA912C4A22908B7566A") || (level.GetChecksum() ~== "75319AE5D2DBA214C5D394BF69DF32F4") )
 			{
-				TexMan.ReplaceTextures("-noflat-","DefTex",0);
+				Level.ReplaceTextures("-noflat-","DefTex",0);
 				TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
 				level.ChangeSky(skytx,skytx);
 			}
 			return;
 		}
 		// prettify Kinsie's test map for a more Unreal feel
-		if ( level.GetChecksum() ~== "FBC3B6622A8B74AE06DE01E70007AC33" )
+		if ( level.GetChecksum() ~== "959A613006CC3AA912C4A22908B7566A" )
 		{
 			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
 			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
@@ -1674,13 +1702,13 @@ Class UTMainHandler : EventHandler
 					level.sectors[i].SetTexture(1,skyflatnum);
 				if ( level.sectors[i].GetTexture(0) == deftex )
 				{
-					level.sectors[i].SetTexture(0,(i==47)?baseceil:baseflor);
+					level.sectors[i].SetTexture(0,((i==47)||((i>=256)&&(i<=260)))?baseceil:baseflor);
 					level.sectors[i].SetXScale(0,2.);
 					level.sectors[i].SetYScale(0,2.);
 				}
 				if ( level.sectors[i].GetTexture(1) == deftex )
 				{
-					level.sectors[i].SetTexture(1,(i==47)?baseflor:baseceil);
+					level.sectors[i].SetTexture(1,((i==47)||((i>=256)&&(i<=260)))?baseflor:baseceil);
 					level.sectors[i].SetXScale(1,2.);
 					level.sectors[i].SetYScale(1,2.);
 				}
@@ -1751,20 +1779,130 @@ Class UTMainHandler : EventHandler
 			AddAmbient((3584,736,64),"testamb/slime",0.4,2.4);
 			AddAmbient((3584,512,64),"testamb/lava",0.8,2.4);
 		}
+		else if ( level.GetChecksum() ~== "75319AE5D2DBA214C5D394BF69DF32F4" )
+		{
+			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
+			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
+			TextureID baseflor = TexMan.CheckForTexture("rClfFlr0",TexMan.Type_Any);
+			TextureID baseceil = TexMan.CheckForTexture("rClfBas0",TexMan.Type_Any);
+			TextureID basewall = TexMan.CheckForTexture("uAlnWl2b",TexMan.Type_Any);
+			TextureID xbasewall = TexMan.CheckForTexture("xAlnWl2b",TexMan.Type_Any);
+			TextureID glasstex = TexMan.CheckForTexture("Glassg",TexMan.Type_Any);
+			level.ChangeSky(skytx,skytx);
+			for ( int i=0; i<level.sectors.size(); i++ )
+			{
+				level.sectors[i].lightlevel = 0;
+				level.sectors[i].SetPlaneLight(0,0);
+				level.sectors[i].SetPlaneLight(1,0);
+				// open some ceilings
+				if ( level.sectors[i].ceilingplane.ZAtPoint(level.sectors[i].centerspot) == 1280 )
+					level.sectors[i].SetTexture(1,skyflatnum);
+				if ( level.sectors[i].GetTexture(0) == deftex )
+				{
+					level.sectors[i].SetTexture(0,((i==47)||((i>=144)&&(i<=148)))?baseceil:baseflor);
+					level.sectors[i].SetXScale(0,2.);
+					level.sectors[i].SetYScale(0,2.);
+				}
+				if ( level.sectors[i].GetTexture(1) == deftex )
+				{
+					level.sectors[i].SetTexture(1,((i==47)||((i>=144)&&(i<=148)))?baseflor:baseceil);
+					level.sectors[i].SetXScale(1,2.);
+					level.sectors[i].SetYScale(1,2.);
+				}
+			}
+			for ( int i=0; i<level.sides.size(); i++ )
+			{
+				level.sides[i].light = 0;
+				for ( int j=0; j<3; j++ )
+				{
+					if ( level.sides[i].GetTexture(j) != deftex ) continue;
+					if ( (i==295) || (i==296) || (i==309) || (i==310) )
+					{
+						level.sides[i].SetTexture(j,xbasewall);
+						level.sides[i].SetTextureYOffset(j,-2304);
+					}
+					else level.sides[i].SetTexture(j,basewall);
+					level.sides[i].SetTextureXScale(j,2.);
+					level.sides[i].SetTextureYScale(j,2.);
+				}
+			}
+			// fixup
+			for ( int i=104; i<134; i++ )
+			{
+				if ( (i==107) || (i==110) || (i==116)
+					|| (i==119) || (i==121) || (i==127)
+					|| (i==132) ) continue;
+				level.sectors[i].SetSpecialColor(0,"00 00 00");
+			}
+			level.sectors[53].SetFade("00 00 20");
+			level.sides[216].SetTexture(1,glasstex);
+			level.lines[125].alpha = 0.5;
+			AddLight((0,-288,128),"E0 E0 FF",256);
+			AddLight((-2560,1024,1280),"E0 E0 FF",1024);
+			AddLight((0,1024,1280),"E0 E0 FF",1024);
+			AddLight((2560,1024,1280),"E0 E0 FF",1024);
+			AddLight((-384,-160,64),"FF FF FF",128);
+			AddLight((-384,-288,64),"FF FF FF",128);
+			AddLight((-384,-416,64),"FF FF FF",128);
+			AddLight((0,2816,96),"FF FF FF",512);
+			AddLight((2904,1344,128),"80 80 FF",256);
+			AddLight((3408,1344,128),"80 80 FF",256);
+			AddLight((1568,1760,64),"20 20 80",128);
+			AddLight((1824,1760,64),"A0 A0 30",128);
+			AddLight((2080,1760,64),"80 80 20",128);
+			AddLight((2336,1760,64),"20 20 80",128);
+			AddLight((2592,1760,64),"FF 80 20",128);
+			AddLight((2944,960,64),"A0 A0 30",128);
+			AddLight((2944,736,64),"A0 A0 30",128);
+			AddLight((3264,960,64),"A0 A0 30",128);
+			AddLight((3264,736,64),"A0 A0 30",128);
+			AddLight((3264,512,64),"A0 A0 30",128);
+			AddLight((3264,288,64),"FF 80 20",128);
+			AddLight((3584,960,64),"A0 A0 30",128);
+			AddLight((3584,736,64),"80 80 20",128);
+			AddLight((3584,512,64),"FF 80 20",128);
+			AddLight((3584,288,64),"A0 A0 30",128);
+			AddAmbient((0,-288,192),"testamb/wind1",0.5,1.6);
+			AddAmbient((-2560,1024,768),"testamb/wind1",0.4,0.8);
+			AddAmbient((0,1024,768),"testamb/wind1",0.4,0.8);
+			AddAmbient((2560,1024,768),"testamb/wind1",0.4,0.8);
+			AddAmbient((768,1600,1280),"testamb/wind2",0.8,1.6);
+			AddAmbient((3174,1344,128),"testamb/water",0.4,1.6);
+			AddAmbient((1568,1760,64),"testamb/water",0.4,2.4);
+			AddAmbient((2336,1760,64),"testamb/water",0.4,2.4);
+			AddAmbient((2592,1760,64),"testamb/lava",0.8,2.4);
+			AddAmbient((3584,512,64),"testamb/lava",0.8,2.4);
+			AddAmbient((3264,288,64),"testamb/lava",0.8,2.4);
+		}
 	}
 
 	override void WorldThingSpawned( WorldEvent e )
 	{
 		if ( flak_nobosstelefrag && e.Thing.bBOSS ) e.Thing.bNOTELEFRAG = true;
+		if ( deathmatch && flak_instagib )
+		{
+			if ( (e.Thing is 'EnhancedShockRifle') || (e.Thing is 'EnhancedShockAmmo') ) return;
+			if ( e.Thing is 'Inventory' ) e.Thing.Destroy();
+		}
 	}
 
 	override void PlayerEntered( PlayerEvent e )
 	{
+		if ( deathmatch && flak_instagib )
+		{
+			players[e.playernumber].mo.GiveInventory("EnhancedShockRifle",1);
+			return;
+		}
 		if ( flak_translocator )
 			players[e.playernumber].mo.GiveInventory("Translocator",1);
 	}
 	override void PlayerRespawned( PlayerEvent e )
 	{
+		if ( deathmatch && flak_instagib )
+		{
+			players[e.playernumber].mo.GiveInventory("EnhancedShockRifle",1);
+			return;
+		}
 		if ( flak_translocator )
 			players[e.playernumber].mo.GiveInventory("Translocator",1);
 	}
@@ -1844,6 +1982,7 @@ Class UTMainHandler : EventHandler
 		qf.tic = gametic;
 		qf.cam = camera;
 		let hnd = UTMainHandler(EventHandler.Find("UTMainHandler"));
+		if ( !hnd ) return;	// not supposed to happen
 		hnd.flashes.push(qf);
 	}
 
@@ -1857,7 +1996,11 @@ Class UTMainHandler : EventHandler
 			if ( !a || !a.bSHOOTABLE || !Source.CheckSight(a,0xf) || (a == Source) || (Source.Distance3D(a) > ExplosionRadius) )
 				continue;
 			Vector3 midpoint = a.Vec3Offset(0,0,a.height*0.5);
-			a.vel += Level.Vec3Diff(Source.pos,midpoint).unit()*(MomentumTransfer/(Thinker.TICRATE*a.mass));
+			Vector3 dir = Level.Vec3Diff(Source.pos,midpoint);
+			double dist = max(1,dir.length());
+			double damagescale = 1-max(0,(dist-a.radius)/ExplosionRadius);
+			dir = dir/dist;
+			a.vel += dir*damagescale*(MomentumTransfer/(Thinker.TICRATE*a.mass));
 		}
 	}
 

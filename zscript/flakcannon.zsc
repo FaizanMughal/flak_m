@@ -2,8 +2,8 @@ Class FlakAmmo : Ammo
 {
 	Default
 	{
-		Tag "Flak Shells";
-		Inventory.PickupMessage "You picked up %d Flak Shells.";
+		Tag "$T_FLAKAMMO";
+		Inventory.PickupMessage "";
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
 		Ammo.BackpackAmount 20;
@@ -12,7 +12,7 @@ Class FlakAmmo : Ammo
 	}
 	override String PickupMessage()
 	{
-		return String.Format(pickupmsg,Amount);
+		return String.Format("%s%d%s",StringTable.Localize("$I_FLAKAMMOL"),Amount,StringTable.Localize("$I_FLAKAMMOR"));
 	}
 	States
 	{
@@ -26,8 +26,8 @@ Class FlakAmmo2 : FlakAmmo
 {
 	Default
 	{
-		Tag "Flak Shell";
-		Inventory.PickupMessage "You picked up a Flak Shell.";
+		Tag "$T_FLAKAMMO2";
+		Inventory.PickupMessage "$I_FLAKAMMO2";
 		Inventory.Amount 1;
 		Ammo.DropAmount 1;
 		+INVENTORY.IGNORESKILL;
@@ -55,7 +55,8 @@ Class ChunkLight : DynamicLight
 			Destroy();
 			return;
 		}
-		if ( globalfreeze || level.frozen ) return;
+		SetOrigin(target.pos,true);
+		if ( isFrozen() ) return;
 		args[LIGHT_RED] = int(255*(10-target.frame)*0.1);
 		args[LIGHT_GREEN] = int(224*(10-target.frame)*0.1);
 		args[LIGHT_BLUE] = int(128*(10-target.frame)*0.1);
@@ -84,7 +85,7 @@ Class ChunkTrail : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( InStateSequence(CurState,FindState("Death")) ) return;
 		if ( !target )
 		{
@@ -161,11 +162,11 @@ Class FlakChunk : Actor
 	Vector3 oldvel;
 	Default
 	{
-		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
+		Obituary "$O_FLAKCANNON";
 		Radius 2;
 		Height 2;
 		Speed 32;
-		DamageFunction Random[Flak](15,20);
+		DamageFunction 16;
 		DamageType 'Shredded';
 		BounceType "Hexen";
 		BounceFactor 1.0;
@@ -196,7 +197,7 @@ Class FlakChunk : Actor
 	{
 		oldvel = vel;
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		if ( waterlevel > 0 )
 		{
 			vel.xy *= 0.98;
@@ -373,7 +374,7 @@ Class SlugSmoke : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		lifetime += lifespeed;
 		let s = Spawn("UTSmoke",pos);
 		s.vel = (FRandom[Flak](-0.5,0.5),FRandom[Flak](-0.5,0.5),FRandom[Flak](-0.5,0.5));
@@ -407,7 +408,7 @@ Class SlugLight : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( globalfreeze || level.frozen ) return;
+		if ( isFrozen() ) return;
 		args[LIGHT_RED] = int(255*lifetime);
 		args[LIGHT_GREEN] = int(224*lifetime);
 		args[LIGHT_BLUE] = int(128*lifetime);
@@ -420,7 +421,7 @@ Class FlakSlug : Actor
 {
 	Default
 	{
-		Obituary "%o was ripped to shreds by %k's Flak Cannon.";
+		Obituary "$O_FLAKCANNON";
 		DamageType 'FlakDeath';
 		Radius 2;
 		Height 2;
@@ -452,7 +453,7 @@ Class FlakSlug : Actor
 		A_NoGravity();
 		A_SetScale(1.2);
 		UTMainHandler.DoBlast(self,120,75000);
-		A_Explode(Random[Flak](70,80),120);
+		A_Explode(70,120);
 		A_QuakeEx(4,4,4,8,0,170,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollIntensity:0.2);
 		A_PlaySound("flak/explode",CHAN_VOICE);
 		A_AlertMonsters();
@@ -460,7 +461,7 @@ Class FlakSlug : Actor
 		Spawn("SlugLight",pos);
 		Vector3 x, y, z;
 		double a, s;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Actor p;
 		Vector3 spawnofs;
 		if ( BlockingMobj ) spawnofs = level.Vec3Diff(pos,BlockingMobj.Vec3Offset(0,0,BlockingMobj.height/2)).unit()*8;
@@ -564,12 +565,12 @@ Class FlakCannon : UTWeapon
 		A_QuakeEx(1,1,1,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
 		Vector3 x, y, z;
 		double a, s;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+4.0*y-3.0*z;
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);
-		[x, y, z] = dt_Matrix4.GetAxes(BulletSlope(),angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Vector3 offsets[8];	// vanilla adds these to each chunk
 		offsets[0] = (0,0,0);
 		offsets[1] = -z;
@@ -623,7 +624,7 @@ Class FlakCannon : UTWeapon
 		A_QuakeEx(2,2,2,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		double a, s;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-3.0*z;
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
@@ -654,8 +655,8 @@ Class FlakCannon : UTWeapon
 
 	Default
 	{
-		Tag "Flak Cannon";
-		Inventory.PickupMessage "You got the Flak Cannon.";
+		Tag "$T_FLAKCANNON";
+		Inventory.PickupMessage "$I_FLAKCANNON";
 		Weapon.UpSound "flak/select";
 		Weapon.SlotNumber 8;
 		Weapon.SelectionOrder 2;

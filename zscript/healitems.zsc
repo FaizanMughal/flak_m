@@ -2,14 +2,14 @@ Class UTHealthPack : Health
 {
 	Default
 	{
-		Tag "Big Keg O' Health";
+		Tag "$T_SUPERHEALTH";
 		+COUNTITEM;
 		+INVENTORY.AUTOACTIVATE;
 		+INVENTORY.ALWAYSPICKUP;
 		+INVENTORY.FANCYPICKUPSOUND;
 		Inventory.Amount 100;
 		Inventory.MaxAmount 200;
-		Inventory.PickupMessage "You picked up the Big Keg O' Health.";
+		Inventory.PickupMessage "$I_SUPERHEALTH";
 		Inventory.PickupSound "misc/ut_keg";
 		Inventory.RespawnTics 3500;
 	}
@@ -25,9 +25,9 @@ Class UTHealthBox : Health
 {
 	Default
 	{
-		Tag "Health Box";
+		Tag "$T_HEALTHBOX";
 		Inventory.Amount 50;
-		Inventory.PickupMessage "You picked up a Health Box.";
+		Inventory.PickupMessage "$I_HEALTHBOX";
 		Inventory.PickupSound "misc/ut_heal";
 	}
 	States
@@ -42,9 +42,9 @@ Class UTMedBox : Health
 {
 	Default
 	{
-		Tag "Health Pack";
+		Tag "$T_MEDBOX";
 		Inventory.Amount 20;
-		Inventory.PickupMessage "You picked up a Health Pack.";
+		Inventory.PickupMessage "$I_MEDBOX";
 		Inventory.PickupSound "misc/ut_heal";
 		Inventory.RespawnTics 700;
 	}
@@ -60,12 +60,12 @@ Class UTHealthBonus : Health
 {
 	Default
 	{
-		Tag "Health Vial";
+		Tag "$T_VIAL";
 		+COUNTITEM;
 		+INVENTORY.ALWAYSPICKUP;
 		Inventory.Amount 5;
 		Inventory.MaxAmount 200;
-		Inventory.PickupMessage "You picked up a Health Vial.";
+		Inventory.PickupMessage "$I_VIAL";
 		Inventory.PickupSound "misc/ut_heal";
 		RenderStyle "Add";
 	}
