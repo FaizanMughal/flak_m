@@ -660,7 +660,7 @@ Class WarheadLauncher : UTWeapon
 		A_AlertMonsters();
 		A_QuakeEx(6,6,6,20,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		vel -= x*10;
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
 		Actor p = Spawn("WarShell",origin);
@@ -674,7 +674,7 @@ Class WarheadLauncher : UTWeapon
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		vel -= x*0.2;
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
 		int numpt = Random[Warhead](10,20);
@@ -698,7 +698,7 @@ Class WarheadLauncher : UTWeapon
 		A_AlertMonsters();
 		A_QuakeEx(6,6,6,20,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.2);
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		vel -= x*10;
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
 		Actor p = Spawn("GuidedWarShell",origin);

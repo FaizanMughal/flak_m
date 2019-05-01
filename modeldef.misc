@@ -58,6 +58,20 @@ Model "UTHealthPack"
 	FrameIndex HBOX A 0 0
 }
 
+Model "ActHealthPack"
+{
+	Path "models"
+	Model 0 "hbox_d.3d"
+	// indices start at 1 for this mesh
+	SurfaceSkin 0 1 "jhbox1.png"
+	SurfaceSkin 0 2 "fizzfull"
+	Scale 0.2 0.24 0.2
+	RollOffset -90
+	ZOffset 16
+
+	FrameIndex HBOX A 0 0
+}
+
 Model "UTHealthBox"
 {
 	Path "models"
@@ -72,7 +86,34 @@ Model "UTHealthBox"
 	FrameIndex HBOX B 0 0
 }
 
+Model "ActHealthBox"
+{
+	Path "models"
+	Model 0 "hboxbeta_d.3d"
+	// indices start at 1 for this mesh
+	SurfaceSkin 0 1 "jhboxbeta1.png"
+	SurfaceSkin 0 2 "fizzside"
+	SurfaceSkin 0 3 "fizzfull"
+	Scale 0.08 0.08 0.096
+	ZOffset 4
+
+	FrameIndex HBOX B 0 0
+}
+
 Model "UTMedBox"
+{
+	Path "models"
+	Model 0 "MedBox_d.3d"
+	// indices start at 1 for this mesh
+	SurfaceSkin 0 1 "JMedBox1.png"
+	SurfaceSkin 0 2 "fizzfull"
+	Scale 0.06 0.06 0.072
+	ZOffset 5
+
+	FrameIndex HBOX C 0 0
+}
+
+Model "ActMedBox"
 {
 	Path "models"
 	Model 0 "MedBox_d.3d"
@@ -147,7 +188,31 @@ Model "UTShieldBelt"
 	FrameIndex BELT A 0 0
 }
 
+Model "ActShieldBelt"
+{
+	Path "models"
+	Model 0 "ShieldBeltMeshM_d.3d"
+	Skin 0 "AUbelt1.png"
+	Scale 0.1 0.1 0.12
+	AngleOffset -90
+	ZOffset 4
+
+	FrameIndex BELT A 0 0
+}
+
 Model "UDamage"
+{
+	Path "models"
+	Model 0 "UDamage_d.3d"
+	Skin 0 "GoldSkin2.png"
+	Scale 0.16 0.16 0.192
+	ZOffset 24
+	ROTATING
+
+	FrameIndex UDAM A 0 0
+}
+
+Model "ActUDamage"
 {
 	Path "models"
 	Model 0 "UDamage_d.3d"
@@ -300,6 +365,18 @@ Model "UTInvisibilityX"
 	FrameIndex INVS A 0 0
 }
 
+Model "ActInvisibility"
+{
+	Path "models"
+	Model 0 "invis2M_d.3d"
+	// indices start at 1 for this mesh
+	SurfaceSkin 0 1 "jinvis.png"
+	Scale 0.1 0.1 0.12
+	ZOffset 9
+
+	FrameIndex INVS A 0 0
+}
+
 Model "UTMapRevealer"
 {
 	Path "models"
@@ -322,7 +399,30 @@ Model "UTJumpBoots"
 	FrameIndex JBUT A 0 0
 }
 
+Model "ActJumpBoots"
+{
+	Path "models"
+	Model 0 "jboot_d.3d"
+	Skin 0 "Jlboot2.png"
+	Scale 0.09 0.09 0.108
+	ZOffset 7
+
+	FrameIndex JBUT A 0 0
+}
+
 Model "Searchlight"
+{
+	Path "models"
+	Model 0 "BigFlash_d.3d"
+	Skin 0 "JBigFlash1.png"
+	Scale 0.07 0.07 0.084
+	AngleOffset -90
+	ZOffset 9
+
+	FrameIndex SLIT A 0 0
+}
+
+Model "ActSearchlight"
 {
 	Path "models"
 	Model 0 "BigFlash_d.3d"

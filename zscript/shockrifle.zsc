@@ -981,7 +981,7 @@ Class ViewShockSpark : ShockSpark
 			return;
 		}
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
@@ -1015,7 +1015,7 @@ Class ShockRifle : UTWeapon
 		A_AlertMonsters();
 		A_QuakeEx(2,2,2,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
 		Actor p = Spawn("ShockBeam",origin);
 		p.angle = angle;
@@ -1053,7 +1053,7 @@ Class ShockRifle : UTWeapon
 		A_AlertMonsters();
 		A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
 		Actor p = Spawn("ShockBall",origin);
 		p.angle = angle;
@@ -1198,7 +1198,7 @@ Class EnhancedShockRifle : UTWeapon
 		A_AlertMonsters();
 		A_QuakeEx(3,3,3,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.15);
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
 		Actor p = Spawn("SuperShockBeam",origin);
 		p.angle = angle;
@@ -1236,7 +1236,7 @@ Class EnhancedShockRifle : UTWeapon
 		A_AlertMonsters();
 		A_QuakeEx(3,3,3,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.15);
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
 		Actor p = Spawn("SuperShockBall",origin);
 		p.angle = angle;

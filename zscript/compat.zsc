@@ -47,12 +47,135 @@ Class UTHereticBlueKey : KeyBlue
 	}
 }
 
-// TODO Base class for items that can be activated from the inventory bar
+// Base class for items that can be activated from the inventory bar
 Class UTActivatable : Inventory
 {
+	Class<Inventory> GiveItem;
+
+	Property GiveItem: GiveItem;
+
+	override bool Use( bool pickup )
+	{
+		if ( !Owner ) return true;
+		let i = GetDefaultByType(GiveItem);
+		if ( Owner.GiveInventory(GiveItem,i.Amount) )
+		{
+			Owner.A_PlaySound(i.PickupSound,CHAN_ITEM);
+			return true;
+		}
+		return false;
+	}
+
 	Default
 	{
 		+INVENTORY.INVBAR;
+		Inventory.DefMaxAmount;
+		Inventory.PickupSound "misc/p_pkup";
+		Inventory.UseSound "";
+	}
+}
+
+Class ActUDamage : UTActivatable
+{
+	Default
+	{
+		Tag "$T_UDAMAGE";
+		Inventory.Icon "ItemUdmg";
+		Inventory.PickupMessage "$I_UDAMAGE";
+		+COUNTITEM;
+		+INVENTORY.BIGPOWERUP;
+		UTActivatable.GiveItem "UDamage";
+		Inventory.RespawnTics 4200;
+	}
+	States
+	{
+	Spawn:
+		UDAM A -1;
+		Stop;
+	}
+}
+
+Class ActShieldBelt : UTActivatable
+{
+	Default
+	{
+		Tag "$T_SHIELDBELT";
+		Inventory.Icon "ItemBelt";
+		Inventory.PickupMessage "$I_SHIELDBELT";
+		+COUNTITEM;
+		+INVENTORY.BIGPOWERUP;
+		UTActivatable.GiveItem "UTShieldBelt";
+		Inventory.RespawnTics 2100;
+	}
+	States
+	{
+	Spawn:
+		BELT A -1;
+		Stop;
+	}
+}
+
+Class ActInvisibility : UTActivatable
+{
+	Default
+	{
+		Tag "$T_INVISIBILITY";
+		Inventory.Icon "ItemInvs";
+		Inventory.PickupMessage "$I_INVISIBILITY";
+		+COUNTITEM;
+		+INVENTORY.BIGPOWERUP;
+		UTActivatable.GiveItem "UTInvisibility";
+		Inventory.RespawnTics 4200;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		tracer = Spawn("UTInvisibilityX",pos);
+		tracer.angle = angle;
+		tracer.target = self;
+	}
+	States
+	{
+	Spawn:
+		INVS A -1;
+		Stop;
+	}
+}
+
+Class ActJumpBoots : UTActivatable
+{
+	Default
+	{
+		Tag "$T_JUMPBOOTS";
+		Inventory.Icon "ItemBoot";
+		Inventory.PickupMessage "$I_JUMPBOOTS";
+		UTActivatable.GiveItem "UTJumpBoots";
+		Inventory.RespawnTics 1050;
+	}
+	States
+	{
+	Spawn:
+		JBUT A -1;
+		Stop;
+	}
+}
+
+Class ActSearchlight : UTActivatable
+{
+	Default
+	{
+		Tag "$T_SEARCHLIGHT";
+		Inventory.Icon "ItemLite";
+		Inventory.PickupMessage "$I_SEARCHLIGHT";
+		+COUNTITEM;
+		UTActivatable.GiveItem "Searchlight";
+		Inventory.RespawnTics 1050;
+	}
+	States
+	{
+	Spawn:
+		SLIT A -1;
+		Stop;
 	}
 }
 
@@ -61,6 +184,71 @@ Class UTActivatableHealth : HealthPickup
 {
 	Default
 	{
+		+INVENTORY.INVBAR;
+		Inventory.DefMaxAmount;
+		Inventory.PickupSound "misc/p_pkup";
+		Inventory.UseSound "misc/ut_heal";
+		HealthPickup.Autouse 1;
+	}
+}
+
+Class ActHealthPack : UTActivatableHealth
+{
+	Default
+	{
+		Tag "$T_SUPERHEALTH";
+		Inventory.Icon "ItemHbox";
+		Inventory.PickupMessage "$I_SUPERHEALTH";
+		+COUNTITEM;
+		Health 100;
+		Inventory.UseSound "misc/ut_keg";
+		Inventory.RespawnTics 3500;
+		HealthPickup.Autouse 2;
+	}
+	override bool Use( bool pickup )
+	{
+		return Owner.GiveBody(health,200);
+	}
+	States
+	{
+	Spawn:
+		HBOX A -1;
+		Stop;
+	}
+}
+
+Class ActHealthBox : UTActivatableHealth
+{
+	Default
+	{
+		Tag "$T_HEALTHBOX";
+		Inventory.Icon "ItemHbxb";
+		Inventory.PickupMessage "$I_HEALTHBOX";
+		Health 50;
+	}
+	States
+	{
+	Spawn:
+		HBOX B -1;
+		Stop;
+	}
+}
+
+Class ActMedBox : UTActivatableHealth
+{
+	Default
+	{
+		Tag "$T_MEDBOX";
+		Inventory.Icon "ItemMbox";
+		Inventory.PickupMessage "$I_MEDBOX";
+		Health 20;
+		Inventory.RespawnTics 700;
+	}
+	States
+	{
+	Spawn:
+		HBOX C -1;
+		Stop;
 	}
 }
 

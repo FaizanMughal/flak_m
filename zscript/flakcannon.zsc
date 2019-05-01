@@ -55,6 +55,7 @@ Class ChunkLight : DynamicLight
 			Destroy();
 			return;
 		}
+		SetOrigin(target.pos,true);
 		if ( isFrozen() ) return;
 		args[LIGHT_RED] = int(255*(10-target.frame)*0.1);
 		args[LIGHT_GREEN] = int(224*(10-target.frame)*0.1);
@@ -460,7 +461,7 @@ Class FlakSlug : Actor
 		Spawn("SlugLight",pos);
 		Vector3 x, y, z;
 		double a, s;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Actor p;
 		Vector3 spawnofs;
 		if ( BlockingMobj ) spawnofs = level.Vec3Diff(pos,BlockingMobj.Vec3Offset(0,0,BlockingMobj.height/2)).unit()*8;
@@ -564,12 +565,12 @@ Class FlakCannon : UTWeapon
 		A_QuakeEx(1,1,1,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
 		Vector3 x, y, z;
 		double a, s;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+4.0*y-3.0*z;
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);
-		[x, y, z] = dt_Matrix4.GetAxes(BulletSlope(),angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Vector3 offsets[8];	// vanilla adds these to each chunk
 		offsets[0] = (0,0,0);
 		offsets[1] = -z;
@@ -623,7 +624,7 @@ Class FlakCannon : UTWeapon
 		A_QuakeEx(2,2,2,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		double a, s;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-3.0*z;
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);

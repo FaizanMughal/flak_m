@@ -49,6 +49,8 @@ This mod requires GZDoom 4.0.0 or later.
    toggled)
  - UT-like weapon dropping style
  - UT player classes (sound only, no models yet)
+ - Heretic compatibility
+ - Spanish localization
 
 ## In progress
 
@@ -56,8 +58,12 @@ This mod requires GZDoom 4.0.0 or later.
  - Add some more effects
    - Lava/Slime footstep sounds?
  - UT gore system (toggleable)
- - Heretic compatibility
- - Localization in all languages supported by the original game
+ - French localization
+ - Italian localization
+
+## Ideas
+
+ - Chainsaw balancing (maybe give it ammo?)
 
 ## Future plans
 
@@ -74,6 +80,7 @@ This mod requires GZDoom 4.0.0 or later.
  - Port some of my UT weapon mods (and maybe also some of my personal faves by
    others, such as Psi Weapon Dreams)
  - Hexen compatibility ???
+ - Relics?
 
 ## Known bugs
 
