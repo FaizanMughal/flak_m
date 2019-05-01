@@ -193,6 +193,7 @@ udamage/fire1	ampfire
 udamage/fire2	ampfire2
 udamage/drain	ampout
 trans/pickup	voicesnd
+lite/pickup	fshlite1
 misc/gibbed1	gib1
 misc/gibbed2	gib2
 misc/gibbed3	gib3

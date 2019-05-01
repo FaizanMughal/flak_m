@@ -97,7 +97,7 @@ Class SniperRifle : UTWeapon
 		let l = Spawn("SniperLight",pos);
 		l.target = self;
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x;
 		if ( !zoomed ) origin = origin+y*4.0-z*2.0;
 		FLineTraceData d;

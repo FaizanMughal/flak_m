@@ -34,6 +34,7 @@ Class UTPlayer : DoomPlayer
 	const groundfriction = 8.;
 	const fluidfriction = 1.2;
 	const terminalvelocity = 2500.;
+	const slantnormal = 0.7;	// slope sliding will have to be handled eventually, but currently due to how much is hardcoded this is impossible
 
 	Default
 	{
@@ -395,7 +396,7 @@ Class UTPlayer : DoomPlayer
 			Vector3 dir = (0,0,0);
 			if ( vel.length() > double.epsilon ) dir = vel.unit();
 			Vector3 x, y;
-			[x, y] = dt_Matrix4.GetAxes(pitch,angle,0);
+			[x, y] = dt_CoordUtil.GetAxes(pitch,angle,0);
 			acceleration3 = x*player.cmd.forwardmove+y*player.cmd.sidemove;
 			if ( player.cmd.buttons&BT_JUMP ) acceleration3.z = 0x500;
 			else if ( player.cmd.buttons&BT_CROUCH ) acceleration3.z = -0x500;
@@ -424,7 +425,7 @@ Class UTPlayer : DoomPlayer
 			if ( vel.length() > double.epsilon ) dir = vel.unit();
 			double doomfriction = clamp(GetFriction()/ORIG_FRICTION,0.0,1.0);
 			Vector3 x, y;
-			[x, y] = dt_Matrix4.GetAxes(pitch,angle,0);
+			[x, y] = dt_CoordUtil.GetAxes(pitch,angle,0);
 			acceleration3 = x*player.cmd.forwardmove+y*player.cmd.sidemove;
 			if ( player.cmd.buttons&BT_JUMP ) acceleration3.z = 0x500;
 			else if ( player.cmd.buttons&BT_CROUCH ) acceleration3.z = -0x500;
@@ -785,7 +786,7 @@ Class UTWeapon : Weapon
 		Vector2 hofs = RotateVector((dropper.radius,0),dropper.angle);
 		SetOrigin(dropper.Vec3Offset(hofs.x,hofs.y,dropper.height*0.5),false);
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(dropper.pitch,dropper.angle,dropper.roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(dropper.pitch,dropper.angle,dropper.roll);
 		vel = x*12.0;
 		vel.z += 4.0;
 		angle = dropper.angle;
@@ -956,7 +957,7 @@ Class UTViewSpark : UTSpark
 			return;
 		}
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
@@ -1201,7 +1202,7 @@ Class UTViewSmoke : UTSmoke
 			return;
 		}
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(target.pitch,target.angle,target.roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
 		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
 		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
 		bInvisible = (players[consoleplayer].camera != target);
@@ -1609,13 +1610,19 @@ Class UTMainHandler : EventHandler
 			else e.Replacement = 'RifleAmmo';
 		}
 		else if ( e.Replacee == 'InvulnerabilitySphere' ) e.Replacement = (!deathmatch||flak_dmsshock)?'EnhancedShockRifle':'UDamage';
-		else if ( (e.Replacee == 'Berserk') || (e.Replacee == 'ArtiTomeOfPower') || (e.Replacee == 'ArtiEgg') ) e.Replacement = 'UDamage';
-		else if ( (e.Replacee == 'Soulsphere') || (e.Replacee == 'ArtiSuperHealth') ) e.Replacement = 'UTHealthPack';
-		else if ( (e.Replacee == 'Megasphere') || (e.Replacee == 'ArtiInvulnerability') ) e.Replacement = 'UTShieldBelt';
+		else if ( e.Replacee == 'Berserk' ) e.Replacement = 'UDamage';
+		else if ( (e.Replacee == 'ArtiTomeOfPower') || (e.Replacee == 'ArtiEgg') ) e.Replacement = 'ActUDamage';
+		else if ( e.Replacee == 'Soulsphere' ) e.Replacement = 'UTHealthPack';
+		else if ( e.Replacee == 'ArtiSuperHealth' ) e.Replacement = 'ActHealthPack';
+		else if ( e.Replacee == 'Megasphere' ) e.Replacement = 'UTShieldBelt';
+		else if ( e.Replacee == 'ArtiInvulnerability' ) e.Replacement = 'ActShieldBelt';
 		else if ( (e.Replacee == 'Allmap') || (e.Replacee == 'SuperMap') ) e.Replacement = 'UTMapRevealer';
-		else if ( (e.Replacee == 'BlurSphere') || (e.Replacee == 'ArtiInvisibility') ) e.Replacement = 'UTInvisibility';
-		else if ( (e.Replacee == 'Infrared') || (e.Replacee == 'ArtiTorch') ) e.Replacement = 'Searchlight';
-		else if ( (e.Replacee == 'RadSuit') || (e.Replacee == 'ArtiFly') ) e.Replacement = 'UTJumpBoots';
+		else if ( e.Replacee == 'BlurSphere' ) e.Replacement = 'UTInvisibility';
+		else if ( e.Replacee == 'ArtiInvisibility' ) e.Replacement = 'ActInvisibility';
+		else if ( e.Replacee == 'Infrared' ) e.Replacement = 'Searchlight';
+		else if ( e.Replacee == 'ArtiTorch' ) e.Replacement = 'ActSearchlight';
+		else if ( e.Replacee == 'RadSuit' ) e.Replacement = 'UTJumpBoots';
+		else if ( e.Replacee == 'ArtiFly' ) e.Replacement = 'ActJumpBoots';
 		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') ) e.Replacement = 'UTBackpack';
 		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') ) e.Replacement = 'UTArmorBonus';
 		else if ( (e.Replacee == 'HealthBonus') || (e.Replacee == 'CrystalVial') ) e.Replacement = 'UTHealthBonus';
@@ -1625,16 +1632,16 @@ Class UTMainHandler : EventHandler
 		else if ( e.Replacee == 'Medikit' ) e.Replacement = 'UTHealthBox';
 		else if ( e.Replacee == 'ArtiHealth' )
 		{
-			if ( !Random[Replacements](0,3) ) e.Replacement = 'UTHealthBox';
-			else e.Replacement = 'UTMedBox';
+			if ( !Random[Replacements](0,3) ) e.Replacement = 'ActHealthBox';
+			else e.Replacement = 'ActMedBox';
 		}
 		else if ( e.Replacee == 'ArtiTeleport' )
 		{
 			// I have no idea what to replace this with, so just have some random stuff
 			if ( Random[Replacements](0,1) ) e.Replacement = 'UTBackpack';
-			else if ( Random[Replacements](0,1) ) e.Replacement = 'UTShieldBelt';
-			else if ( Random[Replacements](0,1) ) e.Replacement = 'UTHealthPack';
-			else e.Replacement = 'UDamage';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'ActShieldBelt';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'ActHealthPack';
+			else e.Replacement = 'ActUDamage';
 		}
 		else if ( e.Replacee == 'RedCard' ) e.Replacement = 'UTRedKey';
 		else if ( e.Replacee == 'BlueCard' ) e.Replacement = 'UTBlueKey';
@@ -1674,7 +1681,7 @@ Class UTMainHandler : EventHandler
 		// just replace the -noflat- with a better scaled version and change the sky
 		if ( !flak_doomtest )
 		{
-			if ( (level.GetChecksum() ~== "FBC3B6622A8B74AE06DE01E70007AC33") || (level.GetChecksum() ~== "D8206A3414DA967F2159473B5791139E") )
+			if ( (level.GetChecksum() ~== "959A613006CC3AA912C4A22908B7566A") || (level.GetChecksum() ~== "75319AE5D2DBA214C5D394BF69DF32F4") )
 			{
 				Level.ReplaceTextures("-noflat-","DefTex",0);
 				TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
@@ -1683,7 +1690,7 @@ Class UTMainHandler : EventHandler
 			return;
 		}
 		// prettify Kinsie's test map for a more Unreal feel
-		if ( level.GetChecksum() ~== "FBC3B6622A8B74AE06DE01E70007AC33" )
+		if ( level.GetChecksum() ~== "959A613006CC3AA912C4A22908B7566A" )
 		{
 			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
 			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
@@ -1703,13 +1710,13 @@ Class UTMainHandler : EventHandler
 					level.sectors[i].SetTexture(1,skyflatnum);
 				if ( level.sectors[i].GetTexture(0) == deftex )
 				{
-					level.sectors[i].SetTexture(0,(i==47)?baseceil:baseflor);
+					level.sectors[i].SetTexture(0,((i==47)||((i>=256)&&(i<=260)))?baseceil:baseflor);
 					level.sectors[i].SetXScale(0,2.);
 					level.sectors[i].SetYScale(0,2.);
 				}
 				if ( level.sectors[i].GetTexture(1) == deftex )
 				{
-					level.sectors[i].SetTexture(1,(i==47)?baseflor:baseceil);
+					level.sectors[i].SetTexture(1,((i==47)||((i>=256)&&(i<=260)))?baseflor:baseceil);
 					level.sectors[i].SetXScale(1,2.);
 					level.sectors[i].SetYScale(1,2.);
 				}
@@ -1780,7 +1787,7 @@ Class UTMainHandler : EventHandler
 			AddAmbient((3584,736,64),"testamb/slime",0.4,2.4);
 			AddAmbient((3584,512,64),"testamb/lava",0.8,2.4);
 		}
-		else if ( level.GetChecksum() ~== "D8206A3414DA967F2159473B5791139E" )
+		else if ( level.GetChecksum() ~== "75319AE5D2DBA214C5D394BF69DF32F4" )
 		{
 			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
 			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
@@ -1800,13 +1807,13 @@ Class UTMainHandler : EventHandler
 					level.sectors[i].SetTexture(1,skyflatnum);
 				if ( level.sectors[i].GetTexture(0) == deftex )
 				{
-					level.sectors[i].SetTexture(0,(i==47)?baseceil:baseflor);
+					level.sectors[i].SetTexture(0,((i==47)||((i>=144)&&(i<=148)))?baseceil:baseflor);
 					level.sectors[i].SetXScale(0,2.);
 					level.sectors[i].SetYScale(0,2.);
 				}
 				if ( level.sectors[i].GetTexture(1) == deftex )
 				{
-					level.sectors[i].SetTexture(1,(i==47)?baseflor:baseceil);
+					level.sectors[i].SetTexture(1,((i==47)||((i>=144)&&(i<=148)))?baseflor:baseceil);
 					level.sectors[i].SetXScale(1,2.);
 					level.sectors[i].SetYScale(1,2.);
 				}

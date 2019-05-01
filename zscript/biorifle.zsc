@@ -138,6 +138,7 @@ Class BioLight : DynamicLight
 			Destroy();
 			return;
 		}
+		SetOrigin(target.pos,true);
 		args[LIGHT_INTENSITY] = int(8*target.Scale.x);
 	}
 }
@@ -674,7 +675,7 @@ Class BioRifle : UTWeapon
 		else A_QuakeEx(1,1,1,5,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
 		Vector3 x, y, z;
 		double a, s;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+8.0*y-5.0*z;
 		Actor p;
 		if ( alt )
@@ -703,6 +704,7 @@ Class BioRifle : UTWeapon
 			s.A_SetRenderStyle(0.5,STYLE_AddShaded);
 			UTViewSmoke(s).vvel += (FRandom[GES](0.8,1.6),FRandom[GES](-0.5,0.5),FRandom[GES](-0.5,0.5));
 		}
+		invoker.charge = 0;
 	}
 	action void A_BeginCharge()
 	{
@@ -753,6 +755,7 @@ Class BioRifle : UTWeapon
 	Idle:
 		BIOI A 1
 		{
+			invoker.charge = 0;
 			invoker.bCharging = false;
 			A_CheckReload();
 			A_WeaponReady();

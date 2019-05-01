@@ -23,12 +23,12 @@ Class ViewTracer : LineTracer
 
 Class UTHud : BaseStatusBar
 {
-	TextureID AmmoBar, Boxes[4], Keys[5], BigNum[12], Flash, Slots[10], Icons[14], Uses[14], Man[5], Woman[5], Boss[5], WeaponBox, IconTloc2, UseTloc2;
+	TextureID AmmoBar, Boxes[4], Keys[5], BigNum[12], Flash, Slots[10], Icons[14], Uses[14], Man[5], Woman[5], Boss[5], WeaponBox, IconTloc2, UseTloc2, ItemBox, ItemSel, ItemFlash, ItemArrow[2], LastItem;
 	Class<Weapon> IconClasses[14];
 	double HScale;
 	Color tintcolor, bgcolor;
 	int opacity;
-	int lastfrag, lastfragcnt, lastpickup, lastslot;
+	int lastfrag, lastfragcnt, lastpickup, lastslot, lastamount;
 	ViewTracer vtracer;
 	Actor lastseen;
 	int lastseentic;
@@ -145,6 +145,11 @@ Class UTHud : BaseStatusBar
 		Boss[3] = TexMan.CheckForTexture("BossBot",TexMan.Type_Any);
 		Boss[4] = TexMan.CheckForTexture("BossBlt",TexMan.Type_Any);
 		WeaponBox = TexMan.CheckForTexture("WpSel",TexMan.Type_Any);
+		ItemBox = TexMan.CheckForTexture("ItemBox",TexMan.Type_Any);
+		ItemSel = TexMan.CheckForTexture("ItmSel",TexMan.Type_Any);
+		ItemFlash = TexMan.CheckForTexture("IFlash",TexMan.Type_Any);
+		ItemArrow[0] = TexMan.CheckForTexture("ItmArrw1",TexMan.Type_Any);
+		ItemArrow[1] = TexMan.CheckForTexture("ItmArrw2",TexMan.Type_Any);
 	}
 
 	override void Draw( int state, double TicFrac )
@@ -189,7 +194,7 @@ Class UTHud : BaseStatusBar
 		{
 			BeginHUD();
 			FracTic = TicFrac;
-			DrawUTHUD();
+			DrawUTHUD(lbottom);
 		}
 		if ( (CPlayer.ReadyWeapon is 'UTWeapon') )
 			UTWeapon(CPlayer.ReadyWeapon).PostRender(lbottom);
@@ -200,25 +205,25 @@ Class UTHud : BaseStatusBar
 		return Color(a.a,int(a.r*(1.-x)+b.r*x),int(a.g*(1.-x)+b.g*x),int(a.b*(1.-x)+b.b*x));
 	}
 
-	private void UTDrawTintedTex( TextureID tx, double sx = 1.0, int opacity = -1, Color tint = Color("Black") )
+	private void UTDrawTintedTex( TextureID tx, double sx = 1.0, int opacity = -1, Color tint = Color("Black"), bool flip = false )
 	{
 		double ss = (HScale*sx);
 		double dw = (Screen.GetWidth()/ss), dh = (Screen.GetHeight()/ss);
 		double dx = CurX/ss, dy = CurY/ss;
 		if ( opacity == -1 ) opacity = self.opacity;
-		if ( opacity >= 16 ) Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor);
+		if ( opacity >= 16 ) Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor,DTA_TopOffset,0,DTA_LeftOffset,0);
 		double alpha = clamp(opacity/15.,0.0,1.0);
-		Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_LegacyRenderStyle,STYLE_AddShaded,DTA_FillColor,(tint!="Black")?tint:tintcolor);
+		Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_LegacyRenderStyle,STYLE_AddShaded,DTA_FillColor,(tint!="Black")?tint:tintcolor,DTA_TopOffset,0,DTA_LeftOffset,0,DTA_FlipX,flip);
 	}
-	private void UTDrawPlainTex( TextureID tx, double sx = 1.0, int opacity = -1 )
+	private void UTDrawPlainTex( TextureID tx, double sx = 1.0, int opacity = -1, bool flip = false )
 	{
 		double ss = (HScale*sx);
 		double dw = (Screen.GetWidth()/ss), dh = (Screen.GetHeight()/ss);
 		double dx = CurX/ss, dy = CurY/ss;
 		if ( opacity == -1 ) opacity = self.opacity;
-		if ( opacity >= 16 ) Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor);
+		if ( opacity >= 16 ) Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor,DTA_TopOffset,0,DTA_LeftOffset,0,DTA_FlipX,flip);
 		double alpha = clamp(opacity/15.,0.0,1.0);
-		Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha);
+		Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_TopOffset,0,DTA_LeftOffset,0,DTA_FlipX,flip);
 	}
 
 	private bool UTDrawWeaponIcon( Weapon w, bool use, double sx = 1.0 )
@@ -255,9 +260,9 @@ Class UTHud : BaseStatusBar
 		double flen = 3*step;
 		double len = digits.length()*step;
 		double alpha = clamp((opacity+7)/15.,0.0,1.0);
-		for ( int i=0; i<digits.length(); i++ ) if ( digits.CharAt(i) == "1" ) len -= 0.5*step;
+		for ( int i=0; i<digits.length(); i++ ) if ( digits.ByteAt(i) == 0x31 ) len -= 0.5*step;
 		CurX += (flen-len)*0.5;
-		if ( digits.CharAt(0) == "1" ) CurX -= 0.5*step;
+		if ( digits.ByteAt(0) == 0x31 ) CurX -= 0.5*step;
 		if ( value < 0 )
 		{
 			if ( opacity+7 > 15 ) Screen.DrawTexture(BigNum[11],false,CurX/ss,CurY/ss,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor);
@@ -266,9 +271,9 @@ Class UTHud : BaseStatusBar
 		}
 		for ( int i=0; i<digits.length(); i++ )
 		{
-			if ( opacity+7 > 15 ) Screen.DrawTexture(BigNum[digits.CharCodeAt(i)-0x30],false,CurX/ss,CurY/ss,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor);
-			Screen.DrawTexture(BigNum[digits.CharCodeAt(i)-0x30],false,CurX/ss,CurY/ss,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_LegacyRenderStyle,STYLE_AddShaded,DTA_FillColor,DrawColor);
-			CurX += ((i<digits.length()-1)&&(digits.CharAt(i+1)=="1"))?step*0.5:step;
+			if ( opacity+7 > 15 ) Screen.DrawTexture(BigNum[digits.ByteAt(i)-0x30],false,CurX/ss,CurY/ss,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor);
+			Screen.DrawTexture(BigNum[digits.ByteAt(i)-0x30],false,CurX/ss,CurY/ss,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_LegacyRenderStyle,STYLE_AddShaded,DTA_FillColor,DrawColor);
+			CurX += ((i<digits.length()-1)&&(digits.ByteAt(i+1)==0x31))?step*0.5:step;
 		}
 	}
 
@@ -285,26 +290,8 @@ Class UTHud : BaseStatusBar
 		CurX += 8*hudsize*HScale;
 		CurY += 14*hudsize*HScale;
 		DrawColor = WhiteColor;
-		if ( ammotype1 )
-		{
-			UTDrawBigNum(ammotype1.Amount,hudsize);
-			let cw = CPlayer.ReadyWeapon;
-			if ( flak_transloc2k4 && (cw is 'Translocator') )
-			{
-				// draw ammo charge bar
-				double ch = Translocator(cw).ammocharge;
-				CurX = BaseX+6*hudsize*HScale;
-				CurY = BaseY+53*hudsize*HScale;
-				Vector2 ss = (0.54,0.3)*hudsize*HScale;
-				double dw = (Screen.GetWidth()/ss.x), dh = (Screen.GetHeight()/ss.y);
-				double dx = CurX/ss.x, dy = CurY/ss.y;
-				Vector2 bs = TexMan.GetScaledSize(AmmoBar);
-				double ddw = bs.x*ch;
-				double alpha = clamp((opacity+7)/15.,0.0,1.0);
-				Screen.DrawTexture(AmmoBar,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_WindowRightF,ddw,DTA_Alpha,alpha);
-			}
-			// TODO try also drawing enforcer and pulsegun clips as bars
-		}
+		let cw = CPlayer.ReadyWeapon;
+		if ( ammotype1 ) UTDrawBigNum(ammotype1.Amount,hudsize);
 		if ( ammotype2 && (ammotype2 != ammotype1) )
 		{
 			CurX = showweapons?(Screen.GetWidth()-128*hudsize*HScale):((Screen.GetWidth()+256*hudsize*HScale)*0.5);
@@ -314,6 +301,101 @@ Class UTHud : BaseStatusBar
 			CurX += 8*hudsize*HScale;
 			CurY += 14*hudsize**HScale;
 			UTDrawBigNum(ammotype2.Amount,hudsize);
+		}
+		// extra bars
+		if ( flak_transloc2k4 && (cw is 'Translocator') )
+		{
+			// draw ammo charge bar
+			double ch = Translocator(cw).ammocharge;
+			CurX = BaseX+6*hudsize*HScale;
+			CurY = BaseY+54*hudsize*HScale;
+			Vector2 ss = (0.54,0.25)*hudsize*HScale;
+			double dw = (Screen.GetWidth()/ss.x), dh = (Screen.GetHeight()/ss.y);
+			double dx = CurX/ss.x, dy = CurY/ss.y;
+			Vector2 bs = TexMan.GetScaledSize(AmmoBar);
+			double ddw = bs.x*ch;
+			double alpha = clamp((opacity+7)/15.,0.0,1.0);
+			Screen.DrawTexture(AmmoBar,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_WindowRightF,ddw,DTA_Alpha,alpha);
+		}
+		else if ( flak_enforcerreload && (cw is 'Enforcer') )
+		{
+			// draw clip(s)
+			double ch = Enforcer(cw).ClipCount/20.;
+			CurX = BaseX+6*hudsize*HScale;
+			CurY = BaseY+53*hudsize*HScale;
+			Vector2 ss;
+			ss = (0.54,(cw.Amount>1)?0.125:0.3)*hudsize*HScale;
+			double dw = (Screen.GetWidth()/ss.x), dh = (Screen.GetHeight()/ss.y);
+			double dx = CurX/ss.x, dy = CurY/ss.y;
+			Vector2 bs = TexMan.GetScaledSize(AmmoBar);
+			double ddw = bs.x*ch;
+			double alpha = clamp((opacity+7)/15.,0.0,1.0);
+			Screen.DrawTexture(AmmoBar,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_WindowRightF,ddw,DTA_Alpha,alpha);
+			if ( cw.Amount > 1 )
+			{
+				ch = Enforcer(cw).SlaveClipCount/20.;
+				CurY += 3*hudsize*HScale;
+				ss = (0.54,0.125)*hudsize*HScale;
+				dw = (Screen.GetWidth()/ss.x);
+				dh = (Screen.GetHeight()/ss.y);
+				dx = CurX/ss.x;
+				dy = CurY/ss.y;
+				ddw = bs.x*ch;
+				Screen.DrawTexture(AmmoBar,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_WindowRightF,ddw,DTA_Alpha,alpha);
+			}
+		}
+		else if ( flak_pulsereload && (cw is 'Pulsegun') )
+		{
+			// draw clip
+			double ch = Pulsegun(cw).ClipCount/50.;
+			CurX = BaseX+6*hudsize*HScale;
+			CurY = BaseY+53*hudsize*HScale;
+			Vector2 ss = (0.54,0.3)*hudsize*HScale;
+			double dw = (Screen.GetWidth()/ss.x), dh = (Screen.GetHeight()/ss.y);
+			double dx = CurX/ss.x, dy = CurY/ss.y;
+			Vector2 bs = TexMan.GetScaledSize(AmmoBar);
+			double ddw = bs.x*ch;
+			double alpha = clamp((opacity+7)/15.,0.0,1.0);
+			Screen.DrawTexture(AmmoBar,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_WindowRightF,ddw,DTA_Alpha,alpha);
+		}
+		else if ( cw is 'ImpactHammer' )
+		{
+			double ch = min(ImpactHammer(cw).chargesize,1.5)/1.5;
+			CurX = BaseX+6*hudsize*HScale;
+			CurY = BaseY+53*hudsize*HScale;
+			Vector2 ss = (0.54,0.3)*hudsize*HScale;
+			double dw = (Screen.GetWidth()/ss.x), dh = (Screen.GetHeight()/ss.y);
+			double dx = CurX/ss.x, dy = CurY/ss.y;
+			Vector2 bs = TexMan.GetScaledSize(AmmoBar);
+			double ddw = bs.x*ch;
+			double alpha = clamp((opacity+7)/15.,0.0,1.0);
+			Screen.DrawTexture(AmmoBar,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_WindowRightF,ddw,DTA_Alpha,alpha);
+		}
+		else if ( cw is 'BioRifle' )
+		{
+			double ch = min(BioRifle(cw).charge,5.1)/5.1;
+			CurX = BaseX+6*hudsize*HScale;
+			CurY = BaseY+53*hudsize*HScale;
+			Vector2 ss = (0.54,0.3)*hudsize*HScale;
+			double dw = (Screen.GetWidth()/ss.x), dh = (Screen.GetHeight()/ss.y);
+			double dx = CurX/ss.x, dy = CurY/ss.y;
+			Vector2 bs = TexMan.GetScaledSize(AmmoBar);
+			double ddw = bs.x*ch;
+			double alpha = clamp((opacity+7)/15.,0.0,1.0);
+			Screen.DrawTexture(AmmoBar,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_WindowRightF,ddw,DTA_Alpha,alpha);
+		}
+		else if ( cw is 'UTRocketLauncher' )
+		{
+			double ch = cw.special1/6.;
+			CurX = BaseX+6*hudsize*HScale;
+			CurY = BaseY+53*hudsize*HScale;
+			Vector2 ss = (0.54,0.3)*hudsize*HScale;
+			double dw = (Screen.GetWidth()/ss.x), dh = (Screen.GetHeight()/ss.y);
+			double dx = CurX/ss.x, dy = CurY/ss.y;
+			Vector2 bs = TexMan.GetScaledSize(AmmoBar);
+			double ddw = bs.x*ch;
+			double alpha = clamp((opacity+7)/15.,0.0,1.0);
+			Screen.DrawTexture(AmmoBar,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_WindowRightF,ddw,DTA_Alpha,alpha);
 		}
 	}
 	private void DrawStatus()
@@ -609,9 +691,108 @@ Class UTHud : BaseStatusBar
 		}
 	}
 
+	private void DrawInventory( double lbottom )
+	{
+		if ( isInventoryBarVisible() )
+		{
+			CPlayer.mo.InvFirst = ValidateInvFirst(5);
+			if ( !CPlayer.mo.InvFirst ) return;
+			// draw the boxes
+			double BaseX, BaseY;
+			BaseX = CurX = (Screen.GetWidth()-64*5*hudsize*HScale)/2.;
+			BaseY = CurY = Screen.GetHeight()-224*hudsize*HScale;
+			for ( int i=0; i<5; i++ )
+			{
+				UTDrawTintedTex(ItemBox,hudsize);
+				CurX += 64*hudsize*HScale;
+			}
+			int i = 0;
+			Inventory itm;
+			for ( itm=CPlayer.mo.InvFirst; (itm && (i < 5)); itm=itm.NextInv() )
+			{
+				CurX = BaseX+2*hudsize*HScale;
+				CurY = BaseY+2*hudsize*HScale;
+				// if item doesn't fit 60x60, scale
+				Vector2 scl = TexMan.GetScaledSize(itm.Icon);
+				double mscl = max(scl.x,scl.y)/60.;
+				UTDrawTintedTex(itm.Icon,hudsize*mscl);
+				// amount if >1
+				if ( itm.Amount > 1 )
+				{
+					CurX = BaseX+32*hudsize*HScale;
+					CurY = BaseY+40*hudsize*HScale;
+					DrawColor = WhiteColor;
+					UTDrawBigNum(itm.Amount,hudsize*0.5);
+				}
+				// selection box if current item
+				if ( itm == CPlayer.mo.InvSel )
+				{
+					CurX = BaseX;
+					CurY = BaseY;
+					UTDrawPlainTex(ItemSel,hudsize,opacity+7);
+				}
+				BaseX += 64*hudsize*HScale;
+				i++;
+			}
+			// draw arrows
+			CurY = Screen.GetHeight()-204*hudsize*HScale;
+			CurX = (Screen.GetWidth()-(64*5+40)*hudsize*HScale)/2.;
+			UTDrawTintedTex(ItemArrow[CPlayer.mo.InvFirst!=CPlayer.mo.FirstInv()],hudsize,flip:true);
+			CurX = (Screen.GetWidth()+(64*5+8)*hudsize*HScale)/2.;
+			UTDrawTintedTex(ItemArrow[!!itm],hudsize);
+		}
+		else if ( CPlayer.mo.InvSel || artiflashtick )
+		{
+			// flashie
+			if ( artiflashtick )
+			{
+				DrawColor = GoldColor;
+				CurX = -32*hudsize*HScale;
+				CurY = lbottom-96*hudsize*HScale;
+				UTDrawTintedTex(ItemFlash,hudsize,min(opacity,15),DrawColor);
+			}
+			// position 64x64 box
+			CurX = 0;
+			CurY = lbottom-64*hudsize*HScale;
+			UTDrawTintedTex(ItemBox,hudsize);
+			if ( artiflashtick )
+			{
+				Vector2 scl = TexMan.GetScaledSize(LastItem);
+				double mscl = max(scl.x,scl.y)/60.;
+				CurX += 2*hudsize*HScale;
+				CurY += 2*hudsize*HScale;
+				UTDrawTintedTex(LastItem,hudsize*mscl);
+				if ( LastAmount <= 1 ) return;
+				CurX = 32*hudsize*HScale;
+				CurY = lbottom-24*hudsize*HScale;
+				DrawColor = WhiteColor;
+				UTDrawBigNum(LastAmount,hudsize*0.5);
+				return;
+			}
+			if ( !CPlayer.mo.InvSel ) return;
+			// if item doesn't fit 60x60, scale
+			Vector2 scl = TexMan.GetScaledSize(CPlayer.mo.InvSel.Icon);
+			double mscl = max(scl.x,scl.y)/60.;
+			CurX += 2*hudsize*HScale;
+			CurY += 2*hudsize*HScale;
+			UTDrawTintedTex(CPlayer.mo.InvSel.Icon,hudsize*mscl);
+			// amount if >1
+			if ( CPlayer.mo.InvSel.Amount <= 1 ) return;
+			CurX = 32*hudsize*HScale;
+			CurY = lbottom-24*hudsize*HScale;
+			DrawColor = WhiteColor;
+			UTDrawBigNum(CPlayer.mo.InvSel.Amount,hudsize*0.5);
+		}
+	}
+
 	override void Tick()
 	{
 		Super.Tick();
+		if ( CPlayer.mo.InvSel && !artiflashtick )
+		{
+			LastItem = CPlayer.mo.InvSel.Icon;
+			LastAmount = CPlayer.mo.InvSel.Amount-1;
+		}
 		if ( deathmatch||teamplay )
 		{
 			if ( CPlayer.fragcount != lastfragcnt ) lastfrag = level.time;
@@ -629,7 +810,7 @@ Class UTHud : BaseStatusBar
 		lastseentic = level.time;
 	}
 
-	private void DrawUTHUD()
+	private void DrawUTHUD( double lbottom )
 	{
 		// Display Weapons
 		if ( showweapons ) DrawWeapons();
@@ -641,6 +822,8 @@ Class UTHud : BaseStatusBar
 		DrawStatus();
 		// Display Keys
 		DrawKeys();
+		// Inventory Bar
+		DrawInventory(lbottom);
 		// Display Identification Info
 		if ( CPlayer == players[consoleplayer] && showinfo ) DrawIdentifyInfo();
 	}

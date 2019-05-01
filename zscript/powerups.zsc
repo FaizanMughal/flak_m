@@ -404,6 +404,8 @@ Class Searchlight : Inventory
 		Inventory.MaxAmount 200;
 		Inventory.InterHubAmount 0;
 		Inventory.PickupMessage "$I_SEARCHLIGHT";
+		Inventory.PickupSound "lite/pickup";
+		Inventory.RespawnTics 1050;
 	}
 
 	override bool Use( bool pickup )

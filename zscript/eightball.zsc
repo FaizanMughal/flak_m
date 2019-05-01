@@ -337,6 +337,7 @@ Class UTRocketLauncher : UTWeapon
 			invoker.LockedOn = false;
 		}
 		if ( checktarget && !weap.bAltFire ) A_CheckTarget();
+		invoker.special1++;
 	}
 
 	// refire that is ignored if there's no ammo
@@ -353,6 +354,7 @@ Class UTRocketLauncher : UTWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
+		invoker.special1 = 0;
 		if ( weap.bAltFire ) A_PlaySound("utrl/altfire",CHAN_WEAPON);
 		else A_PlaySound("utrl/fire",CHAN_WEAPON);
 		invoker.FireEffect();
@@ -363,9 +365,9 @@ Class UTRocketLauncher : UTWeapon
 			UTMainHandler.DoSwing(self,(FRandom[Eightball](0.4,-0.8),FRandom[Eightball](-0.5,0.5)),1,-0.2,Random[Eightball](3,4),SWING_Spring,Random[Eightball](2,5),Random[Eightball](2,4));
 		Vector3 x, y, z, x2, y2, z2;
 		double a, s;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-3.0*z;
-		[x2, y2, z2] = dt_Matrix4.GetAxes(BulletSlope(),angle,roll);
+		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Actor p;
 		if ( weap.bAltFire )
 		{
@@ -490,6 +492,7 @@ Class UTRocketLauncher : UTWeapon
 		EBLI A 1
 		{
 			invoker.locktics = 0;
+			invoker.special1 = 0;
 			A_CheckReload();
 			A_WeaponReady(WRF_ALLOWRELOAD);
 		}
