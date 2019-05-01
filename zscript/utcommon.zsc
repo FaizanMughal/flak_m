@@ -11,15 +11,26 @@ Class UTPlayer : DoomPlayer
 	int last_tap_fm, last_tap_sm;
 	int last_jump_held;
 
-	int dolltype;
+	int dolltype, voicetype;
 
 	Property DollType : dolltype;
+	Property VoiceType : voicetype;
 
 	enum EDollType
 	{
 		DOLL_Male,
 		DOLL_Female,
 		DOLL_Boss
+	};
+
+	enum EVoiceType
+	{
+		VOICE_None,
+		VOICE_MaleOne,
+		VOICE_MaleTwo,
+		VOICE_FemaleOne,
+		VOICE_FemaleTwo,
+		VOICE_Boss
 	};
 
 	const groundspeed = 400.;
@@ -46,6 +57,7 @@ Class UTPlayer : DoomPlayer
 		Player.GruntSpeed 20;
 		+NOMENU;
 		UTPlayer.DollType DOLL_Male;
+		UTPlayer.VoiceType VOICE_None;
 	}
 
 	// Have to modify the give cheat to handle UT armor
@@ -594,6 +606,7 @@ Class UTPlayerTMale1 : UTPlayer
 		Player.SoundClass "tmale1";
 		Player.DisplayName "$N_TMALE1";
 		Player.Portrait "Blake";
+		UTPlayer.VoiceType VOICE_MaleOne;
 		-NOMENU;
 	}
 }
@@ -604,6 +617,7 @@ Class UTPlayerTMale2 : UTPlayer
 		Player.SoundClass "tmale2";
 		Player.DisplayName "$N_TMALE2";
 		Player.Portrait "Brock";
+		UTPlayer.VoiceType VOICE_MaleTwo;
 		-NOMENU;
 	}
 }
@@ -615,6 +629,7 @@ Class UTPlayerTFemale1 : UTPlayer
 		Player.DisplayName "$N_TFEMALE1";
 		Player.Portrait "Ivana";
 		UTPlayer.DollType DOLL_Female;
+		UTPlayer.VoiceType VOICE_FemaleOne;
 		-NOMENU;
 	}
 }
@@ -626,6 +641,7 @@ Class UTPlayerTFemale2 : UTPlayer
 		Player.DisplayName "$N_TFEMALE2";
 		Player.Portrait "Lauren";
 		UTPlayer.DollType DOLL_Female;
+		UTPlayer.VoiceType VOICE_FemaleTwo;
 		-NOMENU;
 	}
 }
@@ -638,6 +654,7 @@ Class UTPlayerTBoss : UTPlayer
 		Player.DisplayName "$N_TBOSS";
 		Player.Portrait "Xan";
 		UTPlayer.DollType DOLL_Boss;
+		UTPlayer.VoiceType VOICE_Boss;
 		// should have NOBLOOD, but Xan did bleed in vanilla UT so...
 		// (this is what gave birth to the theory that Xan was actually Jerl Liandri himself)
 		-NOMENU;
