@@ -86,6 +86,7 @@ I_SNIPER = "You got the Sniper Rifle.";
 I_TRANSLOCATOR = "You got the Translocator Source Module.";
 I_WARHEADAMMO = "You picked up a Redeemer Missile.";
 I_REDEEMER = "You got the Redeemer.";
+I_CHAINSAWAMMO = "You picked up a Fuel Can.";
 /* Tags */
 T_ARMORBONUS = "Armor Bonus";
 T_THIGHPADS = "Thigh Pads";
@@ -140,6 +141,7 @@ T_TRANSLOCATORAMMO = "Translocator Charges";
 T_TRANSLOCATOR = "Translocator";
 T_WARHEADAMMO = "Redeemer Missile";
 T_REDEEMER = "Redeemer";
+T_CHAINSAWAMMO = "Chainsaw Fuel";
 /* Miscellaneous */
 D_SHIELDBELT = "The Shield Belt has depleted.";
 D_UDAMAGE = "Damage Amplifier has worn off.";
@@ -214,6 +216,7 @@ FLAK_UGIB = "[WIP] UT gibbing";
 FLAK_UCORPS = "[WIP] Corpses take damage";
 FLAK_DTEST = "Edit Kinsie's test map";
 FLAK_FSTRENGTH = "Screen flash strength";
+FLAK_SAWAMMO = "Chainsaw uses ammo";
 
 [es esm esn esg esc esa esd esv eso esr ess esf esl esy esz esb ese esh esi esu]
 /* Obituaries */
@@ -287,6 +290,7 @@ I_SNIPER = "Has obtenido el Rifle de Francotirador.";
 I_TRANSLOCATOR = "Has conseguido el Módulo Fuente del Translocalizador.";
 I_WARHEADAMMO = "Has recogido un Misil de Redentor.";
 I_REDEEMER = "Has obtenido el Redentor.";
+I_CHAINSAWAMMO = "Has recogido una Lata de Combustible.";
 /* Tags */
 T_ARMORBONUS = "Armadura Extra";
 T_THIGHPADS = "Musleras";
@@ -341,6 +345,7 @@ T_TRANSLOCATORAMMO = "Cargas de Translocalizador";
 T_TRANSLOCATOR = "Translocalizador";
 T_WARHEADAMMO = "Misil de Redentor";
 T_REDEEMER = "Redentor";
+T_CHAINSAWAMMO = "Combustible de Motosierra";
 /* Miscellaneous */
 D_SHIELDBELT = "El Cinturón Protector se ha agotado.";
 D_UDAMAGE = "El Amplificador de Daño ha desaparecido.";
@@ -415,6 +420,7 @@ FLAK_UGIB = "[WIP] Vísceras de UT";
 FLAK_UCORPS = "[WIP] Los cadáveres reciben daño";
 FLAK_DTEST = "Editar mapa de pruebas de Kinsie";
 FLAK_FSTRENGTH = "Intensidad de destellos en pantalla";
+FLAK_SAWAMMO = "La motosierra usa combustible";
 
 [fr]
 

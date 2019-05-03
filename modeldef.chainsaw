@@ -1,3 +1,14 @@
+Model "ChainsawAmmo"
+{
+	Path "models"
+	Model 1 "barrel4M_d.3d"
+	Skin 1 "jbarrel4.png"
+	ZOffset 6
+	Scale 0.08 0.08 0.072
+
+	FrameIndex CSAM A 0 0
+}
+
 Model "UTChainsaw"
 {
 	Path "models"
