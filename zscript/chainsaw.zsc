@@ -39,12 +39,90 @@ Class SawImpact : Actor
 	}
 }
 
+Class ChainsawAmmo : Ammo
+{
+	Default
+	{
+		Tag "$T_CHAINSAWAMMO";
+		Inventory.PickupMessage "$I_CHAINSAWAMMO";
+		Inventory.Amount 20;
+		Inventory.MaxAmount 100;
+		Ammo.BackpackAmount 50;
+		Ammo.BackpackMaxAmount 100;
+		Ammo.DropAmount 20;
+	}
+	States
+	{
+	Spawn:
+		CSAM A -1;
+		Stop;
+	}
+}
+
 Class UTChainsaw : UTWeapon
 {
 	double sawcnt;
+	double ammocharge;
+
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !Owner ) return;
+		if ( flak_sawammo )
+		{
+			AmmoType1 = "ChainsawAmmo";
+			if ( !Ammo1 ) Ammo1 = NonIdioticAddAmmo(Owner,AmmoType1,GetDefaultByType(AmmoType1).MaxAmount);
+			if ( (Owner.player.ReadyWeapon != self) || (Ammo1.Amount <= 0) )
+				return;
+			if ( ammocharge >= 1. )
+			{
+				Ammo1.Amount = max(Ammo1.Amount-int(ammocharge),0);
+				ammocharge = 0.;
+			}
+			else ammocharge = ammocharge+1./TICRATE;
+			return;
+		}
+		if ( Ammo1 ) Ammo1.Destroy();
+		if ( AmmoType1 ) AmmoType1 = null;
+	}
+
+	protected bool PickupForSawAmmo( Weapon ownedWeapon )
+	{
+		bool gotstuff = false;
+		// Don't take ammo if the weapon sticks around.
+		if ( !ShouldStay() )
+		{
+			int oldamount = 0;
+			if ( ownedWeapon.Ammo1 )
+			{
+				oldamount = ownedWeapon.Ammo1.Amount;
+				gotstuff = AddExistingAmmo(ownedWeapon.Ammo1,ownedWeapon.Ammo1.default.MaxAmount);
+			}
+			let Owner = ownedWeapon.Owner;
+			if ( gotstuff && Owner && Owner.player )
+			{
+				if ( ownedWeapon.Ammo1 && !oldamount )
+					PlayerPawn(Owner).CheckWeaponSwitch(ownedWeapon.Ammo1.GetClass());
+			}
+		}
+		return gotstuff;
+	}
+
+	override bool HandlePickup (Inventory item)
+	{
+		if ( item.GetClass() == GetClass() )
+		{
+			if ( UTChainsaw(item).PickupForSawAmmo(self) )
+				item.bPickupGood = true;
+			if ( MaxAmount > 1 ) return Inventory.HandlePickup(item);
+			return true;
+		}
+		return false;
+	}
 
 	action void A_SawHit()
 	{
+		invoker.ammocharge += 10./TICRATE;
 		A_QuakeEx(2,2,2,2,0,1,"",QF_RELATIVE,rollIntensity:0.15);
 		UTMainHandler.DoSwing(self,(FRandom[Chainsaw](-1,1),FRandom[Chainsaw](-1,1)),0.6,-0.2,2,SWING_Spring);
 		invoker.sawcnt += 1./TICRATE;
@@ -86,6 +164,7 @@ Class UTChainsaw : UTWeapon
 	}
 	action void A_SawSwipe( bool initial = false )
 	{
+		invoker.ammocharge += 20./TICRATE;
 		A_QuakeEx(2,2,2,3,0,1,"",QF_RELATIVE,rollIntensity:0.15);
 		UTMainHandler.DoSwing(self,(FRandom[Chainsaw](-1,1),FRandom[Chainsaw](-1,1)),0.6,-0.2,2,SWING_Spring);
 		if ( initial ) invoker.FireEffect();
@@ -136,7 +215,11 @@ Class UTChainsaw : UTWeapon
 	{
 		invoker.sawcnt = 0;
 		A_AlertMonsters();
-		if ( bAlt ) A_QuakeEx(1,1,1,3,0,1,"",QF_RELATIVE,rollIntensity:0.4);
+		if ( bAlt )
+		{
+			invoker.ammocharge += 40./TICRATE;
+			A_QuakeEx(1,1,1,3,0,1,"",QF_RELATIVE,rollIntensity:0.4);
+		}
 		else A_QuakeEx(0,0,0,2,0,1,"",QF_RELATIVE,rollIntensity:0.2);
 		UTMainHandler.DoSwing(self,(FRandom[Chainsaw](-1,1),FRandom[Chainsaw](-1,1)),0.25,-0.1,2,SWING_Spring);
 		if ( bAlt || Random[Chainsaw](0,2) ) return;
@@ -152,6 +235,21 @@ Class UTChainsaw : UTWeapon
 			s.SetShade("202020");
 			s.target = self;
 			UTViewSmoke(s).vvel += (0,-0.2,0);
+		}
+	}
+	action state A_SawRefire( statelabel flash = null )
+	{
+		if ( invoker.Ammo1 && (invoker.Ammo1.Amount <= 0) )
+		{
+			A_ClearRefire();
+			A_StopSound(CHAN_6);
+			A_PlaySound("chainsaw/lower",CHAN_WEAPON);
+			return ResolveState("Release");
+		}
+		else
+		{
+			A_Refire(flash);
+			return ResolveState(null);
 		}
 	}
 	Default
@@ -177,61 +275,95 @@ Class UTChainsaw : UTWeapon
 		CSWS A 1 A_Raise(int.max);
 		Wait;
 	Ready:
+		CSWS A 0
+		{
+			if ( invoker.Ammo1 && (invoker.Ammo1.Amount <= 0) )
+				A_StopSound(CHAN_WEAPON);
+		}
 		CSWS ABCDEFGHIJLMNO 1
 		{
-			A_Vibrate();
+			if ( !invoker.Ammo1 || (invoker.Ammo1.Amount > 0) )
+				A_Vibrate();
 			A_WeaponReady(WRF_NOFIRE);
 		}
 	Idle:
-		CSWI A 0 A_PlaySound("chainsaw/idle",CHAN_6,looping:true);
+		CSWI A 0
+		{
+			if ( !invoker.Ammo1 || (invoker.Ammo1.Amount > 0) )
+				A_PlaySound("chainsaw/idle",CHAN_6,looping:true);
+			else
+				return ResolveState("DryIdle");
+			return ResolveState(null);
+		}
 		CSWI ABCDEFGHIJ 1
 		{
 			A_Vibrate();
 			A_WeaponReady();
+			if ( invoker.Ammo1 && (invoker.Ammo1.Amount <= 0) )
+			{
+				A_StopSound(CHAN_6);
+				A_PlaySound("chainsaw/lower",CHAN_WEAPON);
+				return ResolveState("DryIdle");
+			}
+			return ResolveState(null);
 		}
 		Goto Idle+1;
+	DryIdle:
+		CSWI C 1
+		{
+			A_WeaponReady(WRF_NOFIRE);
+			if ( !invoker.Ammo1 || (invoker.Ammo1.Amount > 0) )
+			{
+				A_PlaySound("chainsaw/select",CHAN_WEAPON);
+				return ResolveState("Idle");
+			}
+			else if ( player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK) )
+				PlayerPawn(invoker.Owner).PickNewWeapon(null);
+			return ResolveState(null);
+		}
+		Wait;
 	Fire:
 		CSWJ A 1 A_PlaySound("chainsaw/fire",CHAN_6,looping:true);
 		CSWJ BCDEF 1 A_Vibrate();
 	Hold:
 		CSWJ G 1 A_SawHit();
-		CSWJ H 0 A_Refire(1);
+		CSWJ H 0 A_SawRefire(1);
 		Goto Release;
 		CSWJ H 1 A_SawHit();
-		CSWJ I 0 A_Refire(1);
+		CSWJ I 0 A_SawRefire(1);
 		Goto Release;
 		CSWJ I 1 A_SawHit();
-		CSWJ J 0 A_Refire(1);
+		CSWJ J 0 A_SawRefire(1);
 		Goto Release;
 		CSWJ J 1 A_SawHit();
-		CSWJ K 0 A_Refire(1);
+		CSWJ K 0 A_SawRefire(1);
 		Goto Release;
 		CSWJ K 1 A_SawHit();
-		CSWJ L 0 A_Refire(1);
+		CSWJ L 0 A_SawRefire(1);
 		Goto Release;
 		CSWJ L 1 A_SawHit();
-		CSWJ M 0 A_Refire(1);
+		CSWJ M 0 A_SawRefire(1);
 		Goto Release;
 		CSWJ M 1 A_SawHit();
-		CSWJ N 0 A_Refire(1);
+		CSWJ N 0 A_SawRefire(1);
 		Goto Release;
 		CSWJ N 1 A_SawHit();
-		CSWJ O 0 A_Refire(1);
+		CSWJ O 0 A_SawRefire(1);
 		Goto Release;
 		CSWJ O 1 A_SawHit();
-		CSWJ P 0 A_Refire(1);
+		CSWJ P 0 A_SawRefire(1);
 		Goto Release;
 		CSWJ P 1 A_SawHit();
-		CSWJ Q 0 A_Refire(1);
+		CSWJ Q 0 A_SawRefire(1);
 		Goto Release;
 		CSWJ Q 1 A_SawHit();
-		CSWJ R 0 A_Refire(1);
+		CSWJ R 0 A_SawRefire(1);
 		Goto Release;
 		CSWJ R 1 A_SawHit();
-		CSWJ S 0 A_Refire(1);
+		CSWJ S 0 A_SawRefire(1);
 		Goto Release;
 		CSWJ S 1 A_SawHit();
-		CSWJ G 0 A_Refire("Hold");
+		CSWJ G 0 A_SawRefire("Hold");
 	Release:
 		CSWJ FEDCBA 1 A_Vibrate();
 		Goto Idle;
@@ -249,14 +381,26 @@ Class UTChainsaw : UTWeapon
 		}
 		CSWA GHIJ 2;
 		CSWA K 2 A_Vibrate(true);
-		CSWA K 0 A_PlaySound("chainsaw/idle",CHAN_6,looping:true);
+		CSWA K 0
+		{
+			if ( invoker.Ammo1 && (invoker.Ammo1.Amount <= 0) )
+			{
+				A_StopSound(CHAN_6);
+				A_PlaySound("chainsaw/lower",CHAN_WEAPON);
+			}
+			else A_PlaySound("chainsaw/idle",CHAN_6,looping:true);
+		}
 		Goto Ready;
 	AltFireSwipes:
 		TNT1 A 1 A_SawSwipe(true);
 		TNT1 AAAAAAAAA 1 A_SawSwipe();
 		Stop;
 	Deselect:
-		CSWD A 0 A_PlaySound("chainsaw/lower",CHAN_6);
+		CSWD A 0
+		{
+			if ( !invoker.Ammo1 || (invoker.Ammo1.Amount > 0) )
+				A_PlaySound("chainsaw/lower",CHAN_6);
+		}
 		CSWD ABCDEF 1;
 		CSWD F 1 A_Lower(int.max);
 		Wait;

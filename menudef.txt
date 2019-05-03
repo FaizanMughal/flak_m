@@ -27,6 +27,7 @@ OptionMenu "UTOptionMenu"
 	Option "$FLAK_RSHADER", "flak_deemershader", "YesNo"
 	Option "$FLAK_RSWITCH", "flak_noswitchdeemer", "YesNo"
 	Option "$FLAK_CSSHOCK", "flak_classicsshock", "YesNo"
+	Option "$FLAK_SAWAMMO", "flak_sawammo", "YesNo"
 	Option "$FLAK_RECOIL", "flak_swingers", "YesNo"
 	Slider "$FLAK_RSTRENGTH", "flak_swingerstrength", 0.0, 1.0, 0.1, 1
 	Slider "$FLAK_FSTRENGTH", "flak_flashstrength", 0.0, 1.0, 0.1, 1

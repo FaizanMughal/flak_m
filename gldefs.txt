@@ -508,6 +508,14 @@ Brightmap Texture "models/Chunk_a11.png"
 {
 	Map "brightmaps/Chunk_a11.png"
 }
+HardwareShader Texture "models/JChainSawPick1.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/jbarrel4.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
 PulseLight "UTRedKeyLight"
 {
 	Color 1.0 0.0 0.0

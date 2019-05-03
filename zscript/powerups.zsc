@@ -128,6 +128,8 @@ Class UTBackpack : BackpackItem
 					break;
 				}
 			}
+			// sneaky fix for chainsaw ammo
+			if ( (type is 'ChainsawAmmo') && flak_sawammo ) isvalid = true;
 			if ( !isvalid ) continue;
 			let ammoitem = Ammo(other.FindInventory(type));
 			int amount = GetDefaultByType(type).BackpackAmount;

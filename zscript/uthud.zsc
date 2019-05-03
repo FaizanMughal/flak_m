@@ -23,7 +23,7 @@ Class ViewTracer : LineTracer
 
 Class UTHud : BaseStatusBar
 {
-	TextureID AmmoBar, Boxes[4], Keys[5], BigNum[12], Flash, Slots[10], Icons[14], Uses[14], Man[5], Woman[5], Boss[5], WeaponBox, IconTloc2, UseTloc2, ItemBox, ItemSel, ItemFlash, ItemArrow[2], LastItem;
+	TextureID AmmoBar, Boxes[4], Keys[5], BigNum[12], Flash, Slots[10], Icons[14], Uses[14], Man[5], Woman[5], Boss[5], WeaponBox, IconTloc2, UseTloc2, IconSaw2, UseSaw2, ItemBox, ItemSel, ItemFlash, ItemArrow[2], LastItem;
 	Class<Weapon> IconClasses[14];
 	double HScale;
 	Color tintcolor, bgcolor;
@@ -150,13 +150,15 @@ Class UTHud : BaseStatusBar
 		ItemFlash = TexMan.CheckForTexture("IFlash",TexMan.Type_Any);
 		ItemArrow[0] = TexMan.CheckForTexture("ItmArrw1",TexMan.Type_Any);
 		ItemArrow[1] = TexMan.CheckForTexture("ItmArrw2",TexMan.Type_Any);
+		IconTloc2 = TexMan.CheckForTexture("IconTrn2",TexMan.Type_Any);
+		UseTloc2 = TexMan.CheckForTexture("UseTrn2",TexMan.Type_Any);
+		IconSaw2 = TexMan.CheckForTexture("IconSaw2",TexMan.Type_Any);
+		UseSaw2 = TexMan.CheckForTexture("UseSaw2",TexMan.Type_Any);
 	}
 
 	override void Draw( int state, double TicFrac )
 	{
 		Super.Draw(state,TicFrac);
-		if ( IconTloc2.IsNull() ) IconTloc2 = TexMan.CheckForTexture("IconTrn2",TexMan.Type_Any);
-		if ( UseTLoc2.IsNull() ) UseTloc2 = TexMan.CheckForTexture("UseTrn2",TexMan.Type_Any);
 		HScale = Screen.GetWidth()/1280.;
 		switch ( CVar.GetCVar('flak_colorprefs',CPlayer).GetInt() )
 		{
@@ -234,14 +236,18 @@ Class UTHud : BaseStatusBar
 			if ( !(w is IconClasses[i]) ) continue;
 			if ( use )
 			{
-				if ( (i == 11) && flak_transloc2k4 )
+				if ( (i == 10) && flak_sawammo )
+					UTDrawTintedTex(UseSaw2,sx,opacity+7);
+				else if ( (i == 11) && flak_transloc2k4 )
 					UTDrawTintedTex(UseTloc2,sx,opacity+7);
 				else UTDrawTintedTex(Uses[i],sx,opacity+7);
 			}
 			else
 			{
-				if ( (i == 11) && flak_transloc2k4 )
-					UTDrawTintedTex(IconTloc2,sx,opacity+7);
+				if ( (i == 10) && flak_sawammo )
+					UTDrawTintedTex(IconSaw2,sx,opacity,halftint);
+				else if ( (i == 11) && flak_transloc2k4 )
+					UTDrawTintedTex(IconTloc2,sx,opacity,halftint);
 				else UTDrawTintedTex(Icons[i],sx,opacity,halftint);
 			}
 			return true;
