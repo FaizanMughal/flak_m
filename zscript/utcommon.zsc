@@ -1698,7 +1698,7 @@ Class UTMainHandler : EventHandler
 		// just replace the -noflat- with a better scaled version and change the sky
 		if ( !flak_doomtest )
 		{
-			if ( (level.GetChecksum() ~== "959A613006CC3AA912C4A22908B7566A") || (level.GetChecksum() ~== "75319AE5D2DBA214C5D394BF69DF32F4") )
+			if ( (level.GetChecksum() ~== "959A613006CC3AA912C4A22908B7566A") || (level.GetChecksum() ~== "0EADB2F82732A968B8513E4DC6138439") )
 			{
 				Level.ReplaceTextures("-noflat-","DefTex",0);
 				TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
@@ -1804,7 +1804,7 @@ Class UTMainHandler : EventHandler
 			AddAmbient((3584,736,64),"testamb/slime",0.4,2.4);
 			AddAmbient((3584,512,64),"testamb/lava",0.8,2.4);
 		}
-		else if ( level.GetChecksum() ~== "75319AE5D2DBA214C5D394BF69DF32F4" )
+		else if ( level.GetChecksum() ~== "0EADB2F82732A968B8513E4DC6138439" )
 		{
 			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
 			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
@@ -1964,6 +1964,25 @@ Class UTMainHandler : EventHandler
 			if ( flashes[i].tic < gametic ) continue;
 			GenericFlash gf = new("GenericFlash").Setup(flashes[i].cam,flashes[i].c,flashes[i].duration);
 			StatusBar.AttachMessage(gf,0,BaseStatusBar.HUDMSGLayer_UnderHUD);
+		}
+	}
+
+	override void WorldThingDamaged( WorldEvent e )
+	{
+		if ( (e.Thing.Health > 0) || e.Thing.bKilled || e.Thing.bCorpse ) return;
+		if ( !e.Thing.player && !e.Thing.bIsMonster && !e.Thing.bCountKill ) return;
+		if ( (e.Inflictor && e.Inflictor.player && (e.Inflictor != e.Thing)) || (e.DamageSource && e.DamageSource.player && (e.DamageSource != e.Thing)) )
+		{
+			Weapon saw = Weapon(e.Inflictor.FindInventory("UTChainsaw"));
+			if ( !saw ) saw = Weapon(e.DamageSource.FindInventory("UTChainsaw"));
+			bool current = false;
+			if ( e.Inflictor.player && e.Inflictor.player.ReadyWeapon == saw ) current = true;
+			if ( e.DamageSource.player && (e.DamageSource.player.ReadyWeapon == saw) ) current = true;
+			if ( flak_sawammo && saw && (saw.Ammo1.Amount < 40) && !current && !Random[SawDrop](0,9) )
+			{
+				let a = Actor.Spawn("ChainsawAmmo",e.Thing.Vec3Offset(0,0,e.Thing.Height*.5));
+				a.TossItem();
+			}
 		}
 	}
 
