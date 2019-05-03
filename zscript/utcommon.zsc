@@ -1539,30 +1539,30 @@ Class UTMainHandler : EventHandler
 
 	override void CheckReplacement( ReplaceEvent e )
 	{
-		if ( e.Replacee == 'Chainsaw' )
+		if ( (e.Replacee == 'Chainsaw') || (e.Replacee == 'Gauntlets') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'UTChainsaw';
 			else e.Replacement = 'Enforcer';
 		}
-		else if ( e.Replacee == 'Fist' ) e.Replacement = 'ImpactHammer';
-		else if ( e.Replacee == 'Pistol' ) e.Replacement = 'Enforcer';
-		else if ( (e.Replacee == 'Shotgun') || (e.Replacee == 'SuperShotgun') )
+		else if ( (e.Replacee == 'Fist') || (e.Replacee == 'Staff') ) e.Replacement = 'ImpactHammer';
+		else if ( (e.Replacee == 'Pistol') || (e.Replacee == 'GoldWand') ) e.Replacement = 'Enforcer';
+		else if ( (e.Replacee == 'Shotgun') || (e.Replacee == 'SuperShotgun') || (e.Replacee == 'Crossbow') )
 		{
 			if ( !Random[Replacements](0,3) ) e.Replacement = 'Enforcer';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'BioRifle';
 			else e.Replacement = 'ShockRifle';
 		}
-		else if ( e.Replacee == 'Chaingun' )
+		else if ( (e.Replacee == 'Chaingun') || (e.Replacee == 'Blaster') )
 		{
 			if ( Random[Replacements](0,2) ) e.Replacement = 'PulseGun';
 			else e.Replacement = 'Ripper2';
 		}
-		else if ( e.Replacee == 'RocketLauncher' )
+		else if ( (e.Replacee == 'RocketLauncher') || (e.Replacee == 'PhoenixRod') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'FlakCannon';
 			else e.Replacement = 'UTRocketLauncher';
 		}
-		else if ( e.Replacee == 'PlasmaRifle' )
+		else if ( (e.Replacee == 'PlasmaRifle') || (e.Replacee == 'SkullRod') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'Minigun';
 			else e.Replacement = 'SniperRifle';
@@ -1580,18 +1580,23 @@ Class UTMainHandler : EventHandler
 			else if ( Random[Replacements](0,2) ) e.Replacement = 'PulseAmmo';
 			else e.Replacement = 'RipperAmmo';
 		}
-		else if ( e.Replacee == 'Shell' )
+		else if ( (e.Replacee == 'BlasterAmmo') || (e.Replacee == 'BlasterHefty') )
+		{
+			if ( Random[Replacements](0,2) ) e.Replacement = 'PulseAmmo';
+			else e.Replacement = 'RipperAmmo';
+		}
+		else if ( (e.Replacee == 'Shell') || (e.Replacee == 'CrossbowAmmo') )
 		{
 			if ( !Random[Replacements](0,2) ) e.Replacement = 'EClip';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'BioAmmo2';
 			else e.Replacement = 'ShockAmmo2';
 		}
-		else if ( e.Replacee == 'ShellBox' )
+		else if ( (e.Replacee == 'ShellBox') || (e.Replacee == 'CrossbowHefty') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'BioAmmo';
 			else e.Replacement = 'ShockAmmo';
 		}
-		else if ( e.Replacee == 'RocketAmmo' )
+		else if ( (e.Replacee == 'RocketAmmo') || (e.Replacee == 'PhoenixRodAmmo') || (e.Replacee == 'MaceAmmo') )
 		{
 			if ( Random[Replacements](0,1) )
 			{
@@ -1604,18 +1609,18 @@ Class UTMainHandler : EventHandler
 				else e.Replacement = 'UTRocketAmmo2';
 			}
 		}
-		else if ( e.Replacee == 'RocketBox' )
+		else if ( (e.Replacee == 'RocketBox') || (e.Replacee == 'PhoenixRodHefty') || (e.Replacee == 'MaceHefty') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'FlakAmmo';
 			else e.Replacement = 'UTRocketAmmo';
 		}
-		else if ( e.Replacee == 'Cell' )
+		else if ( (e.Replacee == 'Cell') || (e.Replacee == 'SkullRodAmmo') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'EClip';
 			else if ( !Random[Replacements](0,3) ) e.Replacement = 'RifleAmmo';
 			else e.Replacement = 'RifleAmmo2';
 		}
-		else if ( e.Replacee == 'CellPack' )
+		else if ( (e.Replacee == 'CellPack') || (e.Replacee == 'SkullRodHefty') )
 		{
 			if ( !Random[Replacements](0,6) ) e.Replacement = 'WarheadAmmo';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'MiniAmmo';
@@ -1664,6 +1669,9 @@ Class UTMainHandler : EventHandler
 		else if ( e.Replacee == 'TeleportFog' ) e.Replacement = 'UTTeleportFog';
 		else if ( e.Replacee == 'ItemFog' ) e.Replacement = 'UTItemFog';
 		else if ( flak_blood && (e.Replacee == 'Blood') ) e.Replacement = 'UTBlood';
+		else if ( e.Replacee == 'KeyYellow' ) e.Replacement = 'UTHereticYellowKey';
+		else if ( e.Replacee == 'KeyGreen' ) e.Replacement = 'UTHereticGreenKey';
+		else if ( e.Replacee == 'KeyBlue' ) e.Replacement = 'UTHereticBlueKey';
 	}
 
 	private Actor AddLight( Vector3 pos, Color col, int radius )

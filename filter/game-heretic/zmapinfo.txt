@@ -1,0 +1,9 @@
+GameInfo
+{
+	AddEventHandlers = "RedeemerHUDHandler", "UTMainHandler"
+	PlayerClasses = "UTPlayerHereticCompatTMale1", "UTPlayerHereticCompatTMale2", "UTPlayerHereticCompatTFemale1", "UTPlayerHereticCompatTFemale2", "UTPlayerHereticCompatTBoss"
+	StatusBarClass = "UTHud"
+	BackpackType = "UTBackpack"
+	BorderFlat = "TEMPBG"
+	Border = 0,0,"","","","","","","",""
+}

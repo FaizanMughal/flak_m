@@ -219,6 +219,10 @@ HardwareShader Texture "models/RedSkin2.png"
 {
 	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
 }
+HardwareShader Texture "models/NewGreen.png"
+{
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
 HardwareShader Texture "models/bpak.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
@@ -536,6 +540,14 @@ PulseLight "UTGoldKeyLight"
 	Interval 2.0
 	Offset 0 16 0
 }
+PulseLight "UTGreenKeyLight"
+{
+	Color 0.0 1.0 0.0
+	Size 15
+	SecondarySize 20
+	Interval 2.0
+	Offset 0 16 0
+}
 Object "UTRedSkull"
 {
 	Frame "USKL" { light "UTRedKeyLight" }
@@ -559,6 +571,18 @@ Object "UTBlueKey"
 Object "UTGoldKey"
 {
 	Frame "UKEY" { light "UTGoldKeyLight" }
+}
+Object "UTHereticYellowKey"
+{
+	Frame "UKEY" { light "UTGoldKeyLight" }
+}
+Object "UTHereticGreenKey"
+{
+	Frame "UKEY" { light "UTGreenKeyLight" }
+}
+Object "UTHereticBlueKey"
+{
+	Frame "UKEY" { light "UTBlueKeyLight" }
 }
 HardwareShader PostProcess scene
 {

@@ -293,6 +293,39 @@ Model "UTBlueKey"
 
 	FrameIndex UKEY C 0 0
 }
+Model "UTHereticYellowKey"
+{
+	Path "models"
+	Model 0 "MercSymbol_d.3d"
+	Skin 0 "GoldSkin2.png"
+	Scale 0.08 0.08 0.096
+	ZOffset 16
+	ROTATING
+
+	FrameIndex UKEY B 0 0
+}
+Model "UTHereticGreenKey"
+{
+	Path "models"
+	Model 0 "UDamage_d.3d"
+	Skin 0 "NewGreen.png"
+	Scale 0.08 0.08 0.096
+	ZOffset 16
+	ROTATING
+
+	FrameIndex UKEY D 0 0
+}
+Model "UTHereticBlueKey"
+{
+	Path "models"
+	Model 0 "DomB_d.3d"
+	Skin 0 "BlueSkin2.png"
+	Scale 0.04 0.04 0.048
+	ZOffset 16
+	ROTATING
+
+	FrameIndex UKEY C 0 0
+}
 
 Model "UTBackpack"
 {
