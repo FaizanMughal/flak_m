@@ -716,11 +716,11 @@ Class UTHud : BaseStatusBar
 			Inventory itm;
 			for ( itm=CPlayer.mo.InvFirst; (itm && (i < 5)); itm=itm.NextInv() )
 			{
-				CurX = BaseX+2*hudsize*HScale;
-				CurY = BaseY+2*hudsize*HScale;
-				// if item doesn't fit 60x60, scale
+				// scale to fit
 				Vector2 scl = TexMan.GetScaledSize(itm.Icon);
-				double mscl = max(scl.x,scl.y)/60.;
+				double mscl = 56./max(scl.x,scl.y);
+				CurX = BaseX+(4+(56.-scl.x*mscl)/2.)*hudsize*HScale;
+				CurY = BaseY+4*hudsize*HScale;
 				UTDrawTintedTex(itm.Icon,hudsize*mscl);
 				// amount if >1
 				if ( itm.Amount > 1 )
@@ -763,10 +763,11 @@ Class UTHud : BaseStatusBar
 			UTDrawTintedTex(ItemBox,hudsize);
 			if ( artiflashtick )
 			{
+				// scale to fit
 				Vector2 scl = TexMan.GetScaledSize(LastItem);
-				double mscl = max(scl.x,scl.y)/60.;
-				CurX += 2*hudsize*HScale;
-				CurY += 2*hudsize*HScale;
+				double mscl = 56./max(scl.x,scl.y);
+				CurX += (4+(56.-scl.x*mscl)/2.)*hudsize*HScale;
+				CurY += 4*hudsize*HScale;
 				UTDrawTintedTex(LastItem,hudsize*mscl);
 				if ( LastAmount <= 1 ) return;
 				CurX = 32*hudsize*HScale;
@@ -776,11 +777,11 @@ Class UTHud : BaseStatusBar
 				return;
 			}
 			if ( !CPlayer.mo.InvSel ) return;
-			// if item doesn't fit 60x60, scale
+			// scale to fit
 			Vector2 scl = TexMan.GetScaledSize(CPlayer.mo.InvSel.Icon);
-			double mscl = max(scl.x,scl.y)/60.;
-			CurX += 2*hudsize*HScale;
-			CurY += 2*hudsize*HScale;
+			double mscl = 56./max(scl.x,scl.y);
+			CurX += (4+(56.-scl.x*mscl)/2.)*hudsize*HScale;
+			CurY += 4*hudsize*HScale;
 			UTDrawTintedTex(CPlayer.mo.InvSel.Icon,hudsize*mscl);
 			// amount if >1
 			if ( CPlayer.mo.InvSel.Amount <= 1 ) return;
