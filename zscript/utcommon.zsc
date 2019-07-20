@@ -12,6 +12,7 @@ Class UTPlayer : DoomPlayer
 	int last_jump_held;
 
 	int tempslide;
+	double ssup;
 
 	int dolltype, voicetype;
 
@@ -267,6 +268,89 @@ Class UTPlayer : DoomPlayer
 		return 734.2969*fin*fin-1485.0868*fin+750.7899;
 	}
 
+	override void CalcHeight()
+	{
+		if ( !flak_utmovement || !player || (player.mo != self) )
+		{
+			Super.CalcHeight();
+			return;
+		}
+		double angle, bob;
+		bool still = false;
+		// no bobbing while:
+		//  - using noclip2 (equivalent to unreal's ghost cheat)
+		//  - flying
+		//  - swimming
+		//  - falling
+		if ( !bNoGravity && player.onground && (waterlevel < 2) )
+		{
+			player.bob = player.Vel dot player.Vel;
+			if ( player.bob == 0 ) still = true;
+			else
+			{
+				player.bob *= player.GetMoveBob();
+				if ( player.bob > MAXBOB ) player.bob = MAXBOB;
+			}
+		}
+		else
+		{
+			// this still doesn't help because fly bob is hardcoded
+			player.bob = 0;
+		}
+		double defaultviewheight = ViewHeight+player.crouchviewdelta;
+		if ( player.cheats&CF_NOVELOCITY )
+		{
+			player.viewz = pos.z+defaultviewheight;
+			if ( player.viewz > ceilingz-4 ) player.viewz = ceilingz-4;
+			return;
+		}
+		if ( still )
+		{
+			if ( player.health > 0 )
+			{
+				angle = Level.maptime/(120*TICRATE/35.)*360.;
+				bob = player.GetStillBob()*sin(angle);
+			}
+			else bob = 0;
+		}
+		else
+		{
+			angle = Level.maptime/(20*TICRATE/35.)*360.;
+			bob = player.bob*sin(angle)*((waterlevel>1)?0.25:0.5);
+		}
+		// move viewheight
+		if ( player.playerstate == PST_LIVE )
+		{
+			player.viewheight += player.deltaviewheight;
+			if ( player.viewheight > defaultviewheight )
+			{
+				player.viewheight = defaultviewheight;
+				player.deltaviewheight = 0;
+			}
+			else if ( player.viewheight < (defaultviewheight/2) )
+			{
+				player.viewheight = defaultviewheight/2;
+				if ( player.deltaviewheight <= 0 )
+					player.deltaviewheight = 1/65536.;
+			}
+			if ( player.deltaviewheight )
+			{
+				player.deltaviewheight += 0.25;
+				if ( !player.deltaviewheight )
+					player.deltaviewheight = 1/65536.;
+			}
+		}
+		if ( player.morphTics ) bob = 0;
+		player.viewz = pos.z+player.viewheight+(bob*clamp(ViewBob,0.,1.5)); // [SP] Allow DECORATE changes to view bobbing speed.
+		// handle smooth step down (hacky but looks ok)
+		player.viewz += ssup;
+		ssup = max(0,(ssup*0.7)-0.25);
+		if ( floorclip && (player.playerstate != PST_DEAD) && (pos.z <= floorz) )
+			player.viewz -= Floorclip;
+		if ( player.viewz > ceilingz-4 ) player.viewz = ceilingz-4;
+		if ( player.viewz < floorz+4 ) player.viewz = floorz+4;
+	}
+
 	override void MovePlayer()
 	{
 		if ( !flak_utmovement || !player || (player.mo != self) )
@@ -286,6 +370,7 @@ Class UTPlayer : DoomPlayer
 		if ( player.onground ) lastgroundtic = gametic;
 		if ( !player.onground && !bNoGravity && (waterlevel < 2) && (abs(pos.z-floorz) <= maxdropoffheight) && (player.jumptics == 0) && (vel.z < 0) )
 		{
+			ssup = max(0,(pos.z-floorz));
 			SetOrigin(Vec2OffsetZ(0,0,floorz),true);
 			player.onground = true;
 		}
@@ -326,6 +411,8 @@ Class UTPlayer : DoomPlayer
 			}
 		}
 		last_sm = sm;
+		// slant detection
+		if ( floorsector.floorplane.normal dot (0,0,1) < 0.7 ) player.onground = false;
 		if ( !bNoGravity && player.onground && (waterlevel < 2) )
 		{
 			if ( flak_tapdodge && (dodge.length() > 0) && !tempslide )
@@ -420,7 +507,7 @@ Class UTPlayer : DoomPlayer
 			player.vel *= 0;
 			player.jumptics = -2;
 		}
-		else if ( bFly || (player.cheats&CF_NOCLIP2) )
+		else if ( (bFly && bFlyCheat) || (player.cheats&CF_NOCLIP2) )
 		{
 			// fly cheat has infinite friction (player stops moving when movement keys are released)
 			Vector3 dir = (0,0,0);
@@ -473,8 +560,16 @@ Class UTPlayer : DoomPlayer
 			}
 			vel = vel+acceleration3/TICRATE;
 			double maxvel;
-			if ( flak_doomspeed ) maxvel = swimspeed_doomish/TICRATE;
-			else maxvel = swimspeed/TICRATE;
+			if ( waterlevel < 2 )	// flying uses ground speed
+			{
+				if ( flak_doomspeed ) maxvel = groundspeed_doomish/TICRATE;
+				else maxvel = groundspeed/TICRATE;
+			}
+			else
+			{
+				if ( flak_doomspeed ) maxvel = swimspeed_doomish/TICRATE;
+				else maxvel = swimspeed/TICRATE;
+			}
 			maxvel *= fs*doomfriction;
 			if ( vel.length() > maxvel ) vel = vel.unit()*maxvel;
 			player.vel = vel.xy;
