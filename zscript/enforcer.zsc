@@ -47,6 +47,7 @@ Class BulletImpact : Actor
 		+NOGRAVITY;
 		+NOCLIP;
 		+DONTSPLASH;
+		+NOTELEPORT;
 		Scale 0.25;
 	}
 	override void PostBeginPlay()
@@ -102,6 +103,7 @@ Class UTCasing : Actor
 		+THRUACTORS;
 		+USEBOUNCESTATE;
 		+INTERPOLATEANGLES;
+		+NOTELEPORT;
 		Mass 1;
 		Gravity 0.35;
 		BounceType "Hexen";

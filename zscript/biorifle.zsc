@@ -91,6 +91,7 @@ Class BioHitbox : Actor
 		+NOCLIP;
 		+DONTSPLASH;
 		+NOBLOOD;
+		+NOTELEPORT;
 	}
 	override void PostBeginPlay()
 	{

@@ -11,6 +11,8 @@ Class UTPlayer : DoomPlayer
 	int last_tap_fm, last_tap_sm;
 	int last_jump_held;
 
+	int tempslide;
+
 	int dolltype, voicetype;
 
 	Property DollType : dolltype;
@@ -240,6 +242,11 @@ Class UTPlayer : DoomPlayer
 			}
 			else forcefootstep = true;
 		}
+		if ( tempslide )
+		{
+			tempslide = max(0,tempslide-1);
+			if ( !tempslide ) forcefootstep = true;
+		}
 		if ( forcefootstep || ((abs(sin(ang)) >= 1.0) && player.onground && lastground && (player.jumptics == 0) && (player.cmd.forwardmove || player.cmd.sidemove) && (waterlevel < 2)) )
 		{
 			double vol = abs(vel.xy.length())*0.03;
@@ -321,11 +328,20 @@ Class UTPlayer : DoomPlayer
 		last_sm = sm;
 		if ( !bNoGravity && player.onground && (waterlevel < 2) )
 		{
-			if ( flak_tapdodge && (dodge.length() > 0) )
+			if ( flak_tapdodge && (dodge.length() > 0) && !tempslide )
 			{
-				if ( flak_doomspeed ) vel += dodge.unit()*(groundspeed_doomish*1.5)/TICRATE;
-				else vel += dodge.unit()*(groundspeed*1.5)/TICRATE;
-				vel.z += dodgez/TICRATE;
+				if ( level.IsJumpingAllowed() )
+				{
+					if ( flak_doomspeed ) vel += dodge.unit()*(groundspeed_doomish*1.5)/TICRATE;
+					else vel += dodge.unit()*(groundspeed*1.5)/TICRATE;
+					vel.z += dodgez/TICRATE;
+				}
+				else
+				{
+					if ( flak_doomspeed ) vel += dodge.unit()*(groundspeed_doomish*2.0)/TICRATE;
+					else vel += dodge.unit()*(groundspeed*2.0)/TICRATE;
+					tempslide = 8;
+				}
 				bOnMobj = false;
 				if ( !(player.cheats&CF_PREDICTING) )
 					A_PlaySound("*jump",CHAN_BODY);
@@ -339,12 +355,13 @@ Class UTPlayer : DoomPlayer
 			}
 			else
 			{
-				if ( flak_nowalkdrop )
+				if ( flak_nowalkdrop && !tempslide )
 					bNODROPOFF = ((acceleration.length() > double.epsilon) && (cmd.buttons&BT_SPEED));
 				// Hook in Unreal physics
 				Vector2 dir = (0,0);
 				if ( vel.xy.length() > double.epsilon ) dir = vel.xy.unit();
 				double doomfriction = clamp(GetFriction()/ORIG_FRICTION,0.0,1.0);
+				if ( tempslide ) friction *= 0;
 				if ( acceleration.length() <= double.epsilon )
 				{
 					Vector2 oldvel = vel.xy;
@@ -369,7 +386,8 @@ Class UTPlayer : DoomPlayer
 					if ( acceleration.length() <= double.epsilon ) PlayIdle();
 					else PlayRunning();
 				}
-				player.vel = vel.xy;
+				if ( tempslide ) player.vel *= 0;
+				else player.vel = vel.xy;
 			}
 		}
 		else if ( !bNoGravity && (waterlevel < 2) )
@@ -1348,6 +1366,7 @@ Class ShredCorpseHitbox : Actor
 		-SOLID;
 		+DONTSPLASH;
 		+SHOOTABLE;
+		+NOTELEPORT;
 		Health int.max;
 	}
 	override void PostBeginPlay()

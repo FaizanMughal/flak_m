@@ -74,6 +74,7 @@ Class ChunkTrail : Actor
 		+NOGRAVITY;
 		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
+		+NOTELEPORT;
 		Scale 0.2;
 	}
 	override void PostBeginPlay()
@@ -364,6 +365,7 @@ Class SlugSmoke : Actor
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+DONTSPLASH;
+		+NOTELEPORT;
 	}
 	override void PostBeginPlay()
 	{

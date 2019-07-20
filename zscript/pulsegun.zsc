@@ -289,6 +289,7 @@ Class PulseBoltCap : Actor
 		+NOCLIP;
 		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
+		+NOTELEPORT;
 		Scale 0.3;
 	}
 	States
@@ -327,6 +328,7 @@ Class PulseBoltHit : Actor
 		+NOCLIP;
 		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
+		+NOTELEPORT;
 		Scale 0.3;
 	}
 	States
@@ -490,6 +492,7 @@ Class PulseBolt : Actor
 		+NOCLIP;
 		+DONTSPLASH;
 		+INTERPOLATEANGLES;
+		+NOTELEPORT;
 	}
 	States
 	{

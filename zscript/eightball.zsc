@@ -67,6 +67,7 @@ Class UTRocketTrail : Actor
 		+NOGRAVITY;
 		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
+		+NOTELEPORT;
 		Scale 0.7;
 	}
 	override void PostBeginPlay()
