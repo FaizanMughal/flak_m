@@ -360,6 +360,8 @@ Class UTRocketLauncher : UTWeapon
 		else A_PlaySound("utrl/fire",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(64,255,0,0),1);
+		if ( self is 'UTPlayer' )
+			UTPlayer(self).PlayAttacking3();
 		A_AlertMonsters();
 		A_QuakeEx(2+num,2+num,2+num,6+num,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1+num*0.05);
 		for ( int i=0; i<num; i++ )

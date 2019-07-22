@@ -13,6 +13,7 @@ Class UTPlayer : DoomPlayer
 
 	int tempslide;
 	double ssup;
+	int corpsetime;
 
 	int dolltype, voicetype;
 
@@ -177,7 +178,7 @@ Class UTPlayer : DoomPlayer
 				let type = (class<Inventory>)(AllActorClasses[i]);
 				if ( !type ) continue;
 				let def = GetDefaultByType(type);
-				if ( !(self is "UTPlayerHereticCompat")
+				if ( !(gameinfo.gametype&GAME_Raven)
 					&& ((type is "UTActivatable") || (type is "UTActivatableHealth")) )
 					continue;	// don't give these outside of Heretic/Hexen
 				if ( def.Icon.isValid() && (def.MaxAmount > 1) &&
@@ -242,6 +243,7 @@ Class UTPlayer : DoomPlayer
 				else A_PlaySound("*uland",CHAN_AUTO,vol);
 			}
 			else forcefootstep = true;
+			if ( Health > 0 ) PlayLanding();
 		}
 		if ( tempslide )
 		{
@@ -506,6 +508,7 @@ Class UTPlayer : DoomPlayer
 			if ( vel.length() > terminalvelocity/TICRATE ) vel = vel.unit()*(terminalvelocity/TICRATE);
 			player.vel *= 0;
 			player.jumptics = -2;
+			if ( !(player.cheats & CF_PREDICTING) ) PlayIdle();
 		}
 		else if ( (bFly && bFlyCheat) || (player.cheats&CF_NOCLIP2) )
 		{
@@ -708,6 +711,380 @@ Class UTPlayer : DoomPlayer
 	{
 		A_PlaySound("ut/playerfootstep",CHAN_5,vol);
 	}
+
+	override void PlayIdle()
+	{
+		if ( (player && (player.mo == self)) && (player.crouchdir == -1) )
+		{
+			// Crouching
+			if ( !InStateSequence(CurState,FindState("SpawnCrouch")) )
+				SetStateLabel("SpawnCrouch");
+		}
+		else if ( !bNoGravity && player.onground && (waterlevel < 2) )
+		{
+			// Ground
+			if ( (player && (player.mo == self)) && player.cmd.yaw )
+			{
+				if ( InStateSequence(CurState,FindState("See"))
+					|| InStateSequence(CurState,FindState("SeeAir"))
+					|| InStateSequence(CurState,FindState("SeeSwim"))
+					|| InStateSequence(CurState,FindState("SeeCrouch"))
+					|| InStateSequence(CurState,FindState("SpawnAir"))
+					|| InStateSequence(CurState,FindState("SpawnSwim"))
+					|| InStateSequence(CurState,FindState("SpawnCrouch"))
+					|| InStateSequence(CurState,FindState("Spawn")+1) )
+					SetStateLabel("Turn");
+			}
+			else
+			{
+				if ( InStateSequence(CurState,FindState("See"))
+					|| InStateSequence(CurState,FindState("SeeAir"))
+					|| InStateSequence(CurState,FindState("SeeSwim"))
+					|| InStateSequence(CurState,FindState("SeeCrouch"))
+					|| InStateSequence(CurState,FindState("SpawnAir"))
+					|| InStateSequence(CurState,FindState("SpawnSwim"))
+					|| InStateSequence(CurState,FindState("SpawnCrouch")) )
+					SetStateLabel("Spawn");
+			}
+		}
+		else if ( !bNoGravity && (waterlevel < 2) )
+		{
+			// Falling
+			if ( InStateSequence(CurState,FindState("See"))
+				|| InStateSequence(CurState,FindState("SeeAir"))
+				|| InStateSequence(CurState,FindState("SeeSwim"))
+				|| InStateSequence(CurState,FindState("SeeCrouch"))
+				|| InStateSequence(CurState,FindState("Spawn"))
+				|| InStateSequence(CurState,FindState("SpawnSwim"))
+				|| InStateSequence(CurState,FindState("SpawnCrouch"))
+				|| InStateSequence(CurState,FindState("Turn")) )
+				SetStateLabel("SpawnAir");
+		}
+		else
+		{
+			// Swimming
+			if ( InStateSequence(CurState,FindState("See"))
+				|| InStateSequence(CurState,FindState("SeeAir"))
+				|| InStateSequence(CurState,FindState("SeeSwim"))
+				|| InStateSequence(CurState,FindState("SeeCrouch"))
+				|| InStateSequence(CurState,FindState("Spawn"))
+				|| InStateSequence(CurState,FindState("SpawnAir"))
+				|| InStateSequence(CurState,FindState("SpawnCrouch"))
+				|| InStateSequence(CurState,FindState("Turn")) )
+				SetStateLabel("SpawnSwim");
+		}
+	}
+
+	override void PlayRunning()
+	{
+		if ( (player && (player.mo == self)) && (player.crouchdir == -1) )
+		{
+			// Crouching
+			if ( !InStateSequence(CurState,FindState("SeeCrouch")) )
+				SetStateLabel("SeeCrouch");
+		}
+		else if ( !bNoGravity && player.onground && (waterlevel < 2) )
+		{
+			// Ground
+			if ( InStateSequence(CurState,FindState("Spawn"))
+				|| InStateSequence(CurState,FindState("SpawnAir"))
+				|| InStateSequence(CurState,FindState("SpawnSwim"))
+				|| InStateSequence(CurState,FindState("SpawnCrouch"))
+				|| InStateSequence(CurState,FindState("SeeAir"))
+				|| InStateSequence(CurState,FindState("SeeSwim"))
+				|| InStateSequence(CurState,FindState("SeeCrouch"))
+				|| InStateSequence(CurState,FindState("Turn")) )
+				SetStateLabel("See");
+		}
+		else if ( !bNoGravity && (waterlevel < 2) )
+		{
+			// Falling
+			if ( InStateSequence(CurState,FindState("Spawn"))
+				|| InStateSequence(CurState,FindState("SpawnAir"))
+				|| InStateSequence(CurState,FindState("SpawnSwim"))
+				|| InStateSequence(CurState,FindState("SpawnCrouch"))
+				|| InStateSequence(CurState,FindState("See"))
+				|| InStateSequence(CurState,FindState("SeeSwim"))
+				|| InStateSequence(CurState,FindState("SeeCrouch"))
+				|| InStateSequence(CurState,FindState("Turn")) )
+				SetStateLabel("SeeAir");
+		}
+		else
+		{
+			// Swimming
+			if ( InStateSequence(CurState,FindState("Spawn"))
+				|| InStateSequence(CurState,FindState("SpawnAir"))
+				|| InStateSequence(CurState,FindState("SpawnSwim"))
+				|| InStateSequence(CurState,FindState("SpawnCrouch"))
+				|| InStateSequence(CurState,FindState("See"))
+				|| InStateSequence(CurState,FindState("SeeAir"))
+				|| InStateSequence(CurState,FindState("SeeCrouch"))
+				|| InStateSequence(CurState,FindState("Turn")) )
+				SetStateLabel("SeeSwim");
+		}
+	}
+
+	override void PlayAttacking()
+	{
+		// no animation if crouched
+		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
+		// check weapon type
+		if ( (player.ReadyWeapon is 'SniperRifle') && (player.buttons&BT_ALTATTACK) )
+			return;
+		if ( ((player.ReadyWeapon is 'BioRifle') && (player.buttons&BT_ALTATTACK))
+			|| (player.ReadyWeapon is 'UTRocketLauncher') )
+		{
+			if ( !InStateSequence(CurState,FindState("MissileRepStill")) )
+				SetStateLabel("MissileRepStill");
+		}
+		else if ( ((player.ReadyWeapon is 'ImpactHammer') && (player.buttons&BT_ATTACK))
+			|| ((player.ReadyWeapon is 'UTChainsaw') && (player.buttons&BT_ATTACK))
+			|| (player.ReadyWeapon is 'PulseGun')
+			|| (player.ReadyWeapon is 'Minigun') )
+		{
+			if ( !InStateSequence(CurState,FindState("MissileRep")) )
+				SetStateLabel("MissileRep");
+		}
+		else SetStateLabel("Missile");
+	}
+
+	override void PlayAttacking2()
+	{
+		PlayAttacking();
+	}
+
+	virtual void PlayAttacking3()
+	{
+		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
+		SetStateLabel("Missile");
+	}
+
+	virtual void PlayReloading()
+	{
+		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
+		SetStateLabel("Reload");
+	}
+
+	virtual void PlayLanding()
+	{
+		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
+		SetStateLabel("Landing");
+	}
+
+	void A_HeadPop()
+	{
+		Class<UTHead> hclass = "UTHeadMale";
+		if ( DollType == DOLL_Boss ) hclass = "UTHeadBoss";
+		else if ( DollType == DOLL_Female ) hclass = "UTHeadFemale";
+		let h = UTHead(Spawn(hclass,Vec3Offset(0,0,viewheight)));
+		if ( player )
+		{
+			h.headowner = player;
+			player.camera = h;
+		}
+		double ang = FRandom[Blod](0,360);
+		double pt = FRandom[Blod](-90,-30);
+		Vector3 dir = (cos(pt)*cos(ang),cos(pt)*sin(ang),sin(-pt));
+		h.vel = vel*0.6+dir*FRandom[Blod](8.0,12.0);
+	}
+
+	void A_GibMe()
+	{
+		let a = Actor.Spawn("UTPlayerGibber",pos);
+		a.vel = vel;
+		a.Scale = Scale;
+		a.A_SetSize(radius,height);
+		UTGibber(a).Gibbed = self;
+	}
+
+	void A_DMFade()
+	{
+		if ( !deathmatch || player ) return;
+		corpsetime++;
+		if ( corpsetime > 350 ) A_FadeOut(0.03);
+	}
+
+	States
+	{
+	Spawn:
+		#### # 5;
+		PLAY ABCDEFG 8;
+		Goto Spawn+1;
+	Turn:
+		#### # 6;
+		PLYT A 0 A_JumpIf(!player||!player.cmd.yaw,"Spawn");
+		PLYT A 6;
+		PLYT A 0 A_JumpIf(!player||!player.cmd.yaw,"Spawn");
+		PLYT A 6;
+		PLYT B 0 A_JumpIf(!player||!player.cmd.yaw,"Spawn");
+		PLYT B 6;
+		PLYT B 0 A_JumpIf(!player||!player.cmd.yaw,"Spawn");
+		PLYT B 6;
+		Goto Turn+1;
+	SpawnAir:
+		#### # 5;
+		PLYA A 50;
+		PLYL A 50;
+		Goto SpawnAir+1;
+	SpawnSwim:
+		#### # 5;
+		PLYS ABCDEFG 6;
+		Goto SpawnSwim+1;
+	SpawnCrouch:
+		#### # 5;
+		PLYC A -1;
+		Wait;
+	See:
+		#### # 5;
+		PLAY HIJKL 4;
+		Goto See+1;
+	SeeAir:
+		#### # 5;
+		PLYA A 50;
+		PLYL A 50;
+		Goto SeeAir+1;
+	SeeSwim:
+		#### # 5;
+		PLYS HIJKL 4;
+		Goto SeeSwim+1;
+	SeeCrouch:
+		#### # 5;
+		PLYC ABCDE 4;
+		Goto SeeCrouch+1;
+	Missile:
+		#### # 2;
+		PLAY MNOPQA 3;
+		Goto Spawn;
+	MissileRep:
+		#### # 2;
+		PLAY R 2;
+		PLAY S 0 A_JumpIf(!player||!(player.buttons&(BT_ATTACK|BT_ALTATTACK)),"Spawn");
+		PLAY S 2;
+		PLAY T 0 A_JumpIf(!player||!(player.buttons&(BT_ATTACK|BT_ALTATTACK)),"Spawn");
+		PLAY T 2;
+		PLAY U 0 A_JumpIf(!player||!(player.buttons&(BT_ATTACK|BT_ALTATTACK)),"Spawn");
+		PLAY U 2;
+		PLAY V 0 A_JumpIf(!player||!(player.buttons&(BT_ATTACK|BT_ALTATTACK)),"Spawn");
+		PLAY V 2;
+		PLAY R 0 A_JumpIf(!player||!(player.buttons&(BT_ATTACK|BT_ALTATTACK)),"Spawn");
+		Goto MissileRep+1;
+	MissileRepStill:
+		#### # 2;
+		PLAY R 2;
+		PLAY R 0 A_JumpIf(!player||!(player.buttons&(BT_ATTACK|BT_ALTATTACK)),"Spawn");
+		Goto MissileRepStill+1;
+	Reload:
+		#### # 3;
+		PLYR ABCDEFGH 4;
+		Goto Spawn;
+	Landing:
+		#### # 4;
+		PLYL A 3;
+		Goto Spawn;
+	Pain:
+		#### # 0 A_Jump(256,1,3,5,7);
+		#### # 2;
+		PLAY W 3 A_Pain();
+		Goto Spawn;
+		#### # 2;
+		PLAY Y 3 A_Pain();
+		Goto Spawn;
+		#### # 2;
+		PLAY Z 3 A_Pain();
+		Goto Spawn;
+	Pain.Decapitated:
+		#### # 2;
+		PLAY X 3 A_Pain();
+		Goto Spawn;
+	Death.Decapitated:
+		#### # 0 A_HeadPop();
+		PLD4 A 3 A_PlayerScream();
+		PLD4 B 3 A_NoBlocking();
+		PLD4 CDEFGHIJKLMNO 3;
+		PLD4 P 1 A_DMFade();
+		Wait;
+	Death:
+		#### # 0 A_JumpIf(vel.length()>20,"Death11");
+		#### # 0 A_JumpIf(vel.length()>10,"Death1");
+		#### # 0 A_Jump(256,"Death2","Death3","Death7","Death8");
+	Death11:
+		#### # 3;
+		PD11 A 3 A_PlayerScream();
+		PD11 B 3 A_NoBlocking();
+		PD11 CDEFGHIJKLMNOPQ 3;
+		PD11 R 1 A_DMFade();
+		Wait;
+	Death.Zapped:
+		#### # 3;
+		PLD9 A 3 A_PlayerScream();
+		PLD9 B 3 A_NoBlocking();
+		PLD9 CDEFGHIJKLMNOPQRST 2;
+		PD9B ABCDEFGHI 2;
+		PD9B J 1 A_DMFade();
+		Wait;
+	Death8:
+		#### # 3;
+		PLD8 A 3 A_PlayerScream();
+		PLD8 B 3 A_NoBlocking();
+		PLD8 CDEFGHIJKLMNOPQ 3;
+		PLD8 R 1 A_DMFade();
+		Wait;
+	Death7:
+		#### # 3;
+		PLD7 A 3 A_PlayerScream();
+		PLD7 B 3 A_NoBlocking();
+		PLD7 CDEFGHIJKLMNOPQRST 3;
+		PLD7 U 1 A_DMFade();
+		Wait;
+	Death3:
+		#### # 3;
+		PLD3 A 3 A_PlayerScream();
+		PLD3 B 3 A_NoBlocking();
+		PLD3 CDEFGHIJKL 3;
+		PLD3 M 1 A_DMFade();
+		Wait;
+	Death2:
+		#### # 3;
+		PLD2 A 3 A_PlayerScream();
+		PLD2 B 3 A_NoBlocking();
+		PLD2 CDEFGHIJKLMNO 3;
+		PLD2 P 1 A_DMFade();
+		Wait;
+	Death1:
+		#### # 3;
+		PLD1 A 3 A_PlayerScream();
+		PLD1 B 3 A_NoBlocking();
+		PLD1 CDEFGHIJKL 3;
+		PLD1 M 1 A_DMFade();
+		Wait;
+	XDeath:
+		TNT1 A 1
+		{
+			A_XScream();
+			A_NoBlocking();
+			A_GibMe();
+		}
+		TNT1 A 1 A_CheckPlayerDone();
+		Wait;
+	Taunt1:
+		#### # 5;
+		PLT1 ABCDEFGHIJKLMNOPQRST 3;
+		Goto Spawn;
+	Taunt2:
+		#### # 5;
+		PLT2 ABCDEFGHIJKLMNOPQR 4;
+		PLT2 R 8;
+		PLAY A 3;
+		Goto Spawn;
+	Taunt3:
+		#### # 5;
+		PLT3 ABCDEFGHIJKLMNO 3;
+		Goto Spawn;
+	Taunt4:
+		#### # 5;
+		PLT4 ABCDEFGHIJKLMNO 3;
+		Goto Spawn;
+	}
 }
 
 // these only exist for sound
@@ -734,26 +1111,118 @@ Class UTPlayerTMale2 : UTPlayer
 		-NOMENU;
 	}
 }
-Class UTPlayerTFemale1 : UTPlayer
+Class UTPlayerTFemale : UTPlayer
+{
+	Default
+	{
+		UTPlayer.DollType DOLL_Female;
+	}
+
+	void A_LegPop()
+	{
+		let a = Actor.Spawn("UTFemaleLegGibber",pos);
+		a.vel = vel;
+		a.Scale = Scale;
+		a.A_SetSize(radius,height);
+		UTGibber(a).Gibbed = self;
+	}
+
+	States
+	{
+	Reload:
+		#### # 3;
+		PLYR ABCDEF 4;
+		Goto Spawn;
+	Taunt1:
+		#### # 5;
+		PLT1 ABCDEFGHIJKLMNO 3;
+		Goto Spawn;
+	Taunt2:
+		#### # 5;
+		PLT2 ABCDEFGHIJ 6;
+		PLAY A 3;
+		Goto Spawn;
+	Death.Decapitated:
+		#### # 0 A_HeadPop();
+		PLD6 A 3 A_PlayerScream();
+		PLD6 B 3 A_NoBlocking();
+		PLD6 CDEFGHIJ 3;
+		PLD6 K 1 A_DMFade();
+		Wait;
+	Death.Zapped:
+		#### # 3;
+		PLD9 A 3 A_PlayerScream();
+		PLD9 B 3 A_NoBlocking();
+		PLD9 CDEFGHIJKLMNOPQRST 2;
+		PD9B ABCDEFGHIJ 2;
+		PD9B K 1 A_DMFade();
+		Wait;
+	Death:
+		#### # 0 A_JumpIf(vel.length()>20,"Death5");
+		#### # 0 A_JumpIf(vel.length()>10,"Death2");
+		#### # 0 A_Jump(256,"Death1","Death3","Death4","Death7");
+	Death7:
+		#### # 3;
+		PLD7 A 3 A_PlayerScream();
+		PLD7 B 3 A_NoBlocking();
+		PLD7 CDEFGHIJ 3;
+		PLD7 K 1 A_DMFade();
+		Wait;
+	Death5:
+		#### # 0 A_LegPop();
+		PLD5 A 3 A_PlayerScream();
+		PLD5 B 3 A_NoBlocking();
+		PLD5 CDEFGHIJKL 3;
+		PLD5 M 1 A_DMFade();
+		Wait;
+	Death4:
+		#### # 3;
+		PLD4 A 3 A_PlayerScream();
+		PLD4 B 3 A_NoBlocking();
+		PLD4 CDEFGHIJKL 3;
+		PLD4 M 1 A_DMFade();
+		Wait;
+	Death3:
+		#### # 3;
+		PLD3 A 3 A_PlayerScream();
+		PLD3 B 3 A_NoBlocking();
+		PLD3 CDEFGHIJKLMNO 3;
+		PLD3 P 1 A_DMFade();
+		Wait;
+	Death2:
+		#### # 3;
+		PLD2 A 3 A_PlayerScream();
+		PLD2 B 3 A_NoBlocking();
+		PLD2 CDEFGHIJKLMNOPQ 3;
+		PLD2 R 1 A_DMFade();
+		Wait;
+	Death1:
+		#### # 3;
+		PLD1 A 3 A_PlayerScream();
+		PLD1 B 3 A_NoBlocking();
+		PLD1 CDEFGHIJKLMNOPQRSTUV 3;
+		PLD1 W 1 A_DMFade();
+		Wait;
+	}
+}
+Class UTPlayerTFemale1 : UTPlayerTFemale
 {
 	Default
 	{
 		Player.SoundClass "tfemale";
 		Player.DisplayName "$N_TFEMALE1";
 		Player.Portrait "Ivana";
-		UTPlayer.DollType DOLL_Female;
 		UTPlayer.VoiceType VOICE_FemaleOne;
 		-NOMENU;
 	}
 }
-Class UTPlayerTFemale2 : UTPlayer
+Class UTPlayerTFemale2 : UTPlayerTFemale
 {
 	Default
 	{
 		Player.SoundClass "tfemale";
 		Player.DisplayName "$N_TFEMALE2";
 		Player.Portrait "Lauren";
-		UTPlayer.DollType DOLL_Female;
 		UTPlayer.VoiceType VOICE_FemaleTwo;
 		-NOMENU;
 	}
@@ -1580,8 +2049,8 @@ Class GenericFlash : HUDMessageBase
 	}
 	override bool Tick()
 	{
-		alpha -= 1./duration;
-		return (alpha<=0);
+		if ( duration > 0 ) alpha -= 1./duration;
+		return (alpha<=0)||(!cam);
 	}
 	override void Draw( int bottom, int visibility )
 	{
@@ -2059,6 +2528,27 @@ Class UTMainHandler : EventHandler
 				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] ) players[i].mo.TakeInventory("Translocator",1);
 			}
 		}
+		else if ( e.Name ~== "uttaunt" )
+		{
+			if ( (e.player == -1) || !playeringame[e.player] || !players[e.player].mo ) return;
+			let mo = players[e.player].mo;
+			if ( (mo.Health <= 0) || !(mo is 'UTPlayer') ) return;
+			switch ( e.Args[0] )
+			{
+			case 2:
+				mo.SetStateLabel("Taunt2");
+				break;
+			case 3:
+				mo.SetStateLabel("Taunt3");
+				break;
+			case 4:
+				mo.SetStateLabel("Taunt4");
+				break;
+			default:
+				mo.SetStateLabel("Taunt1");
+				break;
+			}
+		}
 	}
 
 	override void WorldTick()
@@ -2106,12 +2596,8 @@ Class UTMainHandler : EventHandler
 		// gibbers
 		if ( flak_gibs && !e.Thing.bNOBLOOD && (e.Thing.FindState("XDeath") || e.Thing.FindState("Death.Extreme")) && ((e.Inflictor && e.Inflictor.bEXTREMEDEATH) || (e.Thing.Health < e.Thing.GetGibHealth())) && (!e.Inflictor || !e.Inflictor.bNOEXTREMEDEATH) )
 		{
-			// players have special gibbing
-			if ( e.Thing.player )
-			{
-				// TODO
-				return;
-			}
+			// players use their own gibber
+			if ( e.Thing is 'UTPlayer' ) return;
 			// generic gibbing
 			let a = Actor.Spawn("UTGibber",e.Thing.pos);
 			a.vel = e.Thing.vel;

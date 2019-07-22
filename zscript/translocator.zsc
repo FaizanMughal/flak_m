@@ -267,8 +267,6 @@ Class TranslocatorAfterimage : Actor
 		angle = target.angle;
 		pitch = target.pitch;
 		roll = target.roll;
-		sprite = target.sprite;
-		frame = target.frame;
 		vel = (FRandom[Transloc](-.5,.5),FRandom[Transloc](-.5,.5),FRandom[Transloc](-.5,.5));
 	}
 	action void A_Spread()
@@ -279,8 +277,8 @@ Class TranslocatorAfterimage : Actor
 	States
 	{
 	Spawn:
-		#### # 10 A_SetTics(Random[Transloc](20,50));
-		#### # 1 A_Spread();
+		PLAY A 10 A_SetTics(Random[Transloc](20,50));
+		PLAY A 1 A_Spread();
 		Wait;
 	}
 }
