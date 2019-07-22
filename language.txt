@@ -217,6 +217,11 @@ FLAK_UCORPS = "[WIP] Corpses take damage";
 FLAK_DTEST = "Edit Kinsie's test map";
 FLAK_FSTRENGTH = "Screen flash strength";
 FLAK_SAWAMMO = "Chainsaw uses ammo";
+FLAK_TAUNTS = "Taunts";
+FLAK_TAUNT1 = "Victory 1";
+FLAK_TAUNT2 = "Victory 2";
+FLAK_TAUNT3 = "Wave";
+FLAK_TAUNT4 = "Pelvic Thrust";
 
 [es esm esn esg esc esa esd esv eso esr ess esf esl esy esz esb ese esh esi esu]
 /* Obituaries */
@@ -421,6 +426,11 @@ FLAK_UCORPS = "[WIP] Los cadáveres reciben daño";
 FLAK_DTEST = "Editar mapa de pruebas de Kinsie";
 FLAK_FSTRENGTH = "Intensidad de destellos en pantalla";
 FLAK_SAWAMMO = "La motosierra usa combustible";
+FLAK_TAUNTS = "Provocaciones";
+FLAK_TAUNT1 = "Victoria 1";
+FLAK_TAUNT2 = "Victoria 2";
+FLAK_TAUNT3 = "Adiós";
+FLAK_TAUNT4 = "Movimiento de pelvis";
 
 [fr]
 
