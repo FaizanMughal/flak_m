@@ -1,6 +1,7 @@
 Class UTPlayer : DoomPlayer
 {
 	bool lastground;
+	int lastwaterlevel;
 	int lastgroundtic;
 	double lastvelz, prevvelz;
 	transient CVar footsteps;
@@ -14,6 +15,7 @@ Class UTPlayer : DoomPlayer
 	int tempslide;
 	double ssup;
 	int corpsetime;
+	bool headless, legless;
 
 	int dolltype, voicetype;
 
@@ -230,7 +232,7 @@ Class UTPlayer : DoomPlayer
 			bNOFRICTIONBOUNCE = false;
 		}
 		if ( !footsteps ) footsteps = CVar.GetCVar('flak_footsteps',players[consoleplayer]);
-		if ( !footsteps.GetBool() ) return;
+		if ( !footsteps.GetBool() || (Health <= 0) ) return;
 		double ang = level.time/(20*TICRATE/35.)*360.;
 		bool forcefootstep = false;
 		if ( player.onground && !bNoGravity && !lastground && (waterlevel < 2) )
@@ -241,9 +243,9 @@ Class UTPlayer : DoomPlayer
 				double vol = clamp((-lastvelz-8)*0.05,0.01,1.0);
 				if ( ((waterlevel > 0) || GetFloorTerrain().IsLiquid) && !bOnMobj ) A_PlaySound("ut/wetsplash",CHAN_AUTO,vol);
 				else A_PlaySound("*uland",CHAN_AUTO,vol);
+				PlayLanding();
 			}
 			else forcefootstep = true;
-			if ( Health > 0 ) PlayLanding();
 		}
 		if ( tempslide )
 		{
@@ -257,10 +259,14 @@ Class UTPlayer : DoomPlayer
 			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid && !bOnMobj ) A_PlaySound("ut/playerfootstepwet",CHAN_5,vol);
 			else PlayFootstep(vol);
 		}
+		if ( (waterlevel >= 2) && (lastwaterlevel < 2) )
+			A_PlaySound("ut/wetsplash",CHAN_AUTO);
+		else if ( (waterlevel < 2) && (lastwaterlevel >= 2) )
+			A_PlaySound("ut/wetsurface",CHAN_AUTO);
 		lastground = player.onground;
 		lastvelz = prevvelz;
 		prevvelz = vel.z;
-		// TODO exit/entry sounds for water
+		lastwaterlevel = waterlevel;
 	}
 
 	double FrictionToUnreal()
@@ -873,6 +879,7 @@ Class UTPlayer : DoomPlayer
 
 	void A_HeadPop()
 	{
+		headless = true;
 		Class<UTHead> hclass = "UTHeadMale";
 		if ( DollType == DOLL_Boss ) hclass = "UTHeadBoss";
 		else if ( DollType == DOLL_Female ) hclass = "UTHeadFemale";
@@ -902,6 +909,13 @@ Class UTPlayer : DoomPlayer
 		if ( !deathmatch || player ) return;
 		corpsetime++;
 		if ( corpsetime > 350 ) A_FadeOut(0.03);
+	}
+
+	override double GetDeathHeight()
+	{
+		// no height reduction while still being zapped
+		if ( DamageType == 'Zapped' ) return height;
+		return Super.GetDeathHeight();
 	}
 
 	States
@@ -1019,7 +1033,8 @@ Class UTPlayer : DoomPlayer
 		PLD9 A 3 A_PlayerScream();
 		PLD9 B 3 A_NoBlocking();
 		PLD9 CDEFGHIJKLMNOPQRST 2;
-		PD9B ABCDEFGHI 2;
+		PD9B A 2 A_SetSize(-1,height*0.25);	// reduce now
+		PD9B BCDEFGHI 2;
 		PD9B J 1 A_DMFade();
 		Wait;
 	Death8:
@@ -1058,7 +1073,7 @@ Class UTPlayer : DoomPlayer
 		PLD1 M 1 A_DMFade();
 		Wait;
 	XDeath:
-		TNT1 A 1
+		TNT1 A 350
 		{
 			A_XScream();
 			A_NoBlocking();
@@ -1120,6 +1135,7 @@ Class UTPlayerTFemale : UTPlayer
 
 	void A_LegPop()
 	{
+		legless = true;
 		let a = Actor.Spawn("UTFemaleLegGibber",pos);
 		a.vel = vel;
 		a.Scale = Scale;
@@ -1154,7 +1170,8 @@ Class UTPlayerTFemale : UTPlayer
 		PLD9 A 3 A_PlayerScream();
 		PLD9 B 3 A_NoBlocking();
 		PLD9 CDEFGHIJKLMNOPQRST 2;
-		PD9B ABCDEFGHIJ 2;
+		PD9B A 2 A_SetSize(-1,height*0.25);	// reduce now
+		PD9B BCDEFGHIJ 2;
 		PD9B K 1 A_DMFade();
 		Wait;
 	Death:
@@ -1923,6 +1940,8 @@ Class UTBlueKey : BlueCard
 Class ShredCorpseHitbox : Actor
 {
 	int accdamage;
+	Vector3 lastvel;
+	bool wasonair;
 
 	Default
 	{
@@ -1946,16 +1965,37 @@ Class ShredCorpseHitbox : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !flak_corpsedamage || !target || (target.Health > 0) || target.InStateSequence(target.CurState,target.FindState("XDeath")) )
+		if ( (!(target is 'UTPlayer') && !flak_corpsedamage) || !target || (target.Health > 0) || target.InStateSequence(target.CurState,target.FindState("XDeath")) )
 		{
 			Destroy();
 			return;
 		}
 		SetOrigin(target.pos,true);
 		A_SetSize(target.radius,target.height);
+		if ( target.pos.z > target.floorz ) wasonair = true;
+		else
+		{
+			if ( wasonair )
+			{
+				A_PlaySound("misc/corpsefall",CHAN_BODY,clamp(-lastvel.z*0.2,0.1,1.0));
+				if ( lastvel.z < -20 ) DamageMobj(null,null,int.max,'Falling');
+			}
+			wasonair = false;
+		}
+		lastvel = target.vel;
 	}
 	override int DamageMobj( Actor inflictor, Actor source, int damage, Name mod, int flags, double angle )
 	{
+		if ( (target is 'UTPlayer') && (mod == 'Zapped') && (target.sprite == target.GetSpriteIndex('PLD9')) )
+		{
+			// keep the zapping action on
+			target.SetState(target.FindState("Death.Zapped")+Random[ZapMe](2,8));
+			damage /= 4;
+			// push the corpse
+			target.vel.xy += RotateVector((1,0),angle)*damage*0.1;
+			// keep it afloat
+			target.vel.z = max(0.1,target.vel.z+0.1);
+		}
 		accdamage -= damage;
 		int gibhealth = (target.GibHealth==int.min)?-target.SpawnHealth():target.GibHealth;
 		if ( accdamage < gibhealth )
@@ -2613,7 +2653,7 @@ Class UTMainHandler : EventHandler
 			return;
 		}
 		// attach damage accumulator for corpses
-		if ( !flak_corpsedamage ) return;
+		if ( !(e.Thing is 'UTPlayer') && !flak_corpsedamage ) return;
 		let a = Actor.Spawn("ShredCorpseHitbox",e.Thing.pos);
 		a.target = e.Thing;
 	}
@@ -2644,7 +2684,9 @@ Class UTMainHandler : EventHandler
 			double dist = max(1,dir.length());
 			double damagescale = 1-max(0,(dist-a.radius)/ExplosionRadius);
 			dir = dir/dist;
-			a.vel += dir*damagescale*(MomentumTransfer/(Thinker.TICRATE*a.mass));
+			if ( (a is 'ShredCorpseHitbox') && a.target )
+				a.target.vel += dir*damagescale*(MomentumTransfer/(Thinker.TICRATE*a.target.mass));
+			else a.vel += dir*damagescale*(MomentumTransfer/(Thinker.TICRATE*a.mass));
 		}
 	}
 
@@ -2652,7 +2694,9 @@ Class UTMainHandler : EventHandler
 	static void DoKnockback( Actor Victim, Vector3 HitDirection, double MomentumTransfer )
 	{
 		if ( !Victim ) return;
-		Victim.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.Mass));
+		if ( (Victim is 'ShredCorpseHitbox') && Victim.target )
+			Victim.target.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.target.Mass));
+		else Victim.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.Mass));
 	}
 
 	static void DoSwing( Actor target, Vector2 dir, double initial, double inc, int steps, int mode = 0, int delay = 0, double rmul = 1.0 )

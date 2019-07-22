@@ -166,6 +166,7 @@ ut/bossfootstep	bfootstp
 
 ut/playerfootstepwet	lsplash
 ut/wetsplash		dsplash
+ut/wetsurface		wtrexit1
 
 // everything else
 
@@ -206,6 +207,7 @@ misc/gibp3	gibp4
 misc/gibp4	gibp5
 misc/gibp5	gibp6
 $random misc/gibp { misc/gibp1 misc/gibp2 misc/gibp3 misc/gibp4 misc/gibp5 }
+misc/corpsefall thump
 
 impact/select	imppick
 impact/pull	impaltst

@@ -245,7 +245,7 @@ Class UTGibber : Actor
 			ang = FRandom[Blod](0,360);
 			pt = FRandom[Blod](-90,90);
 			dir = (cos(pt)*cos(ang),cos(pt)*sin(ang),sin(-pt));
-			a.vel = rvel*0.6+dir*FRandom[Blod](8.0,12.0);
+			a.vel = rvel*0.6+dir*FRandom[Blod](3.0,6.0);
 		}
 		for ( int i=0; i<gibsize; i++ )
 		{
@@ -309,7 +309,7 @@ Class UTFemaleLegGibber : UTGibber
 				ang = FRandom[Blod](0,360);
 				pt = FRandom[Blod](-90,90);
 				dir = (cos(pt)*cos(ang),cos(pt)*sin(ang),sin(-pt));
-				a.vel = rvel*0.6+dir*FRandom[Blod](8.0,12.0);
+				a.vel = rvel*0.6+dir*FRandom[Blod](3.0,6.0);
 			}
 		}
 		for ( int i=0; i<gibsize; i++ )
@@ -384,6 +384,8 @@ Class UTPlayerGibber : UTGibber
 			firstgib = true;
 			for ( int i=0; i<11; i++ )
 			{
+				if ( (i == 5) && UTPlayer(Gibbed).headless ) continue;
+				if ( ((i == 2) || (i == 6)) && UTPlayer(Gibbed).legless ) continue;
 				Actor a;
 				if ( i < 6 )
 				{
@@ -406,7 +408,7 @@ Class UTPlayerGibber : UTGibber
 					}
 				}
 				dir = (cos(pt)*cos(ang),cos(pt)*sin(ang),sin(-pt));
-				a.vel = rvel*0.6+dir*FRandom[Blod](8.0,12.0);
+				a.vel = rvel*0.6+dir*FRandom[Blod](3.0,6.0);
 			}
 		}
 		for ( int i=0; i<gibsize; i++ )
