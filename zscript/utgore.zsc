@@ -385,7 +385,11 @@ Class UTPlayerGibber : UTGibber
 			for ( int i=0; i<11; i++ )
 			{
 				if ( (i == 5) && UTPlayer(Gibbed).headless ) continue;
-				if ( ((i == 2) || (i == 6)) && UTPlayer(Gibbed).legless ) continue;
+				if ( (i == 0) && UTPlayer(Gibbed).armlessR ) continue;
+				if ( (i == 1) && UTPlayer(Gibbed).armlessL ) continue;
+				if ( ((i == 2) || (i == 6)) && UTPlayer(Gibbed).leglessR ) continue;
+				if ( ((i == 3) || (i == 7)) && UTPlayer(Gibbed).leglessL ) continue;
+				if ( ((i == 4) || (i > 7)) && UTPlayer(Gibbed).torsoless ) continue;
 				Actor a;
 				if ( i < 6 )
 				{

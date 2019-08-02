@@ -15,7 +15,14 @@ Class UTPlayer : DoomPlayer
 	int tempslide;
 	double ssup;
 	int corpsetime;
-	bool headless, legless;
+	bool headless, leglessR, leglessL, armlessR, armlessL, torsoless;
+	// these are gibber hints to disable spawning some parts
+	// headless: missing head
+	// leglessR: missing right leg
+	// leglessL: mising left leg
+	// armlessR: missing right arm
+	// armlessL: mising left arm
+	// torsoless: missing torso
 
 	int dolltype, voicetype;
 
@@ -375,6 +382,10 @@ Class UTPlayer : DoomPlayer
 		}
 		else Angle += cmd.yaw*(360./65536.);
 		player.onground = (pos.z <= floorz) || bOnMobj || bMBFBouncer || (player.cheats & CF_NOCLIP2);
+		// slant (aka steep slope) detection
+		// TODO make it 3d floor aware when the PR makes it in
+		if ( floorsector.floorplane.normal dot (0,0,1) < (46342./65536.) )
+			player.onground = false;
 		if ( player.onground ) lastgroundtic = gametic;
 		if ( !player.onground && !bNoGravity && (waterlevel < 2) && (abs(pos.z-floorz) <= maxdropoffheight) && (player.jumptics == 0) && (vel.z < 0) )
 		{
@@ -419,8 +430,6 @@ Class UTPlayer : DoomPlayer
 			}
 		}
 		last_sm = sm;
-		// slant detection
-		if ( floorsector.floorplane.normal dot (0,0,1) < 0.7 ) player.onground = false;
 		if ( !bNoGravity && player.onground && (waterlevel < 2) )
 		{
 			if ( flak_tapdodge && (dodge.length() > 0) && !tempslide )
@@ -1135,7 +1144,7 @@ Class UTPlayerTFemale : UTPlayer
 
 	void A_LegPop()
 	{
-		legless = true;
+		leglessR = true;
 		let a = Actor.Spawn("UTFemaleLegGibber",pos);
 		a.vel = vel;
 		a.Scale = Scale;
@@ -2001,8 +2010,8 @@ Class ShredCorpseHitbox : Actor
 		if ( accdamage < gibhealth )
 		{
 			// force gib (cheap ATM)
-			State gib = target.FindState("XDeath");
-			if ( !gib ) gib = target.FindState("Death.Extreme");
+			State gib = target.FindState("XDeath",true);
+			if ( !gib ) gib = target.FindState("Death.Extreme",true);
 			if ( gib ) target.SetState(gib);
 			Destroy();
 		}
@@ -2576,16 +2585,16 @@ Class UTMainHandler : EventHandler
 			switch ( e.Args[0] )
 			{
 			case 2:
-				mo.SetStateLabel("Taunt2");
+				if ( mo.FindState("Taunt2") ) mo.SetStateLabel("Taunt2");
 				break;
 			case 3:
-				mo.SetStateLabel("Taunt3");
+				if ( mo.FindState("Taunt3") ) mo.SetStateLabel("Taunt3");
 				break;
 			case 4:
-				mo.SetStateLabel("Taunt4");
+				if ( mo.FindState("Taunt4") ) mo.SetStateLabel("Taunt4");
 				break;
 			default:
-				mo.SetStateLabel("Taunt1");
+				if ( mo.FindState("Taunt1") ) mo.SetStateLabel("Taunt1");
 				break;
 			}
 		}
@@ -2634,7 +2643,7 @@ Class UTMainHandler : EventHandler
 	{
 		if ( e.Thing.bDONTGIB ) return;
 		// gibbers
-		if ( flak_gibs && !e.Thing.bNOBLOOD && (e.Thing.FindState("XDeath") || e.Thing.FindState("Death.Extreme")) && ((e.Inflictor && e.Inflictor.bEXTREMEDEATH) || (e.Thing.Health < e.Thing.GetGibHealth())) && (!e.Inflictor || !e.Inflictor.bNOEXTREMEDEATH) )
+		if ( flak_gibs && !e.Thing.bNOBLOOD && (e.Thing.FindState("XDeath",true) || e.Thing.FindState("Death.Extreme",true)) && ((e.Inflictor && e.Inflictor.bEXTREMEDEATH) || (e.Thing.Health < e.Thing.GetGibHealth())) && (!e.Inflictor || !e.Inflictor.bNOEXTREMEDEATH) )
 		{
 			// players use their own gibber
 			if ( e.Thing is 'UTPlayer' ) return;
