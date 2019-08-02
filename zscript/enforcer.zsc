@@ -47,6 +47,7 @@ Class BulletImpact : Actor
 		+NOGRAVITY;
 		+NOCLIP;
 		+DONTSPLASH;
+		+NOTELEPORT;
 		Scale 0.25;
 	}
 	override void PostBeginPlay()
@@ -102,6 +103,7 @@ Class UTCasing : Actor
 		+THRUACTORS;
 		+USEBOUNCESTATE;
 		+INTERPOLATEANGLES;
+		+NOTELEPORT;
 		Mass 1;
 		Gravity 0.35;
 		BounceType "Hexen";
@@ -542,7 +544,12 @@ Class Enforcer : UTWeapon
 		}
 		ENFR ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
 		ENR2 AB 1;
-		ENR2 B 30 A_PlaySound("enforcer/reload",CHAN_WEAPON);
+		ENR2 B 30
+		{
+			A_PlaySound("enforcer/reload",CHAN_WEAPON);
+			if ( self is 'UTPlayer' )
+				UTPlayer(self).PlayReloading();
+		}
 		ENFS A 0 A_PlaySound("enforcer/select",CHAN_WEAPON);
 		Goto Ready;
 	LeftReload:
@@ -555,7 +562,12 @@ Class Enforcer : UTWeapon
 		}
 		2NFR ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
 		2NR2 AB 1;
-		2NR2 B 30 A_PlaySound("enforcer/reload",CHAN_6);
+		2NR2 B 30
+		{
+			A_PlaySound("enforcer/reload",CHAN_6);
+			if ( self is 'UTPlayer' )
+				UTPlayer(self).PlayReloading();
+		}
 		2NFS A 0 A_PlaySound("enforcer/select",CHAN_6);
 		Goto LeftReady;
 	Deselect:

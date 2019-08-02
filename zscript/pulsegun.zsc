@@ -289,6 +289,7 @@ Class PulseBoltCap : Actor
 		+NOCLIP;
 		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
+		+NOTELEPORT;
 		Scale 0.3;
 	}
 	States
@@ -327,6 +328,7 @@ Class PulseBoltHit : Actor
 		+NOCLIP;
 		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
+		+NOTELEPORT;
 		Scale 0.3;
 	}
 	States
@@ -498,6 +500,7 @@ Class PulseBolt : Actor
 		+NOCLIP;
 		+DONTSPLASH;
 		+INTERPOLATEANGLES;
+		+NOTELEPORT;
 	}
 	States
 	{
@@ -807,7 +810,12 @@ Class PulseGun : UTWeapon
 	Reload:
 		PGNI A 1;
 		PGNI A 0 A_JumpIf(invoker.clipcount >= Min(50,invoker.Ammo1.Amount),"Idle");
-		PGNR A 1 A_Reloading();
+		PGNR A 1
+		{
+			A_Reloading();
+			if ( self is 'UTPlayer' )
+				UTPlayer(self).PlayReloading();
+		}
 		PGNR BCDEFGHIJKLMNOPQRSTUVWXYZ 1;
 		PGR2 ABCDEFGHIJKLMNOPQRSTUVWX 1;
 		Goto Idle;

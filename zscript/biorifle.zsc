@@ -91,6 +91,7 @@ Class BioHitbox : Actor
 		+NOCLIP;
 		+DONTSPLASH;
 		+NOBLOOD;
+		+NOTELEPORT;
 	}
 	override void PostBeginPlay()
 	{
@@ -823,6 +824,8 @@ Class BioRifle : UTWeapon
 			invoker.charge = min(5.1,invoker.charge+0.1);
 			A_Overlay(-9999,null);
 			A_WeaponOffset(0,32);	// fix sudden psprite lowering
+			if ( self is 'UTPlayer' )
+				UTPlayer(self).PlayAttacking3();
 		}
 		BIOF A 2 A_BioFire(true);
 		BIOF BCDEFGHI 2;

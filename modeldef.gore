@@ -130,7 +130,7 @@ Model "UTFemaleArm"
 	Path "models"
 	Model 0 "femalearmm_d.3d"
 	Skin 0 "femalearmT.png"
-	Scale 0.16 0.16 0.192
+	Scale 0.2 0.2 0.24
 	Offset 0 0 1.5
 	USEACTORPITCH
 	USEACTORROLL
@@ -145,7 +145,7 @@ Model "UTFemaleFoot"
 	Path "models"
 	Model 0 "femalefootm_d.3d"
 	Skin 0 "femalefootT.png"
-	Scale 0.16 0.16 0.192
+	Scale 0.2 0.2 0.24
 	Offset 0 0 1.5
 	USEACTORPITCH
 	USEACTORROLL
@@ -160,7 +160,7 @@ Model "UTFemaleTorso"
 	Path "models"
 	Model 0 "femaletorsom_d.3d"
 	Skin 0 "femaletorsoT.png"
-	Scale 0.16 0.16 0.192
+	Scale 0.2 0.2 0.24
 	Offset 0 0 4
 	USEACTORPITCH
 	USEACTORROLL
@@ -175,7 +175,7 @@ Model "UTMaleArm"
 	Path "models"
 	Model 0 "malearmm_d.3d"
 	Skin 0 "malearmT.png"
-	Scale 0.16 0.16 0.192
+	Scale 0.2 0.2 0.24
 	Offset 0 0 1.5
 	USEACTORPITCH
 	USEACTORROLL
@@ -190,7 +190,7 @@ Model "UTMaleFoot"
 	Path "models"
 	Model 0 "malefootm_d.3d"
 	Skin 0 "malefootT.png"
-	Scale 0.16 0.16 0.192
+	Scale 0.2 0.2 0.24
 	Offset 0 0 1.5
 	USEACTORPITCH
 	USEACTORROLL
@@ -205,7 +205,7 @@ Model "UTMaleTorso"
 	Path "models"
 	Model 0 "maletorsom_d.3d"
 	Skin 0 "maletorsoT.png"
-	Scale 0.16 0.16 0.192
+	Scale 0.2 0.2 0.24
 	Offset 0 0 4
 	USEACTORPITCH
 	USEACTORROLL
@@ -215,12 +215,42 @@ Model "UTMaleTorso"
 	FrameIndex UGIB A 0 0
 }
 
+Model "UTBossArm"
+{
+	Path "models"
+	Model 0 "bossarmm_d.3d"
+	Skin 0 "bossgibT.png"
+	Scale 0.12 0.12 0.144
+	Offset 0 0 1.5
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1.5
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTBossFoot"
+{
+	Path "models"
+	Model 0 "bossthighm_d.3d"
+	Skin 0 "bossgibT.png"
+	Scale 0.12 0.12 0.144
+	Offset 0 0 1.5
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1.5
+
+	FrameIndex UGIB A 0 0
+}
+
 Model "UTHeadFemale"
 {
 	Path "models"
 	Model 0 "HeadFemaleM_d.3d"
 	Skin 0 "FMT1.png"
-	Scale 0.14 0.14 0.168
+	Scale 0.2 0.2 0.24
 	Offset 0 0 3
 	AngleOffset -90
 	USEACTORPITCH
@@ -236,7 +266,23 @@ Model "UTHeadMale"
 	Path "models"
 	Model 0 "headmalem_d.3d"
 	Skin 0 "MMT1.png"
-	Scale 0.14 0.14 0.168
+	Scale 0.2 0.2 0.24
+	Offset 0 0 3
+	AngleOffset -90
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 3
+
+	FrameIndex UGIB A 0 0
+}
+
+Model "UTHeadBoss"
+{
+	Path "models"
+	Model 0 "bossheadm_d.3d"
+	Skin 0 "bossgibT.png"
+	Scale 0.07 0.07 0.084
 	Offset 0 0 3
 	AngleOffset -90
 	USEACTORPITCH

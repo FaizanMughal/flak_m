@@ -1,6 +1,7 @@
 Class UTPlayer : DoomPlayer
 {
 	bool lastground;
+	int lastwaterlevel;
 	int lastgroundtic;
 	double lastvelz, prevvelz;
 	transient CVar footsteps;
@@ -10,6 +11,18 @@ Class UTPlayer : DoomPlayer
 	int last_fm_tap, last_sm_tap;
 	int last_tap_fm, last_tap_sm;
 	int last_jump_held;
+
+	int tempslide;
+	double ssup;
+	int corpsetime;
+	bool headless, leglessR, leglessL, armlessR, armlessL, torsoless;
+	// these are gibber hints to disable spawning some parts
+	// headless: missing head
+	// leglessR: missing right leg
+	// leglessL: mising left leg
+	// armlessR: missing right arm
+	// armlessL: mising left arm
+	// torsoless: missing torso
 
 	int dolltype, voicetype;
 
@@ -174,7 +187,7 @@ Class UTPlayer : DoomPlayer
 				let type = (class<Inventory>)(AllActorClasses[i]);
 				if ( !type ) continue;
 				let def = GetDefaultByType(type);
-				if ( !(self is "UTPlayerHereticCompat")
+				if ( !(gameinfo.gametype&GAME_Raven)
 					&& ((type is "UTActivatable") || (type is "UTActivatableHealth")) )
 					continue;	// don't give these outside of Heretic/Hexen
 				if ( def.Icon.isValid() && (def.MaxAmount > 1) &&
@@ -226,7 +239,7 @@ Class UTPlayer : DoomPlayer
 			bNOFRICTIONBOUNCE = false;
 		}
 		if ( !footsteps ) footsteps = CVar.GetCVar('flak_footsteps',players[consoleplayer]);
-		if ( !footsteps.GetBool() ) return;
+		if ( !footsteps.GetBool() || (Health <= 0) ) return;
 		double ang = level.time/(20*TICRATE/35.)*360.;
 		bool forcefootstep = false;
 		if ( player.onground && !bNoGravity && !lastground && (waterlevel < 2) )
@@ -237,8 +250,14 @@ Class UTPlayer : DoomPlayer
 				double vol = clamp((-lastvelz-8)*0.05,0.01,1.0);
 				if ( ((waterlevel > 0) || GetFloorTerrain().IsLiquid) && !bOnMobj ) A_PlaySound("ut/wetsplash",CHAN_AUTO,vol);
 				else A_PlaySound("*uland",CHAN_AUTO,vol);
+				PlayLanding();
 			}
 			else forcefootstep = true;
+		}
+		if ( tempslide )
+		{
+			tempslide = max(0,tempslide-1);
+			if ( !tempslide ) forcefootstep = true;
 		}
 		if ( forcefootstep || ((abs(sin(ang)) >= 1.0) && player.onground && lastground && (player.jumptics == 0) && (player.cmd.forwardmove || player.cmd.sidemove) && (waterlevel < 2)) )
 		{
@@ -247,10 +266,14 @@ Class UTPlayer : DoomPlayer
 			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid && !bOnMobj ) A_PlaySound("ut/playerfootstepwet",CHAN_5,vol);
 			else PlayFootstep(vol);
 		}
+		if ( (waterlevel >= 2) && (lastwaterlevel < 2) )
+			A_PlaySound("ut/wetsplash",CHAN_AUTO);
+		else if ( (waterlevel < 2) && (lastwaterlevel >= 2) )
+			A_PlaySound("ut/wetsurface",CHAN_AUTO);
 		lastground = player.onground;
 		lastvelz = prevvelz;
 		prevvelz = vel.z;
-		// TODO exit/entry sounds for water
+		lastwaterlevel = waterlevel;
 	}
 
 	double FrictionToUnreal()
@@ -258,6 +281,89 @@ Class UTPlayer : DoomPlayer
 		double fin = GetFriction();
 		if ( fin >= 1.0 ) return 0.0;
 		return 734.2969*fin*fin-1485.0868*fin+750.7899;
+	}
+
+	override void CalcHeight()
+	{
+		if ( !flak_utmovement || !player || (player.mo != self) )
+		{
+			Super.CalcHeight();
+			return;
+		}
+		double angle, bob;
+		bool still = false;
+		// no bobbing while:
+		//  - using noclip2 (equivalent to unreal's ghost cheat)
+		//  - flying
+		//  - swimming
+		//  - falling
+		if ( !bNoGravity && player.onground && (waterlevel < 2) )
+		{
+			player.bob = player.Vel dot player.Vel;
+			if ( player.bob == 0 ) still = true;
+			else
+			{
+				player.bob *= player.GetMoveBob();
+				if ( player.bob > MAXBOB ) player.bob = MAXBOB;
+			}
+		}
+		else
+		{
+			// this still doesn't help because fly bob is hardcoded
+			player.bob = 0;
+		}
+		double defaultviewheight = ViewHeight+player.crouchviewdelta;
+		if ( player.cheats&CF_NOVELOCITY )
+		{
+			player.viewz = pos.z+defaultviewheight;
+			if ( player.viewz > ceilingz-4 ) player.viewz = ceilingz-4;
+			return;
+		}
+		if ( still )
+		{
+			if ( player.health > 0 )
+			{
+				angle = Level.maptime/(120*TICRATE/35.)*360.;
+				bob = player.GetStillBob()*sin(angle);
+			}
+			else bob = 0;
+		}
+		else
+		{
+			angle = Level.maptime/(20*TICRATE/35.)*360.;
+			bob = player.bob*sin(angle)*((waterlevel>1)?0.25:0.5);
+		}
+		// move viewheight
+		if ( player.playerstate == PST_LIVE )
+		{
+			player.viewheight += player.deltaviewheight;
+			if ( player.viewheight > defaultviewheight )
+			{
+				player.viewheight = defaultviewheight;
+				player.deltaviewheight = 0;
+			}
+			else if ( player.viewheight < (defaultviewheight/2) )
+			{
+				player.viewheight = defaultviewheight/2;
+				if ( player.deltaviewheight <= 0 )
+					player.deltaviewheight = 1/65536.;
+			}
+			if ( player.deltaviewheight )
+			{
+				player.deltaviewheight += 0.25;
+				if ( !player.deltaviewheight )
+					player.deltaviewheight = 1/65536.;
+			}
+		}
+		if ( player.morphTics ) bob = 0;
+		player.viewz = pos.z+player.viewheight+(bob*clamp(ViewBob,0.,1.5)); // [SP] Allow DECORATE changes to view bobbing speed.
+		// handle smooth step down (hacky but looks ok)
+		player.viewz += ssup;
+		ssup = max(0,(ssup*0.7)-0.25);
+		if ( floorclip && (player.playerstate != PST_DEAD) && (pos.z <= floorz) )
+			player.viewz -= Floorclip;
+		if ( player.viewz > ceilingz-4 ) player.viewz = ceilingz-4;
+		if ( player.viewz < floorz+4 ) player.viewz = floorz+4;
 	}
 
 	override void MovePlayer()
@@ -276,9 +382,14 @@ Class UTPlayer : DoomPlayer
 		}
 		else Angle += cmd.yaw*(360./65536.);
 		player.onground = (pos.z <= floorz) || bOnMobj || bMBFBouncer || (player.cheats & CF_NOCLIP2);
+		// slant (aka steep slope) detection
+		// TODO make it 3d floor aware when the PR makes it in
+		if ( floorsector.floorplane.normal dot (0,0,1) < (46342./65536.) )
+			player.onground = false;
 		if ( player.onground ) lastgroundtic = gametic;
 		if ( !player.onground && !bNoGravity && (waterlevel < 2) && (abs(pos.z-floorz) <= maxdropoffheight) && (player.jumptics == 0) && (vel.z < 0) )
 		{
+			ssup = max(0,(pos.z-floorz));
 			SetOrigin(Vec2OffsetZ(0,0,floorz),true);
 			player.onground = true;
 		}
@@ -321,11 +432,20 @@ Class UTPlayer : DoomPlayer
 		last_sm = sm;
 		if ( !bNoGravity && player.onground && (waterlevel < 2) )
 		{
-			if ( flak_tapdodge && (dodge.length() > 0) )
+			if ( flak_tapdodge && (dodge.length() > 0) && !tempslide )
 			{
-				if ( flak_doomspeed ) vel += dodge.unit()*(groundspeed_doomish*1.5)/TICRATE;
-				else vel += dodge.unit()*(groundspeed*1.5)/TICRATE;
-				vel.z += dodgez/TICRATE;
+				if ( level.IsJumpingAllowed() )
+				{
+					if ( flak_doomspeed ) vel += dodge.unit()*(groundspeed_doomish*1.5)/TICRATE;
+					else vel += dodge.unit()*(groundspeed*1.5)/TICRATE;
+					vel.z += dodgez/TICRATE;
+				}
+				else
+				{
+					if ( flak_doomspeed ) vel += dodge.unit()*(groundspeed_doomish*2.0)/TICRATE;
+					else vel += dodge.unit()*(groundspeed*2.0)/TICRATE;
+					tempslide = 8;
+				}
 				bOnMobj = false;
 				if ( !(player.cheats&CF_PREDICTING) )
 					A_PlaySound("*jump",CHAN_BODY);
@@ -339,12 +459,13 @@ Class UTPlayer : DoomPlayer
 			}
 			else
 			{
-				if ( flak_nowalkdrop )
+				if ( flak_nowalkdrop && !tempslide )
 					bNODROPOFF = ((acceleration.length() > double.epsilon) && (cmd.buttons&BT_SPEED));
 				// Hook in Unreal physics
 				Vector2 dir = (0,0);
 				if ( vel.xy.length() > double.epsilon ) dir = vel.xy.unit();
 				double doomfriction = clamp(GetFriction()/ORIG_FRICTION,0.0,1.0);
+				if ( tempslide ) friction *= 0;
 				if ( acceleration.length() <= double.epsilon )
 				{
 					Vector2 oldvel = vel.xy;
@@ -369,7 +490,8 @@ Class UTPlayer : DoomPlayer
 					if ( acceleration.length() <= double.epsilon ) PlayIdle();
 					else PlayRunning();
 				}
-				player.vel = vel.xy;
+				if ( tempslide ) player.vel *= 0;
+				else player.vel = vel.xy;
 			}
 		}
 		else if ( !bNoGravity && (waterlevel < 2) )
@@ -401,8 +523,9 @@ Class UTPlayer : DoomPlayer
 			if ( vel.length() > terminalvelocity/TICRATE ) vel = vel.unit()*(terminalvelocity/TICRATE);
 			player.vel *= 0;
 			player.jumptics = -2;
+			if ( !(player.cheats & CF_PREDICTING) ) PlayIdle();
 		}
-		else if ( bFly || (player.cheats&CF_NOCLIP2) )
+		else if ( (bFly && bFlyCheat) || (player.cheats&CF_NOCLIP2) )
 		{
 			// fly cheat has infinite friction (player stops moving when movement keys are released)
 			Vector3 dir = (0,0,0);
@@ -455,8 +578,16 @@ Class UTPlayer : DoomPlayer
 			}
 			vel = vel+acceleration3/TICRATE;
 			double maxvel;
-			if ( flak_doomspeed ) maxvel = swimspeed_doomish/TICRATE;
-			else maxvel = swimspeed/TICRATE;
+			if ( waterlevel < 2 )	// flying uses ground speed
+			{
+				if ( flak_doomspeed ) maxvel = groundspeed_doomish/TICRATE;
+				else maxvel = groundspeed/TICRATE;
+			}
+			else
+			{
+				if ( flak_doomspeed ) maxvel = swimspeed_doomish/TICRATE;
+				else maxvel = swimspeed/TICRATE;
+			}
 			maxvel *= fs*doomfriction;
 			if ( vel.length() > maxvel ) vel = vel.unit()*maxvel;
 			player.vel = vel.xy;
@@ -595,6 +726,389 @@ Class UTPlayer : DoomPlayer
 	{
 		A_PlaySound("ut/playerfootstep",CHAN_5,vol);
 	}
+
+	override void PlayIdle()
+	{
+		if ( (player && (player.mo == self)) && (player.crouchdir == -1) )
+		{
+			// Crouching
+			if ( !InStateSequence(CurState,FindState("SpawnCrouch")) )
+				SetStateLabel("SpawnCrouch");
+		}
+		else if ( !bNoGravity && player.onground && (waterlevel < 2) )
+		{
+			// Ground
+			if ( (player && (player.mo == self)) && player.cmd.yaw )
+			{
+				if ( InStateSequence(CurState,FindState("See"))
+					|| InStateSequence(CurState,FindState("SeeAir"))
+					|| InStateSequence(CurState,FindState("SeeSwim"))
+					|| InStateSequence(CurState,FindState("SeeCrouch"))
+					|| InStateSequence(CurState,FindState("SpawnAir"))
+					|| InStateSequence(CurState,FindState("SpawnSwim"))
+					|| InStateSequence(CurState,FindState("SpawnCrouch"))
+					|| InStateSequence(CurState,FindState("Spawn")+1) )
+					SetStateLabel("Turn");
+			}
+			else
+			{
+				if ( InStateSequence(CurState,FindState("See"))
+					|| InStateSequence(CurState,FindState("SeeAir"))
+					|| InStateSequence(CurState,FindState("SeeSwim"))
+					|| InStateSequence(CurState,FindState("SeeCrouch"))
+					|| InStateSequence(CurState,FindState("SpawnAir"))
+					|| InStateSequence(CurState,FindState("SpawnSwim"))
+					|| InStateSequence(CurState,FindState("SpawnCrouch")) )
+					SetStateLabel("Spawn");
+			}
+		}
+		else if ( !bNoGravity && (waterlevel < 2) )
+		{
+			// Falling
+			if ( InStateSequence(CurState,FindState("See"))
+				|| InStateSequence(CurState,FindState("SeeAir"))
+				|| InStateSequence(CurState,FindState("SeeSwim"))
+				|| InStateSequence(CurState,FindState("SeeCrouch"))
+				|| InStateSequence(CurState,FindState("Spawn"))
+				|| InStateSequence(CurState,FindState("SpawnSwim"))
+				|| InStateSequence(CurState,FindState("SpawnCrouch"))
+				|| InStateSequence(CurState,FindState("Turn")) )
+				SetStateLabel("SpawnAir");
+		}
+		else
+		{
+			// Swimming
+			if ( InStateSequence(CurState,FindState("See"))
+				|| InStateSequence(CurState,FindState("SeeAir"))
+				|| InStateSequence(CurState,FindState("SeeSwim"))
+				|| InStateSequence(CurState,FindState("SeeCrouch"))
+				|| InStateSequence(CurState,FindState("Spawn"))
+				|| InStateSequence(CurState,FindState("SpawnAir"))
+				|| InStateSequence(CurState,FindState("SpawnCrouch"))
+				|| InStateSequence(CurState,FindState("Turn")) )
+				SetStateLabel("SpawnSwim");
+		}
+	}
+
+	override void PlayRunning()
+	{
+		if ( (player && (player.mo == self)) && (player.crouchdir == -1) )
+		{
+			// Crouching
+			if ( !InStateSequence(CurState,FindState("SeeCrouch")) )
+				SetStateLabel("SeeCrouch");
+		}
+		else if ( !bNoGravity && player.onground && (waterlevel < 2) )
+		{
+			// Ground
+			if ( InStateSequence(CurState,FindState("Spawn"))
+				|| InStateSequence(CurState,FindState("SpawnAir"))
+				|| InStateSequence(CurState,FindState("SpawnSwim"))
+				|| InStateSequence(CurState,FindState("SpawnCrouch"))
+				|| InStateSequence(CurState,FindState("SeeAir"))
+				|| InStateSequence(CurState,FindState("SeeSwim"))
+				|| InStateSequence(CurState,FindState("SeeCrouch"))
+				|| InStateSequence(CurState,FindState("Turn")) )
+				SetStateLabel("See");
+		}
+		else if ( !bNoGravity && (waterlevel < 2) )
+		{
+			// Falling
+			if ( InStateSequence(CurState,FindState("Spawn"))
+				|| InStateSequence(CurState,FindState("SpawnAir"))
+				|| InStateSequence(CurState,FindState("SpawnSwim"))
+				|| InStateSequence(CurState,FindState("SpawnCrouch"))
+				|| InStateSequence(CurState,FindState("See"))
+				|| InStateSequence(CurState,FindState("SeeSwim"))
+				|| InStateSequence(CurState,FindState("SeeCrouch"))
+				|| InStateSequence(CurState,FindState("Turn")) )
+				SetStateLabel("SeeAir");
+		}
+		else
+		{
+			// Swimming
+			if ( InStateSequence(CurState,FindState("Spawn"))
+				|| InStateSequence(CurState,FindState("SpawnAir"))
+				|| InStateSequence(CurState,FindState("SpawnSwim"))
+				|| InStateSequence(CurState,FindState("SpawnCrouch"))
+				|| InStateSequence(CurState,FindState("See"))
+				|| InStateSequence(CurState,FindState("SeeAir"))
+				|| InStateSequence(CurState,FindState("SeeCrouch"))
+				|| InStateSequence(CurState,FindState("Turn")) )
+				SetStateLabel("SeeSwim");
+		}
+	}
+
+	override void PlayAttacking()
+	{
+		// no animation if crouched
+		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
+		// check weapon type
+		if ( (player.ReadyWeapon is 'SniperRifle') && (player.buttons&BT_ALTATTACK) )
+			return;
+		if ( ((player.ReadyWeapon is 'BioRifle') && (player.buttons&BT_ALTATTACK))
+			|| (player.ReadyWeapon is 'UTRocketLauncher') )
+		{
+			if ( !InStateSequence(CurState,FindState("MissileRepStill")) )
+				SetStateLabel("MissileRepStill");
+		}
+		else if ( ((player.ReadyWeapon is 'ImpactHammer') && (player.buttons&BT_ATTACK))
+			|| ((player.ReadyWeapon is 'UTChainsaw') && (player.buttons&BT_ATTACK))
+			|| (player.ReadyWeapon is 'PulseGun')
+			|| (player.ReadyWeapon is 'Minigun') )
+		{
+			if ( !InStateSequence(CurState,FindState("MissileRep")) )
+				SetStateLabel("MissileRep");
+		}
+		else SetStateLabel("Missile");
+	}
+
+	override void PlayAttacking2()
+	{
+		PlayAttacking();
+	}
+
+	virtual void PlayAttacking3()
+	{
+		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
+		SetStateLabel("Missile");
+	}
+
+	virtual void PlayReloading()
+	{
+		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
+		SetStateLabel("Reload");
+	}
+
+	virtual void PlayLanding()
+	{
+		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
+		SetStateLabel("Landing");
+	}
+
+	void A_HeadPop()
+	{
+		headless = true;
+		Class<UTHead> hclass = "UTHeadMale";
+		if ( DollType == DOLL_Boss ) hclass = "UTHeadBoss";
+		else if ( DollType == DOLL_Female ) hclass = "UTHeadFemale";
+		let h = UTHead(Spawn(hclass,Vec3Offset(0,0,viewheight)));
+		if ( player )
+		{
+			h.headowner = player;
+			player.camera = h;
+		}
+		double ang = FRandom[Blod](0,360);
+		double pt = FRandom[Blod](-90,-30);
+		Vector3 dir = (cos(pt)*cos(ang),cos(pt)*sin(ang),sin(-pt));
+		h.vel = vel*0.6+dir*FRandom[Blod](8.0,12.0);
+	}
+
+	void A_GibMe()
+	{
+		let a = Actor.Spawn("UTPlayerGibber",pos);
+		a.vel = vel;
+		a.Scale = Scale;
+		a.A_SetSize(radius,height);
+		UTGibber(a).Gibbed = self;
+	}
+
+	void A_DMFade()
+	{
+		if ( !deathmatch || player ) return;
+		corpsetime++;
+		if ( corpsetime > 350 ) A_FadeOut(0.03);
+	}
+
+	override double GetDeathHeight()
+	{
+		// no height reduction while still being zapped
+		if ( DamageType == 'Zapped' ) return height;
+		return Super.GetDeathHeight();
+	}
+
+	States
+	{
+	Spawn:
+		#### # 5;
+		PLAY ABCDEFG 8;
+		Goto Spawn+1;
+	Turn:
+		#### # 6;
+		PLYT A 0 A_JumpIf(!player||!player.cmd.yaw,"Spawn");
+		PLYT A 6;
+		PLYT A 0 A_JumpIf(!player||!player.cmd.yaw,"Spawn");
+		PLYT A 6;
+		PLYT B 0 A_JumpIf(!player||!player.cmd.yaw,"Spawn");
+		PLYT B 6;
+		PLYT B 0 A_JumpIf(!player||!player.cmd.yaw,"Spawn");
+		PLYT B 6;
+		Goto Turn+1;
+	SpawnAir:
+		#### # 5;
+		PLYA A 50;
+		PLYL A 50;
+		Goto SpawnAir+1;
+	SpawnSwim:
+		#### # 5;
+		PLYS ABCDEFG 6;
+		Goto SpawnSwim+1;
+	SpawnCrouch:
+		#### # 5;
+		PLYC A -1;
+		Wait;
+	See:
+		#### # 5;
+		PLAY HIJKL 4;
+		Goto See+1;
+	SeeAir:
+		#### # 5;
+		PLYA A 50;
+		PLYL A 50;
+		Goto SeeAir+1;
+	SeeSwim:
+		#### # 5;
+		PLYS HIJKL 4;
+		Goto SeeSwim+1;
+	SeeCrouch:
+		#### # 5;
+		PLYC ABCDE 4;
+		Goto SeeCrouch+1;
+	Missile:
+		#### # 2;
+		PLAY MNOPQA 3;
+		Goto Spawn;
+	MissileRep:
+		#### # 2;
+		PLAY R 2;
+		PLAY S 0 A_JumpIf(!player||!(player.buttons&(BT_ATTACK|BT_ALTATTACK)),"Spawn");
+		PLAY S 2;
+		PLAY T 0 A_JumpIf(!player||!(player.buttons&(BT_ATTACK|BT_ALTATTACK)),"Spawn");
+		PLAY T 2;
+		PLAY U 0 A_JumpIf(!player||!(player.buttons&(BT_ATTACK|BT_ALTATTACK)),"Spawn");
+		PLAY U 2;
+		PLAY V 0 A_JumpIf(!player||!(player.buttons&(BT_ATTACK|BT_ALTATTACK)),"Spawn");
+		PLAY V 2;
+		PLAY R 0 A_JumpIf(!player||!(player.buttons&(BT_ATTACK|BT_ALTATTACK)),"Spawn");
+		Goto MissileRep+1;
+	MissileRepStill:
+		#### # 2;
+		PLAY R 2;
+		PLAY R 0 A_JumpIf(!player||!(player.buttons&(BT_ATTACK|BT_ALTATTACK)),"Spawn");
+		Goto MissileRepStill+1;
+	Reload:
+		#### # 3;
+		PLYR ABCDEFGH 4;
+		Goto Spawn;
+	Landing:
+		#### # 4;
+		PLYL A 3;
+		Goto Spawn;
+	Pain:
+		#### # 0 A_Jump(256,1,3,5,7);
+		#### # 2;
+		PLAY W 3 A_Pain();
+		Goto Spawn;
+		#### # 2;
+		PLAY Y 3 A_Pain();
+		Goto Spawn;
+		#### # 2;
+		PLAY Z 3 A_Pain();
+		Goto Spawn;
+	Pain.Decapitated:
+		#### # 2;
+		PLAY X 3 A_Pain();
+		Goto Spawn;
+	Death.Decapitated:
+		#### # 0 A_HeadPop();
+		PLD4 A 3 A_PlayerScream();
+		PLD4 B 3 A_NoBlocking();
+		PLD4 CDEFGHIJKLMNO 3;
+		PLD4 P 1 A_DMFade();
+		Wait;
+	Death:
+		#### # 0 A_JumpIf(vel.length()>20,"Death11");
+		#### # 0 A_JumpIf(vel.length()>10,"Death1");
+		#### # 0 A_Jump(256,"Death2","Death3","Death7","Death8");
+	Death11:
+		#### # 3;
+		PD11 A 3 A_PlayerScream();
+		PD11 B 3 A_NoBlocking();
+		PD11 CDEFGHIJKLMNOPQ 3;
+		PD11 R 1 A_DMFade();
+		Wait;
+	Death.Zapped:
+		#### # 3;
+		PLD9 A 3 A_PlayerScream();
+		PLD9 B 3 A_NoBlocking();
+		PLD9 CDEFGHIJKLMNOPQRST 2;
+		PD9B A 2 A_SetSize(-1,height*0.25);	// reduce now
+		PD9B BCDEFGHI 2;
+		PD9B J 1 A_DMFade();
+		Wait;
+	Death8:
+		#### # 3;
+		PLD8 A 3 A_PlayerScream();
+		PLD8 B 3 A_NoBlocking();
+		PLD8 CDEFGHIJKLMNOPQ 3;
+		PLD8 R 1 A_DMFade();
+		Wait;
+	Death7:
+		#### # 3;
+		PLD7 A 3 A_PlayerScream();
+		PLD7 B 3 A_NoBlocking();
+		PLD7 CDEFGHIJKLMNOPQRST 3;
+		PLD7 U 1 A_DMFade();
+		Wait;
+	Death3:
+		#### # 3;
+		PLD3 A 3 A_PlayerScream();
+		PLD3 B 3 A_NoBlocking();
+		PLD3 CDEFGHIJKL 3;
+		PLD3 M 1 A_DMFade();
+		Wait;
+	Death2:
+		#### # 3;
+		PLD2 A 3 A_PlayerScream();
+		PLD2 B 3 A_NoBlocking();
+		PLD2 CDEFGHIJKLMNO 3;
+		PLD2 P 1 A_DMFade();
+		Wait;
+	Death1:
+		#### # 3;
+		PLD1 A 3 A_PlayerScream();
+		PLD1 B 3 A_NoBlocking();
+		PLD1 CDEFGHIJKL 3;
+		PLD1 M 1 A_DMFade();
+		Wait;
+	XDeath:
+		TNT1 A 350
+		{
+			A_XScream();
+			A_NoBlocking();
+			A_GibMe();
+		}
+		TNT1 A 1 A_CheckPlayerDone();
+		Wait;
+	Taunt1:
+		#### # 5;
+		PLT1 ABCDEFGHIJKLMNOPQRST 3;
+		Goto Spawn;
+	Taunt2:
+		#### # 5;
+		PLT2 ABCDEFGHIJKLMNOPQR 4;
+		PLT2 R 8;
+		PLAY A 3;
+		Goto Spawn;
+	Taunt3:
+		#### # 5;
+		PLT3 ABCDEFGHIJKLMNO 3;
+		Goto Spawn;
+	Taunt4:
+		#### # 5;
+		PLT4 ABCDEFGHIJKLMNO 3;
+		Goto Spawn;
+	}
 }
 
 // these only exist for sound
@@ -621,26 +1135,120 @@ Class UTPlayerTMale2 : UTPlayer
 		-NOMENU;
 	}
 }
-Class UTPlayerTFemale1 : UTPlayer
+Class UTPlayerTFemale : UTPlayer
+{
+	Default
+	{
+		UTPlayer.DollType DOLL_Female;
+	}
+
+	void A_LegPop()
+	{
+		leglessR = true;
+		let a = Actor.Spawn("UTFemaleLegGibber",pos);
+		a.vel = vel;
+		a.Scale = Scale;
+		a.A_SetSize(radius,height);
+		UTGibber(a).Gibbed = self;
+	}
+
+	States
+	{
+	Reload:
+		#### # 3;
+		PLYR ABCDEF 4;
+		Goto Spawn;
+	Taunt1:
+		#### # 5;
+		PLT1 ABCDEFGHIJKLMNO 3;
+		Goto Spawn;
+	Taunt2:
+		#### # 5;
+		PLT2 ABCDEFGHIJ 6;
+		PLAY A 3;
+		Goto Spawn;
+	Death.Decapitated:
+		#### # 0 A_HeadPop();
+		PLD6 A 3 A_PlayerScream();
+		PLD6 B 3 A_NoBlocking();
+		PLD6 CDEFGHIJ 3;
+		PLD6 K 1 A_DMFade();
+		Wait;
+	Death.Zapped:
+		#### # 3;
+		PLD9 A 3 A_PlayerScream();
+		PLD9 B 3 A_NoBlocking();
+		PLD9 CDEFGHIJKLMNOPQRST 2;
+		PD9B A 2 A_SetSize(-1,height*0.25);	// reduce now
+		PD9B BCDEFGHIJ 2;
+		PD9B K 1 A_DMFade();
+		Wait;
+	Death:
+		#### # 0 A_JumpIf(vel.length()>20,"Death5");
+		#### # 0 A_JumpIf(vel.length()>10,"Death2");
+		#### # 0 A_Jump(256,"Death1","Death3","Death4","Death7");
+	Death7:
+		#### # 3;
+		PLD7 A 3 A_PlayerScream();
+		PLD7 B 3 A_NoBlocking();
+		PLD7 CDEFGHIJ 3;
+		PLD7 K 1 A_DMFade();
+		Wait;
+	Death5:
+		#### # 0 A_LegPop();
+		PLD5 A 3 A_PlayerScream();
+		PLD5 B 3 A_NoBlocking();
+		PLD5 CDEFGHIJKL 3;
+		PLD5 M 1 A_DMFade();
+		Wait;
+	Death4:
+		#### # 3;
+		PLD4 A 3 A_PlayerScream();
+		PLD4 B 3 A_NoBlocking();
+		PLD4 CDEFGHIJKL 3;
+		PLD4 M 1 A_DMFade();
+		Wait;
+	Death3:
+		#### # 3;
+		PLD3 A 3 A_PlayerScream();
+		PLD3 B 3 A_NoBlocking();
+		PLD3 CDEFGHIJKLMNO 3;
+		PLD3 P 1 A_DMFade();
+		Wait;
+	Death2:
+		#### # 3;
+		PLD2 A 3 A_PlayerScream();
+		PLD2 B 3 A_NoBlocking();
+		PLD2 CDEFGHIJKLMNOPQ 3;
+		PLD2 R 1 A_DMFade();
+		Wait;
+	Death1:
+		#### # 3;
+		PLD1 A 3 A_PlayerScream();
+		PLD1 B 3 A_NoBlocking();
+		PLD1 CDEFGHIJKLMNOPQRSTUV 3;
+		PLD1 W 1 A_DMFade();
+		Wait;
+	}
+}
+Class UTPlayerTFemale1 : UTPlayerTFemale
 {
 	Default
 	{
 		Player.SoundClass "tfemale";
 		Player.DisplayName "$N_TFEMALE1";
 		Player.Portrait "Ivana";
-		UTPlayer.DollType DOLL_Female;
 		UTPlayer.VoiceType VOICE_FemaleOne;
 		-NOMENU;
 	}
 }
-Class UTPlayerTFemale2 : UTPlayer
+Class UTPlayerTFemale2 : UTPlayerTFemale
 {
 	Default
 	{
 		Player.SoundClass "tfemale";
 		Player.DisplayName "$N_TFEMALE2";
 		Player.Portrait "Lauren";
-		UTPlayer.DollType DOLL_Female;
 		UTPlayer.VoiceType VOICE_FemaleTwo;
 		-NOMENU;
 	}
@@ -1341,6 +1949,8 @@ Class UTBlueKey : BlueCard
 Class ShredCorpseHitbox : Actor
 {
 	int accdamage;
+	Vector3 lastvel;
+	bool wasonair;
 
 	Default
 	{
@@ -1348,6 +1958,7 @@ Class ShredCorpseHitbox : Actor
 		-SOLID;
 		+DONTSPLASH;
 		+SHOOTABLE;
+		+NOTELEPORT;
 		Health int.max;
 	}
 	override void PostBeginPlay()
@@ -1363,23 +1974,44 @@ Class ShredCorpseHitbox : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !flak_corpsedamage || !target || (target.Health > 0) || target.InStateSequence(target.CurState,target.FindState("XDeath")) )
+		if ( (!(target is 'UTPlayer') && !flak_corpsedamage) || !target || (target.Health > 0) || target.InStateSequence(target.CurState,target.FindState("XDeath")) )
 		{
 			Destroy();
 			return;
 		}
 		SetOrigin(target.pos,true);
 		A_SetSize(target.radius,target.height);
+		if ( target.pos.z > target.floorz ) wasonair = true;
+		else
+		{
+			if ( wasonair )
+			{
+				A_PlaySound("misc/corpsefall",CHAN_BODY,clamp(-lastvel.z*0.2,0.1,1.0));
+				if ( lastvel.z < -20 ) DamageMobj(null,null,int.max,'Falling');
+			}
+			wasonair = false;
+		}
+		lastvel = target.vel;
 	}
 	override int DamageMobj( Actor inflictor, Actor source, int damage, Name mod, int flags, double angle )
 	{
+		if ( (target is 'UTPlayer') && (mod == 'Zapped') && (target.sprite == target.GetSpriteIndex('PLD9')) )
+		{
+			// keep the zapping action on
+			target.SetState(target.FindState("Death.Zapped")+Random[ZapMe](2,8));
+			damage /= 4;
+			// push the corpse
+			target.vel.xy += RotateVector((1,0),angle)*damage*0.1;
+			// keep it afloat
+			target.vel.z = max(0.1,target.vel.z+0.1);
+		}
 		accdamage -= damage;
 		int gibhealth = (target.GibHealth==int.min)?-target.SpawnHealth():target.GibHealth;
 		if ( accdamage < gibhealth )
 		{
 			// force gib (cheap ATM)
-			State gib = target.FindState("XDeath");
-			if ( !gib ) gib = target.FindState("Death.Extreme");
+			State gib = target.FindState("XDeath",true);
+			if ( !gib ) gib = target.FindState("Death.Extreme",true);
 			if ( gib ) target.SetState(gib);
 			Destroy();
 		}
@@ -1466,8 +2098,8 @@ Class GenericFlash : HUDMessageBase
 	}
 	override bool Tick()
 	{
-		alpha -= 1./duration;
-		return (alpha<=0);
+		if ( duration > 0 ) alpha -= 1./duration;
+		return (alpha<=0)||(!cam);
 	}
 	override void Draw( int bottom, int visibility )
 	{
@@ -1945,6 +2577,27 @@ Class UTMainHandler : EventHandler
 				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] ) players[i].mo.TakeInventory("Translocator",1);
 			}
 		}
+		else if ( e.Name ~== "uttaunt" )
+		{
+			if ( (e.player == -1) || !playeringame[e.player] || !players[e.player].mo ) return;
+			let mo = players[e.player].mo;
+			if ( (mo.Health <= 0) || !(mo is 'UTPlayer') ) return;
+			switch ( e.Args[0] )
+			{
+			case 2:
+				if ( mo.FindState("Taunt2") ) mo.SetStateLabel("Taunt2");
+				break;
+			case 3:
+				if ( mo.FindState("Taunt3") ) mo.SetStateLabel("Taunt3");
+				break;
+			case 4:
+				if ( mo.FindState("Taunt4") ) mo.SetStateLabel("Taunt4");
+				break;
+			default:
+				if ( mo.FindState("Taunt1") ) mo.SetStateLabel("Taunt1");
+				break;
+			}
+		}
 	}
 
 	override void WorldTick()
@@ -1990,14 +2643,10 @@ Class UTMainHandler : EventHandler
 	{
 		if ( e.Thing.bDONTGIB ) return;
 		// gibbers
-		if ( flak_gibs && !e.Thing.bNOBLOOD && (e.Thing.FindState("XDeath") || e.Thing.FindState("Death.Extreme")) && ((e.Inflictor && e.Inflictor.bEXTREMEDEATH) || (e.Thing.Health < e.Thing.GetGibHealth())) && (!e.Inflictor || !e.Inflictor.bNOEXTREMEDEATH) )
+		if ( flak_gibs && !e.Thing.bNOBLOOD && (e.Thing.FindState("XDeath",true) || e.Thing.FindState("Death.Extreme",true)) && ((e.Inflictor && e.Inflictor.bEXTREMEDEATH) || (e.Thing.Health < e.Thing.GetGibHealth())) && (!e.Inflictor || !e.Inflictor.bNOEXTREMEDEATH) )
 		{
-			// players have special gibbing
-			if ( e.Thing.player )
-			{
-				// TODO
-				return;
-			}
+			// players use their own gibber
+			if ( e.Thing is 'UTPlayer' ) return;
 			// generic gibbing
 			let a = Actor.Spawn("UTGibber",e.Thing.pos);
 			a.vel = e.Thing.vel;
@@ -2013,7 +2662,7 @@ Class UTMainHandler : EventHandler
 			return;
 		}
 		// attach damage accumulator for corpses
-		if ( !flak_corpsedamage ) return;
+		if ( !(e.Thing is 'UTPlayer') && !flak_corpsedamage ) return;
 		let a = Actor.Spawn("ShredCorpseHitbox",e.Thing.pos);
 		a.target = e.Thing;
 	}
@@ -2044,7 +2693,9 @@ Class UTMainHandler : EventHandler
 			double dist = max(1,dir.length());
 			double damagescale = 1-max(0,(dist-a.radius)/ExplosionRadius);
 			dir = dir/dist;
-			a.vel += dir*damagescale*(MomentumTransfer/(Thinker.TICRATE*a.mass));
+			if ( (a is 'ShredCorpseHitbox') && a.target )
+				a.target.vel += dir*damagescale*(MomentumTransfer/(Thinker.TICRATE*a.target.mass));
+			else a.vel += dir*damagescale*(MomentumTransfer/(Thinker.TICRATE*a.mass));
 		}
 	}
 
@@ -2052,7 +2703,9 @@ Class UTMainHandler : EventHandler
 	static void DoKnockback( Actor Victim, Vector3 HitDirection, double MomentumTransfer )
 	{
 		if ( !Victim ) return;
-		Victim.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.Mass));
+		if ( (Victim is 'ShredCorpseHitbox') && Victim.target )
+			Victim.target.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.target.Mass));
+		else Victim.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.Mass));
 	}
 
 	static void DoSwing( Actor target, Vector2 dir, double initial, double inc, int steps, int mode = 0, int delay = 0, double rmul = 1.0 )

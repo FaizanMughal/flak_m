@@ -68,6 +68,7 @@ Class ShockRifleWave : Actor
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+DONTSPLASH;
+		+NOTELEPORT;
 	}
 	override void Tick()
 	{
@@ -95,6 +96,7 @@ Class SuperShockRifleWave : Actor
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+DONTSPLASH;
+		+NOTELEPORT;
 	}
 	override void Tick()
 	{
@@ -123,6 +125,7 @@ Class ShockBeamRing : Actor
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+DONTSPLASH;
+		+NOTELEPORT;
 	}
 	override void Tick()
 	{
@@ -150,6 +153,7 @@ Class SuperShockBeamRing : Actor
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+DONTSPLASH;
+		+NOTELEPORT;
 	}
 	override void Tick()
 	{
@@ -283,6 +287,7 @@ Class ShockBeam : Actor
 		+FORCEXYBILLBOARD;
 		+FORCERADIUSDMG;
 		+NODAMAGETHRUST;
+		+NOTELEPORT;
 	}
 	override void PostBeginPlay()
 	{
@@ -516,6 +521,7 @@ Class SuperShockBeam : Actor
 		+FORCERADIUSDMG;
 		+EXTREMEDEATH;
 		+NODAMAGETHRUST;
+		+NOTELEPORT;
 	}
 	override void PostBeginPlay()
 	{
@@ -824,6 +830,7 @@ Class ShockHitbox : Actor
 		+NOGRAVITY;
 		+NOCLIP;
 		+DONTSPLASH;
+		+NOTELEPORT;
 	}
 	override void Tick()
 	{

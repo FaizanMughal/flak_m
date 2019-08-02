@@ -1,0 +1,13 @@
+addkeysection "$FLAK_TAUNTS" DoomTournament
+addmenukey "$FLAK_TAUNT4" taunt4
+addmenukey "$FLAK_TAUNT1" taunt1
+addmenukey "$FLAK_TAUNT2" taunt2
+addmenukey "$FLAK_TAUNT3" taunt3
+alias taunt4 "netevent uttaunt 4"
+alias taunt1 "netevent uttaunt 1"
+alias taunt2 "netevent uttaunt 2"
+alias taunt3 "netevent uttaunt 3"
+defaultbind H taunt4
+defaultbind J taunt1
+defaultbind K taunt2
+defaultbind L taunt3
