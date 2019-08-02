@@ -38,6 +38,7 @@ Class ShockWave : Actor
 		+NOBLOCKMAP;
 		+NOGRAVITY;
 		+DONTSPLASH;
+		+NOTELEPORT;
 	}
 	override void PostBeginPlay()
 	{
@@ -94,6 +95,7 @@ Class WarheadSubExplosion : Actor
 		+NOCLIP;
 		+DONTSPLASH;
 		+FORCEXYBILLBOARD;
+		+NOTELEPORT;
 	}
 	override void PostBeginPlay()
 	{
@@ -119,6 +121,7 @@ Class WarheadHitbox : Actor
 		+NOCLIP;
 		+DONTSPLASH;
 		+NOBLOOD;
+		+NOTELEPORT;
 	}
 	override int DamageMobj( Actor inflictor, Actor source, int damage, Name mod, int flags, double angle )
 	{
@@ -207,6 +210,7 @@ Class WarheadTrail : Actor
 		+FORCEXYBILLBOARD;
 		+ROLLSPRITE;
 		+ROLLCENTER;
+		+NOTELEPORT;
 		Scale 0.2;
 	}
 

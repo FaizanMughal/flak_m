@@ -142,13 +142,6 @@ Class Razor2 : Actor
 		}
 		Goto Spawn;
 	Death:
-		TNT1 A 0
-		{
-			angle += 180;
-			pitch *= -1;
-			A_RazorHit();
-		}
-	XDeath:
 		TNT1 A 1 A_StopSound(CHAN_VOICE);
 		Stop;
 	}

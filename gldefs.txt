@@ -27,6 +27,18 @@ HardwareShader Texture "models/bossheadT.png"
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 	Texture "brighttex" "brightmaps/bossheadT.png"
 }
+Brightmap Texture "models/bossgibT.png"
+{
+	Map "brightmaps/bossheadT.png"
+}
+Brightmap Texture "models/boss3.png"
+{
+	Map "brightmaps/boss3.png"
+}
+Brightmap Texture "models/boss4.png"
+{
+	Map "brightmaps/boss4.png"
+}
 HardwareShader Texture "models/JBRifle2.png"
 {
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"

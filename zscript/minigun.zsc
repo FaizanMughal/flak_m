@@ -43,6 +43,7 @@ Class MinigunTracer : Actor
 		+NOGRAVITY;
 		+DONTSPLASH;
 		+INTERPOLATEANGLES;
+		+NOTELEPORT;
 	}
 	override void Tick()
 	{

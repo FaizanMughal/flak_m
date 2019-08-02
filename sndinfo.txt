@@ -42,7 +42,7 @@ $playeralias	tmale1	neutral	*pain50		ut/malepain3
 $playeralias	tmale1	neutral	*pain25		ut/malepain4
 $playeralias	tmale1	neutral	*grunt		ut/malegrunt
 $playeralias	tmale1	neutral	*land		DSEMPTY
-$playeralias	tmale1	neutral	*uland		ut/land1
+$playeralias	tmale1	neutral	*uland		ut/land
 $playeralias	tmale1	neutral	*jump		ut/malejump1
 $playeralias	tmale1	neutral	*usefail	ut/malehump1
 $playeralias	tmale1	neutral	*surface	ut/malesurface
@@ -166,6 +166,7 @@ ut/bossfootstep	bfootstp
 
 ut/playerfootstepwet	lsplash
 ut/wetsplash		dsplash
+ut/wetsurface		wtrexit1
 
 // everything else
 
@@ -206,6 +207,7 @@ misc/gibp3	gibp4
 misc/gibp4	gibp5
 misc/gibp5	gibp6
 $random misc/gibp { misc/gibp1 misc/gibp2 misc/gibp3 misc/gibp4 misc/gibp5 }
+misc/corpsefall thump
 
 impact/select	imppick
 impact/pull	impaltst

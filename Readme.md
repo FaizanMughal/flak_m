@@ -12,7 +12,7 @@ This mod requires GZDoom 4.1 or later.
  - Redeemer (slot 0)
    - 6 Degrees of Freedom movement with manual tilt (reload/zoom buttons)
  - GES Biorifle (slot 3)
- - Pulsegun (slot 5) (with beta animations)
+ - Pulsegun (slot 5) (with optional beta reload)
  - Health
   - Big Keg O' Health (soulsphere)
   - Beta Super Health (medkit)
@@ -31,12 +31,16 @@ This mod requires GZDoom 4.1 or later.
  - Computer Map (computer area map)
  - Searchlight (light amplification visor)
  - Enhanced Shock Rifle (slot 4, limited ammo, invulnerability sphere)
+   - Instagib DM mode
  - UT HUD
  - Impact Hammer (slot 1)
  - Chainsaw (slot 1)
+   - Option to make chainsaw use ammo (random drop from enemies killed without it)
  - Translocator (slot 1)
+   - Option to make it use regenerating ammo like in UT2k4
  - Enforcer (slot 2)
    - Dual Enforcers (slot 2)
+   - Restored reloading (optional)
  - Ripper (slot 6)
  - Jump Boots (radsuit, has "iron boots" powerup effect to compensate)
  - Minigun (slot 7)
@@ -48,22 +52,22 @@ This mod requires GZDoom 4.1 or later.
  - Visual recoil affecting aim (improved A_Swing from Soundless Mound, can be
    toggled)
  - UT-like weapon dropping style
- - UT player classes (sound only, no models yet)
+ - UT player classes
  - Heretic compatibility
  - Spanish localization
+ - UT gore system (toggleable)
 
 ## In progress
 
  - General polishing, bugfixing and rebalancing
  - Add some more effects
    - Lava/Slime footstep sounds?
- - UT gore system (toggleable)
- - French localization
- - Italian localization
+ - French, Italian and German localizations (I'll need help for these)
 
 ## Ideas
 
- - Chainsaw balancing (maybe give it ammo?)
+ - Figure out some alternative invincibility item. Kinda like how I improvised
+   the backpack replacement.
 
 ## Future plans
 
@@ -72,14 +76,14 @@ This mod requires GZDoom 4.1 or later.
    - Recenter the backpack mesh (it was a complete hack job to begin with)
  - Add ammo counters to Pulsegun, Minigun, Flak Cannon and Rocket Launcher once
    scripted textures are implemented
- - Add player models once GZDoom gets a well deserved model animation system
-   overhaul (at the moment this would require a monumental amount of work in
-   the current state-tied system)
+ - Redo player models once GZDoom gets a well deserved model animation system
+   overhaul (mainly to clean up the current, messy implementation of this)
  - Add weapon attachment support to player models when that is also added in
+   (at the moment all player models have an integrated placeholder weapon)
  - Unreal 1 weapons mod and maybe also a monsters mod
  - Port some of my UT weapon mods (and maybe also some of my personal faves by
    others, such as Psi Weapon Dreams)
- - Hexen compatibility ???
+ - Hexen/Strife compatibility ???
  - Relics?
 
 ## Known bugs
