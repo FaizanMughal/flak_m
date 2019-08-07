@@ -222,6 +222,18 @@ FLAK_TAUNT1 = "Victory 1";
 FLAK_TAUNT2 = "Victory 2";
 FLAK_TAUNT3 = "Wave";
 FLAK_TAUNT4 = "Pelvic Thrust";
+FLAK_MCREDS = "UT Credits";
+FLAK_CDT = "Doom Tournament";
+FLAK_CLEAD = "Development Lead:";
+FLAK_CASSETS = "Additional Assets:";
+FLAK_CPATRON = "Patreon Backers:";
+FLAK_CTHANK = "Special Thanks:";
+FLAK_CUT = "Unreal Tournament";
+FLAK_CPROG = "Programming:";
+FLAK_CLEVEL = "Level Design:";
+FLAK_CARTNMODEL = "Art & Models:";
+FLAK_CMUSNSND = "Music & Sound:";
+FLAK_CBIZ = "Biz:";
 
 [es esm esn esg esc esa esd esv eso esr ess esf esl esy esz esb ese esh esi esu]
 /* Obituaries */
@@ -431,6 +443,16 @@ FLAK_TAUNT1 = "Victoria 1";
 FLAK_TAUNT2 = "Victoria 2";
 FLAK_TAUNT3 = "Adiós";
 FLAK_TAUNT4 = "Movimiento de pelvis";
+FLAK_MCREDS = "Créditos de UT";
+FLAK_CLEAD = "Desarrolladora Jefe:";
+FLAK_CASSETS = "Assets Adicionales:";
+FLAK_CPATRON = "Mecenas de Patreon:";
+FLAK_CTHANK = "Agradecimientos Especiales:";
+FLAK_CPROG = "Programación:";
+FLAK_CLEVEL = "Diseño de Niveles:";
+FLAK_CARTNMODEL = "Arte y Modelos:";
+FLAK_CMUSNSND = "Música y Sonido:";
+FLAK_CBIZ = "Negocios:";
 
 [fr]
 
