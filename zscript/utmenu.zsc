@@ -1,0 +1,49 @@
+// for hud config
+Class OptionMenuItemUTHudPreview : OptionMenuItem
+{
+	TextureID tex[2];
+	CVar mColorP, mColorC, mOpacity, mPTeam, mPColor;
+
+	OptionMenuItemUTHudPreview Init( String label )
+	{
+		Super.Init(label,"",true);
+		mColorP = CVar.FindCVar("flak_colorprefs");
+		mColorC = CVar.FindCVar("flak_colorcustom");
+		mOpacity = CVar.FindCVar("flak_opacity");
+		mPTeam = CVar.FindCVar("team");
+		mPColor = CVar.FindCVar("color");
+		tex[0] = TexMan.CheckForTexture("graphics/HudPreviewBG.png",TexMan.Type_Any);
+		tex[1] = TexMan.CheckForTexture("graphics/HudPreview.png",TexMan.Type_Any);
+		return self;
+	}
+
+	override bool Selectable()
+	{
+		return false;
+	}
+
+	override int Draw( OptionMenuDescriptor desc, int y, int indent, bool selected )
+	{
+		int xpos = indent + CursorSpace();
+		int ypos = y+OptionMenuSettings.mLinespacing*CleanYfac_1;
+		Screen.DrawTexture(tex[0],false,xpos,ypos,DTA_CleanNoMove_1,true);
+		Color tintcolor = Color("White");
+		switch ( mColorP.GetInt() )
+		{
+		case 0:
+			tintcolor = Color(Teams[mPTeam.GetInt()].mName);
+			break;
+		case 1:
+			tintcolor = Color(mPColor.GetString());
+			break;
+		case 2:
+			tintcolor = Color(mColorC.GetString());
+			break;
+		}
+		int opacity = mOpacity.GetInt();
+		if ( opacity >= 16 ) Screen.DrawTexture(tex[1],false,xpos,ypos,DTA_CleanNoMove_1,true,DTA_FillColor,Color("Black"));
+		double alpha = clamp(opacity/15.,0.,1.);
+		Screen.DrawTexture(tex[1],false,xpos,ypos,DTA_CleanNoMove_1,true,DTA_FillColor,tintcolor,DTA_Alpha,alpha,DTA_LegacyRenderStyle,STYLE_AddShaded);
+		return -1;
+	}
+}
