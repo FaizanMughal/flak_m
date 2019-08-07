@@ -59,6 +59,11 @@ OptionMenu "UTOptionMenu"
 	Slider "$FLAK_HSIZE", "flak_hudsize", 0.2, 1.0, 0.2, 1
 	Slider "$FLAK_WSIZE", "flak_weaponsize", 0.2, 1.0, 0.2, 1
 	Slider "$FLAK_DSIZE", "flak_statussize", 0.5, 1.5, 0.1, 1
+	UTHudPreview " "
+	StaticText " "
+	StaticText " "
+	StaticText " "
+	StaticText " "
 	Option "$FLAK_CCHOOSE", "flak_colorprefs", "ColorPrefs"
 	ColorPicker "$FLAK_CCOLOR", "flak_colorcustom"
 	Slider "$FLAK_HOPAC", "flak_opacity", 1, 16, 1, 0
