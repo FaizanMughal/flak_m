@@ -31,7 +31,7 @@ Class OptionMenuItemUTHudPreview : OptionMenuItem
 		switch ( mColorP.GetInt() )
 		{
 		case 0:
-			int t = Teams[mPTeam.GetInt();
+			int t = Teams[mPTeam.GetInt()];
 			if ( t < Teams.Size() )
 				tintcolor = Color(Teams[t].mName);
 			break;
