@@ -3,7 +3,7 @@
 What began as a test for importing UT vertex meshes has turned into an actual
 full UT weapon and item mod.
 
-This mod requires GZDoom 4.1 or later.
+This mod requires GZDoom 4.2.0 or later.
 
 ## Currently implemented
 
