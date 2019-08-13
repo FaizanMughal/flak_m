@@ -178,6 +178,7 @@ Class FlakChunk : Actor
 		+SKYEXPLODE;
 		+INTERPOLATEANGLES;
 		+HITTRACER;
+		+DONTBOUNCEONSHOOTABLES;
 		Scale 0.3;
 	}
 	override void PostBeginPlay()
