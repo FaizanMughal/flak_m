@@ -225,6 +225,7 @@ Class UTGrenade : UTRocket
 		-EXPLODEONWATER;
 		+CANBOUNCEWATER;
 		+NOEXPLODEFLOOR;
+		+DONTBOUNCEONSHOOTABLES;
 		BounceType "Hexen";
 		WallBounceFactor 0.75;
 		BounceFactor 0.75;

@@ -69,6 +69,7 @@ Class Razor2 : Actor
 		+SKYEXPLODE;
 		+CANBOUNCEWATER;
 		+NODAMAGETHRUST;
+		+DONTBOUNCEONSHOOTABLES;
 	}
 	override void PostBeginPlay()
 	{
