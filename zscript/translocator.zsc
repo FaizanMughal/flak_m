@@ -13,34 +13,34 @@ Class ModuleHitbox : Actor
 	}
 	override int DamageMobj( Actor inflictor, Actor source, int damage, Name mod, int flags, double angle )
 	{
-		if ( target )
+		if ( master )
 		{
-			if ( inflictor ) target.vel += level.Vec3Diff(inflictor.pos,pos).unit()*damage*0.2;
-			else if ( source ) target.vel += level.Vec3Diff(source.pos,pos).unit()*damage*0.2;
-			target.vel.z = 5;
+			if ( inflictor ) master.vel += level.Vec3Diff(inflictor.pos,pos).unit()*damage*0.2;
+			else if ( source ) master.vel += level.Vec3Diff(source.pos,pos).unit()*damage*0.2;
+			master.vel.z = 5;
 		}
-		if ( !target || (target.target && ((target.target == source) || target.target.isTeammate(source))) ) return 0;
-		target.bAMBUSH = true;
+		if ( !master || (master.target && ((master.target == source) || master.target.isTeammate(source))) ) return 0;
+		master.bAMBUSH = true;
 		return 0;
 	}
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !target )
+		if ( !master )
 		{
 			Destroy();
 			return;
 		}
-		SetOrigin(target.pos,true);
-		if ( target.bMISSILE ) return;
+		SetOrigin(master.pos,true);
+		if ( master.bMISSILE ) return;
 		let bi = BlockThingsIterator.Create(self,32);
 		while ( bi.Next() )
 		{
-			if ( !bi.Thing || (bi.Thing != target.target) ) continue;
+			if ( !bi.Thing || (bi.Thing != master.target) ) continue;
 			if ( (Distance2D(bi.Thing)-bi.Thing.radius <= radius) && ((bi.Thing.pos.z <= pos.z+height) && (bi.Thing.pos.z+bi.Thing.height >= pos.z-height)) )
 			{
 				A_PlaySound("misc/i_pkup");
-				target.Destroy();
+				master.Destroy();
 				return;
 			}
 		}
@@ -149,7 +149,7 @@ Class TranslocatorModule : Actor
 			return;
 		}
 		b = Spawn("ModuleHitbox",pos);
-		b.target = self;
+		b.master = self;
 		A_PlaySound("transloc/hum",CHAN_VOICE,0.5,true,2.0);
 	}
 

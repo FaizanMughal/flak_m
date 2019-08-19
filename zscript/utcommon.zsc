@@ -1974,7 +1974,7 @@ Class ShredCorpseHitbox : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( (!(target is 'UTPlayer') && !flak_corpsedamage) || !target || (target.Health > 0) || target.InStateSequence(target.CurState,target.FindState("XDeath")) )
+		if ( (!(target is 'UTPlayer') && !flak_corpsedamage) || !target || (target.Health > 0) || target.InStateSequence(target.CurState,target.FindState("XDeath",true)) )
 		{
 			Destroy();
 			return;
@@ -1995,6 +1995,8 @@ Class ShredCorpseHitbox : Actor
 	}
 	override int DamageMobj( Actor inflictor, Actor source, int damage, Name mod, int flags, double angle )
 	{
+		// somehow target can spontaneously stop existing while this is happening
+		if ( !target ) return 0;
 		if ( (target is 'UTPlayer') && (mod == 'Zapped') && (target.sprite == target.GetSpriteIndex('PLD9')) )
 		{
 			// keep the zapping action on
