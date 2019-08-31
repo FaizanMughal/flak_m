@@ -26,6 +26,7 @@ Class OptionMenuItemUTHudPreview : OptionMenuItem
 	{
 		int xpos = indent + CursorSpace();
 		int ypos = y+OptionMenuSettings.mLinespacing*CleanYfac_1;
+		Screen.DrawFrame(xpos,ypos,64*CleanXFac_1,64*CleanYFac_1);
 		Screen.DrawTexture(tex[0],false,xpos,ypos,DTA_CleanNoMove_1,true);
 		Color tintcolor = Color("White");
 		switch ( mColorP.GetInt() )
@@ -47,5 +48,39 @@ Class OptionMenuItemUTHudPreview : OptionMenuItem
 		double alpha = clamp(opacity/15.,0.,1.);
 		Screen.DrawTexture(tex[1],false,xpos,ypos,DTA_CleanNoMove_1,true,DTA_FillColor,tintcolor,DTA_Alpha,alpha,DTA_LegacyRenderStyle,STYLE_AddShaded);
 		return -1;
+	}
+}
+
+// changes to Tahoma
+Class UTMessageBox : MessageBoxMenu
+{
+	override void Init( Menu parent, String message, int messagemode, bool playsound, Name cmd, voidptr native_handler )
+	{
+		Super.Init(parent,message,messagemode,playsound,cmd,native_handler);
+		Font NFont = Font.GetFont('Tahoma10');
+		if ( !generic_ui )
+		{
+			if ( NFont && NFont.CanPrint(message) && NFont.CanPrint("$TXT_YES") && NFont.CanPrint("$TXT_NO") ) textFont = NFont;
+			else if ( OriginalSmallFont && OriginalSmallFont.CanPrint(message) && OriginalSmallFont.CanPrint("$TXT_YES") && OriginalSmallFont.CanPrint("$TXT_NO") ) textFont = OriginalSmallFont;
+		}
+		if ( !textFont )
+		{
+			arrowFont = textFont = NewSmallFont;
+			int factor = (CleanXfac+1)/2;
+			destWidth = screen.GetWidth()/factor;
+			destHeight = screen.GetHeight()/factor;
+			selector = "▶";
+		}
+		else
+		{
+			arrowFont = ConFont;
+			destWidth = CleanWidth;
+			destHeight = CleanHeight;
+			selector = "\xd";
+		}
+		int mr1 = destWidth/2+10+textFont.StringWidth(Stringtable.Localize("$TXT_YES"));
+		int mr2 = destWidth/2+10+textFont.StringWidth(Stringtable.Localize("$TXT_NO"));
+		mMouseRight = MAX(mr1,mr2);
+		mMessage = textFont.BreakLines(Stringtable.Localize(message),generic_ui?600:300);
 	}
 }

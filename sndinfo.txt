@@ -144,7 +144,7 @@ $playeralias	tboss	neutral	*pain50		ut/bosspain3
 $playeralias	tboss	neutral	*pain25		ut/bosspain4
 $playeralias	tboss	neutral	*grunt		ut/bossgrunt
 $playeralias	tboss	neutral	*land		DSEMPTY
-$playeralias	tboss	neutral	*uland		ut/land
+$playeralias	tboss	neutral	*uland		ut/bossgrunt
 $playeralias	tboss	neutral	*jump		ut/bossjump
 $playeralias	tboss	neutral	*usefail	ut/bosshump
 $playeralias	tboss	neutral	*surface	ut/malesurf

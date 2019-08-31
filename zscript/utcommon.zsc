@@ -1321,7 +1321,7 @@ Class UTWeapon : Weapon
 		Owner.player.WeaponState |= WF_WEAPONBOBBING; // UT weapons always bob
 	}
 
-	void FireEffect()
+	virtual void FireEffect()
 	{
 		let amp = DamageAmplifier(Owner.FindInventory("DamageAmplifier",true));
 		if ( amp ) amp.FireEffect();
@@ -2021,6 +2021,47 @@ Class ShredCorpseHitbox : Actor
 	}
 }
 
+// imitates UE1 light type LT_TexturePaletteOnce
+Class PaletteLight : DynamicLight
+{
+	Color pal[256];
+
+	Default
+	{
+		Tag "Explosion";
+		DynamicLight.Type "Point";
+		Args 0,0,0,80;
+		ReactionTime 15;
+	}
+	private void UpdateLight()
+	{
+		int index = 255-((255*ReactionTime)/default.ReactionTime);
+		args[LIGHT_RED] = pal[index].r;
+		args[LIGHT_GREEN] = pal[index].g;
+		args[LIGHT_BLUE] = pal[index].b;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		int lump = Wads.CheckNumForFullname(String.Format("palettes/%s.pal",GetTag()));
+		String paldat = Wads.ReadLump(lump);
+		for ( int i=0; i<256; i++ )
+		{
+			pal[i].r = paldat.ByteAt(i*3);
+			pal[i].g = paldat.ByteAt(i*3+1);
+			pal[i].b = paldat.ByteAt(i*3+2);
+		}
+		UpdateLight();
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		A_CountDown();
+		UpdateLight();
+	}
+}
+
 Enum ESwingMode
 {
 	SWING_Straight,	// constant increment
@@ -2343,6 +2384,7 @@ Class UTMainHandler : EventHandler
 		// prettify Kinsie's test map for a more Unreal feel
 		if ( level.GetChecksum() ~== "959A613006CC3AA912C4A22908B7566A" )
 		{
+			S_ChangeMusic("Course");
 			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
 			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
 			TextureID baseflor = TexMan.CheckForTexture("rClfFlr0",TexMan.Type_Any);
@@ -2353,9 +2395,9 @@ Class UTMainHandler : EventHandler
 			level.ChangeSky(skytx,skytx);
 			for ( int i=0; i<level.sectors.size(); i++ )
 			{
-				level.sectors[i].lightlevel = min(level.sectors[i].lightlevel,64);
-				level.sectors[i].SetPlaneLight(0,0);
-				level.sectors[i].SetPlaneLight(1,0);
+				level.sectors[i].lightlevel = min(level.sectors[i].lightlevel,96);
+				if ( level.sectors[i].GetPlaneLight(0) ) level.sectors[i].SetPlaneLight(0,96);
+				if ( level.sectors[i].GetPlaneLight(1) ) level.sectors[i].SetPlaneLight(1,96);
 				// open some ceilings
 				if ( level.sectors[i].ceilingplane.ZAtPoint(level.sectors[i].centerspot) == 1280 )
 					level.sectors[i].SetTexture(1,skyflatnum);
@@ -2375,6 +2417,7 @@ Class UTMainHandler : EventHandler
 			for ( int i=0; i<level.sides.size(); i++ )
 			{
 				level.sides[i].light = 0;
+				level.sides[i].flags &= ~Side.WALLF_ABSLIGHTING;
 				for ( int j=0; j<3; j++ )
 				{
 					if ( level.sides[i].GetTexture(j) != deftex ) continue;
@@ -2440,6 +2483,7 @@ Class UTMainHandler : EventHandler
 		}
 		else if ( level.GetChecksum() ~== "0EADB2F82732A968B8513E4DC6138439" )
 		{
+			S_ChangeMusic("Course");
 			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
 			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
 			TextureID baseflor = TexMan.CheckForTexture("rClfFlr0",TexMan.Type_Any);
@@ -2450,9 +2494,9 @@ Class UTMainHandler : EventHandler
 			level.ChangeSky(skytx,skytx);
 			for ( int i=0; i<level.sectors.size(); i++ )
 			{
-				level.sectors[i].lightlevel = 0;
-				level.sectors[i].SetPlaneLight(0,0);
-				level.sectors[i].SetPlaneLight(1,0);
+				level.sectors[i].lightlevel = min(level.sectors[i].lightlevel,96);
+				if ( level.sectors[i].GetPlaneLight(0) ) level.sectors[i].SetPlaneLight(0,96);
+				if ( level.sectors[i].GetPlaneLight(1) ) level.sectors[i].SetPlaneLight(1,96);
 				// open some ceilings
 				if ( level.sectors[i].ceilingplane.ZAtPoint(level.sectors[i].centerspot) == 1280 )
 					level.sectors[i].SetTexture(1,skyflatnum);
@@ -2472,6 +2516,7 @@ Class UTMainHandler : EventHandler
 			for ( int i=0; i<level.sides.size(); i++ )
 			{
 				level.sides[i].light = 0;
+				level.sides[i].flags &= ~Side.WALLF_ABSLIGHTING;
 				for ( int j=0; j<3; j++ )
 				{
 					if ( level.sides[i].GetTexture(j) != deftex ) continue;

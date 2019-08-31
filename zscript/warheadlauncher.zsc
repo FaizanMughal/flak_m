@@ -150,29 +150,12 @@ Class WarheadHitbox : Actor
 	}
 }
 
-Class WarheadExplodLight : DynamicLight
+Class WarheadExplodLight : PaletteLight
 {
-	double lifetime;
 	Default
 	{
-		DynamicLight.Type "Point";
 		ReactionTime 50;
-		Args 255,192,128,300;
-	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		lifetime = 1.0;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( isFrozen() ) return;
-		args[LIGHT_RED] = int(255*lifetime);
-		args[LIGHT_GREEN] = int(192*lifetime);
-		args[LIGHT_BLUE] = int(128*lifetime);
-		lifetime -= 1./ReactionTime;
-		if ( lifetime <= 0 ) Destroy();
+		Args 0,0,0,300;
 	}
 }
 

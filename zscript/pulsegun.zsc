@@ -132,28 +132,13 @@ Class PulseBallLight : DynamicLight
 	}
 }
 
-Class PulseExplLight : DynamicLight
+Class PulseExplLight : PaletteLight
 {
-	double lifetime;
 	Default
 	{
-		DynamicLight.Type "Point";
+		Tag "ExplGreen";
 		ReactionTime 20;
-		Args 64,255,0,30;
-	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		lifetime = 1.0;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( isFrozen() ) return;
-		args[LIGHT_RED] = int(64*lifetime);
-		args[LIGHT_GREEN] = int(255*lifetime);
-		lifetime -= 1./ReactionTime;
-		if ( lifetime <= 0 ) Destroy();
+		Args 0,0,0,30;
 	}
 }
 

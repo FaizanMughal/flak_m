@@ -12,33 +12,3 @@ WHFONT
 	8 WH8
 	9 WH9
 }
-
-// UT Font size 40 (big text in various places, also used by announcer add-on)
-UTFONT40
-{
-	TEMPLATE uf40_%03d
-}
-
-// UT Font size 12 (automap text, identification info)
-UTFONT12
-{
-	TEMPLATE uf12_%03d
-}
-
-// Tahoma size 10 (messages)
-TAHOMA10
-{
-	TEMPLATE th10_%03d
-}
-
-// Unreal Engine small font (for clip counters on hud)
-USMALLFONT
-{
-	TEMPLATE usmf_%03d
-}
-
-// Replace Doom font with Tahoma too
-SMALLFONT
-{
-	TEMPLATE th10_%03d
-}

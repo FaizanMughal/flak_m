@@ -104,6 +104,7 @@ Class ActShieldBelt : UTActivatable
 		Inventory.PickupMessage "$I_SHIELDBELT";
 		+COUNTITEM;
 		+INVENTORY.BIGPOWERUP;
+		+INVENTORY.ISARMOR;
 		UTActivatable.GiveItem "UTShieldBelt";
 		Inventory.RespawnTics 2100;
 	}
