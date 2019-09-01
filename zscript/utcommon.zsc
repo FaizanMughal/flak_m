@@ -69,6 +69,7 @@ Class UTPlayer : DoomPlayer
 		Player.ViewHeight 46;
 		Player.GruntSpeed 20;
 		+NOMENU;
+		+DONTTRANSLATE;
 		UTPlayer.DollType DOLL_Male;
 		UTPlayer.VoiceType VOICE_None;
 	}
@@ -740,7 +741,7 @@ Class UTPlayer : DoomPlayer
 			// Ground
 			if ( (player && (player.mo == self)) && player.cmd.yaw )
 			{
-				if ( InStateSequence(CurState,FindState("See"))
+				if ( InStateSequence(CurState,FindState("See2"))
 					|| InStateSequence(CurState,FindState("SeeAir"))
 					|| InStateSequence(CurState,FindState("SeeSwim"))
 					|| InStateSequence(CurState,FindState("SeeCrouch"))
@@ -752,7 +753,7 @@ Class UTPlayer : DoomPlayer
 			}
 			else
 			{
-				if ( InStateSequence(CurState,FindState("See"))
+				if ( InStateSequence(CurState,FindState("See2"))
 					|| InStateSequence(CurState,FindState("SeeAir"))
 					|| InStateSequence(CurState,FindState("SeeSwim"))
 					|| InStateSequence(CurState,FindState("SeeCrouch"))
@@ -765,7 +766,7 @@ Class UTPlayer : DoomPlayer
 		else if ( !bNoGravity && (waterlevel < 2) )
 		{
 			// Falling
-			if ( InStateSequence(CurState,FindState("See"))
+			if ( InStateSequence(CurState,FindState("See2"))
 				|| InStateSequence(CurState,FindState("SeeAir"))
 				|| InStateSequence(CurState,FindState("SeeSwim"))
 				|| InStateSequence(CurState,FindState("SeeCrouch"))
@@ -778,7 +779,7 @@ Class UTPlayer : DoomPlayer
 		else
 		{
 			// Swimming
-			if ( InStateSequence(CurState,FindState("See"))
+			if ( InStateSequence(CurState,FindState("See2"))
 				|| InStateSequence(CurState,FindState("SeeAir"))
 				|| InStateSequence(CurState,FindState("SeeSwim"))
 				|| InStateSequence(CurState,FindState("SeeCrouch"))
@@ -809,7 +810,7 @@ Class UTPlayer : DoomPlayer
 				|| InStateSequence(CurState,FindState("SeeSwim"))
 				|| InStateSequence(CurState,FindState("SeeCrouch"))
 				|| InStateSequence(CurState,FindState("Turn")) )
-				SetStateLabel("See");
+				SetStateLabel("See2");
 		}
 		else if ( !bNoGravity && (waterlevel < 2) )
 		{
@@ -818,7 +819,7 @@ Class UTPlayer : DoomPlayer
 				|| InStateSequence(CurState,FindState("SpawnAir"))
 				|| InStateSequence(CurState,FindState("SpawnSwim"))
 				|| InStateSequence(CurState,FindState("SpawnCrouch"))
-				|| InStateSequence(CurState,FindState("See"))
+				|| InStateSequence(CurState,FindState("See2"))
 				|| InStateSequence(CurState,FindState("SeeSwim"))
 				|| InStateSequence(CurState,FindState("SeeCrouch"))
 				|| InStateSequence(CurState,FindState("Turn")) )
@@ -831,7 +832,7 @@ Class UTPlayer : DoomPlayer
 				|| InStateSequence(CurState,FindState("SpawnAir"))
 				|| InStateSequence(CurState,FindState("SpawnSwim"))
 				|| InStateSequence(CurState,FindState("SpawnCrouch"))
-				|| InStateSequence(CurState,FindState("See"))
+				|| InStateSequence(CurState,FindState("See2"))
 				|| InStateSequence(CurState,FindState("SeeAir"))
 				|| InStateSequence(CurState,FindState("SeeCrouch"))
 				|| InStateSequence(CurState,FindState("Turn")) )
@@ -957,10 +958,11 @@ Class UTPlayer : DoomPlayer
 		#### # 5;
 		PLYC A -1;
 		Wait;
-	See:
+	// See state needs to be defined on each subclass for the selection menu
+	See2:
 		#### # 5;
 		PLAY HIJKL 4;
-		Goto See+1;
+		Goto See2+1;
 	SeeAir:
 		#### # 5;
 		PLYA A 50;
