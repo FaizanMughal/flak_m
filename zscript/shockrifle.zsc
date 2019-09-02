@@ -696,116 +696,89 @@ Class SuperShockBallLight : ShockBallLight
 {
 	Default
 	{
-		DynamicLight.Type "Point";
 		Args 255,160,128,120;
 	}
 }
 
-Class ShockBeamLight : ShockExplLight
+Class ShockBeamLight : PaletteLight
 {
 	Default
 	{
-		+DYNAMICLIGHT.ATTENUATE;
+		Tag "ExplShock";
 		ReactionTime 15;
 		Args 0,0,0,80;
+		+DYNAMICLIGHT.ATTENUATE;
 	}
 }
 
-Class SuperShockBeamLight : SuperShockExplLight
+Class SuperShockBeamLight : PaletteLight
 {
 	Default
 	{
-		+DYNAMICLIGHT.ATTENUATE;
+		Tag "ExplSShock";
 		ReactionTime 15;
 		Args 0,0,0,100;
+		+DYNAMICLIGHT.ATTENUATE;
 	}
 }
 
-Class ShockBeamHitLight : ShockExplLight
+Class ShockBeamHitLight : PaletteLight
 {
 	Default
 	{
+		Tag "ExplShock";
 		ReactionTime 24;
 		Args 0,0,0,120;
 	}
 }
 
-Class SuperShockBeamHitLight : SuperShockExplLight
+Class SuperShockBeamHitLight : PaletteLight
 {
 	Default
 	{
+		Tag "ExplSShock";
 		ReactionTime 24;
 		Args 0,0,0,150;
 	}
 }
 
-Class ShockBlastLight : ShockExplLight
+Class ShockBlastLight : PaletteLight
 {
 	Default
 	{
-		ReactionTime 50;
+		Tag "ExplShock";
+		ReactionTime 60;
 		Args 0,0,0,300;
 	}
 }
 
-Class SuperShockBlastLight : SuperShockExplLight
+Class SuperShockBlastLight : PaletteLight
 {
 	Default
 	{
-		ReactionTime 50;
+		Tag "ExplSShock";
+		ReactionTime 60;
 		Args 0,0,0,400;
 	}
 }
 
-Class ShockExplLight : DynamicLight
+Class ShockExplLight : PaletteLight
 {
-	double lifetime;
 	Default
 	{
-		DynamicLight.Type "Point";
+		Tag "ExplShock";
 		ReactionTime 30;
-		Args 160,128,255,150;
-	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		lifetime = 1.0;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( isFrozen() ) return;
-		args[LIGHT_RED] = int(160*lifetime);
-		args[LIGHT_GREEN] = int(128*lifetime);
-		args[LIGHT_BLUE] = int(255*lifetime);
-		lifetime -= 1./ReactionTime;
-		if ( lifetime <= 0 ) Destroy();
+		Args 0,0,0,150;
 	}
 }
 
-Class SuperShockExplLight : DynamicLight
+Class SuperShockExplLight : PaletteLight
 {
-	double lifetime;
 	Default
 	{
-		DynamicLight.Type "Point";
+		Tag "ExplSShock";
 		ReactionTime 30;
-		Args 255,160,128,200;
-	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		lifetime = 1.0;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( isFrozen() ) return;
-		args[LIGHT_RED] = int(255*lifetime);
-		args[LIGHT_GREEN] = int(160*lifetime);
-		args[LIGHT_BLUE] = int(128*lifetime);
-		lifetime -= 1./ReactionTime;
-		if ( lifetime <= 0 ) Destroy();
+		Args 0,0,0,200;
 	}
 }
 
@@ -823,16 +796,16 @@ Class ShockHitbox : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !target || target.InStateSequence(target.CurState,target.ResolveState("Death")) )
+		if ( !target || !target.InStateSequence(target.CurState,target.FindState("Spawn")) )
 		{
 			Destroy();
 			return;
 		}
-		SetOrigin(target.pos-(0,0,height*0.5),true);
+		SetOrigin(target.Vec3Offset(0,0,-height*0.5),true);
 	}
 	override bool CanCollideWith( Actor other, bool passive )
 	{
-		return ((other is 'ShockBeam') || (other is 'SuperShockBeam'));
+		return false;
 	}
 }
 

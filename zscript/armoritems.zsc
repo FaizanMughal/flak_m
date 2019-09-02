@@ -142,7 +142,7 @@ Class UTShieldBelt : UTArmor
 		}
 		int oldamt = amount;
 		Super.AbsorbDamage(damage,damageType,newdamage);
-		if ( (oldamt > 0) && (amount <= 0) ) PrintPickupMessage(true,StringTable.Localize("$D_SHIELDBELT"));
+		if ( (oldamt > 0) && (amount <= 0) && Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_SHIELDBELT"));
 	}
 	override bool HandlePickup( Inventory item )
 	{

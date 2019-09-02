@@ -94,11 +94,12 @@ Class UTRocketTrail : Actor
 	}
 }
 
-Class RocketExplLight : SlugLight
+Class RocketExplLight : PaletteLight
 {
 	Default
 	{
-		Args 255,224,128,120;
+		Args 0,0,0,120;
+		ReactionTime 20;
 	}
 }
 

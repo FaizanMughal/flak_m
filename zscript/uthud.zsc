@@ -23,7 +23,7 @@ Class ViewTracer : LineTracer
 
 Class UTHud : BaseStatusBar
 {
-	TextureID AmmoBar, Boxes[4], Keys[5], BigNum[12], Flash, Slots[10], Icons[14], Uses[14], Man[5], Woman[5], Boss[5], WeaponBox, IconTloc2, UseTloc2, IconSaw2, UseSaw2, ItemBox, ItemSel, ItemFlash, ItemArrow[2], LastItem;
+	TextureID AmmoBar, Boxes[4], Keys[5], BigNum[12], Flash, Slots[10], Icons[14], Uses[14], Man[5], Woman[5], Boss[5], WeaponBox, IconTloc2, UseTloc2, IconSaw2, UseSaw2, ItemBox, ItemSel, ItemFlash, ItemArrow[2], LastItem, FacePanel[3];
 	Class<Weapon> IconClasses[14];
 	double HScale;
 	Color tintcolor, bgcolor;
@@ -35,7 +35,19 @@ Class UTHud : BaseStatusBar
 	bool showweapons, showfrags, showammo, showstatus, showinfo;
 	double hudsize, weaponsize, statussize;
 
-	HUDFont mUTFont12;
+	HUDFont mUTFont12, mUTFont40;
+
+	String PickupMsg;
+	int PickupMsgTic;
+	String ShortMsg[4];
+	int ShortMsgTic[4];
+	int ShortMsgCol[4];
+	int LastMsgTic;
+	TextureID LastTalkFace;	// guessed from voice type
+	int LastTalkTic, faceout;
+	String MidPrintStr;
+	int MidPrintTic;
+	double MidPrintScale;
 
 	// For easier UT Canvas drawing
 	Color DrawColor, WhiteColor, GoldColor;
@@ -45,11 +57,12 @@ Class UTHud : BaseStatusBar
 	override void Init()
 	{
 		Super.Init();
-		SetSize(0,320,200);
+		SetSize(0,640,480);	// this exists here merely to scale the automap text
 		lastfrag = int.min;
 		lastfragcnt = 0;
 		vtracer = new("ViewTracer");
 		mUTFont12 = HUDFont.Create("UTFONT12");
+		mUTFont40 = HUDFont.Create("UTFONT40");
 		// Set defaults
 		DrawColor = WhiteColor = "White";
 		GoldColor = "Gold";
@@ -154,6 +167,9 @@ Class UTHud : BaseStatusBar
 		UseTloc2 = TexMan.CheckForTexture("UseTrn2",TexMan.Type_Any);
 		IconSaw2 = TexMan.CheckForTexture("IconSaw2",TexMan.Type_Any);
 		UseSaw2 = TexMan.CheckForTexture("UseSaw2",TexMan.Type_Any);
+		FacePanel[0] = TexMan.CheckForTexture("FacePnl",TexMan.Type_Any);
+		FacePanel[1] = TexMan.CheckForTexture("FacePnlA",TexMan.Type_Any);
+		FacePanel[2] = TexMan.CheckForTexture("Static1",TexMan.Type_Any);
 	}
 
 	override void Draw( int state, double TicFrac )
@@ -207,25 +223,25 @@ Class UTHud : BaseStatusBar
 		return Color(a.a,int(a.r*(1.-x)+b.r*x),int(a.g*(1.-x)+b.g*x),int(a.b*(1.-x)+b.b*x));
 	}
 
-	private void UTDrawTintedTex( TextureID tx, double sx = 1.0, int opacity = -1, Color tint = Color("Black"), bool flip = false )
+	private void UTDrawTintedTex( TextureID tx, double sx = 1.0, int opacity = -1, Color tint = Color("Black"), bool flip = false, bool animated = false )
 	{
 		double ss = (HScale*sx);
 		double dw = (Screen.GetWidth()/ss), dh = (Screen.GetHeight()/ss);
 		double dx = CurX/ss, dy = CurY/ss;
 		if ( opacity == -1 ) opacity = self.opacity;
-		if ( opacity >= 16 ) Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor,DTA_TopOffset,0,DTA_LeftOffset,0);
+		if ( opacity >= 16 ) Screen.DrawTexture(tx,animated,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor,DTA_TopOffset,0,DTA_LeftOffset,0);
 		double alpha = clamp(opacity/15.,0.0,1.0);
-		Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_LegacyRenderStyle,STYLE_AddShaded,DTA_FillColor,(tint!="Black")?tint:tintcolor,DTA_TopOffset,0,DTA_LeftOffset,0,DTA_FlipX,flip);
+		Screen.DrawTexture(tx,animated,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_LegacyRenderStyle,STYLE_AddShaded,DTA_FillColor,(tint!="Black")?tint:tintcolor,DTA_TopOffset,0,DTA_LeftOffset,0,DTA_FlipX,flip);
 	}
-	private void UTDrawPlainTex( TextureID tx, double sx = 1.0, int opacity = -1, bool flip = false )
+	private void UTDrawPlainTex( TextureID tx, double sx = 1.0, int opacity = -1, bool flip = false, bool animated = false )
 	{
 		double ss = (HScale*sx);
 		double dw = (Screen.GetWidth()/ss), dh = (Screen.GetHeight()/ss);
 		double dx = CurX/ss, dy = CurY/ss;
 		if ( opacity == -1 ) opacity = self.opacity;
-		if ( opacity >= 16 ) Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor,DTA_TopOffset,0,DTA_LeftOffset,0,DTA_FlipX,flip);
+		if ( opacity >= 16 ) Screen.DrawTexture(tx,animated,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,bgcolor,DTA_TopOffset,0,DTA_LeftOffset,0,DTA_FlipX,flip);
 		double alpha = clamp(opacity/15.,0.0,1.0);
-		Screen.DrawTexture(tx,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_TopOffset,0,DTA_LeftOffset,0,DTA_FlipX,flip);
+		Screen.DrawTexture(tx,animated,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,alpha,DTA_TopOffset,0,DTA_LeftOffset,0,DTA_FlipX,flip);
 	}
 
 	private bool UTDrawWeaponIcon( Weapon w, bool use, double sx = 1.0 )
@@ -637,14 +653,16 @@ Class UTHud : BaseStatusBar
 			cl1 = String.Format("Dark%s",cl2);
 		}
 		String tname = String.Format("\c[%s]%s:\c[%s] %s",cl1,StringTable.Localize("$M_NAME"),cl2,lastseen.player.GetUserName());
-		CurX = (640-mUTFont12.mFont.StringWidth(tname))*0.5;
+		double scl = HScale/5.;
+		CurX = (640-mUTFont40.mFont.StringWidth(tname)*scl)*0.5;
 		CurY = 480*0.75;
-		Screen.DrawText(mUTFont12.mFont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_Alpha,lalpha/2.);
+		Screen.DrawText(mUTFont40.mFont,Font.CR_UNTRANSLATED,CurX/scl,CurY/scl,tname,DTA_VirtualWidthF,640/scl,DTA_VirtualHeightF,480/scl,DTA_Alpha,lalpha/2.,DTA_LegacyRenderStyle,STYLE_Add);
 		if ( !deathmatch || (lastseen.IsTeammate(CPlayer.mo)) )
 		{
-			CurY += 1.2*mUTFont12.mFont.GetHeight();
 			tname = String.Format("\c[%s]%s:\c[%s] %d",cl1,StringTable.Localize("$M_HEALTH"),cl2,lastseen.Health);
-			Screen.DrawText(mUTFont12.mFont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_Alpha,lalpha/2.);
+			CurY += mUTFont40.mFont.GetHeight()*scl;
+			CurX = (640-mUTFont40.mFont.StringWidth(tname)*scl)*0.5;
+			Screen.DrawText(mUTFont40.mFont,Font.CR_UNTRANSLATED,CurX/scl,CurY/scl,tname,DTA_VirtualWidthF,640/scl,DTA_VirtualHeightF,480/scl,DTA_Alpha,lalpha/2.,DTA_LegacyRenderStyle,STYLE_Add);
 		}
 	}
 
@@ -792,6 +810,224 @@ Class UTHud : BaseStatusBar
 		}
 	}
 
+	private bool IsAutoTaunt( String str )
+	{
+		// checks if this critical message is pretending to be a chat msg
+		if ( str.IndexOf("\c*") == 0 ) return true;
+		return false;
+	}
+
+	private void SetChatFace( String str, bool isauto = false )
+	{
+		Array<String> splitme;
+		str.Split(splitme,":");
+		if ( splitme.Size() < 2 ) return;
+		String pname = splitme[0];
+		// autotaunts have a leading chat color escape
+		if ( isauto && (pname.IndexOf("\c*") == 0) ) pname.Remove(0,2);
+		if ( pname.RightIndexOf("\c*") == pname.Length()-2 ) pname.Remove(pname.Length()-2,2);
+		// guess the player
+		int p = -1;
+		for ( int i=0; i<MAXPLAYERS; i++ )
+		{
+			if ( !playeringame[i] ) continue;
+			if ( players[i].GetUserName() != pname ) continue;
+			p = i;
+			break;
+		}
+		if ( (p == -1) || !(players[p].mo is 'UTPlayer') ) return;
+		switch ( UTPlayer(players[p].mo).VoiceType )
+		{
+		case UTPlayer.VOICE_FemaleOne:
+			LastTalkFace = TexMan.CheckForTexture("Ivana",TexMan.Type_Any);
+			break;
+		case UTPlayer.VOICE_FemaleTwo:
+			LastTalkFace = TexMan.CheckForTexture("Lauren",TexMan.Type_Any);
+			break;
+		case UTPlayer.VOICE_MaleOne:
+			LastTalkFace = TexMan.CheckForTexture("Blake",TexMan.Type_Any);
+			break;
+		case UTPlayer.VOICE_MaleTwo:
+			LastTalkFace = TexMan.CheckForTexture("Brock",TexMan.Type_Any);
+			break;
+		case UTPlayer.VOICE_Boss:
+			LastTalkFace = TexMan.CheckForTexture("Xan",TexMan.Type_Any);
+			break;
+		}
+		LastTalkTic = gametic+90;
+	}
+
+	override bool ProcessNotify( EPrintLevel printlevel, String outline )
+	{
+		if ( gamestate != GS_LEVEL ) return false;	// not during intermissions
+		if ( printlevel == PRINT_LOW )	// pickups
+		{
+			PickupMsg = outline;
+			PickupMsgTic = gametic+50;
+			return true;
+		}
+		else if ( printlevel == PRINT_MEDIUM )	 // obituaries
+		{
+			AppendMessage(outline,Font.CR_RED);
+			return true;
+		}
+		else if ( (printlevel == PRINT_CHAT) || (printlevel == PRINT_TEAMCHAT) )	// chat
+		{
+			AppendMessage(outline,Font.CR_GREEN);
+			SetChatFace(outline);
+			return true;
+		}
+		else if ( IsAutoTaunt(outline) )	// autotaunts
+		{
+			AppendMessage(outline,Font.CR_GREEN);
+			SetChatFace(outline,true);
+			return true;
+		}
+		else	// other messages
+		{
+			AppendMessage(outline,Font.CR_WHITE);
+			return true;
+		}
+		return false;
+	}
+
+	override bool ProcessMidPrint( Font fnt, String msg, bool bold )
+	{
+		if ( !fnt || (fnt == SmallFont) || (fnt == OriginalSmallFont) || (fnt == NewSmallFont) )
+		{
+			MidPrintStr = msg;
+			MidPrintScale = 2.5;
+			MidPrintTic = gametic+70;
+			return true;
+		}
+		else if ( fnt == BigFont )
+		{
+			MidPrintStr = msg;
+			MidPrintScale = 1.2;
+			MidPrintTic = gametic+70;
+			return true;
+		}
+		return false;
+	}
+
+	private void AppendMessage( String msg, int col )
+	{
+		BrokenLines lines = mUTFont40.mFont.BreakLines(msg,2450);
+		for ( int i=0; i<lines.Count(); i++ )
+		{
+			// push back old lines
+			for ( int j=3; j>0; j-- )
+			{
+				ShortMsg[j] = ShortMsg[j-1];
+				ShortMsgTic[j] = ShortMsgTic[j-1];
+				ShortMsgCol[j] = ShortMsgCol[j-1];
+			}
+			// jam it in
+			ShortMsg[0] = lines.StringAt(i);
+			LastMsgTic = ShortMsgTic[0] = gametic+170;
+			ShortMsgCol[0] = col;
+		}
+	}
+
+	override void FlushNotify()
+	{
+		for ( int i=0; i<4; i++ )
+		{
+			ShortMsg[i] = "";
+			ShortMsgTic[i] = int.min;
+			ShortMsgCol[i] = Font.CR_UNTRANSLATED;
+		}
+		LastTalkTic = LastMsgTic = PickupMsgTic = int.min;
+		LastTalkFace.SetNull();
+		PickupMsg = "";
+		PickupMsgTic = int.min;
+		MidPrintStr = "";
+		MidPrintTic = int.min;
+	}
+
+	override bool DrawChat( String txt )
+	{
+		if ( gamestate != GS_LEVEL ) return false;	// not during intermissions
+		CurX = 0;
+		CurY = 68*HScale;
+		if ( LastTalkTic > gametic ) CurX += (68+faceout)*HScale;
+		int areatime = max(LastTalkTic,LastMsgTic)+30;
+		if ( areatime > gametic ) UTDrawTintedTex(FacePanel[1],opacity:clamp(int((areatime-gametic+fractic)*0.75),0,15));
+		CurX += 6*HScale;
+		CurY += HScale;
+		double scl = HScale/3.;
+		String fullstr = String.Format("(> Say %s%s",txt,mUTFont40.mFont.GetCursor());
+		// cut out until it fits
+		while ( (mUTFont40.mFont.StringWidth(fullstr) > 2450) && (fullstr.Length() > 7) )
+			fullstr.Remove(7,1);
+		Screen.DrawText(mUTFont40.mFont,Font.CR_GREEN,CurX/scl,CurY/scl,fullstr,DTA_VirtualWidthF,Screen.GetWidth()/scl,DTA_VirtualHeightF,Screen.GetHeight()/scl,DTA_KeepRatio,true);
+		return true;
+	}
+
+	private void DrawTalkFace()
+	{
+		// this doesn't even get close to how it's supposed to look but whatever
+		double ss = (HScale*0.265625);
+		double dw = (Screen.GetWidth()/ss), dh = (Screen.GetHeight()/ss);
+		double dx = CurX/ss, dy = CurY/ss;
+		Screen.DrawTexture(FacePanel[2],false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_FillColor,Color("Black"));
+		Screen.DrawTexture(FacePanel[2],true,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_LegacyRenderStyle,STYLE_AddShaded,DTA_FillColor,tintcolor);
+		ss = HScale;
+		dw = (Screen.GetWidth()/ss);
+		dh = (Screen.GetHeight()/ss);
+		dx = (CurX+2*HScale)/ss;
+		dy = (CurY+2*HScale)/ss;
+		Screen.DrawTexture(LastTalkFace,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_Alpha,0.8);
+		Screen.DrawTexture(LastTalkFace,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_LegacyRenderStyle,STYLE_Add);
+	}
+
+	private void DrawMessages()
+	{
+		// midprint
+		if ( (MidPrintStr.Length() > 0) && (MidPrintTic > gametic) )
+		{
+			double scl = HScale/MidPrintScale;
+			CurX = (Screen.GetWidth()-mUTFont40.mFont.StringWidth(MidPrintStr)*scl)/2;
+			CurY = 256*HScale;
+			Screen.DrawText(mUTFont40.mFont,Font.FindFontColor('UTHudText'),CurX/scl,CurY/scl,MidPrintStr,DTA_VirtualWidthF,Screen.GetWidth()/scl,DTA_VirtualHeightF,Screen.GetHeight()/scl,DTA_KeepRatio,true,DTA_Alpha,clamp((MidPrintTic-gametic+fractic)*0.1,0,1),DTA_LegacyRenderStyle,STYLE_Add);
+		}
+		// pickup message
+		if ( PickupMsgTic > gametic )
+		{
+			double scl = HScale/2.2;
+			CurX = (Screen.GetWidth()-mUTFont40.mFont.StringWidth(PickupMsg)*scl)/2;
+			CurY = Screen.GetHeight()-112*HScale;
+			Screen.DrawText(mUTFont40.mFont,Font.CR_WHITE,CurX/scl,CurY/scl,PickupMsg,DTA_VirtualWidthF,Screen.GetWidth()/scl,DTA_VirtualHeightF,Screen.GetHeight()/scl,DTA_KeepRatio,true,DTA_Alpha,clamp((PickupMsgTic-gametic+fractic)*0.1,0,1),DTA_LegacyRenderStyle,STYLE_Add);
+		}
+		// talk face
+		CurX = 0;
+		CurY = 0;
+		if ( LastTalkTic > gametic )
+		{
+			if ( (LastTalkTic-gametic) < 30 ) faceout = max(-68,faceout-8);
+			else faceout = 0;
+			CurX = faceout*HScale;
+			DrawTalkFace();
+			CurX += 68*HScale;
+		}
+		// message frame
+		int areatime = max(LastTalkTic,LastMsgTic)+30;
+		if ( areatime > gametic )
+			UTDrawTintedTex(FacePanel[0],opacity:clamp(int((areatime-gametic+fractic)*0.75),0,15));
+		// messages themselves
+		if ( LastMsgTic < gametic ) return;
+		CurX = 8*HScale;
+		if ( LastTalkTic > gametic ) CurX += (68+faceout)*HScale;
+		CurY = HScale;
+		double scl = HScale/3.;
+		for ( int i=3; i>=0; i-- )
+		{
+			if ( ShortMsgTic[i] < gametic ) continue;
+			Screen.DrawText(mUTFont40.mFont,ShortMsgCol[i],CurX/scl,CurY/scl,ShortMsg[i],DTA_VirtualWidthF,Screen.GetWidth()/scl,DTA_VirtualHeightF,Screen.GetHeight()/scl,DTA_KeepRatio,true);
+			CurY += 16*HScale;
+		}
+	}
+
 	override void Tick()
 	{
 		Super.Tick();
@@ -833,6 +1069,8 @@ Class UTHud : BaseStatusBar
 		DrawInventory(lbottom);
 		// Display Identification Info
 		if ( CPlayer == players[consoleplayer] && showinfo ) DrawIdentifyInfo();
+		// Display messages
+		DrawMessages();
 	}
 
 	override void DrawAutomapHUD( double ticFrac )

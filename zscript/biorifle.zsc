@@ -144,28 +144,13 @@ Class BioLight : DynamicLight
 	}
 }
 
-Class BioXLight : DynamicLight
+Class BioXLight : PaletteLight
 {
-	double lifetime;
 	Default
 	{
-		DynamicLight.Type "Point";
-		Args 64,255,48,30;
-	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		lifetime = 1.0;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( isFrozen() ) return;
-		args[LIGHT_RED] = int(64*lifetime);
-		args[LIGHT_GREEN] = int(255*lifetime);
-		args[LIGHT_BLUE] = int(48*lifetime);
-		lifetime -= 0.05;
-		if ( lifetime <= 0 ) Destroy();
+		Tag "ExplGreen";
+		Args 0,0,0,30;
+		ReactionTime 20;
 	}
 }
 

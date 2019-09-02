@@ -39,7 +39,7 @@ Class DamageAmpLight : DynamicLight
 		if ( target.player )
 			SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
 		else SetOrigin(target.Vec3Offset(0,0,target.height/2),true);
-		args[LIGHT_INTENSITY] = Random[ASMD](10,12)*8;
+		args[LIGHT_INTENSITY] = Random[UDamage](10,12)*8;
 		bDORMANT = Powerup(master).isBlinking();
 	}
 }
@@ -78,7 +78,7 @@ Class DamageAmplifier : Powerup
 	override void EndEffect()
 	{
 		Super.EndEffect();
-		if ( EffectTics <= 0 ) PrintPickupMessage(true,StringTable.Localize("$D_UDAMAGE"));
+		if ( (EffectTics <= 0) && Owner && Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_UDAMAGE"));
 	}
 
 	override bool isBlinking()
@@ -219,7 +219,7 @@ Class PowerUTInvisibility : PowerInvisibility
 	override void EndEffect()
 	{
 		Super.EndEffect();
-		if ( EffectTics <= 0 ) PrintPickupMessage(true,StringTable.Localize("$D_INVISIBILITY"));
+		if ( (EffectTics <= 0) && Owner && Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_INVISIBILITY"));
 	}
 }
 
@@ -339,7 +339,7 @@ Class UTJumpBoots : Inventory
 		}
 		else if ( (Amount <= 0) && owner.player.onground )
 		{
-			PrintPickupMessage(true,StringTable.Localize("$D_JUMPBOOTS"));
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_JUMPBOOTS"));
 			DepleteOrDestroy();
 		}
 	}
@@ -438,7 +438,7 @@ Class Searchlight : Inventory
 		ticcnt = 0;
 		if ( --Amount <= 0 )
 		{
-			PrintPickupMessage(true,StringTable.Localize("$D_SEARCHLIGHT"));
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_SEARCHLIGHT"));
 			DepleteOrDestroy();
 		}
 	}

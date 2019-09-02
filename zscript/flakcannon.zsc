@@ -395,28 +395,12 @@ Class SlugSmoke : Actor
 	}
 }
 
-Class SlugLight : DynamicLight
+Class SlugLight : PaletteLight
 {
-	double lifetime;
 	Default
 	{
-		DynamicLight.Type "Point";
-		Args 255,224,128,80;
-	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		lifetime = 1.0;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( isFrozen() ) return;
-		args[LIGHT_RED] = int(255*lifetime);
-		args[LIGHT_GREEN] = int(224*lifetime);
-		args[LIGHT_BLUE] = int(128*lifetime);
-		lifetime -= 0.05;
-		if ( lifetime <= 0 ) Destroy();
+		Args 0,0,0,80;
+		ReactionTime 20;
 	}
 }
 

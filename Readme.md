@@ -3,7 +3,7 @@
 What began as a test for importing UT vertex meshes has turned into an actual
 full UT weapon and item mod.
 
-This mod requires GZDoom 4.2.0 or later.
+This mod requires GZDoom g4.3pre-64-g37fa2e1b6 or later.
 
 ## Currently implemented
 
@@ -80,7 +80,6 @@ This mod requires GZDoom 4.2.0 or later.
    overhaul (mainly to clean up the current, messy implementation of this)
  - Add weapon attachment support to player models when that is also added in
    (at the moment all player models have an integrated placeholder weapon)
- - Unreal 1 weapons mod and maybe also a monsters mod
  - Port some of my UT weapon mods (and maybe also some of my personal faves by
    others, such as Psi Weapon Dreams)
  - Hexen/Strife compatibility ???
