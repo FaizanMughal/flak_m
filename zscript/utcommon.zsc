@@ -139,11 +139,12 @@ Class UTPlayer : DoomPlayer
 		{
 			// Doom Tournament just gives the player a shield belt and maximum bonuses
 			let belt = Inventory(Spawn("UTShieldBelt"));
+			belt.ClearCounters();
 			if ( !belt.CallTryPickup(self) ) belt.Destroy();
 			let bonus = Inventory(Spawn("UTArmorBonus"));
+			bonus.ClearCounters();
 			bonus.Amount = bonus.MaxAmount;
 			if ( !bonus.CallTryPickup(self) ) bonus.Destroy();
-			level.total_items -= 2; // spawning them in raises item count
 			if ( !giveall ) return;
 		}
 		if ( giveall || (name ~== "keys") )
