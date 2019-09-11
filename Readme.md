@@ -3,7 +3,7 @@
 What began as a test for importing UT vertex meshes has turned into an actual
 full UT weapon and item mod.
 
-This mod requires GZDoom g4.3pre-64-g37fa2e1b6 or later.
+This mod requires GZDoom g4.3pre-79-gbcef44051 or later.
 
 ## Currently implemented
 
@@ -89,6 +89,3 @@ This mod requires GZDoom g4.3pre-64-g37fa2e1b6 or later.
 
  - Translocator allows telefragging other players in coop (no idea if I can
    even fix this)
- - Biorifle sludge doesn't handle 3d floors (especially sloped ones) properly.
-   This is due to the unavailability of 3D floor data on ZScript and will be
-   fixed once 3D floors are exported to scripting (still waiting on that PR)
