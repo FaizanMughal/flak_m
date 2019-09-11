@@ -26,10 +26,7 @@ Class OptionMenuItemUTHudPreview : OptionMenuItem
 	{
 		int xpos = indent + CursorSpace();
 		int ypos = y+OptionMenuSettings.mLinespacing*CleanYfac_1;
-<<<<<<< HEAD
 		Screen.DrawFrame(xpos,ypos,64*CleanXFac_1,64*CleanYFac_1);
-=======
->>>>>>> experimental
 		Screen.DrawTexture(tex[0],false,xpos,ypos,DTA_CleanNoMove_1,true);
 		Color tintcolor = Color("White");
 		switch ( mColorP.GetInt() )
@@ -52,7 +49,6 @@ Class OptionMenuItemUTHudPreview : OptionMenuItem
 		Screen.DrawTexture(tex[1],false,xpos,ypos,DTA_CleanNoMove_1,true,DTA_FillColor,tintcolor,DTA_Alpha,alpha,DTA_LegacyRenderStyle,STYLE_AddShaded);
 		return -1;
 	}
-<<<<<<< HEAD
 }
 
 // changes to Tahoma
@@ -88,6 +84,3 @@ Class UTMessageBox : MessageBoxMenu
 		mMessage = textFont.BreakLines(Stringtable.Localize(message),generic_ui?600:300);
 	}
 }
-=======
-}
->>>>>>> experimental
