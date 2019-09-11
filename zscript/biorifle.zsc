@@ -241,7 +241,7 @@ Class BioGel : Actor
 			}
 			else if ( atsector )	// attempt to follow the movement of the plane
 			{
-				SetOrigin(Vec2OffsetZ(0,0,atz+cursector.GetPlaneTexZ(atplane)),true);
+				SetOrigin(Vec2OffsetZ(0,0,atz+atsector.GetPlaneTexZ(atplane)),true);
 				if ( ceilingz-floorz <= 2 ) deadtimer = min(deadtimer,0);
 			}
 		}
@@ -270,7 +270,9 @@ Class BioGel : Actor
 			SetStateLabel("XDeath");
 		}
 	}
-	// align self to what surface was hit, currently does not support 3d floors + slopes properly
+	// align self to what surface was hit
+	// TODO handle plane collision within the very border between two
+	// sectors (most noticeable with moving 3d floors)
 	virtual void AlignSelf()
 	{
 		F3DFloor ff;
@@ -386,41 +388,57 @@ Class BioGel : Actor
 		else if ( BlockingFloor )
 		{
 			// find closest 3d floor for its normal
-			for ( int i=0; i<CurSector.Get3DFloorCount(); i++ )
+			for ( int i=0; i<BlockingFloor.Get3DFloorCount(); i++ )
 			{
-				if ( !(CurSector.Get3DFloor(i).top.ZAtPoint(pos.xy) ~== floorz) ) continue;
-				ff = CurSector.Get3DFLoor(i);
+				if ( !(BlockingFloor.Get3DFloor(i).top.ZAtPoint(pos.xy) ~== floorz) ) continue;
+				ff = BlockingFloor.Get3DFLoor(i);
 				break;
 			}
-			if ( ff ) normal = -ff.top.Normal;
-			else normal = BlockingFloor.floorplane.Normal;
-			atsector = BlockingFloor;
-			atplane = 0;
+			if ( ff )
+			{
+				normal = -ff.top.Normal;
+				atsector = ff.model;
+				atplane = 1;
+			}
+			else
+			{
+				normal = BlockingFloor.floorplane.Normal;
+				atsector = BlockingFloor;
+				atplane = 0;
+			}
 			pitch = asin(-normal.z);
 			angle = atan2(normal.y,normal.x);
 			roll = FRandom[GES](0,360);
 			SetOrigin((pos.x,pos.y,floorz)+normal*0.5,false);
-			atz = pos.z-BlockingFloor.GetPlaneTexZ(0);
+			atz = pos.z-atsector.GetPlaneTexZ(atplane);
 			hittype = HIT_FLOOR;
 		}
 		else if ( BlockingCeiling )
 		{
 			// find closest 3d floor for its normal
-			for ( int i=0; i<CurSector.Get3DFloorCount(); i++ )
+			for ( int i=0; i<BlockingCeiling.Get3DFloorCount(); i++ )
 			{
-				if ( !(CurSector.Get3DFloor(i).bottom.ZAtPoint(pos.xy) ~== ceilingz) ) continue;
-				ff = CurSector.Get3DFloor(i);
+				if ( !(BlockingCeiling.Get3DFloor(i).bottom.ZAtPoint(pos.xy) ~== ceilingz) ) continue;
+				ff = BlockingCeiling.Get3DFloor(i);
 				break;
 			}
-			if ( ff ) normal = -ff.bottom.Normal;
-			else normal = BlockingCeiling.ceilingplane.Normal;
-			atsector = BlockingCeiling;
-			atplane = 1;
+			if ( ff )
+			{
+				normal = -ff.bottom.Normal;
+				atsector = ff.model;
+				atplane = 0;
+			}
+			else
+			{
+				normal = BlockingCeiling.ceilingplane.Normal;
+				atsector = BlockingCeiling;
+				atplane = 1;
+			}
 			pitch = asin(-normal.z);
 			angle = atan2(normal.y,normal.x);
 			roll = FRandom[GES](0,360);
 			SetOrigin((pos.x,pos.y,ceilingz)+normal*0.5,false);
-			atz = pos.z-BlockingCeiling.GetPlaneTexZ(1);
+			atz = pos.z-atsector.GetPlaneTexZ(atplane);
 			if ( waterlevel > 0 ) hittype = HIT_FLOOR;
 			else if ( normal dot (0,0,-1) > 0.7 )
 				hittype = HIT_CEILING;
@@ -442,8 +460,26 @@ Class BioGel : Actor
 			// attempt to guess line part (upper/mid/lower)
 			if ( !atline.sidedef[1] ) atpart = 0;	// mid
 			else if ( atline.sidedef[atside?0:1].sector.ceilingplane.ZAtPoint(pos.xy) < pos.z ) atpart = 1;	// upper
-			else if ( atline.sidedef[atside?0:1].sector.floorplane.ZAtPoint(pos.xy) > pos.z ) atpart = -1;	// lower
-			else atpart = 0;
+			else if ( atline.sidedef[atside?0:1].sector.floorplane.ZAtPoint(pos.xy) > (pos.z+height) ) atpart = -1;	// lower
+			else
+			{
+				atpart = 0;
+				// check if we're touching a 3d floor line
+				Sector backsector = atline.sidedef[atside?0:1].sector;
+				for ( int i=0; i<backsector.Get3DFloorCount(); i++ )
+				{
+					if ( backsector.Get3DFloor(i).bottom.ZAtPoint(pos.xy) > (pos.z+height) ) continue;
+					if ( backsector.Get3DFloor(i).top.ZAtPoint(pos.xy) < pos.z ) continue;
+					ff = backsector.Get3DFloor(i);
+					break;
+				}
+				// attach to it
+				if ( ff )
+				{
+					atline = ff.master;
+					atside = 0;
+				}
+			}
 			if ( atpart == 1 )
 			{
 				if ( atline.flags&Line.ML_DONTPEGTOP ) atz = pos.z-atline.sidedef[atside].sector.GetPlaneTexZ(1);

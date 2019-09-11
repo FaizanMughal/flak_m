@@ -8,7 +8,7 @@ $random ut/maledie { ut/maledie1 ut/maledie2 ut/maledie3 }
 ut/malexdie1	deathc51
 ut/malexdie2	deathc52
 ut/malexdie3	deathc53
-$random ut/malexdie { ut/malexdie1 ut/malexdie2 ut/malexdie3 }
+$random ut/malexdie { ut/malexdie1 ut/malexdie3 }
 ut/gibp		newgib
 ut/malepain1	injurl2
 ut/malepain2	injurl04
@@ -48,6 +48,7 @@ $playeralias	tmale1	neutral	*usefail	ut/malehump1
 $playeralias	tmale1	neutral	*surface	ut/malesurface
 $playeralias	tmale1	neutral	*gasp		ut/malegasp
 
+$playeralias	tmale1	neutral	*death-decapitated	ut/malexdie2
 $playeralias	tmale1	neutral	*death-drowning		ut/maledrowned
 $playeralias	tmale1	neutral	*xdeath-drowning	ut/maledrowned
 $playeralias	tmale1	neutral	*pain100-drowning	ut/maledrowning
@@ -81,7 +82,7 @@ ut/femaledie1	decap01
 ut/femaledie2	death1d
 ut/femaledie3	death2a
 ut/femaledie4	death3c
-$random ut/femaledie { ut/femaledie1 ut/femaledie2 ut/femaledie3 }
+$random ut/femaledie { ut/femaledie4 ut/femaledie2 ut/femaledie3 }
 ut/femalexdie1	death41
 ut/femalexdie2	death42
 $random ut/femalexdie { ut/femalexdie1 ut/femalexdie2 }
@@ -112,6 +113,7 @@ $playeralias	tfemale	neutral	*usefail	ut/femalegrunt
 $playeralias	tfemale	neutral	*surface	ut/femalesurf
 $playeralias	tfemale	neutral	*gasp		ut/femalegasp
 
+$playeralias	tfemale	neutral	*death-decapitated	ut/femaledie1
 $playeralias	tfemale	neutral	*death-drowning		ut/femaledrowned
 $playeralias	tfemale	neutral	*xdeath-drowning	ut/femaledrowned
 $playeralias	tfemale	neutral	*pain100-drowning	ut/femaledrowning
@@ -131,9 +133,9 @@ ut/bosspain1	binjur1
 ut/bosspain2	binjur2
 ut/bosspain3	binjur3
 ut/bosspain4	binjur4
-ut/bossgrunt	bland01
+ut/bossgrunt	blland01
+ut/bossland	bland01
 ut/bossjump	bjump1
-ut/bosshump	bjump1
 
 $playeralias	tboss	neutral	*death		ut/bossdie
 $playeralias	tboss	neutral	*xdeath		ut/bossxdie
@@ -144,9 +146,9 @@ $playeralias	tboss	neutral	*pain50		ut/bosspain3
 $playeralias	tboss	neutral	*pain25		ut/bosspain4
 $playeralias	tboss	neutral	*grunt		ut/bossgrunt
 $playeralias	tboss	neutral	*land		DSEMPTY
-$playeralias	tboss	neutral	*uland		ut/bossgrunt
+$playeralias	tboss	neutral	*uland		ut/bossland
 $playeralias	tboss	neutral	*jump		ut/bossjump
-$playeralias	tboss	neutral	*usefail	ut/bosshump
+$playeralias	tboss	neutral	*usefail	ut/bossgrunt
 $playeralias	tboss	neutral	*surface	ut/malesurf
 $playeralias	tboss	neutral	*gasp		ut/malegasp
 
