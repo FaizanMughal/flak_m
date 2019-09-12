@@ -127,7 +127,7 @@ Class UTRocket : Actor
 		Super.PostBeginPlay();
 		let l = Spawn("UTRocketTrail",pos);
 		l.target = self;
-		A_PlaySound("utrl/fly",CHAN_VOICE,1.0,true,2.5);
+		A_PlaySound("utrl/fly",CHAN_VOICE,1.0,true,2.5,pitch:1.5625);
 		if ( tracer ) vel *= 0.9;
 		Acceleration = vel.unit()*50;
 	}
