@@ -109,19 +109,26 @@ Class ChunkTrail : Actor
 
 Class FlakAccumulator : Thinker
 {
-	Actor victim;
-	int amount;
-	int cnt;
+	Actor victim, inflictor, source;
+	Array<Int> amounts;
+	int total;
+	Name type;
 
 	override void Tick()
 	{
 		Super.Tick();
-		cnt++;
-		if ( cnt < 5 ) return;
+		bool oldxd = inflictor.bEXTREMEDEATH;
+		int gibhealth = victim.GetGibHealth();
+		// おまえはもう死んでいる
+		if ( victim.health-total <= gibhealth ) inflictor.bEXTREMEDEATH = true;
+		// 何？
+		for ( int i=0; i<amounts.Size(); i++ )
+			victim.DamageMobj(inflictor,source,amounts[i],type,DMG_THRUSTLESS);
+		inflictor.bEXTREMEDEATH = oldxd;
 		Destroy();
 	}
 
-	static void Accumulate( Actor victim, int amount )
+	static void Accumulate( Actor victim, int amount, Actor inflictor, Actor source, Name type )
 	{
 		let ti = ThinkerIterator.Create("FlakAccumulator",STAT_USER);
 		FlakAccumulator a, match = null;
@@ -136,19 +143,23 @@ Class FlakAccumulator : Thinker
 			match = new("FlakAccumulator");
 			match.ChangeStatNum(STAT_USER);
 			match.victim = victim;
+			match.amounts.Clear();
 		}
-		match.cnt = 0;
-		match.amount += amount;
+		match.amounts.Push(amount);
+		match.total += amount;
+		match.inflictor = inflictor;
+		match.source = source;
+		match.type = type;
 	}
 
-	static int GetAmount( Actor victim )
+	static clearscope int GetAmount( Actor victim )
 	{
 		let ti = ThinkerIterator.Create("FlakAccumulator",STAT_USER);
-		FlakAccumulator a;
+		FlakAccumulator a, match = null;
 		while ( a = FlakAccumulator(ti.Next()) )
 		{
 			if ( a.victim != victim ) continue;
-			return a.amount;
+			return a.total;
 		}
 		return 0;
 	}
@@ -313,18 +324,24 @@ Class FlakChunk : Actor
 	}
 	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
 	{
+		if ( bAMBUSH ) return damage;
 		if ( vel.length() <= 5.0 ) return -1;
-		FlakAccumulator.Accumulate(target,damage);
-		int gibhealth = (target.GibHealth==int.min)?-target.SpawnHealth():target.GibHealth;
-		int calcdmg = FlakAccumulator.GetAmount(target);
-		if ( target.Health-calcdmg <= (gibhealth/2) ) bEXTREMEDEATH = true;
+		FlakAccumulator.Accumulate(target,damage,self,self.target,damagetype);
+		bAMBUSH = true;
 		if ( !target.bNOBLOOD )
 		{
 			target.SpawnBlood(pos,AngleTo(target),damage);
 			A_PlaySound("flak/meat",volume:0.3);
 			A_AlertMonsters();
 		}
-		return damage;
+		return -1;
+	}
+	override int SpecialMissileHit( Actor victim )
+	{
+		int amt = FlakAccumulator.GetAmount(victim);
+		// go through actors that are already gibbed
+		if ( victim.health-amt <= victim.GetGibHealth() ) return 1;
+		return -1;
 	}
 	States
 	{
@@ -368,7 +385,7 @@ Class FlakChunk : Actor
 			A_AlertMonsters();
 		}
 	XDeath:
-		TNT1 A 1;
+		TNT1 A 2;	// must exist for at least two tics so the accumulator doesn't break
 		Stop;
 	Dummy:
 		FCH1 ABCDEFGHIJKL -1;

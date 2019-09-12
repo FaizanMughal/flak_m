@@ -89,3 +89,5 @@ This mod requires GZDoom g4.3pre-79-gbcef44051 or later.
 
  - Translocator allows telefragging other players in coop (no idea if I can
    even fix this)
+ - Biorifle sludge doesn't attach properly when it lands on the edge between
+   sectors. This is most noticeable with moving sectors and 3d floors.
