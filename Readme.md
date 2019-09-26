@@ -66,14 +66,21 @@ This mod requires GZDoom g4.3pre-79-gbcef44051 or later.
 
 ## Ideas
 
+ - Code cleanup / backporting of improvements from Doomreal
+   - Stop using A_Overlay instead of player.SetPSprite, this breaks stuff (and
+     is the reason the Enforcer does that lowering thing when reloading)
+   - Simplify certain fire loops (especially the minigun/biorifle)
+   - Add ####-based tweening to some weapon animations where needed
+ - Remember to flip the translocator model so people stop complaining
+ - Fancy titlemap like Doomreal
+ - Pickup lights like Doomreal
  - Figure out some alternative invincibility item. Kinda like how I improvised
-   the backpack replacement.
+   the backpack replacement
 
 ## Future plans
 
  - Additional model optimization and cleanup (optional, not needed for 1.0)
    - Trim out unused animations (this one is going to be very time-consuming)
-   - Recenter the backpack mesh (it was a complete hack job to begin with)
  - Add ammo counters to Pulsegun, Minigun, Flak Cannon and Rocket Launcher once
    scripted textures are implemented
  - Redo player models once GZDoom gets a well deserved model animation system

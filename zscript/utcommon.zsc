@@ -2708,7 +2708,7 @@ Class UTMainHandler : EventHandler
 			e.Thing.A_XScream();
 			e.Thing.A_NoBlocking();
 			e.Thing.A_BossDeath();
-			e.Thing.Destroy();
+			e.Thing.SetStateLabel("Null");	// instead of destroying, should prevent random VM aborts
 			return;
 		}
 		// attach damage accumulator for corpses
