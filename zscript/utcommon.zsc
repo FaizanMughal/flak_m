@@ -731,6 +731,7 @@ Class UTPlayer : DoomPlayer
 
 	override void PlayIdle()
 	{
+		if ( player.Health <= 0 ) return;
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) )
 		{
 			// Crouching
@@ -794,6 +795,7 @@ Class UTPlayer : DoomPlayer
 
 	override void PlayRunning()
 	{
+		if ( player.Health <= 0 ) return;
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) )
 		{
 			// Crouching
@@ -843,6 +845,7 @@ Class UTPlayer : DoomPlayer
 
 	override void PlayAttacking()
 	{
+		if ( player.Health <= 0 ) return;
 		// no animation if crouched
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
 		// check weapon type
@@ -872,18 +875,21 @@ Class UTPlayer : DoomPlayer
 
 	virtual void PlayAttacking3()
 	{
+		if ( player.Health <= 0 ) return;
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
 		SetStateLabel("Missile");
 	}
 
 	virtual void PlayReloading()
 	{
+		if ( player.Health <= 0 ) return;
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
 		SetStateLabel("Reload");
 	}
 
 	virtual void PlayLanding()
 	{
+		if ( player.Health <= 0 ) return;
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
 		SetStateLabel("Landing");
 	}
