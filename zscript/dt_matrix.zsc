@@ -105,20 +105,4 @@ Class dt_Matrix4
 		r.set(2,3,-1);
 		return r;
 	}
-
-	// [deprecated] UE-like axes from rotation
-	// proper implementation moved to CoordUtil
-	static Vector3, Vector3, Vector3 getaxes( double pitch, double yaw, double roll )
-	{
-		Vector3 x = (1,0,0), y = (0,-1,0), z = (0,0,1);	// y inverted for left-handed result
-		dt_Matrix4 mRoll = dt_Matrix4.rotate((1,0,0),roll);
-		dt_Matrix4 mPitch = dt_Matrix4.rotate((0,1,0),pitch);
-		dt_Matrix4 mYaw = dt_Matrix4.rotate((0,0,1),yaw);
-		dt_Matrix4 mRot = mRoll.mul(mYaw);
-		mRot = mRot.mul(mPitch);
-		x = mRot.vmat(x);
-		y = mRot.vmat(y);
-		z = mRot.vmat(z);
-		return x, y, z;
-	}
 }

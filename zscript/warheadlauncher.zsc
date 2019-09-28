@@ -140,7 +140,7 @@ Class WarheadHitbox : Actor
 			Destroy();
 			return;
 		}
-		SetOrigin(target.pos-(0,0,height*0.5),true);
+		SetOrigin(target.Vec3Offset(0,0,-height*0.5),true);
 	}
 	States
 	{
@@ -175,7 +175,7 @@ Class WarheadLight : DynamicLight
 			return;
 		}
 		Vector3 taildir = -(cos(target.angle)*cos(target.pitch),sin(target.angle)*cos(target.pitch),-sin(target.pitch));
-		SetOrigin(target.Vec3Offset(taildir.x*20,taildir.y*20,taildir.z*20),true);
+		SetOrigin(level.Vec3Offset(pos,taildir*20),true);
 		args[LIGHT_INTENSITY] = Random[Warhead](6,8)*10;
 	}
 }
@@ -649,7 +649,7 @@ Class WarheadLauncher : UTWeapon
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		vel -= x*10;
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2*y-2*z);
 		Actor p = Spawn("WarShell",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
@@ -663,7 +663,7 @@ Class WarheadLauncher : UTWeapon
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		vel -= x*0.2;
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2*y-2*z);
 		int numpt = Random[Warhead](10,20);
 		for ( int i=0; i<numpt; i++ )
 		{
@@ -687,7 +687,7 @@ Class WarheadLauncher : UTWeapon
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		vel -= x*10;
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2*y-2*z);
 		Actor p = Spawn("GuidedWarShell",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();

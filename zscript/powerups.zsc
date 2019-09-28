@@ -47,6 +47,7 @@ Class DamageAmpLight : DynamicLight
 Class DamageAmplifier : Powerup
 {
 	Actor l;
+	int lasteffect;
 
 	Default
 	{
@@ -63,6 +64,7 @@ Class DamageAmplifier : Powerup
 	override void InitEffect()
 	{
 		Super.InitEffect();
+		lasteffect = int.min;
 		l = Spawn("DamageAmpLight",Owner.pos);
 		l.target = Owner;
 		l.master = self;
@@ -88,9 +90,11 @@ Class DamageAmplifier : Powerup
 
 	void FireEffect()
 	{
+		if ( gametic < lasteffect ) return;
 		if ( EffectTics < 350 ) Owner.A_PlaySound("udamage/fire2",CHAN_7,1.0,false,0.25);
 		else Owner.A_PlaySound("udamage/fire1",CHAN_7,1.0,false,0.25);
-		UTMainHandler.DoFlash(Owner,Color(96,238,0,255),10);
+		UTMainHandler.DoFlash(Owner,Color(48,238,0,255),6);
+		lasteffect = gametic+5;	// prevent excess flash
 	}
 
 	override void ModifyDamage( int damage, Name damageType, out int newdamage, bool passive )
@@ -480,7 +484,7 @@ Class mkLight : DynamicLight
 			Destroy();
 			return;
 		}
-		if ( target.player ) SetOrigin((target.pos.x,target.pos.y,target.player.viewz),true);
+		if ( target.player ) SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
 		else SetOrigin(target.vec3Offset(0,0,target.height*0.75),true);
 		A_SetAngle(target.angle,SPF_INTERPOLATE);
 		A_SetPitch(target.pitch,SPF_INTERPOLATE);

@@ -333,7 +333,7 @@ Class Translocator : UTWeapon
 		A_AlertMonsters();
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x-8.0*y-12.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x-8*y-12*z);
 		let p = Spawn("TranslocatorModule",origin);
 		p.target = self;
 		p.angle = angle;

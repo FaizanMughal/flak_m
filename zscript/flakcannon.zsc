@@ -94,7 +94,7 @@ Class ChunkTrail : Actor
 			SetState(FindState("Death")+dist);
 			return;
 		}
-		SetOrigin(target.pos+(0,0,speed),true);
+		SetOrigin(target.Vec3Offset(0,0,speed),true);
 	}
 	States
 	{
@@ -117,17 +117,18 @@ Class FlakAccumulator : Thinker
 	override void Tick()
 	{
 		Super.Tick();
-		bool oldxd = inflictor.bEXTREMEDEATH;
 		int gibhealth = victim.GetGibHealth();
 		// おまえはもう死んでいる
 		if ( victim.health-total <= gibhealth ) inflictor.bEXTREMEDEATH = true;
 		// 何？
+		inflictor.bAMBUSH = true;
 		for ( int i=0; i<amounts.Size(); i++ )
 		{
 			if ( !victim ) break;
 			victim.DamageMobj(inflictor,source,amounts[i],type,DMG_THRUSTLESS);
 		}
-		inflictor.bEXTREMEDEATH = oldxd;
+		inflictor.bAMBUSH = false;
+		inflictor.bEXTREMEDEATH = false;
 		Destroy();
 	}
 
@@ -175,6 +176,7 @@ Class FlakChunk : Actor
 	double lifetime, lifespeed;
 	int lifetics;
 	Vector3 oldvel;
+	Actor lasthit;
 	Default
 	{
 		Obituary "$O_FLAKCANNON";
@@ -323,14 +325,11 @@ Class FlakChunk : Actor
 		yawvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
 		A_PlaySound("flak/bounce",volume:0.3);
 		A_AlertMonsters();
-		if ( vel.length() < 5.0 ) ExplodeMissile();
+		if ( vel.length() < 5 ) ExplodeMissile();
 	}
 	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
 	{
-		if ( bAMBUSH ) return damage;
-		if ( vel.length() <= 5.0 ) return -1;
-		FlakAccumulator.Accumulate(target,damage,self,self.target,damagetype);
-		bAMBUSH = true;
+		if ( bAMBUSH || (vel.length() <= 5) ) return damage;
 		if ( !target.bNOBLOOD )
 		{
 			target.SpawnBlood(pos,AngleTo(target),damage);
@@ -341,9 +340,26 @@ Class FlakChunk : Actor
 	}
 	override int SpecialMissileHit( Actor victim )
 	{
+		if ( bAMBUSH || (vel.length() <= 5) || ((victim == target) && !bHITOWNER) || (victim == lasthit) )
+			return 1;
+		// with this we can guarantee that the chunk won't just keep on dealing damage
+		// this is something I wish Unreal's boulders did
+		lasthit = victim;
+		// gather damage
+		FlakAccumulator.Accumulate(victim,GetMissileDamage(0,0),self,target,damagetype);
 		int amt = FlakAccumulator.GetAmount(victim);
-		// go through actors that are already gibbed
-		if ( victim.health-amt <= victim.GetGibHealth() ) return 1;
+		// pass through if it's already dead
+		if ( victim.health-amt <= 0 )
+		{
+			// bleed
+			if ( !victim.bNOBLOOD )
+			{
+				victim.SpawnBlood(pos,AngleTo(victim),damage);
+				A_PlaySound("flak/meat",volume:0.3);
+				A_AlertMonsters();
+			}
+			return 1;
+		}
 		return -1;
 	}
 	States
@@ -388,7 +404,7 @@ Class FlakChunk : Actor
 			A_AlertMonsters();
 		}
 	XDeath:
-		TNT1 A 2;	// must exist for at least two tics so the accumulator doesn't break
+		TNT1 A 2;	// must exist for at least two tics so the accumulator gets the right inflictor
 		Stop;
 	Dummy:
 		FCH1 ABCDEFGHIJKL -1;
@@ -568,7 +584,7 @@ Class FlakLight : DynamicLight
 			Destroy();
 			return;
 		}
-		if ( target.player ) SetOrigin(target.Vec3Offset(0,0,target.player.viewz-target.pos.z),true);
+		if ( target.player ) SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
 		else SetOrigin(target.pos,true);
 		if ( cnt++ > 2 ) Destroy();
 	}
@@ -596,7 +612,7 @@ Class FlakCannon : UTWeapon
 		Vector3 x, y, z;
 		double a, s;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+4.0*y-3.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+4*y-3*z);
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);
@@ -655,7 +671,7 @@ Class FlakCannon : UTWeapon
 		Vector3 x, y, z;
 		double a, s;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-3.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2*y-3*z);
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);

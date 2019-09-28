@@ -342,7 +342,7 @@ Class UTHud : BaseStatusBar
 		else if ( flak_enforcerreload && (cw is 'Enforcer') )
 		{
 			// draw clip(s)
-			double ch = Enforcer(cw).ClipCount/20.;
+			double ch = Enforcer(cw).ClipCount/double(Enforcer(cw).default.ClipCount);
 			CurX = BaseX+6*hudsize*HScale;
 			CurY = BaseY+53*hudsize*HScale;
 			Vector2 ss;
@@ -355,7 +355,7 @@ Class UTHud : BaseStatusBar
 			Screen.DrawTexture(AmmoBar,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_WindowRightF,ddw,DTA_Alpha,alpha);
 			if ( cw.Amount > 1 )
 			{
-				ch = Enforcer(cw).SlaveClipCount/20.;
+				ch = Enforcer(cw).SlaveClipCount/double(Enforcer(cw).default.SlaveClipCount);
 				CurY += 3*hudsize*HScale;
 				ss = (0.54,0.125)*hudsize*HScale;
 				dw = (Screen.GetWidth()/ss.x);
@@ -369,7 +369,7 @@ Class UTHud : BaseStatusBar
 		else if ( flak_pulsereload && (cw is 'Pulsegun') )
 		{
 			// draw clip
-			double ch = Pulsegun(cw).ClipCount/50.;
+			double ch = Pulsegun(cw).ClipCount/double(Pulsegun(cw).default.ClipCount);
 			CurX = BaseX+6*hudsize*HScale;
 			CurY = BaseY+53*hudsize*HScale;
 			Vector2 ss = (0.54,0.3)*hudsize*HScale;

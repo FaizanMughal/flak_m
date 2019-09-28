@@ -612,3 +612,8 @@ SkyBox "KGDaySky" fliptop
 	"graphics/SkySetB_up.png"
 	"graphics/SkySetB_down.png"
 }
+HardwareShader PostProcess scene
+{
+	Name "UTRifleScope"
+	Shader "shaders/glsl/UTRifleScope.fp" 330
+}

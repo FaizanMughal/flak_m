@@ -303,6 +303,8 @@ utrl/bounce	hit1
 
 sniper/select	riflepck
 sniper/fire	sniperf
+sniper/zoomup	zoomup
+sniper/zoomdown	zoomdown
 
 warhead/explode	warexplo
 warhead/fly	warfly

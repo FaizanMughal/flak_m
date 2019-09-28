@@ -371,7 +371,7 @@ Class UTRocketLauncher : UTWeapon
 		Vector3 x, y, z, x2, y2, z2;
 		double a, s;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+3.0*y-3.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+3*y-3*z);
 		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Actor p;
 		if ( weap.bAltFire )
@@ -382,7 +382,7 @@ Class UTRocketLauncher : UTWeapon
 				a = FRandom[Eightball](0,360);
 				s = FRandom[Eightball](0,(num>1)?12:0);
 				Vector3 dir = (x2+cos(a)*y2*s*0.004+sin(a)*z2*s*0.004).unit();
-				p = Spawn("UTGrenade",origin+cos(a)*y*s+sin(a)*z*s);
+				p = Spawn("UTGrenade",level.Vec3Offset(origin,cos(a)*y*s+sin(a)*z*s));
 				p.vel = x*(vel dot x)*0.4 + dir*p.speed*FRandom[Eightball](1.0,1.2);
 				p.vel.z += 3.5;
 				p.target = self;
@@ -391,7 +391,7 @@ Class UTRocketLauncher : UTWeapon
 		else if ( num <= 1 )
 		{
 			// single rocket
-			p = Spawn("UTRocket",origin+cos(a)*y*s+sin(a)*z*s);
+			p = Spawn("UTRocket",level.Vec3Offset(origin,cos(a)*y*s+sin(a)*z*s));
 			p.vel = x2*p.speed;
 			p.target = self;
 			p.tracer = invoker.LockedTarget;
@@ -404,7 +404,7 @@ Class UTRocketLauncher : UTWeapon
 			s = (num>1)?6:0;
 			for ( int i=0; i<num; i++ )
 			{
-				p = Spawn("UTRocket",origin+cos(a)*y*s+sin(a)*z*s);
+				p = Spawn("UTRocket",level.Vec3Offset(origin,cos(a)*y*s+sin(a)*z*s));
 				p.vel = x2*p.speed;
 				p.target = self;
 				p.tracer = invoker.LockedTarget;
@@ -419,7 +419,7 @@ Class UTRocketLauncher : UTWeapon
 			s = -range*0.5;
 			for ( int i=0; i<num; i++ )
 			{
-				p = Spawn("UTRocket",origin+sin(s)*y);
+				p = Spawn("UTRocket",level.Vec3Offset(origin,sin(s)*y));
 				p.vel = (x2+sin(s)*y2).unit()*p.speed;
 				p.target = self;
 				p.tracer = invoker.LockedTarget;
@@ -526,221 +526,54 @@ Class UTRocketLauncher : UTWeapon
 	AltFire:
 		// one is loaded already
 		EBLI A 1 A_LoadRocket(false);
-		EBLI A 2 A_JumpIf(!invoker.bAltFire&&invoker.bSingleRocket,"FireOne");
-		EBLI A 0 A_LoadedRefire(1);
-		Goto FireOne;
+		EBLI A 2 A_JumpIf((!invoker.bAltFire&&invoker.bSingleRocket)||(invoker.Ammo1.Amount<=0)||!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireOne");
+		EBLI A 0;	// no tween
 		// load two
-		EBLI A 2;
-		EBL1 A 0;
-		EBR1 A 2 A_PlaySound("utrl/rotate",CHAN_6,0.1);
-		EBR1 B 0 A_Refire(1);
-		Goto FireOne;
-		EBR1 B 2;
-		EBR1 C 0 A_Refire(1);
-		Goto FireOne;
-		EBR1 C 2;
-		EBR1 D 0 A_Refire(1);
-		Goto FireOne;
-		EBR1 D 2;
-		EBR1 E 0 A_Refire(1);
-		Goto FireOne;
-		EBR1 E 2;
-		EBR1 F 0 A_Refire(1);
-		Goto FireOne;
-		EBR1 F 2;
-		EBR1 G 0 A_Refire(1);
-		Goto FireOne;
-		EBR1 G 2;
-		EBL2 A 0 A_Refire(1);
-		Goto FireOne;
-		EBL2 A 3 A_PlaySound("utrl/load",CHAN_6);
-		EBL2 B 0 A_Refire(1);
-		Goto FireOne;
-		EBL2 B 3;
-		EBL2 C 0 A_Refire(1);
-		Goto FireOne;
-		EBL2 C 3;
-		EBL2 D 0 A_Refire(1);
-		Goto FireOne;
-		EBL2 D 3;
-		EBL2 E 0 A_Refire(1);
-		Goto FireOne;
-		EBL2 E 3;
-		EBL2 F 0 A_Refire(1);
-		Goto FireOne;
-		EBL2 F 3;
-		EBL2 G 0 A_Refire(1);
-		Goto FireOne;
-		EBL2 G 3 A_LoadRocket();
-		EBR2 A 0 A_LoadedRefire(1);
-		Goto FireTwo;
+		EBR1 A 0 A_PlaySound("utrl/rotate",CHAN_6,0.1);
+		EBR1 ABCDEFG 2 A_JumpIf(!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireOne");
+		EBL2 A 0 A_PlaySound("utrl/load",CHAN_6);
+		EBL2 ABCDEFG 3 A_JumpIf(!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireOne");
+		EBR2 A 0
+		{
+			A_LoadRocket();
+			return A_JumpIf((invoker.Ammo1.Amount<=0)||!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireTwo");
+		}
 		// load three
-		EBR2 A 2 A_PlaySound("utrl/rotate",CHAN_6,0.1);
-		EBR2 B 0 A_Refire(1);
-		Goto FireTwo;
-		EBR2 B 2;
-		EBR2 C 0 A_Refire(1);
-		Goto FireTwo;
-		EBR2 C 2;
-		EBR2 D 0 A_Refire(1);
-		Goto FireTwo;
-		EBR2 D 2;
-		EBR2 E 0 A_Refire(1);
-		Goto FireTwo;
-		EBR2 E 2;
-		EBR2 F 0 A_Refire(1);
-		Goto FireTwo;
-		EBR2 F 2;
-		EBR2 G 0 A_Refire(1);
-		Goto FireTwo;
-		EBR2 G 2;
-		EBL3 A 0 A_Refire(1);
-		Goto FireTwo;
-		EBL3 A 3 A_PlaySound("utrl/load",CHAN_6);
-		EBL3 B 0 A_Refire(1);
-		Goto FireTwo;
-		EBL3 B 3;
-		EBL3 C 0 A_Refire(1);
-		Goto FireTwo;
-		EBL3 C 3;
-		EBL3 D 0 A_Refire(1);
-		Goto FireTwo;
-		EBL3 D 3;
-		EBL3 E 0 A_Refire(1);
-		Goto FireTwo;
-		EBL3 E 3;
-		EBL3 F 0 A_Refire(1);
-		Goto FireTwo;
-		EBL3 F 3;
-		EBL3 G 0 A_Refire(1);
-		Goto FireTwo;
-		EBL3 G 3 A_LoadRocket();
-		EBR3 A 0 A_LoadedRefire(1);
-		Goto FireThree;
+		EBR2 A 0 A_PlaySound("utrl/rotate",CHAN_6,0.1);
+		EBR2 ABCDEFG 2 A_JumpIf(!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireTwo");
+		EBL3 A 0 A_PlaySound("utrl/load",CHAN_6);
+		EBL3 ABCDEFG 3 A_JumpIf(!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireTwo");
+		EBR3 A 0
+		{
+			A_LoadRocket();
+			return A_JumpIf((invoker.Ammo1.Amount<=0)||!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireThree");
+		}
 		// load four
-		EBR3 A 2 A_PlaySound("utrl/rotate",CHAN_6,0.1);
-		EBR3 B 0 A_Refire(1);
-		Goto FireThree;
-		EBR3 B 2;
-		EBR3 C 0 A_Refire(1);
-		Goto FireThree;
-		EBR3 C 2;
-		EBR3 D 0 A_Refire(1);
-		Goto FireThree;
-		EBR3 D 2;
-		EBR3 E 0 A_Refire(1);
-		Goto FireThree;
-		EBR3 E 2;
-		EBR3 F 0 A_Refire(1);
-		Goto FireThree;
-		EBR3 F 2;
-		EBR3 G 0 A_Refire(1);
-		Goto FireThree;
-		EBR3 G 2;
-		EBL4 A 0 A_Refire(1);
-		Goto FireThree;
-		EBL4 A 3 A_PlaySound("utrl/load",CHAN_6);
-		EBL4 B 0 A_Refire(1);
-		Goto FireThree;
-		EBL4 B 3;
-		EBL4 C 0 A_Refire(1);
-		Goto FireThree;
-		EBL4 C 3;
-		EBL4 D 0 A_Refire(1);
-		Goto FireThree;
-		EBL4 D 3;
-		EBL4 E 0 A_Refire(1);
-		Goto FireThree;
-		EBL4 E 3;
-		EBL4 F 0 A_Refire(1);
-		Goto FireThree;
-		EBL4 F 3;
-		EBL4 G 0 A_Refire(1);
-		Goto FireThree;
-		EBL4 G 3 A_LoadRocket();
-		EBR4 A 0 A_LoadedRefire(1);
-		Goto FireFour;
+		EBR3 A 0 A_PlaySound("utrl/rotate",CHAN_6,0.1);
+		EBR3 ABCDEFG 2 A_JumpIf(!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireThree");
+		EBL4 A 0 A_PlaySound("utrl/load",CHAN_6);
+		EBL4 ABCDEFG 3 A_JumpIf(!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireThree");
+		EBR4 A 0
+		{
+			A_LoadRocket();
+			return A_JumpIf((invoker.Ammo1.Amount<=0)||!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireFour");
+		}
 		// load five
-		EBR4 A 2 A_PlaySound("utrl/rotate",CHAN_6,0.1);
-		EBR4 B 0 A_Refire(1);
-		Goto FireFour;
-		EBR4 B 2;
-		EBR4 C 0 A_Refire(1);
-		Goto FireFour;
-		EBR4 C 2;
-		EBR4 D 0 A_Refire(1);
-		Goto FireFour;
-		EBR4 D 2;
-		EBR4 E 0 A_Refire(1);
-		Goto FireFour;
-		EBR4 E 2;
-		EBR4 F 0 A_Refire(1);
-		Goto FireFour;
-		EBR4 F 2;
-		EBR4 G 0 A_Refire(1);
-		Goto FireFour;
-		EBR4 G 2;
-		EBL5 A 0 A_Refire(1);
-		Goto FireFour;
-		EBL5 A 3 A_PlaySound("utrl/load",CHAN_6);
-		EBL5 B 0 A_Refire(1);
-		Goto FireFour;
-		EBL5 B 3;
-		EBL5 C 0 A_Refire(1);
-		Goto FireFour;
-		EBL5 C 3;
-		EBL5 D 0 A_Refire(1);
-		Goto FireFour;
-		EBL5 D 3;
-		EBL5 E 0 A_Refire(1);
-		Goto FireFour;
-		EBL5 E 3;
-		EBL5 F 0 A_Refire(1);
-		Goto FireFour;
-		EBL5 F 3;
-		EBL5 G 0 A_Refire(1);
-		Goto FireFour;
-		EBL5 G 3 A_LoadRocket();
-		EBR5 A 0 A_LoadedRefire(1);
-		Goto FireFive;
+		EBR4 A 0 A_PlaySound("utrl/rotate",CHAN_6,0.1);
+		EBR4 ABCDEFG 2 A_JumpIf(!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireFour");
+		EBL5 A 0 A_PlaySound("utrl/load",CHAN_6);
+		EBL5 ABCDEFG 3 A_JumpIf(!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireFour");
+		EBR5 A 0
+		{
+			A_LoadRocket();
+			return A_JumpIf((invoker.Ammo1.Amount<=0)||!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireFive");
+		}
 		// load six
-		EBR5 A 2 A_PlaySound("utrl/rotate",CHAN_6,0.1);
-		EBR5 B 0 A_Refire(1);
-		Goto FireFive;
-		EBR5 B 2;
-		EBR5 C 0 A_Refire(1);
-		Goto FireFive;
-		EBR5 C 2;
-		EBR5 D 0 A_Refire(1);
-		Goto FireFive;
-		EBR5 D 2;
-		EBR5 E 0 A_Refire(1);
-		Goto FireFive;
-		EBR5 E 2;
-		EBR5 F 0 A_Refire(1);
-		Goto FireFive;
-		EBR5 F 2;
-		EBR5 G 0 A_Refire(1);
-		Goto FireFive;
-		EBR5 G 2;
-		EBL6 A 0 A_Refire(1);
-		Goto FireFive;
-		EBL6 A 3 A_PlaySound("utrl/load",CHAN_6);
-		EBL6 B 0 A_Refire(1);
-		Goto FireFive;
-		EBL6 B 3;
-		EBL6 C 0 A_Refire(1);
-		Goto FireFive;
-		EBL6 C 3;
-		EBL6 D 0 A_Refire(1);
-		Goto FireFive;
-		EBL6 D 3;
-		EBL6 E 0 A_Refire(1);
-		Goto FireFive;
-		EBL6 E 3;
-		EBL6 F 0 A_Refire(1);
-		Goto FireFive;
-		EBL6 F 3 A_LoadRocket();
+		EBR5 A 0 A_PlaySound("utrl/rotate",CHAN_6,0.1);
+		EBR5 ABCDEFG 2 A_JumpIf(!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireFive");
+		EBL6 A 0 A_PlaySound("utrl/load",CHAN_6);
+		EBL6 ABCDEF 3 A_JumpIf(!(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)),"FireFive");
+		EBL6 F 0 A_LoadRocket();
 		Goto FireSix;
 	FireOne:
 		EBF1 A 0 A_FireRockets(1);
