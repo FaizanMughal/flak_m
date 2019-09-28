@@ -539,7 +539,7 @@ Class PulseGun : UTWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
-		if ( (weap.Ammo1.Amount <= 0) || !(player.cmd.buttons&BT_ALTATTACK) )
+		if ( (weap.Ammo1.Amount <= 0) || !(player.cmd.buttons&BT_ALTATTACK) || (flak_pulsereload && (invoker.clipcount <= 0)) )
 		{
 			player.SetPSprite(PSP_WEAPON,ResolveState("AltRelease"));
 			return;
@@ -583,7 +583,7 @@ Class PulseGun : UTWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap || !player ) return;
-		if ( (invoker.clipcount <= 0) || (weap.Ammo1.Amount <= 0) )
+		if ( (flak_pulsereload && (invoker.clipcount <= 0)) || (weap.Ammo1.Amount <= 0) )
 			return;
 		if ( player.cmd.buttons&BT_ALTATTACK )
 		{
@@ -600,7 +600,7 @@ Class PulseGun : UTWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
-		if ( (weap.Ammo1.Amount <= 0) || !(player.cmd.buttons&BT_ATTACK) )
+		if ( (weap.Ammo1.Amount <= 0) || !(player.cmd.buttons&BT_ATTACK) || (flak_pulsereload && (invoker.clipcount <= 0)) )
 		{
 			player.SetPSprite(PSP_WEAPON,ResolveState("Release"));
 			return;
