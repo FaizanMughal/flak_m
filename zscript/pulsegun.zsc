@@ -673,12 +673,10 @@ Class PulseGun : UTWeapon
 	{
 		Super.OwnerDied();
 		if ( beam ) beam.Destroy();
-		Owner.A_StopSound(CHAN_WEAPON);
 	}
 	override void DetachFromOwner()
 	{
 		if ( beam ) beam.Destroy();
-		Owner.A_StopSound(CHAN_WEAPON);
 		Super.DetachFromOwner();
 	}
 	override void OnDestroy()

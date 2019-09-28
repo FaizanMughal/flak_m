@@ -199,11 +199,6 @@ Class ImpactHammer : UTWeapon
 			s.scale *= 0.4;
 		}
 	}
-	override void DetachFromOwner()
-	{
-		if ( Owner ) Owner.A_StopSound(CHAN_WEAPON);
-		Super.DetachFromOwner();
-	}
 
 	Default
 	{

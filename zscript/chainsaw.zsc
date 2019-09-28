@@ -219,7 +219,8 @@ Class UTChainsaw : UTWeapon
 	override void DetachFromOwner()
 	{
 		if ( Owner ) Owner.A_StopSound(CHAN_6);
-		A_PlaySound("chainsaw/lower",CHAN_6);
+		if ( !Ammo1 || (Ammo1.Amount > 0) )
+			A_PlaySound("chainsaw/lower",CHAN_6);
 		Super.DetachFromOwner();
 	}
 	action void A_Vibrate( bool bAlt = false )

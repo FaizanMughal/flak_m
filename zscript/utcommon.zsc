@@ -1336,10 +1336,17 @@ Class UTWeapon : Weapon
 		if ( amp ) amp.FireEffect();
 	}
 
+	override void DetachFromOwner()
+	{
+		Owner.A_StopSound(CHAN_WEAPON);
+		Super.DetachFromOwner();
+	}
 	override void OwnerDied()
 	{
-		Super.OwnerDied();
+		if ( Owner.player && (Owner.player.ReadyWeapon == self) )
+			Owner.A_StopSound(CHAN_WEAPON);
 		A_ClearRefire();
+		Super.OwnerDied();
 	}
 
 	override bool HandlePickup( Inventory item )
