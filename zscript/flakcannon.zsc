@@ -351,8 +351,8 @@ Class FlakChunk : Actor
 		// pass through if it's already dead
 		if ( victim.health-amt <= 0 )
 		{
-			// bleed
-			if ( !victim.bNOBLOOD )
+			// bleed if not gibbed (reduces effect spam)
+			if ( !victim.bNOBLOOD && (victim.health-amt > victim.GetGibHealth()) )
 			{
 				victim.SpawnBlood(pos,AngleTo(victim),damage);
 				A_PlaySound("flak/meat",volume:0.3);
