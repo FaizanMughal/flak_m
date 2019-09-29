@@ -160,6 +160,8 @@ M_LCLIP = "L Clip";
 M_RCLIP = "R Clip";
 M_NAME = "Name";
 M_HEALTH = "Health";
+M_NOAMMO = "%s has no ammo.";
+M_NOAMMO2 = "%s have no ammo.";
 /* Menus */
 FLAK_BTOP1 = "Standard";
 FLAK_BTOP2 = "Beta";
@@ -383,6 +385,8 @@ M_LCLIP = "Cargador Izq.";
 M_RCLIP = "Cargador Dch.";
 M_NAME = "Nombre";
 M_HEALTH = "Salud";
+M_NOAMMO = "%s no tiene munición.";
+M_NOAMMO2 = "%s no tienen munición.";
 /* Menus */
 FLAK_BTOP1 = "Estándar";
 FLAK_BTOP2 = "Beta";

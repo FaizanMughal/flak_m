@@ -1288,6 +1288,7 @@ Class UTWeapon : Weapon
 {
 	int DropAmmo;
 	bool bExtraPickup;
+	transient int lastnoammotic;
 
 	Property DropAmmo: DropAmmo;
 
@@ -1433,6 +1434,17 @@ Class UTWeapon : Weapon
 		angle = dropper.angle;
 		pitch = 0;
 		roll = 0;
+	}
+
+	override bool CheckAmmo( int fireMode, bool autoSwitch, bool requireAmmo, int ammocount )
+	{
+		bool rslt = Super.CheckAmmo(fireMode,autoSwitch,requireAmmo,ammocount);
+		if ( (gametic > lastnoammotic) && !rslt && !autoSwitch && !requireAmmo && Owner.CheckLocalView() )
+		{
+			lastnoammotic = gametic;
+			Console.Printf(StringTable.Localize((Amount>1)?"$M_NOAMMO2":"$M_NOAMMO"),GetTag());
+		}
+		return rslt;
 	}
 
 	Default
