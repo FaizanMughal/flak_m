@@ -1473,11 +1473,11 @@ Class UTTeleportLight : DynamicLight
 			Destroy();
 			return;
 		}
-		args[LIGHT_RED] = int(128*alpha);
-		args[LIGHT_GREEN] = int(160*alpha);
-		args[LIGHT_BLUE] = int(255*alpha);
+		args[LIGHT_RED] = int(128*alpha*(.5+.5*cos(GetAge()*30)));
+		args[LIGHT_GREEN] = int(160*alpha*(.5+.5*cos(GetAge()*30)));
+		args[LIGHT_BLUE] = int(255*alpha*(.5+.5*cos(GetAge()*30)));
 		args[LIGHT_INTENSITY] = Random[Tele](10,14)*8;
-		alpha -= 1./35;
+		alpha -= 1./TICRATE;
 	}
 }
 
@@ -1500,7 +1500,7 @@ Class UTItemLight : DynamicLight
 		args[LIGHT_GREEN] = int(224*alpha);
 		args[LIGHT_BLUE] = int(160*alpha);
 		args[LIGHT_INTENSITY] = Random[Tele](6,8)*8;
-		alpha -= 3./35;
+		alpha -= 1.5/TICRATE;
 	}
 }
 
@@ -1516,8 +1516,9 @@ Class UTTeleportFog : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		Spawn("UTTeleportLight",pos+(0,0,16));
+		Spawn("UTTeleportLight",Vec3Offset(0,0,16));
 		A_PlaySound ("misc/teleport");
+		Spawn("UTTeleportParticles",Vec3Offset(0,0,16));
 	}
 	States
 	{
@@ -1540,7 +1541,8 @@ Class UTItemFog : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		Spawn("UTItemLight",pos+(0,0,16));
+		Spawn("UTItemLight",Vec3Offset(0,0,16));
+		Spawn("UTRespawnParticles",Vec3Offset(0,0,12));
 	}
 	States
 	{
@@ -2049,10 +2051,11 @@ Class ShredCorpseHitbox : Actor
 	}
 }
 
-// imitates UE1 light type LT_TexturePaletteOnce
+// imitates UE1 light type LT_TexturePaletteOnce/LT_TexturePaletteLoop
 Class PaletteLight : DynamicLight
 {
 	Color pal[256];
+	bool IsLooping;
 
 	Default
 	{
@@ -2063,7 +2066,7 @@ Class PaletteLight : DynamicLight
 	}
 	private void UpdateLight()
 	{
-		int index = 255-((255*ReactionTime)/default.ReactionTime);
+		int index = 255-((255*ReactionTime)/abs(default.ReactionTime));
 		args[LIGHT_RED] = pal[index].r;
 		args[LIGHT_GREEN] = pal[index].g;
 		args[LIGHT_BLUE] = pal[index].b;
@@ -2079,14 +2082,201 @@ Class PaletteLight : DynamicLight
 			pal[i].g = paldat.ByteAt(i*3+1);
 			pal[i].b = paldat.ByteAt(i*3+2);
 		}
+		if ( ReactionTime < 0 )
+		{
+			ReactionTime = -ReactionTime;
+			IsLooping = true;
+		}
 		UpdateLight();
 	}
 	override void Tick()
 	{
 		Super.Tick();
 		if ( isFrozen() ) return;
-		A_CountDown();
+		ReactionTime--;
+		if ( ReactionTime < 0 )
+		{
+			if ( !IsLooping )
+			{
+				Destroy();
+				return;
+			}
+			else ReactionTime = abs(default.ReactionTime);
+		}
 		UpdateLight();
+	}
+}
+
+// A bParticles type actor, reads from the anivfile directly
+// Tag: semicolon-separated, starting with the model, then the particle class
+// of UTMeshParticle to use
+Class UTParticleMesh : Actor
+{
+	Array<double> px, py, pz;
+	Array<Actor> parts;
+	Class<UTMeshParticle> pclass;
+	int numframes, numverts;
+	double animframe, animrate;
+
+	Default
+	{
+		Tag "telepo;UTMeshParticle";
+		Args 28;	// animation rate in fps
+		ReactionTime 35;	// total lifespan
+		XScale 0.015;	// scale of the model
+		YScale 0.03;	// scale of the model
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+		+NOTELEPORT;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		Array<String> strs;
+		strs.Clear();
+		GetTag().Split(strs,";");
+		pclass = strs[1];
+		int lump = Wads.CheckNumForFullname(String.Format("models/%s_a.3d",strs[0]));
+		String anivfile = Wads.ReadLump(lump);
+		numframes = anivfile.ByteAt(0);
+		numframes |= anivfile.ByteAt(1)<<8;
+		int fsiz = anivfile.ByteAt(2);
+		fsiz |= anivfile.ByteAt(3)<<8;
+		numverts = fsiz/4;
+		px.Resize(numverts*numframes);
+		py.Resize(numverts*numframes);
+		pz.Resize(numverts*numframes);
+		parts.Resize(numverts);
+		int cursor = 4;
+		for ( int i=0; i<numverts*numframes; i++ )
+		{
+			int avert = anivfile.ByteAt(cursor++);
+			avert |= anivfile.ByteAt(cursor++)<<8;
+			avert |= anivfile.ByteAt(cursor++)<<16;
+			avert |= anivfile.ByteAt(cursor++)<<24;
+			int ax = ((avert&0x7ff)<<21),
+				ay = ((avert>>11)&0x7ff)<<21,
+				az = ((avert>>22)&0x3ff)<<22;
+			px[i] = ax/2097152.;
+			py[i] = ay/2097152.;
+			pz[i] = az/4194304.;
+		}
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		for ( int i=0; i<numverts; i++ )
+			parts[i] = Spawn(pclass,level.Vec3Offset(pos,px[i]*scale.x*x+py[i]*scale.x*y+pz[i]*scale.y*z));
+		animframe = 0;
+		animrate = Args[0];
+	}
+	override void OnDestroy()
+	{
+		for ( int i=0; i<numverts; i++ )
+		{
+			if ( !parts[i] ) continue;
+			parts[i].Destroy();
+		}
+		Super.OnDestroy();
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		animframe += animrate/TICRATE;
+		ReactionTime--;
+		if ( (ceil(animframe) >= numframes) || (ReactionTime <= 0) )
+		{
+			Destroy();
+			return;
+		}
+		int framea = int(floor(animframe)), frameb = int(ceil(animframe));
+		double theta = animframe-framea;
+		Vector3 posa, posb, ipos;
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		for ( int i=0; i<numverts; i++ )
+		{
+			posa = (px[i+numverts*framea],py[i+numverts*framea],pz[i+numverts*framea]);
+			posb = (px[i+numverts*frameb],py[i+numverts*frameb],pz[i+numverts*frameb]);
+			ipos = posa*(1.-theta)+posb*theta;
+			if ( !parts[i] ) parts[i] = Spawn(pclass,level.Vec3Offset(pos,ipos.x*scale.x*x+ipos.y*scale.x*y+ipos.z*scale.y*z));
+			else parts[i].SetOrigin(level.Vec3Offset(pos,ipos.x*scale.x*x+ipos.y*scale.x*y+ipos.z*scale.y*z),true);
+			parts[i].alpha = ReactionTime/double(default.ReactionTime);
+		}
+	}
+	States
+	{
+	Spawn:
+		TNT1 A -1;
+		Stop;
+	}
+}
+
+// Individual particle
+Class UTMeshParticle : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Scale 0.25;
+		FloatBobPhase 0;
+		+NOGRAVITY;
+		+NOCLIP;
+		+NOTELEPORT;
+		+DONTSPLASH;
+		+FORCEXYBILLBOARD;
+	}
+	States
+	{
+	Spawn:
+		DBEF A -1 Bright;
+		Stop;
+	}
+}
+Class UTRespawnParticles : UTParticleMesh
+{
+	Default
+	{
+		Tag "telepo;UTRespawnParticle";
+	}
+}
+Class UTRespawnParticle : UTMeshParticle
+{
+	Default
+	{
+		Scale 1.1;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		A_SetScale(0.03+alpha*0.37);
+	}
+}
+Class UTTeleportParticles : UTParticleMesh
+{
+	Default
+	{
+		Tag "telepo;UTTeleParticle";
+		Args 21;
+		XScale 0.06;
+		YScale 0.16;
+	}
+}
+Class UTTeleParticle : UTMeshParticle
+{
+	Default
+	{
+		Scale 0.2;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		SetState(FindState("Spawn")+Random[UTParticle](0,7));
+	}
+	States
+	{
+	Spawn:
+		UTFL ABCDEFGH -1 Bright;
+		Stop;
 	}
 }
 

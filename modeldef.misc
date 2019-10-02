@@ -4,7 +4,7 @@ Model "UTTeleportFog"
 	Model 0 "Tele2_d.3d"
 	Skin 0 "JTele2_01.png"
 	Scale 0.2 0.2 0.24
-	ZOffset 10
+	ZOffset 16
 	DONTCULLBACKFACES
 
 	FrameIndex TELE A 0 0
