@@ -6,7 +6,7 @@ Class RipperAmmo : Ammo
 		Inventory.PickupMessage "$I_RIPPERAMMO";
 		Inventory.Amount 10;
 		Inventory.MaxAmount 40;
-		Ammo.BackpackAmount 20;
+		Ammo.BackpackAmount 5;
 		Ammo.BackpackMaxAmount 80;
 		Ammo.DropAmount 5;
 	}

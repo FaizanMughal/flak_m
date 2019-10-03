@@ -6,7 +6,7 @@ Class PulseAmmo : Ammo
 		Inventory.PickupMessage "$I_PULSEAMMO";
 		Inventory.Amount 25;
 		Inventory.MaxAmount 200;
-		Ammo.BackpackAmount 40;
+		Ammo.BackpackAmount 10;
 		Ammo.BackpackMaxAmount 400;
 		Ammo.DropAmount 10;
 	}

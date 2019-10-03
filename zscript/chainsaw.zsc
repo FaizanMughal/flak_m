@@ -48,7 +48,7 @@ Class ChainsawAmmo : Ammo
 		Inventory.PickupMessage "$I_CHAINSAWAMMO";
 		Inventory.Amount 20;
 		Inventory.MaxAmount 100;
-		Ammo.BackpackAmount 50;
+		Ammo.BackpackAmount 10;
 		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 20;
 	}

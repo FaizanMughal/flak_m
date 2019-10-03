@@ -6,7 +6,7 @@ Class RifleAmmo : Ammo
 		Inventory.PickupMessage "$I_RIFLEAMMO";
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
-		Ammo.BackpackAmount 20;
+		Ammo.BackpackAmount 5;
 		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 5;
 	}
