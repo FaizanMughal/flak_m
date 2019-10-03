@@ -15,7 +15,7 @@ Class UTHealthPack : Health
 	}
 	override String PickupMessage()
 	{
-		return String.Format("%s +%d",PickupMsg,Amount);
+		return String.Format("%s +%d",StringTable.Localize(PickupMsg),Amount);
 	}
 	States
 	{
@@ -36,7 +36,7 @@ Class UTHealthBox : Health
 	}
 	override String PickupMessage()
 	{
-		return String.Format("%s +%d",PickupMsg,Amount);
+		return String.Format("%s +%d",StringTable.Localize(PickupMsg),Amount);
 	}
 	States
 	{
@@ -58,7 +58,7 @@ Class UTMedBox : Health
 	}
 	override String PickupMessage()
 	{
-		return String.Format("%s +%d",PickupMsg,Amount);
+		return String.Format("%s +%d",StringTable.Localize(PickupMsg),Amount);
 	}
 	States
 	{
@@ -83,7 +83,7 @@ Class UTHealthBonus : Health
 	}
 	override String PickupMessage()
 	{
-		return String.Format("%s +%d",PickupMsg,Amount);
+		return String.Format("%s +%d",StringTable.Localize(PickupMsg),Amount);
 	}
 	States
 	{
