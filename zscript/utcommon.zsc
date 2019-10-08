@@ -2951,7 +2951,7 @@ Class UTMainHandler : EventHandler
 		while ( bi.Next() )
 		{
 			Actor a = bi.Thing;
-			if ( !a || !a.bSHOOTABLE || !Source.CheckSight(a,0xf) || (a == Source) || (Source.Distance3D(a) > ExplosionRadius) )
+			if ( !a || !a.bSHOOTABLE || !Source.CheckSight(a,0xf) || (a == Source) || (Source.Distance3D(a) > ExplosionRadius) || a.bCANNOTPUSH || (a.Mass >= 10000000) )
 				continue;
 			Vector3 midpoint = a.Vec3Offset(0,0,a.height*0.5);
 			Vector3 dir = Level.Vec3Diff(Source.pos,midpoint);
@@ -2967,7 +2967,7 @@ Class UTMainHandler : EventHandler
 	// Same for this
 	static void DoKnockback( Actor Victim, Vector3 HitDirection, double MomentumTransfer )
 	{
-		if ( !Victim ) return;
+		if ( !Victim || !Victim.bSHOOTABLE || Victim.bCANNOTPUSH || (Victim.Mass >= 10000000) ) return;
 		if ( (Victim is 'ShredCorpseHitbox') && Victim.target )
 			Victim.target.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.target.Mass));
 		else Victim.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.Mass));
