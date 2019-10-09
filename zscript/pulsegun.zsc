@@ -226,6 +226,7 @@ Class PulseBoltLight : DynamicLight
 Class PulseBoltTracer : LineTracer
 {
 	Actor ignore;
+	Array<Line> ShootThroughList;
 
 	override ETraceStatus TraceCallback()
 	{
@@ -239,6 +240,7 @@ Class PulseBoltTracer : LineTracer
 		{
 			if ( !Results.HitLine.sidedef[1] || (Results.HitLine.Flags&Line.ML_BlockHitscan) )
 				return TRACE_Stop;
+			ShootThroughList.Push(Results.HitLine);
 			return TRACE_Skip;
 		}
 		return TRACE_Stop;
@@ -352,7 +354,10 @@ Class PulseBolt : Actor
 	}
 	void CheckBeam( Vector3 x )
 	{
+		t.ShootThroughList.Clear();
 		t.Trace(pos,cursector,x,beamsize,0);
+		for ( int i=0; i<t.ShootThroughList.Size(); i++ )
+			t.ShootThroughList[i].Activate(target,0,SPAC_PCross);
 		if ( t.Results.HitType != TRACE_HitNone )
 		{
 			if ( t.Results.HitType == TRACE_HitActor )

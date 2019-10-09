@@ -38,6 +38,7 @@ Class ShockAmmo2 : ShockAmmo
 Class ShockBeamTracer : LineTracer
 {
 	Actor owner, ignore, lasthit;
+	Array<Line> ShootThroughList;
 
 	override ETraceStatus TraceCallback()
 	{
@@ -51,6 +52,7 @@ Class ShockBeamTracer : LineTracer
 		{
 			if ( !Results.HitLine.sidedef[1] || (Results.HitLine.Flags&(Line.ML_BlockHitscan|Line.ML_BlockEverything)) )
 				return TRACE_Stop;
+			ShootThroughList.Push(Results.HitLine);
 			return TRACE_Skip;
 		}
 		return TRACE_Stop;
@@ -304,7 +306,10 @@ Class ShockBeam : Actor
 		if ( !moving ) return;
 		// step trace
 		tracedir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		t.ShootThroughList.Clear();
 		t.Trace(pos,cursector,tracedir,1000,0);
+		for ( int i=0; i<t.ShootThroughList.Size(); i++ )
+			t.ShootThroughList[i].Activate(target,0,SPAC_PCross);
 		totaldist += t.Results.Distance;
 		// spawn particles
 		for ( int i=0; i<t.Results.Distance; i+=80 )
@@ -538,7 +543,10 @@ Class SuperShockBeam : Actor
 		if ( !moving ) return;
 		// step trace
 		tracedir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		t.ShootThroughList.Clear();
 		t.Trace(pos,cursector,tracedir,2000,0);
+		for ( int i=0; i<t.ShootThroughList.Size(); i++ )
+			t.ShootThroughList[i].Activate(target,0,SPAC_PCross);
 		totaldist += t.Results.Distance;
 		// spawn particles
 		for ( int i=0; i<t.Results.Distance; i+=80 )

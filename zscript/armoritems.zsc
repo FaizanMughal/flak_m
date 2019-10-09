@@ -21,6 +21,7 @@ Class UTArmor : Armor
 			newdamage -= saved;
 			amount -= saved;
 			damage = newdamage;
+			if ( (amount <= 0) ) DepleteOrDestroy();
 		}
 		if ( damage > 0 ) newdamage = ApplyDamageFactors(GetClass(),damageType,damage,damage);
 	}

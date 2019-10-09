@@ -109,6 +109,7 @@ Class Minigun : UTWeapon
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 		FLineTraceData d;
 		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		UTBulletTrail.DoTrail(self,origin,dir,10000,alt?5:3);
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = Random[Minigun](9,18); // fun fact: the Minigun is one of the few weapons that has actual RNG damage in UT

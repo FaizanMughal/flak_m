@@ -2280,6 +2280,49 @@ Class UTTeleParticle : UTMeshParticle
 	}
 }
 
+// Follows a single line trail, spawns bubbles if underwater
+// In addition, also activates shoot-through lines, since LineTrace can't do it
+Class UTBulletTrail : LineTracer
+{
+	Array<Line> ShootThroughList;
+	Actor ignoreme;
+
+	static play void DoTrail( Actor target, Vector3 pos, Vector3 dir, int dist, int bubblechance )
+	{
+		let t = new("UTBulletTrail");
+		t.ignoreme = target;
+		t.ShootThroughList.Clear();
+		t.Trace(pos,level.PointInSector(pos.xy),dir,dist,0);
+		for ( int i=0; i<t.ShootThroughList.Size(); i++ )
+			t.ShootThroughList[i].Activate(target,0,SPAC_PCross);
+		for ( int i=5; i<t.Results.Distance; i+=10 )
+		{
+			if ( !Random[Boolet](0,bubblechance) ) continue;
+			let b = Actor.Spawn("UTBubble",level.Vec3Offset(pos,dir*i));
+			b.Scale *= FRandom[Boolet](0.4,0.6);
+		}
+		t.Destroy();
+	}
+
+	override ETraceStatus TraceCallback()
+	{
+		if ( Results.HitType == TRACE_HitActor )
+		{
+			if ( Results.HitActor == ignoreme ) return TRACE_Skip;
+			if ( Results.HitActor.bSHOOTABLE ) return TRACE_Stop;
+			return TRACE_Skip;
+		}
+		else if ( (Results.HitType == TRACE_HitWall) && (Results.Tier == TIER_Middle) )
+		{
+			if ( !Results.HitLine.sidedef[1] || (Results.HitLine.Flags&(Line.ML_BlockHitscan|Line.ML_BlockEverything)) )
+				return TRACE_Stop;
+			ShootThroughList.Push(Results.HitLine);
+			return TRACE_Skip;
+		}
+		return TRACE_Stop;
+	}
+}
+
 Enum ESwingMode
 {
 	SWING_Straight,	// constant increment
