@@ -20,6 +20,7 @@ Class ModuleHitbox : Actor
 			master.vel.z = 5;
 		}
 		if ( !master || (master.target && ((master.target == source) || master.target.isTeammate(source))) ) return 0;
+		Health = 0;
 		master.bAMBUSH = true;
 		return 0;
 	}
@@ -50,6 +51,9 @@ Class ModuleHitbox : Actor
 	Spawn:
 		TNT1 A 10 A_AlertMonsters(0,AMF_TARGETEMITTER);
 		Wait;
+	Death:
+		TNT1 A -1;
+		Stop;
 	}
 }
 
@@ -232,6 +236,8 @@ Class TranslocatorModule : Actor
 			{
 				SetOrigin(tracer.Vec2OffsetZ(0,0,pos.z),false);
 				vel.xy *= 0;
+				tracer = null;
+				bHITTRACER = false;
 			}
 		}
 		TMOD A 12;
