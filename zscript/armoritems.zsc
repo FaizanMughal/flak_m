@@ -21,7 +21,12 @@ Class UTArmor : Armor
 			newdamage -= saved;
 			amount -= saved;
 			damage = newdamage;
-			if ( (amount <= 0) ) DepleteOrDestroy();
+			if ( amount <= 0 )
+			{
+				if ( damage > 0 ) newdamage = ApplyDamageFactors(GetClass(),damageType,damage,damage);
+				DepleteOrDestroy();
+				return;
+			}
 		}
 		if ( damage > 0 ) newdamage = ApplyDamageFactors(GetClass(),damageType,damage,damage);
 	}
@@ -141,9 +146,13 @@ Class UTShieldBelt : UTArmor
 			Owner.A_PlaySound("belt/absorb",CHAN_7);
 			UTMainHandler.DoFlash(Owner,Color(80,255,224,0),5);
 		}
-		int oldamt = amount;
 		Super.AbsorbDamage(damage,damageType,newdamage);
-		if ( (oldamt > 0) && (amount <= 0) && Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_SHIELDBELT"));
+	}
+	override void DepleteOrDestroy()
+	{
+		if ( (amount <= 0) && Owner.CheckLocalView() )
+			Console.Printf(StringTable.Localize("$D_SHIELDBELT"));
+		Super.DepleteOrDestroy();
 	}
 	override bool HandlePickup( Inventory item )
 	{
