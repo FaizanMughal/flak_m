@@ -171,6 +171,8 @@ Class SniperRifle : UTWeapon
 		origin = level.Vec3Offset(origin,x*8+y*6-z*9);
 		let c = Spawn("UTCasing",origin);
 		c.scale *= 1.25;
+		c.angle = angle;
+		c.pitch = pitch;
 		c.vel = x*FRandom[Junk](-1.5,1.5)+y*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
 	}
 	override String GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )

@@ -11,6 +11,7 @@ Class UTPlayer : DoomPlayer
 	int last_fm_tap, last_sm_tap;
 	int last_tap_fm, last_tap_sm;
 	int last_jump_held;
+	Actor underwatersnd;
 
 	int tempslide;
 	double ssup;
@@ -250,7 +251,7 @@ Class UTPlayer : DoomPlayer
 			if ( lastvelz < -8 )
 			{
 				double vol = clamp((-lastvelz-8)*0.05,0.01,1.0);
-				if ( ((waterlevel > 0) || GetFloorTerrain().IsLiquid) && !bOnMobj ) A_PlaySound("ut/wetsplash",CHAN_AUTO,vol);
+				if ( ((waterlevel > 0) || GetFloorTerrain().IsLiquid) && !bOnMobj ) PlaySplash(vol);
 				else A_PlaySound("*uland",CHAN_AUTO,vol);
 				PlayLanding();
 			}
@@ -265,13 +266,20 @@ Class UTPlayer : DoomPlayer
 		{
 			double vol = abs(vel.xy.length())*0.03;
 			if ( forcefootstep ) vol = clamp(-lastvelz*0.05,0.01,1.0);
-			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid && !bOnMobj ) A_PlaySound("ut/playerfootstepwet",CHAN_5,vol);
+			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid && !bOnMobj ) PlayWetFootstep(vol);
 			else PlayFootstep(vol);
 		}
 		if ( (waterlevel >= 2) && (lastwaterlevel < 2) )
-			A_PlaySound("ut/wetsplash",CHAN_AUTO);
+			PlaySplash(1.);
 		else if ( (waterlevel < 2) && (lastwaterlevel >= 2) )
-			A_PlaySound("ut/wetsurface",CHAN_AUTO);
+			PlaySurface();
+		if ( (waterlevel >= 3) && !underwatersnd )
+		{
+			underwatersnd = Spawn("UTUnderSound",pos);
+			underwatersnd.target = self;
+		}
+		else if ( (waterlevel < 3) && underwatersnd )
+			underwatersnd.Destroy();
 		lastground = player.onground;
 		lastvelz = prevvelz;
 		prevvelz = vel.z;
@@ -385,8 +393,17 @@ Class UTPlayer : DoomPlayer
 		else Angle += cmd.yaw*(360./65536.);
 		player.onground = (pos.z <= floorz) || bOnMobj || bMBFBouncer || (player.cheats & CF_NOCLIP2);
 		// slant (aka steep slope) detection
-		// TODO make it 3d floor aware when the PR makes it in
-		if ( floorsector.floorplane.normal dot (0,0,1) < (46342./65536.) )
+		Vector3 floornormal = floorsector.floorplane.normal;
+		for ( int i=0; i<floorsector.Get3DFloorCount(); i++ )
+		{
+			F3DFloor ff = floorsector.Get3DFloor(i);
+			if ( ff.top.ZAtPoint(pos.xy) ~== floorz )
+			{
+				floornormal = -ff.top.normal;
+				break;
+			}
+		}
+		if ( floornormal dot (0,0,1) < (46342./65536.) )
 			player.onground = false;
 		if ( player.onground ) lastgroundtic = gametic;
 		if ( !player.onground && !bNoGravity && (waterlevel < 2) && (abs(pos.z-floorz) <= maxdropoffheight) && (player.jumptics == 0) && (vel.z < 0) )
@@ -726,7 +743,70 @@ Class UTPlayer : DoomPlayer
 
 	virtual void PlayFootstep( double vol )
 	{
-		A_PlaySound("ut/playerfootstep",CHAN_5,vol);
+		A_PlaySound("ut/playerfootstep",CHAN_AUTO,vol);
+	}
+
+	virtual void PlaySplash( double vol )
+	{
+		TerrainDef t = GetFloorTerrain();
+		String snd = "ut/wetsplash";
+		switch ( t.TerrainName )
+		{
+		case 'UTLava':
+		case 'Lava':
+			snd = "ut/lavasplash";
+			break;
+		case 'UTSlime':
+		case 'UTNukage':
+		case 'Slime':
+		case 'Nukage':
+		case 'Sludge':
+			snd = "ut/slimesplash";
+			break;
+		}
+		A_PlaySound(snd,CHAN_AUTO,vol);
+	}
+
+	virtual void PlaySurface()
+	{
+		TerrainDef t = GetFloorTerrain();
+		String snd = "ut/wetsurface";
+		switch ( t.TerrainName )
+		{
+		case 'UTLava':
+		case 'Lava':
+			snd = "ut/lavasurface";
+			break;
+		case 'UTSlime':
+		case 'UTNukage':
+		case 'Slime':
+		case 'Nukage':
+		case 'Sludge':
+			snd = "ut/slimesurface";
+			break;
+		}
+		A_PlaySound(snd,CHAN_AUTO);
+	}
+
+	virtual void PlayWetFootstep( double vol )
+	{
+		TerrainDef t = GetFloorTerrain();
+		String snd = "ut/playerfootstepwet";
+		switch ( t.TerrainName )
+		{
+		case 'UTLava':
+		case 'Lava':
+			snd = "ut/playerfootsteplava";
+			break;
+		case 'UTSlime':
+		case 'UTNukage':
+		case 'Slime':
+		case 'Nukage':
+		case 'Sludge':
+			snd = "ut/playerfootstepslime";
+			break;
+		}
+		A_PlaySound(snd,CHAN_AUTO,vol);
 	}
 
 	override void PlayIdle()
@@ -1118,6 +1198,139 @@ Class UTPlayer : DoomPlayer
 		PLT4 ABCDEFGHIJKLMNO 3;
 		Goto Spawn;
 	}
+}
+
+Class UTUnderSound : Actor
+{
+	enum EFluidType
+	{
+		FLUID_WATER,
+		FLUID_SLIME,
+		FLUID_LAVA,
+		FLUID_NITRO
+	};
+	int curfluid, lastfluid;
+	String fluidsounds[4];
+	Default
+	{
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+DONTSPLASH;
+		+NOINTERACTION;
+	}
+	int GetFluid()
+	{
+		int thisfluid = FLUID_WATER;
+		// try to guess where we are
+		for ( int i=0; i<CurSector.Get3DFloorCount(); i++ )
+		{
+			F3DFloor ff = CurSector.Get3DFloor(i);
+			switch ( ff.model.damagetype )
+			{
+			case 'Slime':
+				thisfluid = FLUID_SLIME;
+				break;
+			case 'Fire':
+				thisfluid = FLUID_LAVA;
+				break;
+			case 'Ice':
+				thisfluid = FLUID_NITRO;
+				break;
+			}
+		}
+		return thisfluid;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
+		curfluid = lastfluid = GetFluid();
+		fluidsounds[0] = 'ut/underwater';
+		fluidsounds[1] = 'ut/underslime';
+		fluidsounds[2] = 'ut/underlava';
+		fluidsounds[3] = 'ut/undernitro';
+		A_PlaySound(fluidsounds[curfluid],CHAN_VOICE|CHAN_LISTENERZ,1.,true,100.);
+		A_SoundVolume(CHAN_VOICE,(players[consoleplayer].camera==target)?1.:0.);
+	}
+	override void OnDestroy()
+	{
+		A_StopSound(CHAN_VOICE);
+		Super.OnDestroy();
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
+		curfluid = GetFluid();
+		if ( curfluid != lastfluid )
+			A_PlaySound(fluidsounds[curfluid],CHAN_VOICE|CHAN_LISTENERZ,1.,true,100.);
+		lastfluid = curfluid;
+		A_SoundVolume(CHAN_VOICE,(players[consoleplayer].camera==target)?1.:0.);
+	}
+}
+
+// TODO terrain stuff
+Class UTTerrainFX : Actor
+{
+	States
+	{
+	Spawn:
+		TNT1 A 1;
+		Stop;
+	}
+}
+
+Class UTWaterSplish : UTTerrainFX
+{
+}
+
+Class UTWaterSplash : UTTerrainFX
+{
+}
+
+Class UTBloodSplish : UTTerrainFX
+{
+}
+
+Class UTBloodSplash : UTTerrainFX
+{
+}
+
+Class UTSlimeSplish : UTTerrainFX
+{
+}
+
+Class UTSlimeSplash : UTTerrainFX
+{
+}
+
+Class UTNukageSplish : UTTerrainFX
+{
+}
+
+Class UTNukageSplash : UTTerrainFX
+{
+}
+
+Class UTLavaSplish : UTTerrainFX
+{
+}
+
+Class UTLavaSplash : UTTerrainFX
+{
+}
+
+Class UTNitroSplish : UTTerrainFX
+{
+}
+
+Class UTNitroSplash : UTTerrainFX
+{
 }
 
 // these only exist for sound

@@ -607,6 +607,33 @@ Class FlakLight : DynamicLight
 	}
 }
 
+Class FlakMag : UTCasing
+{
+	Default
+	{
+		BounceSound "flak/sbounce";
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		if ( special1 )
+		{
+			anglevel *= .1;
+			pitchvel *= .1;
+		}
+	}
+	States
+	{
+	Death:
+		PCAS A -1
+		{
+			pitch = RandomPick[Junk](-90,90);
+			angle = FRandom[Junk](0,360);
+		}
+		Stop;
+	}
+}
+
 Class FlakCannon : UTWeapon
 {
 	action void A_Loading( bool first = false )
@@ -714,6 +741,11 @@ Class FlakCannon : UTWeapon
 			s.scale *= 2.4;
 			s.alpha *= 0.5;
 		}
+		let c = Spawn("FlakMag",origin);
+		c.angle = angle;
+		c.pitch = BulletSlope();
+		c.vel = x*FRandom[Junk](15.,20.)+y*FRandom[Junk](-.1,.1)+z*FRandom[Junk](.1,.8);
+		c.special1 = 1;
 	}
 
 	Default
@@ -756,7 +788,16 @@ Class FlakCannon : UTWeapon
 	Fire:
 		FLKF A 1 A_FireChunks();
 		FLKF BCDEFGHI 1;
-		FLKF J 4;
+		FLKF J 4
+		{
+			Vector3 x, y, z, origin;
+			[x,y,z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+			origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),x*4.+y*3.-z*8.);
+			let c = Spawn("FlakMag",origin);
+			c.angle = angle;
+			c.pitch = pitch;
+			c.vel = vel*.5+x*FRandom[Junk](-.8,.1)+y*FRandom[Junk](-.2,.2)-z*FRandom[Junk](1,2);
+		}
 		Goto Loading;
 	AltFire:
 		FLKA A 1 A_FireSlug();

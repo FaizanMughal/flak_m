@@ -172,6 +172,8 @@ Class Minigun : UTWeapon
 		}
 		origin = level.Vec3Offset(origin,x*8+y*5-z*5);
 		let c = Spawn("UTCasing",origin);
+		c.angle = angle;
+		c.pitch = pitch;
 		c.vel = x*FRandom[Junk](-1.5,1.5)+y*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
 		c.Scale *= 0.5;
 	}

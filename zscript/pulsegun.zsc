@@ -531,6 +531,31 @@ Class StarterBolt : PulseBolt
 	}
 }
 
+Class PulseMag : UTCasing
+{
+	Default
+	{
+		BounceSound "enforcer/bounce";
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		heat = 0.;
+	}
+	States
+	{
+	Death:
+		PCAS A -1
+		{
+			pitch = Normalize180(pitch);
+			if ( abs(deltaangle(pitch,0)) < 35 ) pitch = 0;
+			else pitch = (pitch>0)?90:-90;
+			angle = FRandom[Junk](0,360);
+		}
+		Stop;
+	}
+}
+
 Class PulseGun : UTWeapon
 {
 	int clipcount;
@@ -778,7 +803,17 @@ Class PulseGun : UTWeapon
 			invoker.clipcount = 0;
 		}
 		PGNR QRSTUVWXYZ 1;
-		PGR2 ABCD 1;
+		PGR2 A 1
+		{
+			Vector3 x, y, z, origin;
+			[x,y,z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+			origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),x*4.-y*6.-z*8.);
+			let c = Spawn("PulseMag",origin);
+			c.angle = angle;
+			c.pitch = pitch;
+			c.vel = vel*.5+x*FRandom[Junk](-.5,.5)+y*FRandom[Junk](-.5,.5)-z*FRandom[Junk](1,2);
+		}
+		PGR2 BCD 1;
 		PGR2 E 1
 		{
 			invoker.clipcount = Min(invoker.default.clipcount,invoker.Ammo1.Amount);

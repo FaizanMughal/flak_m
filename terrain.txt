@@ -1,0 +1,155 @@
+// splish sploshes
+splash utwater
+{
+	smallclass utwatersplish
+	smallclip 4
+	smallsound ut/playerfootstepwet
+
+	baseclass utwatersplash
+	sound ut/wetsplash
+}
+
+splash utslime
+{
+	smallclass utslimesplish
+	smallclip 4
+	smallsound ut/playerfootstepslime
+
+	baseclass utslimesplash
+	sound ut/slimesplash}
+
+splash utnukage
+{
+	smallclass utnukagesplish
+	smallclip 4
+	smallsound ut/playerfootstepslime
+
+	baseclass utnukagesplash
+	sound ut/slimesplash
+}
+
+splash utlava
+{
+	smallclass utlavasplish
+	smallclip 4
+	smallsound ut/playerfootsteplava
+
+	baseclass utlavasplash
+	sound ut/lavasplash
+}
+
+splash utnitro
+{
+	smallclass utnitrosplish
+	smallclip 4
+	smallsound ut/playerfootstepnitro
+
+	baseclass utnitrosplash
+	sound ut/nitrosplash
+}
+
+splash utblood
+{
+	smallclass utbloodsplish
+	smallclip 4
+	smallsound ut/playerfootstepwet
+
+	baseclass utbloodsplash
+	sound ut/wetsplash
+}
+
+terrain utwater
+{
+	splash utwater
+	footclip 6
+	liquid
+}
+
+terrain utslime
+{
+	splash utslime
+	footclip 6
+	liquid
+}
+
+terrain utnukage
+{
+	splash utnukage
+	footclip 6
+	liquid
+}
+
+terrain utlava
+{
+	splash utlava
+	footclip 6
+	liquid
+}
+
+terrain utnitro
+{
+	splash utnitro
+	footclip 6
+	liquid
+}
+
+terrain utblood
+{
+	splash utblood
+	footclip 6
+	liquid
+}
+
+ifdoom
+floor BLOOD1 UTBlood
+floor BLOOD2 UTBlood
+floor BLOOD3 UTBlood
+floor FWATER1 UTWater
+floor FWATER2 UTWater
+floor FWATER3 UTWater
+floor FWATER4 UTWater
+floor LAVA1 UTLava
+floor LAVA2 UTLava
+floor LAVA3 UTLava
+floor LAVA4 UTLava
+floor NUKAGE1 UTNukage
+floor NUKAGE2 UTNukage
+floor NUKAGE3 UTNukage
+floor SLIME01 UTSlime
+floor SLIME02 UTSlime
+floor SLIME03 UTSlime
+floor SLIME04 UTSlime
+floor SLIME05 UTSlime
+floor SLIME06 UTSlime
+floor SLIME07 UTSlime
+floor SLIME08 UTSlime
+endif
+
+ifheretic
+floor FLTWAWA1 UTWater
+floor FLTFLWW1 UTWater
+floor FLTLAVA1 UTLava
+floor FLATHUH1 UTLava
+floor FLTSLUD1 UTSlime
+endif
+
+ifhexen
+floor X_005 UTWater
+floor X_001 UTLava
+floor X_009 UTSlime
+endif
+
+ifstrife
+floor F_WATR03 UTWater
+floor F_WATR02 UTWater
+floor F_WATR01 UTWater
+floor F_VWATR3 UTWater
+floor F_VWATR2 UTWater
+floor P_VWATR1 UTWater
+floor F_HWATR3 UTWater
+floor F_HWATR2 UTWater
+floor F_HWATR1 UTWater
+floor F_PWATR3 UTWater
+floor F_PWATR2 UTWater
+floor F_PWATR1 UTWater
+endif

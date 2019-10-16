@@ -166,9 +166,27 @@ $random ut/playerfootstep { ut/playerfootstep1 ut/playerfootstep2 ut/playerfoots
 
 ut/bossfootstep	bfootstp
 
+// fluid sounds
+
 ut/playerfootstepwet	lsplash
 ut/wetsplash		dsplash
 ut/wetsurface		wtrexit1
+ut/underwater		uwater1a
+
+ut/playerfootstepslime	dsslime1
+ut/slimesplash		goopj1
+ut/slimesurface		goope1
+ut/underslime		ugoop1
+
+ut/playerfootsteplava	dslava1
+ut/lavasplash		goopj1
+ut/lavasurface		goope1
+ut/underlava		ulava1
+
+ut/playerfootstepnitro	lsplash
+ut/nitrosplash		dsplash
+ut/nitrosurface		wtrexit1
+ut/undernitro		ulnitro1
 
 // everything else
 
@@ -232,8 +250,12 @@ enforcer/select	cocking
 enforcer/shoot	e_shot
 enforcer/reload	reload
 enforcer/click	click
+enforcer/bounce	clipb
+$volume enforcer/bounce 0.5
+$attenuation enforcer/bounce 3
 
 bullet/casing	shell2
+$attenuation bullet/casing 2
 bullet/hit1	impact1
 bullet/hit2	impact2
 $random bullet/hit { bullet/hit1 bullet/hit2 }
@@ -289,6 +311,9 @@ flak/bounce3	hit3
 $random flak/bounce { flak/bounce1 flak/bounce2 flak/bounce3 }
 $limit flak/bounce 64
 flak/explode	expl04
+flak/sbounce	chnkhit1
+$volume flak/sbounce 0.5
+$attenuation flak/sbounce 3
 
 utrl/select	selectin
 utrl/rotate	barrelmv

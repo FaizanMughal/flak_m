@@ -55,6 +55,21 @@ Model "StarterBolt"
 	FrameIndex PBLT E 0 0
 }
 
+Model "PulseMag"
+{
+	Path "models"
+	Model 0 "UsedPulse_d.3d"
+	Skin 0 "JPulseGun_02.png"
+	Scale 0.2 0.2 0.24
+	ZOffset 2
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 2
+
+	FrameIndex PCAS A 0 0
+}
+
 Model "PulseGun"
 {
 	Path "models"
