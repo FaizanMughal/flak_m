@@ -8,7 +8,7 @@ Class UTArmor : Armor
 	{
 		+INVENTORY.AUTOACTIVATE;
 		+INVENTORY.UNTOSSABLE;
-		-INVENTORY.KEEPDEPLETED;
+		+INVENTORY.KEEPDEPLETED;
 		+INVENTORY.ALWAYSPICKUP;
 	}
 	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
