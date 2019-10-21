@@ -182,6 +182,7 @@ ut/playerfootsteplava	dslava1
 ut/lavasplash		goopj1
 ut/lavasurface		goope1
 ut/underlava		ulava1
+ut/lavaex		expl04
 
 ut/playerfootstepnitro	lsplash
 ut/nitrosplash		dsplash
@@ -192,7 +193,7 @@ ut/undernitro		ulnitro1
 
 misc/secret	capsound
 misc/i_pkup	ammopick
-misc/k_pkup	ammosnd
+misc/k_pkup	cntrlsnd
 misc/w_pkup	weaponpk
 misc/p_pkup	genpicks
 misc/spawn	respsnd2
@@ -204,6 +205,7 @@ misc/ut_heal	uthealth
 $volume misc/ut_heal 0.7	// a bit too loud otherwise
 misc/ut_shard	shardpck
 misc/ut_armor	armorut
+misc/hud_sel	swclick
 belt/pickup	beltsnd
 belt/absorb	sbelthe2
 boot/pickup	bootsnd
@@ -213,8 +215,6 @@ udamage/pickup	amppckup
 udamage/fire1	ampfire
 udamage/fire2	ampfire2
 udamage/drain	ampout
-trans/pickup	voicesnd
-lite/pickup	fshlite1
 misc/gibbed1	gib1
 misc/gibbed2	gib2
 misc/gibbed3	gib3
@@ -341,3 +341,9 @@ testamb/lava	lava31
 testamb/water	trickle1
 testamb/wind1	wind21
 testamb/wind2	wind23
+
+uinvul/pickup	invlpick
+uinvul/hit	invlhit
+uinvul/drain	invlout
+
+uvision/pickup	visions

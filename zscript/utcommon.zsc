@@ -139,13 +139,21 @@ Class UTPlayer : DoomPlayer
 		if ( giveall || (name ~== "armor") )
 		{
 			// Doom Tournament just gives the player a shield belt and maximum bonuses
-			let belt = Inventory(Spawn("UTShieldBelt"));
-			belt.ClearCounters();
-			if ( !belt.CallTryPickup(self) ) belt.Destroy();
-			let bonus = Inventory(Spawn("UTArmorBonus"));
-			bonus.ClearCounters();
-			bonus.Amount = bonus.MaxAmount;
-			if ( !bonus.CallTryPickup(self) ) bonus.Destroy();
+			// in non-vanilla mode, also gives body/thigh armor
+			Class<Inventory> which[] =
+			{
+				"UTShieldBelt", "UTArmorBonus",
+				"UTBodyArmor", "UTThighpads"
+			};
+			Inventory inv;
+			int mx = flak_vanillaarmor?2:4;
+			for ( int i=0; i<mx; i++ )
+			{
+				inv = Inventory(Spawn(which[i]));
+				inv.ClearCounters();
+				inv.Amount = inv.MaxAmount;
+				if ( !inv.CallTryPickup(self) ) inv.Destroy();
+			}
 			if ( !giveall ) return;
 		}
 		if ( giveall || (name ~== "keys") )
@@ -1274,23 +1282,71 @@ Class UTUnderSound : Actor
 	}
 }
 
-// TODO terrain stuff
+// terrain splashes
 Class UTTerrainFX : Actor
 {
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		+DONTSPLASH;
+		+NOTELEPORT;
+	}
 	States
 	{
 	Spawn:
-		TNT1 A 1;
+		SPSH ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_FadeOut(1./26.);
 		Stop;
 	}
 }
 
 Class UTWaterSplish : UTTerrainFX
 {
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		let r = Spawn("WaterRing",pos);
+		r.scale *= 0.3;
+	}
 }
 
 Class UTWaterSplash : UTTerrainFX
 {
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		Spawn("WaterRing",pos);
+	}
+}
+
+Class WaterRing : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Scale 0.15;
+		Radius 0.1;
+		Height 0;
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		+DONTSPLASH;
+		+NOTELEPORT;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		alpha -= 1./20.;
+	}
+	States
+	{
+	Spawn:
+		RNGX ABCDEF 5 Bright;
+		Stop;
+	}
 }
 
 Class UTBloodSplish : UTTerrainFX
@@ -1311,18 +1367,112 @@ Class UTSlimeSplash : UTTerrainFX
 
 Class UTNukageSplish : UTTerrainFX
 {
+	Default
+	{
+		+BRIGHT;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		int numpt = Random[Terrain](3,5);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Terrain](-1,1),FRandom[Terrain](-1,1),FRandom[Terrain](-1,1)).unit()*FRandom[Terrain](2,5);
+			let s = Spawn("BioSpark",pos);
+			s.vel = pvel;
+		}
+		numpt = Random[Terrain](1,2);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Terrain](-1,1),FRandom[Terrain](-1,1),FRandom[Terrain](-1,1)).unit()*FRandom[Terrain](.6,1.2);
+			let s = Spawn("UTSmoke",pos);
+			s.vel = pvel;
+			s.scale *= 0.7;
+			s.A_SetRenderStyle(0.5,STYLE_AddShaded);
+			if ( Random[Terrain](0,1) ) s.SetShade("40FF60");
+			else s.SetShade("60FF40");
+		}
+	}
 }
 
 Class UTNukageSplash : UTTerrainFX
 {
+	Default
+	{
+		+BRIGHT;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		int numpt = Random[Terrain](8,12);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Terrain](-1,1),FRandom[Terrain](-1,1),FRandom[Terrain](-1,1)).unit()*FRandom[Terrain](3,12);
+			let s = Spawn("BioSpark",pos);
+			s.vel = pvel;
+		}
+		numpt = Random[Terrain](3,5);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Terrain](-1,1),FRandom[Terrain](-1,1),FRandom[Terrain](-1,1)).unit()*FRandom[Terrain](1.2,2.4);
+			let s = Spawn("UTSmoke",pos);
+			s.vel = pvel;
+			s.scale *= 2;
+			s.A_SetRenderStyle(0.5,STYLE_AddShaded);
+			if ( Random[Terrain](0,1) ) s.SetShade("40FF60");
+			else s.SetShade("60FF40");
+		}
+	}
 }
 
 Class UTLavaSplish : UTTerrainFX
 {
+	Default
+	{
+		+BRIGHT;
+	}
 }
 
 Class UTLavaSplash : UTTerrainFX
 {
+	Default
+	{
+		+BRIGHT;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		Spawn("FlameExplosion",pos);
+	}
+}
+
+Class FlameExplosion : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		Scale 0.8;
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		+DONTSPLASH;
+		+NOTELEPORT;
+		+FORCEXYBILLBOARD;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		A_PlaySound("ut/lavaex",CHAN_VOICE);
+		Spawn("SlugSmoke",pos);
+		Spawn("SlugLight",pos);
+	}
+	States
+	{
+	Spawn:
+		FEXP ABCDEFGHIJ 2 BRIGHT;
+		Stop;
+	}
 }
 
 Class UTNitroSplish : UTTerrainFX
@@ -2775,25 +2925,31 @@ Class UTMainHandler : EventHandler
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'MiniAmmo';
 			else e.Replacement = 'RifleAmmo';
 		}
-		else if ( e.Replacee == 'InvulnerabilitySphere' ) e.Replacement = (!deathmatch||flak_dmsshock)?'EnhancedShockRifle':'UDamage';
+		else if ( e.Replacee == 'InvulnerabilitySphere' ) e.Replacement = 'UTInvulnerability';
 		else if ( e.Replacee == 'Berserk' ) e.Replacement = 'UDamage';
 		else if ( (e.Replacee == 'ArtiTomeOfPower') || (e.Replacee == 'ArtiEgg') ) e.Replacement = 'ActUDamage';
 		else if ( e.Replacee == 'Soulsphere' ) e.Replacement = 'UTHealthPack';
 		else if ( e.Replacee == 'ArtiSuperHealth' ) e.Replacement = 'ActHealthPack';
 		else if ( e.Replacee == 'Megasphere' ) e.Replacement = 'UTShieldBelt';
-		else if ( e.Replacee == 'ArtiInvulnerability' ) e.Replacement = 'ActShieldBelt';
+		else if ( e.Replacee == 'ArtiInvulnerability' ) e.Replacement = 'ActUTInvulnerability';
 		else if ( (e.Replacee == 'Allmap') || (e.Replacee == 'SuperMap') ) e.Replacement = 'UTMapRevealer';
 		else if ( e.Replacee == 'BlurSphere' ) e.Replacement = 'UTInvisibility';
-		else if ( e.Replacee == 'ArtiInvisibility' ) e.Replacement = 'ActInvisibility';
-		else if ( e.Replacee == 'Infrared' ) e.Replacement = 'Searchlight';
-		else if ( e.Replacee == 'ArtiTorch' ) e.Replacement = 'ActSearchlight';
+		else if ( e.Replacee == 'ArtiInvisibility' ) e.Replacement = 'ActUTInvisibility';
+		else if ( e.Replacee == 'Infrared' ) e.Replacement = 'UTNightVision';
+		else if ( e.Replacee == 'ArtiTorch' ) e.Replacement = 'ActUTNightVision';
 		else if ( e.Replacee == 'RadSuit' ) e.Replacement = 'UTJumpBoots';
 		else if ( e.Replacee == 'ArtiFly' ) e.Replacement = 'ActJumpBoots';
 		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') ) e.Replacement = 'UTBackpack';
 		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') ) e.Replacement = 'UTArmorBonus';
 		else if ( (e.Replacee == 'HealthBonus') || (e.Replacee == 'CrystalVial') ) e.Replacement = 'UTHealthBonus';
-		else if ( (e.Replacee == 'GreenArmor') || (e.Replacee == 'Silvershield') ) e.Replacement = 'UTThighPads';
-		else if ( (e.Replacee == 'BlueArmor') || (e.Replacee == 'EnchantedShield') ) e.Replacement = 'UTBodyArmor';
+		else if ( e.Replacee == 'GreenArmor' ) e.Replacement = 'UTThighPads';
+		else if ( e.Replacee == 'Silvershield' )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'UTThighPads';
+			else e.Replacement = 'UTBodyArmor';
+		}
+		else if ( e.Replacee == 'BlueArmor' ) e.Replacement = 'UTBodyArmor';
+		else if ( e.Replacee == 'EnchantedShield' ) e.Replacement = 'UTShieldBelt';
 		else if ( e.Replacee == 'Stimpack' ) e.Replacement = 'UTMedBox';
 		else if ( e.Replacee == 'Medikit' ) e.Replacement = 'UTHealthBox';
 		else if ( e.Replacee == 'ArtiHealth' )
@@ -2804,9 +2960,7 @@ Class UTMainHandler : EventHandler
 		else if ( e.Replacee == 'ArtiTeleport' )
 		{
 			// I have no idea what to replace this with, so just have some random stuff
-			if ( Random[Replacements](0,1) ) e.Replacement = 'UTBackpack';
-			else if ( Random[Replacements](0,1) ) e.Replacement = 'ActShieldBelt';
-			else if ( Random[Replacements](0,1) ) e.Replacement = 'ActHealthPack';
+			if ( Random[Replacements](0,1) ) e.Replacement = 'ActHealthPack';
 			else e.Replacement = 'ActUDamage';
 		}
 		else if ( e.Replacee == 'RedCard' ) e.Replacement = 'UTRedKey';

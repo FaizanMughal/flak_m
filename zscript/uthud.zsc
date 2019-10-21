@@ -23,7 +23,7 @@ Class ViewTracer : LineTracer
 
 Class UTHud : BaseStatusBar
 {
-	TextureID AmmoBar, Boxes[4], Keys[5], BigNum[12], Flash, Slots[10], Icons[14], Uses[14], Man[5], Woman[5], Boss[5], WeaponBox, IconTloc2, UseTloc2, IconSaw2, UseSaw2, ItemBox, ItemSel, ItemFlash, ItemArrow[2], LastItem, FacePanel[3];
+	TextureID AmmoBar, Boxes[4], Keys[5], BigNum[12], Flash, Slots[10], Icons[14], Uses[14], Man[5], Woman[5], Boss[5], WeaponBox, IconTloc2, UseTloc2, IconSaw2, UseSaw2, IconAuto2, UseAuto2, ItemBox, ItemSel, ItemFlash, ItemArrow[2], LastItem, FacePanel[3];
 	Class<Weapon> IconClasses[14];
 	double HScale;
 	Color tintcolor, bgcolor;
@@ -34,6 +34,7 @@ Class UTHud : BaseStatusBar
 	int lastseentic;
 	bool showweapons, showfrags, showammo, showstatus, showinfo;
 	double hudsize, weaponsize, statussize;
+	bool justselected;
 
 	HUDFont mUTFont12, mUTFont40;
 
@@ -167,6 +168,8 @@ Class UTHud : BaseStatusBar
 		UseTloc2 = TexMan.CheckForTexture("UseTrn2",TexMan.Type_Any);
 		IconSaw2 = TexMan.CheckForTexture("IconSaw2",TexMan.Type_Any);
 		UseSaw2 = TexMan.CheckForTexture("UseSaw2",TexMan.Type_Any);
+		IconAuto2 = TexMan.CheckForTexture("IconAut2",TexMan.Type_Any);
+		UseAuto2 = TexMan.CheckForTexture("UseAut2",TexMan.Type_Any);
 		FacePanel[0] = TexMan.CheckForTexture("FacePnl",TexMan.Type_Any);
 		FacePanel[1] = TexMan.CheckForTexture("FacePnlA",TexMan.Type_Any);
 		FacePanel[2] = TexMan.CheckForTexture("Static1",TexMan.Type_Any);
@@ -252,7 +255,9 @@ Class UTHud : BaseStatusBar
 			if ( !(w is IconClasses[i]) ) continue;
 			if ( use )
 			{
-				if ( (i == 10) && flak_sawammo )
+				if ( (i == 1) && (w.Amount > 1) )
+					UTDrawTintedTex(UseAuto2,sx,opacity+7);
+				else if ( (i == 10) && flak_sawammo )
 					UTDrawTintedTex(UseSaw2,sx,opacity+7);
 				else if ( (i == 11) && flak_transloc2k4 )
 					UTDrawTintedTex(UseTloc2,sx,opacity+7);
@@ -260,7 +265,9 @@ Class UTHud : BaseStatusBar
 			}
 			else
 			{
-				if ( (i == 10) && flak_sawammo )
+				if ( (i == 1) && (w.Amount > 1) )
+					UTDrawTintedTex(IconAuto2,sx,opacity,halftint);
+				else if ( (i == 10) && flak_sawammo )
 					UTDrawTintedTex(IconSaw2,sx,opacity,halftint);
 				else if ( (i == 11) && flak_transloc2k4 )
 					UTDrawTintedTex(IconTloc2,sx,opacity,halftint);
@@ -433,11 +440,14 @@ Class UTHud : BaseStatusBar
 			CurY = 0;
 			Color dollcolor = tintcolor;
 			DamageAmplifier d;
+			UTInvulPower p;
 			UTJumpBoots j;
 			d = DamageAmplifier(CPlayer.mo.FindInventory("DamageAmplifier"));
+			p = UTInvulPower(CPlayer.mo.FindInventory("UTInvulPower"));
 			j = UTJumpBoots(CPlayer.mo.FindInventory("UTJumpBoots"));
 			if ( d && !d.isBlinking() ) dollcolor = d.BlendColor;
 			int dolltype = 0;
+			if ( p && !p.isBlinking() ) dollcolor = LerpColor(GoldColor,dollcolor,((gametic+fractic)/15)%1.);
 			if ( CPlayer.mo is 'UTPlayer' ) dolltype = UTPlayer(CPlayer.mo).DollType;
 			else
 			{
@@ -1035,6 +1045,25 @@ Class UTHud : BaseStatusBar
 		{
 			LastItem = CPlayer.mo.InvSel.Icon;
 			LastAmount = CPlayer.mo.InvSel.Amount-1;
+		}
+		if ( CPlayer.inventorytics >= (5*Thinker.TICRATE)-1 )
+		{
+			if ( CPlayer.mo.InvSel )
+			{
+				PickupMsg = CPlayer.mo.InvSel.GetTag();
+				PickupMsgTic = gametic+50;
+				S_Sound("misc/hud_sel",CHAN_UI);
+			}
+		}
+		if ( CPlayer.inventorytics > 0 ) justselected = false;
+		else
+		{
+			if ( !justselected && CPlayer.mo.InvSel )
+			{
+				Console.Printf(StringTable.Localize("$M_ISELECT"),CPlayer.mo.InvSel.GetTag());
+				S_Sound("misc/hud_sel",CHAN_UI);
+			}
+			justselected = true;
 		}
 		if ( deathmatch||teamplay )
 		{

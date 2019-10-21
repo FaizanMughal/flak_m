@@ -105,6 +105,107 @@ Class DamageAmplifier : Powerup
 	}
 }
 
+Class UTInvulnerability : PowerupGiver
+{
+	Default
+	{
+		Tag "$T_UTINVUL";
+		Inventory.PickupMessage "$I_UTINVUL";
+		+COUNTITEM;
+		+INVENTORY.AUTOACTIVATE;
+		+INVENTORY.ALWAYSPICKUP;
+		+INVENTORY.BIGPOWERUP;
+		Inventory.MaxAmount 0;
+		Powerup.Type "UTInvulPower";
+		Inventory.PickupSound "uinvul/pickup";
+		Inventory.RespawnTics 4200;
+	}
+	States
+	{
+	Spawn:
+		UKEY A -1;
+		Stop;
+	}
+}
+
+Class UTInvulLight : DynamicLight
+{
+	Default
+	{
+		DynamicLight.Type "Point";
+		Args 255,238,0,80;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target || !master )
+		{
+			Destroy();
+			return;
+		}
+		if ( target.player )
+			SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
+		else SetOrigin(target.Vec3Offset(0,0,target.height/2),true);
+		args[LIGHT_INTENSITY] = Random[UInvuln](10,12)*8;
+		bDORMANT = Powerup(master).isBlinking();
+	}
+}
+
+Class UTInvulPower : Powerup
+{
+	Actor l;
+	int lasteffect;
+
+	Default
+	{
+		Powerup.Duration -60;
+		Powerup.Color "FFEE00", 0.05;
+	}
+
+	override void BeginPlay()
+	{
+		Super.BeginPlay();
+		if ( deathmatch ) EffectTics /= 2;
+	}
+
+	override void InitEffect()
+	{
+		Super.InitEffect();
+		lasteffect = int.min;
+		l = Spawn("UTInvulLight",Owner.pos);
+		l.target = Owner;
+		l.master = self;
+	}
+
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if ( (EffectTics == 175) || (EffectTics == 140) || (EffectTics == 105) || (EffectTics == 70) || (EffectTics == 35) )
+			Owner.A_PlaySound("uinvul/drain",CHAN_7,1.0,false,0.25);
+	}
+
+	override void EndEffect()
+	{
+		Super.EndEffect();
+		if ( (EffectTics <= 0) && Owner && Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_UTINVUL"));
+	}
+
+	override bool isBlinking()
+	{
+		return ((EffectTics <= 175) && (EffectTics%35 >= 30));
+	}
+
+	override void ModifyDamage( int damage, Name damageType, out int newdamage, bool passive )
+	{
+		if ( !passive || (damage <= 0) ) return;
+		newdamage = 0;
+		if ( gametic < lasteffect ) return;
+		Owner.A_PlaySound("uinvul/hit",CHAN_7,1.0,false,0.25);
+		UTMainHandler.DoFlash(Owner,Color(48,255,238,0),6);
+		lasteffect = gametic+5;	// prevent excess flash
+	}
+}
+
 // Backpack that only gives ammo for valid weapons
 Class UTBackpack : BackpackItem
 {
@@ -277,7 +378,7 @@ Class UTInvisibilityX : Actor
 			return;
 		}
 		Warp(target,flags:WARPF_COPYINTERPOLATION|WARPF_NOCHECKPOSITION);
-		bInvisible = target.bInvisible;
+		bInvisible = target.bInvisible||!target.InStateSequence(target.CurState,target.FindState("Spawn"));
 	}
 	States
 	{
@@ -291,18 +392,19 @@ Class UTMapRevealer : MapRevealer
 {
 	Default
 	{
+		Tag "$T_MAPREVEALER";
 		+COUNTITEM;
 		+INVENTORY.FANCYPICKUPSOUND;
 		+INVENTORY.ALWAYSPICKUP;
 		Inventory.MaxAmount 0;
-		Inventory.PickupSound "trans/pickup";
+		Inventory.PickupSound "misc/p_pkup";
 		Inventory.PickupMessage "$I_MAPREVEALER";
 	}
 	States
 	{
 	Spawn:
-		TRNS A -1;
-		Stop;
+		TRNS ABCDCB 6;
+		Loop;
 	}
 }
 
@@ -385,6 +487,7 @@ Class PowerJumpBoots_IronFeet : PowerIronFeet
 	}
 	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
 	{
+		Inventory.AbsorbDamage(damage,damageType,newdamage);
 	}
 	override void DoEffect()
 	{
@@ -394,159 +497,108 @@ Class PowerJumpBoots_IronFeet : PowerIronFeet
 	}
 }
 
-Class Searchlight : Inventory
+Class UTNightVision : PowerupGiver
 {
-	Actor lt[3];
-	int ticcnt;
 	Default
 	{
-		Tag "$T_SEARCHLIGHT";
+		Tag "$T_UTVISION";
+		Inventory.PickupMessage "$I_UTVISION";
 		+COUNTITEM;
-		+INVENTORY.UNTOSSABLE;
-		+INVENTORY.FANCYPICKUPSOUND;
 		+INVENTORY.AUTOACTIVATE;
 		+INVENTORY.ALWAYSPICKUP;
-		Inventory.Amount 200;
-		Inventory.MaxAmount 200;
-		Inventory.InterHubAmount 0;
-		Inventory.PickupMessage "$I_SEARCHLIGHT";
-		Inventory.PickupSound "lite/pickup";
-		Inventory.RespawnTics 1050;
+		+INVENTORY.BIGPOWERUP;
+		Inventory.MaxAmount 0;
+		Powerup.Type "UTVisionPower";
+		Inventory.PickupSound "uvision/pickup";
+		Inventory.RespawnTics 4200;
 	}
-
-	override bool Use( bool pickup )
+	override void PostBeginPlay()
 	{
-		if ( !lt[0] ) lt[0] = Spawn("mkLight");
-		lt[0].target = owner;
-		lt[0].master = self;
-		if ( !lt[1] ) lt[1] = Spawn("mkLight2");
-		lt[1].target = owner;
-		lt[1].master = self;
-		if ( !lt[2] ) lt[2] = Spawn("mkLight3");
-		lt[2].target = owner;
-		lt[2].master = self;
-		return Super.Use(pickup);
-	}
-	override void DetachFromOwner()
-	{
-		Super.DetachFromOwner();
-		if ( lt[0] ) lt[0].Destroy();
-		if ( lt[1] ) lt[1].Destroy();
-		if ( lt[2] ) lt[2].Destroy();
-	}
-	override void DoEffect()
-	{
-		Super.DoEffect();
-		if ( !Owner ) return;
-		if ( ticcnt++ < TICRATE ) return;
-		ticcnt = 0;
-		if ( --Amount <= 0 )
-		{
-			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_SEARCHLIGHT"));
-			DepleteOrDestroy();
-		}
+		Super.PostBeginPlay();
+		tracer = Spawn("UTNightVisionX",pos);
+		tracer.angle = angle;
+		tracer.target = self;
 	}
 	States
 	{
 	Spawn:
-		SLIT A -1;
+		UKEY A -1;
 		Stop;
 	}
 }
 
-/* hello, Soundless Mound copypasted lights */
-Class mkLight : DynamicLight
+Class UTNightVisionX : UTInvisibilityX
 {
-	int basecolor[3];
+	Default
+	{
+		Alpha 0.3;
+	}
+	States
+	{
+	Spawn:
+		UKEY A -1 Bright;
+		Stop;
+	}
+}
 
+Class UTVisionLight : DynamicLight
+{
 	Default
 	{
 		DynamicLight.Type "Point";
-		+DynamicLight.SPOT;
-		+DynamicLight.ATTENUATE;
-		+DynamicLight.DONTLIGHTSELF;
-		args 255,224,160,300;
-		DynamicLight.SpotInnerAngle 20;
-		DynamicLight.SpotOuterAngle 35;
-	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		basecolor[0] = args[LIGHT_RED];
-		basecolor[1] = args[LIGHT_GREEN];
-		basecolor[2] = args[LIGHT_BLUE];
+		+DYNAMICLIGHT.SPOT;
+		DynamicLight.SpotInnerAngle 60;
+		DynamicLight.SpotOuterAngle 90;
+		Args 224,238,255,800;
 	}
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !target || !Inventory(master) )
+		if ( !target || !master )
 		{
 			Destroy();
 			return;
 		}
-		if ( target.player ) SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
-		else SetOrigin(target.vec3Offset(0,0,target.height*0.75),true);
-		A_SetAngle(target.angle,SPF_INTERPOLATE);
-		A_SetPitch(target.pitch,SPF_INTERPOLATE);
-		args[LIGHT_RED] = int(basecolor[0]*clamp(Inventory(master).amount/40.,0.,1.));
-		args[LIGHT_GREEN] = int(basecolor[1]*clamp(Inventory(master).amount/40.,0.,1.));
-		args[LIGHT_BLUE] = int(basecolor[2]*clamp(Inventory(master).amount/40.,0.,1.));
-		bDORMANT = (target.health <= 0);
-		if ( Inventory(target) && target.bInvisible ) bDORMANT = true;
-		// alert monsters hit by the light
-		if ( GetClass() != "mkLight" ) return;
-		if ( !bDORMANT && target.player && (target.health > 0) )
-		{
-			BlockThingsIterator bt = BlockThingsIterator.Create(target,args[LIGHT_INTENSITY]);
-			while ( bt.Next() )
-			{
-				if ( !bt.Thing || (Distance3D(bt.Thing) > args[LIGHT_INTENSITY]) ) continue;
-				Vector3 aimdir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
-				Vector3 reldir = Vec3To(bt.Thing).unit();
-				if ( (acos(aimdir dot reldir) < SpotOuterAngle+5) && bt.Thing.CheckSight(target) ) bt.Thing.LastHeard = target;
-			}
-		}
+		Vector3 x, y, z, origin;
+		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
+		if ( target.player )
+			origin = target.Vec2OffsetZ(0,0,target.player.viewz);
+		else origin = target.Vec3Offset(0,0,target.height/2);
+		SetOrigin(origin,true);
+		angle = target.angle;
+		pitch = target.pitch;
+		args[LIGHT_INTENSITY] = Random[UVision](40,48)*20;
+		bDORMANT = ((players[consoleplayer].Camera != target)||Powerup(master).isBlinking());
 	}
 }
 
-Class mkLight2 : mkLight
+Class UTVisionPower : Powerup
 {
-	Default
-	{
-		args 128,112,96,300;
-		DynamicLight.SpotInnerAngle 0;
-		DynamicLight.SpotOuterAngle 50;
-	}
-}
-
-Class mkLight3 : DynamicLight
-{
-	int basecolor[3];
+	Actor l;
 
 	Default
 	{
-		DynamicLight.Type "Point";
-		+DynamicLight.ATTENUATE;
-		args 32,28,24,0;
+		Powerup.Duration -90;
+		Powerup.Color "AAEEFF", 0.05;
 	}
-	override void PostBeginPlay()
+
+	override void BeginPlay()
 	{
-		Super.PostBeginPlay();
-		basecolor[0] = args[LIGHT_RED];
-		basecolor[1] = args[LIGHT_GREEN];
-		basecolor[2] = args[LIGHT_BLUE];
+		Super.BeginPlay();
+		if ( deathmatch ) EffectTics /= 2;
 	}
-	override void Tick()
+
+	override void InitEffect()
 	{
-		Super.Tick();
-		if ( !target || Inventory(target) || !Inventory(master) )
-		{
-			Destroy();
-			return;
-		}
-		args[LIGHT_RED] = int(basecolor[0]*clamp(Inventory(master).amount/40.,0.,1.));
-		args[LIGHT_GREEN] = int(basecolor[1]*clamp(Inventory(master).amount/40.,0.,1.));
-		args[LIGHT_BLUE] = int(basecolor[2]*clamp(Inventory(master).amount/40.,0.,1.));
-		SetOrigin(target.vec3Offset(0,0,target.height*0.5),true);
+		Super.InitEffect();
+		l = Spawn("UTVisionLight",Owner.pos);
+		l.target = Owner;
+		l.master = self;
+	}
+
+	override void EndEffect()
+	{
+		Super.EndEffect();
+		if ( (EffectTics <= 0) && Owner && Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_UTVISION"));
 	}
 }

@@ -59,7 +59,7 @@ Class ImpactHammer : UTWeapon
 			invoker.count = 0;
 			A_AlertMonsters();
 		}
-		A_QuakeEx(clamp(int(invoker.chargesize*3),0,3),clamp(int(invoker.chargesize*3),0,3),clamp(int(invoker.chargesize*3),0,3),2,0,96,"",QF_RELATIVE,rollIntensity:clamp(invoker.chargesize*0.3,0,0.3));
+		A_QuakeEx(clamp(int(invoker.chargesize),0,2),clamp(int(invoker.chargesize),0,2),clamp(int(invoker.chargesize),0,2),2,0,96,"",QF_RELATIVE,rollIntensity:clamp(invoker.chargesize*0.3,0,0.3));
 		UTMainHandler.DoSwing(self,(FRandom[Impact](-1,1),FRandom[Impact](-1,1)),invoker.chargesize*0.1,0,1,SWING_Spring);
 		if ( !(player.cmd.buttons&BT_ATTACK) )
 		{

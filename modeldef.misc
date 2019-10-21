@@ -143,12 +143,10 @@ Model "UTHealthBonus"
 Model "UTArmorBonus"
 {
 	Path "models"
-	Model 0 "bossheadm_d.3d"
-	Skin 0 "bossheadT.png"
-	Scale 0.06 0.06 0.072
-	AngleOffset -90
-	RollOffset 12
-	ZOffset 5.5
+	Model 0 "ubonus_d.3d"
+	Skin 0 "shield.png"
+	Scale 0.08 -0.08 0.096
+	AngleOffset 90
 
 	FrameIndex XANH A 0 0
 }
@@ -177,18 +175,6 @@ Model "UTBodyArmor"
 }
 
 Model "UTShieldBelt"
-{
-	Path "models"
-	Model 0 "ShieldBeltMeshM_d.3d"
-	Skin 0 "AUbelt1.png"
-	Scale 0.1 0.1 0.12
-	AngleOffset -90
-	ZOffset 4
-
-	FrameIndex BELT A 0 0
-}
-
-Model "ActShieldBelt"
 {
 	Path "models"
 	Model 0 "ShieldBeltMeshM_d.3d"
@@ -364,7 +350,7 @@ Model "UTInvisibilityX"
 	FrameIndex INVS A 0 0
 }
 
-Model "ActInvisibility"
+Model "ActUTInvisibility"
 {
 	Path "models"
 	Model 0 "invis2M_d.3d"
@@ -379,12 +365,21 @@ Model "ActInvisibility"
 Model "UTMapRevealer"
 {
 	Path "models"
-	Model 0 "TranslatorMesh_d.3d"
-	Skin 0 "JTranslator1.png"
-	Scale 0.08 0.08 0.096
-	ZOffset 4
+	Model 0 "cheapcomp_d.3d"
+	SurfaceSkin 0 1 "JAllMap2.png"
+	SurfaceSkin 0 2 "JAllMap3.png"
+	Scale 0.04 0.04 0.048
+	ZOffset 3
+	AngleOffset 90
 
+	SurfaceSkin 0 0 "JAllMap1_a00.png"
 	FrameIndex TRNS A 0 0
+	SurfaceSkin 0 0 "JAllMap1_a01.png"
+	FrameIndex TRNS B 0 0
+	SurfaceSkin 0 0 "JAllMap1_a02.png"
+	FrameIndex TRNS C 0 0
+	SurfaceSkin 0 0 "JAllMap1_a03.png"
+	FrameIndex TRNS D 0 0
 }
 
 Model "UTJumpBoots"
@@ -409,30 +404,6 @@ Model "ActJumpBoots"
 	FrameIndex JBUT A 0 0
 }
 
-Model "Searchlight"
-{
-	Path "models"
-	Model 0 "BigFlash_d.3d"
-	Skin 0 "JBigFlash1.png"
-	Scale 0.07 0.07 0.084
-	AngleOffset -90
-	ZOffset 9
-
-	FrameIndex SLIT A 0 0
-}
-
-Model "ActSearchlight"
-{
-	Path "models"
-	Model 0 "BigFlash_d.3d"
-	Skin 0 "JBigFlash1.png"
-	Scale 0.07 0.07 0.084
-	AngleOffset -90
-	ZOffset 9
-
-	FrameIndex SLIT A 0 0
-}
-
 Model "UTChip"
 {
 	Path "models"
@@ -449,4 +420,458 @@ Model "UTChip"
 	FrameIndex CHIP B 0 1
 	FrameIndex CHIP C 0 2
 	FrameIndex CHIP D 0 3
+}
+
+Model "UTInvulnerability"
+{
+	Path "models"
+	Model 0 "U_d.3d"
+	Skin 0 "GOLD.png"
+	Scale 0.15 0.15 0.18
+	ZOffset 24
+	ROTATING
+
+	FrameIndex UKEY A 0 0
+}
+
+Model "ActUTInvulnerability"
+{
+	Path "models"
+	Model 0 "U_d.3d"
+	Skin 0 "GOLD.png"
+	Scale 0.15 0.15 0.18
+	ZOffset 24
+	ROTATING
+
+	FrameIndex UKEY A 0 0
+}
+
+Model "UTNightVision"
+{
+	Path "models"
+	Model 0 "VisionM_d.3d"
+	SurfaceSkin 0 0 "s_camera.png"
+	Scale 0.15 0.15 0.18
+	ZOffset 24
+	ROTATING
+
+	FrameIndex UKEY A 0 0
+}
+
+Model "ActUTNightVision"
+{
+	Path "models"
+	Model 0 "VisionM_d.3d"
+	SurfaceSkin 0 0 "s_camera.png"
+	Scale 0.15 0.15 0.18
+	ZOffset 24
+	ROTATING
+
+	FrameIndex UKEY A 0 0
+}
+
+Model "UTNightVisionX"
+{
+	Path "models"
+	Model 0 "VisionM_d.3d"
+	SurfaceSkin 0 1 "Effect1.png"
+	Scale 0.15 0.15 0.18
+	ZOffset 24
+	ROTATING
+	DONTCULLBACKFACES
+
+	FrameIndex UKEY A 0 0
+}
+
+Model "WaterRing"
+{
+	Path "models"
+	Model 0 "RingEx_d.3d"
+	Skin 0 "WetRing.png"
+	Scale 1.0 1.0 1.2
+	ZOffset 1
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+
+	FrameIndex RNGX A 0 0
+	FrameIndex RNGX B 0 1
+	FrameIndex RNGX C 0 2
+	FrameIndex RNGX D 0 3
+	FrameIndex RNGX E 0 4
+	FrameIndex RNGX F 0 5
+}
+Model "UTWaterSplash"
+{
+	Path "models"
+	Model 0 "WaterImpactM_d.3d"
+	Skin 0 "splash_water.png"
+	Scale 0.16 0.16 0.192
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+
+	FrameIndex SPSH A 0 1
+	FrameIndex SPSH B 0 2
+	FrameIndex SPSH C 0 3
+	FrameIndex SPSH D 0 4
+	FrameIndex SPSH E 0 5
+	FrameIndex SPSH F 0 6
+	FrameIndex SPSH G 0 7
+	FrameIndex SPSH H 0 8
+	FrameIndex SPSH I 0 9
+	FrameIndex SPSH J 0 10
+	FrameIndex SPSH K 0 11
+	FrameIndex SPSH L 0 12
+	FrameIndex SPSH M 0 13
+	FrameIndex SPSH N 0 14
+	FrameIndex SPSH O 0 15
+	FrameIndex SPSH P 0 16
+	FrameIndex SPSH Q 0 17
+	FrameIndex SPSH R 0 18
+	FrameIndex SPSH S 0 19
+	FrameIndex SPSH T 0 20
+	FrameIndex SPSH U 0 21
+	FrameIndex SPSH V 0 22
+	FrameIndex SPSH W 0 23
+	FrameIndex SPSH X 0 24
+	FrameIndex SPSH Y 0 25
+	FrameIndex SPSH Z 0 26
+}
+Model "UTWaterSplish"
+{
+	Path "models"
+	Model 0 "WaterImpactM_d.3d"
+	Skin 0 "splash_water.png"
+	Scale 0.1 0.1 0.12
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+
+	FrameIndex SPSH A 0 1
+	FrameIndex SPSH B 0 2
+	FrameIndex SPSH C 0 3
+	FrameIndex SPSH D 0 4
+	FrameIndex SPSH E 0 5
+	FrameIndex SPSH F 0 6
+	FrameIndex SPSH G 0 7
+	FrameIndex SPSH H 0 8
+	FrameIndex SPSH I 0 9
+	FrameIndex SPSH J 0 10
+	FrameIndex SPSH K 0 11
+	FrameIndex SPSH L 0 12
+	FrameIndex SPSH M 0 13
+	FrameIndex SPSH N 0 14
+	FrameIndex SPSH O 0 15
+	FrameIndex SPSH P 0 16
+	FrameIndex SPSH Q 0 17
+	FrameIndex SPSH R 0 18
+	FrameIndex SPSH S 0 19
+	FrameIndex SPSH T 0 20
+	FrameIndex SPSH U 0 21
+	FrameIndex SPSH V 0 22
+	FrameIndex SPSH W 0 23
+	FrameIndex SPSH X 0 24
+	FrameIndex SPSH Y 0 25
+	FrameIndex SPSH Z 0 26
+}
+
+Model "UTBloodSplash"
+{
+	Path "models"
+	Model 0 "WaterImpactM_d.3d"
+	Skin 0 "splash_blood.png"
+	Scale 0.16 0.16 0.192
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+
+	FrameIndex SPSH A 0 1
+	FrameIndex SPSH B 0 2
+	FrameIndex SPSH C 0 3
+	FrameIndex SPSH D 0 4
+	FrameIndex SPSH E 0 5
+	FrameIndex SPSH F 0 6
+	FrameIndex SPSH G 0 7
+	FrameIndex SPSH H 0 8
+	FrameIndex SPSH I 0 9
+	FrameIndex SPSH J 0 10
+	FrameIndex SPSH K 0 11
+	FrameIndex SPSH L 0 12
+	FrameIndex SPSH M 0 13
+	FrameIndex SPSH N 0 14
+	FrameIndex SPSH O 0 15
+	FrameIndex SPSH P 0 16
+	FrameIndex SPSH Q 0 17
+	FrameIndex SPSH R 0 18
+	FrameIndex SPSH S 0 19
+	FrameIndex SPSH T 0 20
+	FrameIndex SPSH U 0 21
+	FrameIndex SPSH V 0 22
+	FrameIndex SPSH W 0 23
+	FrameIndex SPSH X 0 24
+	FrameIndex SPSH Y 0 25
+	FrameIndex SPSH Z 0 26
+}
+Model "UTBloodSplish"
+{
+	Path "models"
+	Model 0 "WaterImpactM_d.3d"
+	Skin 0 "splash_blood.png"
+	Scale 0.1 0.1 0.12
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+
+	FrameIndex SPSH A 0 1
+	FrameIndex SPSH B 0 2
+	FrameIndex SPSH C 0 3
+	FrameIndex SPSH D 0 4
+	FrameIndex SPSH E 0 5
+	FrameIndex SPSH F 0 6
+	FrameIndex SPSH G 0 7
+	FrameIndex SPSH H 0 8
+	FrameIndex SPSH I 0 9
+	FrameIndex SPSH J 0 10
+	FrameIndex SPSH K 0 11
+	FrameIndex SPSH L 0 12
+	FrameIndex SPSH M 0 13
+	FrameIndex SPSH N 0 14
+	FrameIndex SPSH O 0 15
+	FrameIndex SPSH P 0 16
+	FrameIndex SPSH Q 0 17
+	FrameIndex SPSH R 0 18
+	FrameIndex SPSH S 0 19
+	FrameIndex SPSH T 0 20
+	FrameIndex SPSH U 0 21
+	FrameIndex SPSH V 0 22
+	FrameIndex SPSH W 0 23
+	FrameIndex SPSH X 0 24
+	FrameIndex SPSH Y 0 25
+	FrameIndex SPSH Z 0 26
+}
+
+Model "UTSlimeSplash"
+{
+	Path "models"
+	Model 0 "WaterImpactM_d.3d"
+	Skin 0 "splash_sludge.png"
+	Scale 0.16 0.16 0.192
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+
+	FrameIndex SPSH A 0 1
+	FrameIndex SPSH B 0 2
+	FrameIndex SPSH C 0 3
+	FrameIndex SPSH D 0 4
+	FrameIndex SPSH E 0 5
+	FrameIndex SPSH F 0 6
+	FrameIndex SPSH G 0 7
+	FrameIndex SPSH H 0 8
+	FrameIndex SPSH I 0 9
+	FrameIndex SPSH J 0 10
+	FrameIndex SPSH K 0 11
+	FrameIndex SPSH L 0 12
+	FrameIndex SPSH M 0 13
+	FrameIndex SPSH N 0 14
+	FrameIndex SPSH O 0 15
+	FrameIndex SPSH P 0 16
+	FrameIndex SPSH Q 0 17
+	FrameIndex SPSH R 0 18
+	FrameIndex SPSH S 0 19
+	FrameIndex SPSH T 0 20
+	FrameIndex SPSH U 0 21
+	FrameIndex SPSH V 0 22
+	FrameIndex SPSH W 0 23
+	FrameIndex SPSH X 0 24
+	FrameIndex SPSH Y 0 25
+	FrameIndex SPSH Z 0 26
+}
+Model "UTSlimeSplish"
+{
+	Path "models"
+	Model 0 "WaterImpactM_d.3d"
+	Skin 0 "splash_sludge.png"
+	Scale 0.1 0.1 0.12
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+
+	FrameIndex SPSH A 0 1
+	FrameIndex SPSH B 0 2
+	FrameIndex SPSH C 0 3
+	FrameIndex SPSH D 0 4
+	FrameIndex SPSH E 0 5
+	FrameIndex SPSH F 0 6
+	FrameIndex SPSH G 0 7
+	FrameIndex SPSH H 0 8
+	FrameIndex SPSH I 0 9
+	FrameIndex SPSH J 0 10
+	FrameIndex SPSH K 0 11
+	FrameIndex SPSH L 0 12
+	FrameIndex SPSH M 0 13
+	FrameIndex SPSH N 0 14
+	FrameIndex SPSH O 0 15
+	FrameIndex SPSH P 0 16
+	FrameIndex SPSH Q 0 17
+	FrameIndex SPSH R 0 18
+	FrameIndex SPSH S 0 19
+	FrameIndex SPSH T 0 20
+	FrameIndex SPSH U 0 21
+	FrameIndex SPSH V 0 22
+	FrameIndex SPSH W 0 23
+	FrameIndex SPSH X 0 24
+	FrameIndex SPSH Y 0 25
+	FrameIndex SPSH Z 0 26
+}
+
+Model "UTNukageSplash"
+{
+	Path "models"
+	Model 0 "WaterImpactM_d.3d"
+	Skin 0 "splash_nukage.png"
+	Scale 0.16 0.16 0.192
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+
+	FrameIndex SPSH A 0 1
+	FrameIndex SPSH B 0 2
+	FrameIndex SPSH C 0 3
+	FrameIndex SPSH D 0 4
+	FrameIndex SPSH E 0 5
+	FrameIndex SPSH F 0 6
+	FrameIndex SPSH G 0 7
+	FrameIndex SPSH H 0 8
+	FrameIndex SPSH I 0 9
+	FrameIndex SPSH J 0 10
+	FrameIndex SPSH K 0 11
+	FrameIndex SPSH L 0 12
+	FrameIndex SPSH M 0 13
+	FrameIndex SPSH N 0 14
+	FrameIndex SPSH O 0 15
+	FrameIndex SPSH P 0 16
+	FrameIndex SPSH Q 0 17
+	FrameIndex SPSH R 0 18
+	FrameIndex SPSH S 0 19
+	FrameIndex SPSH T 0 20
+	FrameIndex SPSH U 0 21
+	FrameIndex SPSH V 0 22
+	FrameIndex SPSH W 0 23
+	FrameIndex SPSH X 0 24
+	FrameIndex SPSH Y 0 25
+	FrameIndex SPSH Z 0 26
+}
+Model "UTNukageSplish"
+{
+	Path "models"
+	Model 0 "WaterImpactM_d.3d"
+	Skin 0 "splash_nukage.png"
+	Scale 0.1 0.1 0.12
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+
+	FrameIndex SPSH A 0 1
+	FrameIndex SPSH B 0 2
+	FrameIndex SPSH C 0 3
+	FrameIndex SPSH D 0 4
+	FrameIndex SPSH E 0 5
+	FrameIndex SPSH F 0 6
+	FrameIndex SPSH G 0 7
+	FrameIndex SPSH H 0 8
+	FrameIndex SPSH I 0 9
+	FrameIndex SPSH J 0 10
+	FrameIndex SPSH K 0 11
+	FrameIndex SPSH L 0 12
+	FrameIndex SPSH M 0 13
+	FrameIndex SPSH N 0 14
+	FrameIndex SPSH O 0 15
+	FrameIndex SPSH P 0 16
+	FrameIndex SPSH Q 0 17
+	FrameIndex SPSH R 0 18
+	FrameIndex SPSH S 0 19
+	FrameIndex SPSH T 0 20
+	FrameIndex SPSH U 0 21
+	FrameIndex SPSH V 0 22
+	FrameIndex SPSH W 0 23
+	FrameIndex SPSH X 0 24
+	FrameIndex SPSH Y 0 25
+	FrameIndex SPSH Z 0 26
+}
+
+Model "UTLavaSplash"
+{
+	Path "models"
+	Model 0 "WaterImpactM_d.3d"
+	Skin 0 "splash_lava.png"
+	Scale 0.16 0.16 0.192
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+
+	FrameIndex SPSH A 0 1
+	FrameIndex SPSH B 0 2
+	FrameIndex SPSH C 0 3
+	FrameIndex SPSH D 0 4
+	FrameIndex SPSH E 0 5
+	FrameIndex SPSH F 0 6
+	FrameIndex SPSH G 0 7
+	FrameIndex SPSH H 0 8
+	FrameIndex SPSH I 0 9
+	FrameIndex SPSH J 0 10
+	FrameIndex SPSH K 0 11
+	FrameIndex SPSH L 0 12
+	FrameIndex SPSH M 0 13
+	FrameIndex SPSH N 0 14
+	FrameIndex SPSH O 0 15
+	FrameIndex SPSH P 0 16
+	FrameIndex SPSH Q 0 17
+	FrameIndex SPSH R 0 18
+	FrameIndex SPSH S 0 19
+	FrameIndex SPSH T 0 20
+	FrameIndex SPSH U 0 21
+	FrameIndex SPSH V 0 22
+	FrameIndex SPSH W 0 23
+	FrameIndex SPSH X 0 24
+	FrameIndex SPSH Y 0 25
+	FrameIndex SPSH Z 0 26
+}
+Model "UTLavaSplish"
+{
+	Path "models"
+	Model 0 "WaterImpactM_d.3d"
+	Skin 0 "splash_lava.png"
+	Scale 0.1 0.1 0.12
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+
+	FrameIndex SPSH A 0 1
+	FrameIndex SPSH B 0 2
+	FrameIndex SPSH C 0 3
+	FrameIndex SPSH D 0 4
+	FrameIndex SPSH E 0 5
+	FrameIndex SPSH F 0 6
+	FrameIndex SPSH G 0 7
+	FrameIndex SPSH H 0 8
+	FrameIndex SPSH I 0 9
+	FrameIndex SPSH J 0 10
+	FrameIndex SPSH K 0 11
+	FrameIndex SPSH L 0 12
+	FrameIndex SPSH M 0 13
+	FrameIndex SPSH N 0 14
+	FrameIndex SPSH O 0 15
+	FrameIndex SPSH P 0 16
+	FrameIndex SPSH Q 0 17
+	FrameIndex SPSH R 0 18
+	FrameIndex SPSH S 0 19
+	FrameIndex SPSH T 0 20
+	FrameIndex SPSH U 0 21
+	FrameIndex SPSH V 0 22
+	FrameIndex SPSH W 0 23
+	FrameIndex SPSH X 0 24
+	FrameIndex SPSH Y 0 25
+	FrameIndex SPSH Z 0 26
 }
