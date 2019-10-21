@@ -6,7 +6,7 @@ Class ShockAmmo : Ammo
 		Inventory.PickupMessage "$I_SHOCKAMMO";
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
-		Ammo.BackpackAmount 20;
+		Ammo.BackpackAmount 5;
 		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 5;
 	}
@@ -38,6 +38,7 @@ Class ShockAmmo2 : ShockAmmo
 Class ShockBeamTracer : LineTracer
 {
 	Actor owner, ignore, lasthit;
+	Array<Line> ShootThroughList;
 
 	override ETraceStatus TraceCallback()
 	{
@@ -51,6 +52,7 @@ Class ShockBeamTracer : LineTracer
 		{
 			if ( !Results.HitLine.sidedef[1] || (Results.HitLine.Flags&(Line.ML_BlockHitscan|Line.ML_BlockEverything)) )
 				return TRACE_Stop;
+			ShootThroughList.Push(Results.HitLine);
 			return TRACE_Skip;
 		}
 		return TRACE_Stop;
@@ -304,7 +306,10 @@ Class ShockBeam : Actor
 		if ( !moving ) return;
 		// step trace
 		tracedir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		t.ShootThroughList.Clear();
 		t.Trace(pos,cursector,tracedir,1000,0);
+		for ( int i=0; i<t.ShootThroughList.Size(); i++ )
+			t.ShootThroughList[i].Activate(target,0,SPAC_PCross);
 		totaldist += t.Results.Distance;
 		// spawn particles
 		for ( int i=0; i<t.Results.Distance; i+=80 )
@@ -391,9 +396,15 @@ Class ShockBeam : Actor
 				if ( t.Results.Side == 0 ) HitNormal *= -1;
 			}
 			else if ( t.Results.HitType == TRACE_HitFloor )
-				HitNormal = t.Results.HitSector.floorplane.Normal;
+			{
+				if ( t.Results.ffloor ) HitNormal = -t.Results.ffloor.top.Normal;
+				else HitNormal = t.Results.HitSector.floorplane.Normal;
+			}
 			else if ( t.Results.HitType == TRACE_HitCeiling )
-				HitNormal = t.Results.HitSector.ceilingplane.Normal;
+			{
+				if ( t.Results.ffloor ) HitNormal = -t.Results.ffloor.bottom.Normal;
+				else HitNormal = t.Results.HitSector.ceilingplane.Normal;
+			}
 			let r = Spawn("ShockBeamRing",pos);
 			r.angle = atan2(HitNormal.y,HitNormal.x);
 			r.pitch = asin(-HitNormal.z);
@@ -532,7 +543,10 @@ Class SuperShockBeam : Actor
 		if ( !moving ) return;
 		// step trace
 		tracedir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		t.ShootThroughList.Clear();
 		t.Trace(pos,cursector,tracedir,2000,0);
+		for ( int i=0; i<t.ShootThroughList.Size(); i++ )
+			t.ShootThroughList[i].Activate(target,0,SPAC_PCross);
 		totaldist += t.Results.Distance;
 		// spawn particles
 		for ( int i=0; i<t.Results.Distance; i+=80 )
@@ -627,9 +641,15 @@ Class SuperShockBeam : Actor
 				if ( t.Results.Side == 1 ) HitNormal *= -1;
 			}
 			else if ( t.Results.HitType == TRACE_HitFloor )
-				HitNormal = t.Results.HitSector.floorplane.Normal;
+			{
+				if ( t.Results.ffloor ) HitNormal = -t.Results.ffloor.top.Normal;
+				else HitNormal = t.Results.HitSector.floorplane.Normal;
+			}
 			else if ( t.Results.HitType == TRACE_HitCeiling )
-				HitNormal = t.Results.HitSector.ceilingplane.Normal;
+			{
+				if ( t.Results.ffloor ) HitNormal = -t.Results.ffloor.bottom.Normal;
+				else HitNormal = t.Results.HitSector.ceilingplane.Normal;
+			}
 			let r = Spawn("SuperShockBeamRing",pos);
 			r.angle = atan2(HitNormal.y,HitNormal.x);
 			r.pitch = asin(-HitNormal.z);
@@ -696,116 +716,89 @@ Class SuperShockBallLight : ShockBallLight
 {
 	Default
 	{
-		DynamicLight.Type "Point";
 		Args 255,160,128,120;
 	}
 }
 
-Class ShockBeamLight : ShockExplLight
+Class ShockBeamLight : PaletteLight
 {
 	Default
 	{
-		+DYNAMICLIGHT.ATTENUATE;
+		Tag "ExplShock";
 		ReactionTime 15;
 		Args 0,0,0,80;
+		+DYNAMICLIGHT.ATTENUATE;
 	}
 }
 
-Class SuperShockBeamLight : SuperShockExplLight
+Class SuperShockBeamLight : PaletteLight
 {
 	Default
 	{
-		+DYNAMICLIGHT.ATTENUATE;
+		Tag "ExplSShock";
 		ReactionTime 15;
 		Args 0,0,0,100;
+		+DYNAMICLIGHT.ATTENUATE;
 	}
 }
 
-Class ShockBeamHitLight : ShockExplLight
+Class ShockBeamHitLight : PaletteLight
 {
 	Default
 	{
+		Tag "ExplShock";
 		ReactionTime 24;
 		Args 0,0,0,120;
 	}
 }
 
-Class SuperShockBeamHitLight : SuperShockExplLight
+Class SuperShockBeamHitLight : PaletteLight
 {
 	Default
 	{
+		Tag "ExplSShock";
 		ReactionTime 24;
 		Args 0,0,0,150;
 	}
 }
 
-Class ShockBlastLight : ShockExplLight
+Class ShockBlastLight : PaletteLight
 {
 	Default
 	{
-		ReactionTime 50;
+		Tag "ExplShock";
+		ReactionTime 60;
 		Args 0,0,0,300;
 	}
 }
 
-Class SuperShockBlastLight : SuperShockExplLight
+Class SuperShockBlastLight : PaletteLight
 {
 	Default
 	{
-		ReactionTime 50;
+		Tag "ExplSShock";
+		ReactionTime 60;
 		Args 0,0,0,400;
 	}
 }
 
-Class ShockExplLight : DynamicLight
+Class ShockExplLight : PaletteLight
 {
-	double lifetime;
 	Default
 	{
-		DynamicLight.Type "Point";
+		Tag "ExplShock";
 		ReactionTime 30;
-		Args 160,128,255,150;
-	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		lifetime = 1.0;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( isFrozen() ) return;
-		args[LIGHT_RED] = int(160*lifetime);
-		args[LIGHT_GREEN] = int(128*lifetime);
-		args[LIGHT_BLUE] = int(255*lifetime);
-		lifetime -= 1./ReactionTime;
-		if ( lifetime <= 0 ) Destroy();
+		Args 0,0,0,150;
 	}
 }
 
-Class SuperShockExplLight : DynamicLight
+Class SuperShockExplLight : PaletteLight
 {
-	double lifetime;
 	Default
 	{
-		DynamicLight.Type "Point";
+		Tag "ExplSShock";
 		ReactionTime 30;
-		Args 255,160,128,200;
-	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		lifetime = 1.0;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( isFrozen() ) return;
-		args[LIGHT_RED] = int(255*lifetime);
-		args[LIGHT_GREEN] = int(160*lifetime);
-		args[LIGHT_BLUE] = int(128*lifetime);
-		lifetime -= 1./ReactionTime;
-		if ( lifetime <= 0 ) Destroy();
+		Args 0,0,0,200;
 	}
 }
 
@@ -823,16 +816,16 @@ Class ShockHitbox : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !target || target.InStateSequence(target.CurState,target.ResolveState("Death")) )
+		if ( !target || !target.InStateSequence(target.CurState,target.FindState("Spawn")) )
 		{
 			Destroy();
 			return;
 		}
-		SetOrigin(target.pos-(0,0,height*0.5),true);
+		SetOrigin(target.Vec3Offset(0,0,-height*0.5),true);
 	}
 	override bool CanCollideWith( Actor other, bool passive )
 	{
-		return ((other is 'ShockBeam') || (other is 'SuperShockBeam'));
+		return false;
 	}
 }
 
@@ -856,8 +849,37 @@ Class ShockBall : Actor
 		Spawn("ShockExplLight",pos);
 		A_SetScale(1.0);
 		let r = Spawn("ShockBeamRing",pos);
-		r.angle = angle;
-		r.pitch = pitch;
+		Vector3 HitNormal = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		if ( BlockingLine ) HitNormal = (-BlockingLine.delta.y,BlockingLine.delta.x,0).unit();
+		else if ( BlockingFloor )
+		{
+			// find closest 3d floor for its normal
+			F3DFloor ff = null;
+			for ( int i=0; i<BlockingFloor.Get3DFloorCount(); i++ )
+			{
+				if ( !(BlockingFloor.Get3DFloor(i).top.ZAtPoint(pos.xy) ~== floorz) ) continue;
+				ff = BlockingFloor.Get3DFloor(i);
+				break;
+			}
+			if ( ff ) HitNormal = -ff.top.Normal;
+			else HitNormal = BlockingFloor.floorplane.Normal;
+			r.SetOrigin(r.Vec3Offset(0,0,2),false);
+		}
+		else if ( BlockingCeiling )
+		{
+			// find closest 3d floor for its normal
+			F3DFloor ff = null;
+			for ( int i=0; i<BlockingCeiling.Get3DFloorCount(); i++ )
+			{
+				if ( !(BlockingCeiling.Get3DFloor(i).bottom.ZAtPoint(pos.xy) ~== ceilingz) ) continue;
+				ff = BlockingCeiling.Get3DFloor(i);
+				break;
+			}
+			if ( ff ) HitNormal = -ff.bottom.Normal;
+			else HitNormal = BlockingCeiling.ceilingplane.Normal;
+		}
+		r.angle = atan2(HitNormal.y,HitNormal.x);
+		r.pitch = asin(-HitNormal.z);
 		r.scale *= 1.5;
 		A_PlaySound("shock/hit",CHAN_VOICE);
 		A_PlaySound("shock/ball",CHAN_WEAPON,pitch:FRandom[ASMD](0.5,1.5));
@@ -920,8 +942,37 @@ Class SuperShockBall : Actor
 		Spawn("SuperShockExplLight",pos);
 		A_SetScale(1.5);
 		let r = Spawn("SuperShockBeamRing",pos);
-		r.angle = angle;
-		r.pitch = pitch;
+		Vector3 HitNormal = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		if ( BlockingLine ) HitNormal = (-BlockingLine.delta.y,BlockingLine.delta.x,0).unit();
+		else if ( BlockingFloor )
+		{
+			// find closest 3d floor for its normal
+			F3DFloor ff = null;
+			for ( int i=0; i<BlockingFloor.Get3DFloorCount(); i++ )
+			{
+				if ( !(BlockingFloor.Get3DFloor(i).top.ZAtPoint(pos.xy) ~== floorz) ) continue;
+				ff = BlockingFloor.Get3DFloor(i);
+				break;
+			}
+			if ( ff ) HitNormal = -ff.top.Normal;
+			else HitNormal = BlockingFloor.floorplane.Normal;
+			r.SetOrigin(r.Vec3Offset(0,0,2),false);
+		}
+		else if ( BlockingCeiling )
+		{
+			// find closest 3d floor for its normal
+			F3DFloor ff = null;
+			for ( int i=0; i<BlockingCeiling.Get3DFloorCount(); i++ )
+			{
+				if ( !(BlockingCeiling.Get3DFloor(i).bottom.ZAtPoint(pos.xy) ~== ceilingz) ) continue;
+				ff = BlockingCeiling.Get3DFloor(i);
+				break;
+			}
+			if ( ff ) HitNormal = -ff.bottom.Normal;
+			else HitNormal = BlockingCeiling.ceilingplane.Normal;
+		}
+		r.angle = atan2(HitNormal.y,HitNormal.x);
+		r.pitch = asin(-HitNormal.z);
 		r.scale *= 1.5;
 		A_PlaySound("shock/hit",CHAN_VOICE,attenuation:0.5);
 		A_PlaySound("shock/ball",CHAN_WEAPON,attenuation:0.5,pitch:FRandom[ASMD](0.5,1.5));
@@ -989,8 +1040,8 @@ Class ViewShockSpark : ShockSpark
 		}
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
-		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
-		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
+		Vector3 origin = level.Vec3Offset(target.Vec2OffsetZ(0,0,target.player.viewz),x*ofs.x+y*ofs.y+z*ofs.z);
+		SetOrigin(origin,true);
 		bInvisible = (players[consoleplayer].camera != target);
 		if ( isFrozen() ) return;
 		ofs += vvel;
@@ -1023,7 +1074,7 @@ Class ShockRifle : UTWeapon
 		A_QuakeEx(2,2,2,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2*y-1.5*z);
 		Actor p = Spawn("ShockBeam",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
@@ -1061,7 +1112,7 @@ Class ShockRifle : UTWeapon
 		A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2*y-1.5*z);
 		Actor p = Spawn("ShockBall",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
@@ -1206,7 +1257,7 @@ Class EnhancedShockRifle : UTWeapon
 		A_QuakeEx(3,3,3,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.15);
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2*y-1.5*z);
 		Actor p = Spawn("SuperShockBeam",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
@@ -1244,7 +1295,7 @@ Class EnhancedShockRifle : UTWeapon
 		A_QuakeEx(3,3,3,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.15);
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-1.5*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2*y-1.5*z);
 		Actor p = Spawn("SuperShockBall",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();

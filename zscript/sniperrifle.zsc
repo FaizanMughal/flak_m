@@ -6,7 +6,7 @@ Class RifleAmmo : Ammo
 		Inventory.PickupMessage "$I_RIFLEAMMO";
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
-		Ammo.BackpackAmount 20;
+		Ammo.BackpackAmount 5;
 		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 5;
 	}
@@ -57,15 +57,20 @@ Class SniperRifle : UTWeapon
 	}
 	override void PreRender( double lbottom )
 	{
-		if ( sniperzoom <= 1.0 ) return;
+		if ( sniperzoom <= 1. ) return;
 		Screen.DrawTexture(reticle,false,320,240,DTA_VirtualWidth,640,DTA_VirtualHeight,480,DTA_LegacyRenderStyle,STYLE_Add);
 		if ( !zfont ) zfont = Font.GetFont('UTFont40');
 		Screen.DrawText(zfont,Font.FindFontColor('UGreen'),960,960,String.Format("X%.1f",sniperzoom),DTA_VirtualWidth,1600,DTA_VirtualHeight,1200,DTA_LegacyRenderStyle,STYLE_Add);
 	}
-	override void Tick()
+	override void RenderOverlay( RenderEvent e )
 	{
-		Super.Tick();
-		if ( !Owner ) return;
+		PlayerInfo p = players[consoleplayer];
+		if ( (p.Camera != Owner) || (sniperzoom <= 1.) ) Shader.SetEnabled(p,"UTRifleScope",false);
+		else Shader.SetEnabled(p,"UTRifleScope",CVar.GetCVar('flak_zoomshader',p).GetBool());
+	}
+	override void DoEffect()
+	{
+		Super.DoEffect();
 		if ( sniperzoom > 1.0 ) crosshair = 99;
 		else crosshair = 0;
 	}
@@ -98,10 +103,12 @@ Class SniperRifle : UTWeapon
 		l.target = self;
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x;
-		if ( !zoomed ) origin = origin+y*4.0-z*2.0;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x);
+		if ( !zoomed ) origin = level.Vec3Offset(origin,y*4-z*2);
 		FLineTraceData d;
-		LineTrace(angle,10000,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		double pt = BulletSlope();
+		LineTrace(angle,10000,pt,TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		UTBulletTrail.DoTrail(self,origin,(cos(angle)*cos(pt),sin(angle)*cos(pt),-sin(pt)),10000,1);
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = 45;
@@ -131,8 +138,16 @@ Class SniperRifle : UTWeapon
 		else if ( d.HitType != TRACE_HitNone )
 		{
 			Vector3 hitnormal = -d.HitDir;
-			if ( d.HitType == TRACE_HitFloor ) hitnormal = d.HitSector.floorplane.Normal;
-			else if ( d.HitType == TRACE_HitCeiling ) hitnormal = d.HitSector.ceilingplane.Normal;
+			if ( d.HitType == TRACE_HitFloor )
+			{
+				if ( d.Hit3DFloor ) hitnormal = -d.Hit3DFloor.top.Normal;
+				else hitnormal = d.HitSector.floorplane.Normal;
+			}
+			else if ( d.HitType == TRACE_HitCeiling )
+			{
+				if ( d.Hit3DFloor ) hitnormal = -d.Hit3DFloor.bottom.Normal;
+				else hitnormal = d.HitSector.ceilingplane.Normal;
+			}
 			else if ( d.HitType == TRACE_HitWall )
 			{
 				hitnormal = (-d.HitLine.delta.y,d.HitLine.delta.x,0).unit();
@@ -153,9 +168,11 @@ Class SniperRifle : UTWeapon
 			s.scale *= 1.8;
 			s.alpha *= 0.3;
 		}
-		origin += x*8.0+y*6.0-z*9.0;
+		origin = level.Vec3Offset(origin,x*8+y*6-z*9);
 		let c = Spawn("UTCasing",origin);
 		c.scale *= 1.25;
+		c.angle = angle;
+		c.pitch = pitch;
 		c.vel = x*FRandom[Junk](-1.5,1.5)+y*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
 	}
 	override String GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
@@ -233,7 +250,18 @@ Class SniperRifle : UTWeapon
 		TNT1 A 20 A_SniperFire(true);
 		Goto ZoomedIdle;
 	AltFire:
-		SRFI A 0 A_JumpIf(invoker.sniperzoom>1.0,"AltHold2");
+		SRFI A 0
+		{
+			if ( invoker.sniperzoom > 1. )
+			{
+				if ( CVar.GetCVar('flak_zoomsound',players[consoleplayer]).GetBool() && CheckLocalView() )
+					A_PlaySound("sniper/zoomdown",CHAN_WEAPON);
+				return ResolveState("AltHold2");
+			}
+			if ( CVar.GetCVar('flak_zoomsound',players[consoleplayer]).GetBool() && CheckLocalView() )
+				A_PlaySound("sniper/zoomup",CHAN_WEAPON);
+			return ResolveState(null);
+		}
 	AltHold:
 		TNT1 A 1
 		{
@@ -248,7 +276,12 @@ Class SniperRifle : UTWeapon
 		SRFI A 0 A_Refire("AltHold2");
 		Goto Idle;
 	Deselect:
-		SRFD A 0 A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
+		SRFD A 0
+		{
+			if ( (invoker.sniperzoom>1.0) && CVar.GetCVar('flak_zoomsound',players[consoleplayer]).GetBool() && CheckLocalView() )
+				A_PlaySound("sniper/zoomdown",CHAN_WEAPON);
+			A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
+		}
 		SRFD ABCDEFG 1;
 		SRFD G 1 A_Lower(int.max);
 		Wait;

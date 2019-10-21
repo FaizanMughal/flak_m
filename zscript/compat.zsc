@@ -95,27 +95,27 @@ Class ActUDamage : UTActivatable
 	}
 }
 
-Class ActShieldBelt : UTActivatable
+Class ActUTInvulnerability : UTActivatable
 {
 	Default
 	{
-		Tag "$T_SHIELDBELT";
-		Inventory.Icon "ItemBelt";
-		Inventory.PickupMessage "$I_SHIELDBELT";
+		Tag "$T_UTINVUL";
+		Inventory.Icon "ItemInvl";
+		Inventory.PickupMessage "$I_UTINVUL";
 		+COUNTITEM;
 		+INVENTORY.BIGPOWERUP;
-		UTActivatable.GiveItem "UTShieldBelt";
-		Inventory.RespawnTics 2100;
+		UTActivatable.GiveItem "UTInvulnerability";
+		Inventory.RespawnTics 4200;
 	}
 	States
 	{
 	Spawn:
-		BELT A -1;
+		UKEY A -1;
 		Stop;
 	}
 }
 
-Class ActInvisibility : UTActivatable
+Class ActUTInvisibility : UTActivatable
 {
 	Default
 	{
@@ -142,6 +142,33 @@ Class ActInvisibility : UTActivatable
 	}
 }
 
+Class ActUTNightVision : UTActivatable
+{
+	Default
+	{
+		Tag "$T_UTVISION";
+		Inventory.Icon "ItemLite";
+		Inventory.PickupMessage "$I_UTVISION";
+		+COUNTITEM;
+		+INVENTORY.BIGPOWERUP;
+		UTActivatable.GiveItem "UTNightVision";
+		Inventory.RespawnTics 4200;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		tracer = Spawn("UTNightVisionX",pos);
+		tracer.angle = angle;
+		tracer.target = self;
+	}
+	States
+	{
+	Spawn:
+		UKEY A -1;
+		Stop;
+	}
+}
+
 Class ActJumpBoots : UTActivatable
 {
 	Default
@@ -156,25 +183,6 @@ Class ActJumpBoots : UTActivatable
 	{
 	Spawn:
 		JBUT A -1;
-		Stop;
-	}
-}
-
-Class ActSearchlight : UTActivatable
-{
-	Default
-	{
-		Tag "$T_SEARCHLIGHT";
-		Inventory.Icon "ItemLite";
-		Inventory.PickupMessage "$I_SEARCHLIGHT";
-		+COUNTITEM;
-		UTActivatable.GiveItem "Searchlight";
-		Inventory.RespawnTics 1050;
-	}
-	States
-	{
-	Spawn:
-		SLIT A -1;
 		Stop;
 	}
 }

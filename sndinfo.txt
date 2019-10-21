@@ -8,7 +8,7 @@ $random ut/maledie { ut/maledie1 ut/maledie2 ut/maledie3 }
 ut/malexdie1	deathc51
 ut/malexdie2	deathc52
 ut/malexdie3	deathc53
-$random ut/malexdie { ut/malexdie1 ut/malexdie2 ut/malexdie3 }
+$random ut/malexdie { ut/malexdie1 ut/malexdie3 }
 ut/gibp		newgib
 ut/malepain1	injurl2
 ut/malepain2	injurl04
@@ -48,6 +48,7 @@ $playeralias	tmale1	neutral	*usefail	ut/malehump1
 $playeralias	tmale1	neutral	*surface	ut/malesurface
 $playeralias	tmale1	neutral	*gasp		ut/malegasp
 
+$playeralias	tmale1	neutral	*death-decapitated	ut/malexdie2
 $playeralias	tmale1	neutral	*death-drowning		ut/maledrowned
 $playeralias	tmale1	neutral	*xdeath-drowning	ut/maledrowned
 $playeralias	tmale1	neutral	*pain100-drowning	ut/maledrowning
@@ -81,7 +82,7 @@ ut/femaledie1	decap01
 ut/femaledie2	death1d
 ut/femaledie3	death2a
 ut/femaledie4	death3c
-$random ut/femaledie { ut/femaledie1 ut/femaledie2 ut/femaledie3 }
+$random ut/femaledie { ut/femaledie4 ut/femaledie2 ut/femaledie3 }
 ut/femalexdie1	death41
 ut/femalexdie2	death42
 $random ut/femalexdie { ut/femalexdie1 ut/femalexdie2 }
@@ -112,6 +113,7 @@ $playeralias	tfemale	neutral	*usefail	ut/femalegrunt
 $playeralias	tfemale	neutral	*surface	ut/femalesurf
 $playeralias	tfemale	neutral	*gasp		ut/femalegasp
 
+$playeralias	tfemale	neutral	*death-decapitated	ut/femaledie1
 $playeralias	tfemale	neutral	*death-drowning		ut/femaledrowned
 $playeralias	tfemale	neutral	*xdeath-drowning	ut/femaledrowned
 $playeralias	tfemale	neutral	*pain100-drowning	ut/femaledrowning
@@ -131,9 +133,9 @@ ut/bosspain1	binjur1
 ut/bosspain2	binjur2
 ut/bosspain3	binjur3
 ut/bosspain4	binjur4
-ut/bossgrunt	bland01
+ut/bossgrunt	blland01
+ut/bossland	bland01
 ut/bossjump	bjump1
-ut/bosshump	bjump1
 
 $playeralias	tboss	neutral	*death		ut/bossdie
 $playeralias	tboss	neutral	*xdeath		ut/bossxdie
@@ -144,9 +146,9 @@ $playeralias	tboss	neutral	*pain50		ut/bosspain3
 $playeralias	tboss	neutral	*pain25		ut/bosspain4
 $playeralias	tboss	neutral	*grunt		ut/bossgrunt
 $playeralias	tboss	neutral	*land		DSEMPTY
-$playeralias	tboss	neutral	*uland		ut/land
+$playeralias	tboss	neutral	*uland		ut/bossland
 $playeralias	tboss	neutral	*jump		ut/bossjump
-$playeralias	tboss	neutral	*usefail	ut/bosshump
+$playeralias	tboss	neutral	*usefail	ut/bossgrunt
 $playeralias	tboss	neutral	*surface	ut/malesurf
 $playeralias	tboss	neutral	*gasp		ut/malegasp
 
@@ -164,15 +166,34 @@ $random ut/playerfootstep { ut/playerfootstep1 ut/playerfootstep2 ut/playerfoots
 
 ut/bossfootstep	bfootstp
 
+// fluid sounds
+
 ut/playerfootstepwet	lsplash
 ut/wetsplash		dsplash
 ut/wetsurface		wtrexit1
+ut/underwater		uwater1a
+
+ut/playerfootstepslime	dsslime1
+ut/slimesplash		goopj1
+ut/slimesurface		goope1
+ut/underslime		ugoop1
+
+ut/playerfootsteplava	dslava1
+ut/lavasplash		goopj1
+ut/lavasurface		goope1
+ut/underlava		ulava1
+ut/lavaex		expl04
+
+ut/playerfootstepnitro	lsplash
+ut/nitrosplash		dsplash
+ut/nitrosurface		wtrexit1
+ut/undernitro		ulnitro1
 
 // everything else
 
 misc/secret	capsound
 misc/i_pkup	ammopick
-misc/k_pkup	ammosnd
+misc/k_pkup	cntrlsnd
 misc/w_pkup	weaponpk
 misc/p_pkup	genpicks
 misc/spawn	respsnd2
@@ -184,6 +205,7 @@ misc/ut_heal	uthealth
 $volume misc/ut_heal 0.7	// a bit too loud otherwise
 misc/ut_shard	shardpck
 misc/ut_armor	armorut
+misc/hud_sel	swclick
 belt/pickup	beltsnd
 belt/absorb	sbelthe2
 boot/pickup	bootsnd
@@ -193,8 +215,6 @@ udamage/pickup	amppckup
 udamage/fire1	ampfire
 udamage/fire2	ampfire2
 udamage/drain	ampout
-trans/pickup	voicesnd
-lite/pickup	fshlite1
 misc/gibbed1	gib1
 misc/gibbed2	gib2
 misc/gibbed3	gib3
@@ -230,8 +250,12 @@ enforcer/select	cocking
 enforcer/shoot	e_shot
 enforcer/reload	reload
 enforcer/click	click
+enforcer/bounce	clipb
+$volume enforcer/bounce 0.5
+$attenuation enforcer/bounce 3
 
 bullet/casing	shell2
+$attenuation bullet/casing 2
 bullet/hit1	impact1
 bullet/hit2	impact2
 $random bullet/hit { bullet/hit1 bullet/hit2 }
@@ -287,6 +311,9 @@ flak/bounce3	hit3
 $random flak/bounce { flak/bounce1 flak/bounce2 flak/bounce3 }
 $limit flak/bounce 64
 flak/explode	expl04
+flak/sbounce	chnkhit1
+$volume flak/sbounce 0.5
+$attenuation flak/sbounce 3
 
 utrl/select	selectin
 utrl/rotate	barrelmv
@@ -301,6 +328,8 @@ utrl/bounce	hit1
 
 sniper/select	riflepck
 sniper/fire	sniperf
+sniper/zoomup	zoomup
+sniper/zoomdown	zoomdown
 
 warhead/explode	warexplo
 warhead/fly	warfly
@@ -312,3 +341,9 @@ testamb/lava	lava31
 testamb/water	trickle1
 testamb/wind1	wind21
 testamb/wind2	wind23
+
+uinvul/pickup	invlpick
+uinvul/hit	invlhit
+uinvul/drain	invlout
+
+uvision/pickup	visions

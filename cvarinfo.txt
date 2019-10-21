@@ -43,3 +43,6 @@ server bool flak_dmsshock = false;			// allow enhanced shock rifle on deathmatch
 server noarchive bool flak_instagib = false;		// instagib mode (only for dm) - this cvar has to be set from the command line
 user float flak_flashstrength = 1.0;			// strength of screen flashes
 server bool flak_sawammo = false;			// chainsaw uses fuel
+user bool flak_zoomsound = false;			// sniper rifle plays unused zoom sounds (annoying)
+user bool flak_zoomshader = false;			// sniper rifle has a scope shader
+server bool flak_vanillaarmor = true;			// shield belt removes body/thigh armors on pickup

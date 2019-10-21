@@ -140,7 +140,7 @@ Class WarheadHitbox : Actor
 			Destroy();
 			return;
 		}
-		SetOrigin(target.pos-(0,0,height*0.5),true);
+		SetOrigin(target.Vec3Offset(0,0,-height*0.5),true);
 	}
 	States
 	{
@@ -150,29 +150,12 @@ Class WarheadHitbox : Actor
 	}
 }
 
-Class WarheadExplodLight : DynamicLight
+Class WarheadExplodLight : PaletteLight
 {
-	double lifetime;
 	Default
 	{
-		DynamicLight.Type "Point";
 		ReactionTime 50;
-		Args 255,192,128,300;
-	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		lifetime = 1.0;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( isFrozen() ) return;
-		args[LIGHT_RED] = int(255*lifetime);
-		args[LIGHT_GREEN] = int(192*lifetime);
-		args[LIGHT_BLUE] = int(128*lifetime);
-		lifetime -= 1./ReactionTime;
-		if ( lifetime <= 0 ) Destroy();
+		Args 0,0,0,300;
 	}
 }
 
@@ -192,7 +175,7 @@ Class WarheadLight : DynamicLight
 			return;
 		}
 		Vector3 taildir = -(cos(target.angle)*cos(target.pitch),sin(target.angle)*cos(target.pitch),-sin(target.pitch));
-		SetOrigin(target.Vec3Offset(taildir.x*20,taildir.y*20,taildir.z*20),true);
+		SetOrigin(level.Vec3Offset(pos,taildir*20),true);
 		args[LIGHT_INTENSITY] = Random[Warhead](6,8)*10;
 	}
 }
@@ -461,6 +444,13 @@ Class RedeemerHUD : HUDMessageBase
 	Array<TargetActor> ta;
 	Shape2D sshape, darrow;
 	bool dodim;
+	// libeye stuff
+	dtLe_ProjScreen proj;
+	dtLe_GLScreen gl_proj;
+	dtLe_SWScreen sw_proj;
+	dtLe_Viewport viewport;
+	bool can_project;
+	transient CVar cvar_renderer;
 
 	RedeemerHUD Init()
 	{
@@ -477,15 +467,45 @@ Class RedeemerHUD : HUDMessageBase
 		sshape.PushCoord((1,1));
 		sshape.PushTriangle(0,3,1);
 		sshape.PushTriangle(0,2,3);
+		gl_proj = new("dtLe_GLScreen");
+		sw_proj = new("dtLe_SWScreen");
+		PrepareProjection();
 		return self;
+	}
+	void PrepareProjection()
+	{
+		if ( !cvar_renderer )
+			cvar_renderer = CVar.GetCVar("vid_rendermode",players[consoleplayer]);
+		if ( !cvar_renderer )
+		{
+			can_project = proj = gl_proj;
+			return;
+		}
+		switch ( cvar_renderer.GetInt() )
+		{
+		case 0:
+		case 1:
+			proj = sw_proj;
+			break;
+		default:
+			proj = gl_proj;
+			break;
+		}
+		can_project = proj;
 	}
 	override bool Tick()
 	{
+		PrepareProjection();
 		LagRoll = dt_Quat.Normalize180(ViewRoll-LagRoll2);
 		LagRoll2 += dt_Quat.Normalize180(LagRoll-LagRoll2)*0.1;
 		// shootable targetting
-		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() && !CVar.GetCVar('flak_redeemerreadout_perframe',players[consoleplayer]).GetBool() )
+		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() && !CVar.GetCVar('flak_redeemerreadout_perframe',players[consoleplayer]).GetBool() && can_project )
 		{
+			viewport.FromHud();
+			proj.CacheResolution();
+			proj.CacheFov(players[consoleplayer].fov);
+			proj.Reorient(ViewPos,(ViewAngle,ViewPitch,ViewRoll));
+			proj.BeginProjection();
 			if ( !t ) t = ThinkerIterator.Create("Actor");
 			if ( !tr ) tr = new("MidTracer");
 			t.Reinit();
@@ -496,11 +516,11 @@ Class RedeemerHUD : HUDMessageBase
 			{
 				Vector3 tdir = Level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
 				if ( !a.bSHOOTABLE || (a.Health <= 0) || ((Camera is 'GuidedWarShell') && (a == GuidedWarShell(Camera).b)) || (tdir.length() > 2000) || (acos(tdir.unit() dot vdir) > players[consoleplayer].FOV) || tr.Trace(ViewPos,Camera.CurSector,tdir.unit(),tdir.length(),0) ) continue;
-				Vector3 wpos = ViewPos+tdir;
-				Vector3 spos = dt_CoordUtil.WorldToScreen(wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
-				if ( spos.z > 1.0 ) continue;
+				proj.ProjectWorldPos(ViewPos+tdir);
+				Vector2 npos = proj.ProjectToNormal();
+				if ( !proj.IsInFront() ) continue;
 				TargetActor te = new("TargetActor");
-				te.vpos = dt_CoordUtil.ToViewport(spos);
+				te.vpos = viewport.SceneToWindow(npos);
 				te.diststr = String.Format("%f",tdir.length());
 				te.diststr.Replace(".","");
 				ta.Push(te);
@@ -513,10 +533,15 @@ Class RedeemerHUD : HUDMessageBase
 		if ( visibility != StatusBar.HUDMSGLayer_UnderHUD ) return;
 		if ( dodim ) Screen.Dim("C8 00 00",0.2,0,0,Screen.GetWidth(),Screen.GetHeight());
 		// shootable targetting
-		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() )
+		if ( CVar.GetCVar('flak_redeemerreadout',players[consoleplayer]).GetBool() && can_project )
 		{
 			if ( CVar.GetCVar('flak_redeemerreadout_perframe',players[consoleplayer]).GetBool() )
 			{
+				viewport.FromHud();
+				proj.CacheResolution();
+				proj.CacheFov(players[consoleplayer].fov);
+				proj.Reorient(ViewPos,(ViewAngle,ViewPitch,ViewRoll));
+				proj.BeginProjection();
 				if ( !t ) t = ThinkerIterator.Create("Actor");
 				if ( !tr ) tr = new("MidTracer");
 				t.Reinit();
@@ -527,11 +552,11 @@ Class RedeemerHUD : HUDMessageBase
 				{
 					Vector3 tdir = Level.Vec3Diff(ViewPos,a.Pos+(0,0,a.Height*0.5));
 					if ( !a.bSHOOTABLE || (a.Health <= 0) || ((Camera is 'GuidedWarShell') && (a == GuidedWarShell(Camera).b)) || (tdir.length() > 2000) || (acos(tdir.unit() dot vdir) > players[consoleplayer].FOV) || tr.Trace(ViewPos,Camera.CurSector,tdir.unit(),tdir.length(),0) ) continue;
-					Vector3 wpos = ViewPos+tdir;
-					Vector3 spos = dt_CoordUtil.WorldToScreen(wpos,ViewPos,ViewPitch,ViewAngle,ViewRoll,players[consoleplayer].FOV);
-					if ( spos.z > 1.0 ) continue;
+					proj.ProjectWorldPos(ViewPos+tdir);
+					Vector2 npos = proj.ProjectToNormal();
+					if ( !proj.IsInFront() ) continue;
 					TargetActor te = new("TargetActor");
-					te.vpos = dt_CoordUtil.ToViewport(spos);
+					te.vpos = viewport.SceneToWindow(npos);
 					te.diststr = String.Format("%f",tdir.length());
 					te.diststr.Replace(".","");
 					ta.Push(te);
@@ -666,7 +691,7 @@ Class WarheadLauncher : UTWeapon
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		vel -= x*10;
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2*y-2*z);
 		Actor p = Spawn("WarShell",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
@@ -680,7 +705,7 @@ Class WarheadLauncher : UTWeapon
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		vel -= x*0.2;
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2*y-2*z);
 		int numpt = Random[Warhead](10,20);
 		for ( int i=0; i<numpt; i++ )
 		{
@@ -704,7 +729,7 @@ Class WarheadLauncher : UTWeapon
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		vel -= x*10;
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-2.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2*y-2*z);
 		Actor p = Spawn("GuidedWarShell",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();

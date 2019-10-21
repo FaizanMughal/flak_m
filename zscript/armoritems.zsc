@@ -1,15 +1,33 @@
 Class UTArmor : Armor
 {
-	int absorb;
+	int absorb, priority;
 
 	Property ArmorAbsorption : absorb;
+	Property AbsorptionPriority : priority;
 
 	Default
 	{
 		+INVENTORY.AUTOACTIVATE;
 		+INVENTORY.UNTOSSABLE;
-		-INVENTORY.KEEPDEPLETED;
+		+INVENTORY.KEEPDEPLETED;
 		+INVENTORY.ALWAYSPICKUP;
+	}
+	override void AttachToOwner( Actor other )
+	{
+		Super.AttachToOwner(other);
+		// find last armor that's better than us
+		Inventory found = null;
+		for ( Inventory i=other.Inv; i; i=i.Inv )
+		{
+			if ( !(i is 'UTArmor') || (i == self) || (UTArmor(i).priority < priority) ) continue;
+			found = i;
+		}
+		if ( !found ) return;
+		// place ourselves right after it
+		Inventory saved = found.Inv;
+		found.Inv = self;
+		other.Inv = Inv;
+		Inv = saved;
 	}
 	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
 	{
@@ -21,6 +39,12 @@ Class UTArmor : Armor
 			newdamage -= saved;
 			amount -= saved;
 			damage = newdamage;
+			if ( amount <= 0 )
+			{
+				if ( damage > 0 ) newdamage = ApplyDamageFactors(GetClass(),damageType,damage,damage);
+				DepleteOrDestroy();
+				return;
+			}
 		}
 		if ( damage > 0 ) newdamage = ApplyDamageFactors(GetClass(),damageType,damage,damage);
 	}
@@ -42,6 +66,7 @@ Class UTArmorBonus : UTArmor
 		Inventory.MaxAmount 50;
 		Inventory.InterHubAmount 50;
 		UTArmor.ArmorAbsorption 25;
+		UTArmor.AbsorptionPriority 1;
 		Inventory.PickupMessage "$I_ARMORBONUS";
 		Inventory.PickupSound "misc/ut_shard";
 	}
@@ -57,7 +82,7 @@ Class UTThighPads : UTArmor
 {
 	override bool HandlePickup( Inventory item )
 	{
-		if ( item is 'UTThighPads' )
+		if ( flak_vanillaarmor && (item is 'UTThighPads') )
 		{
 			let s = Owner.FindInventory("UTShieldBelt");
 			if ( s )
@@ -81,6 +106,7 @@ Class UTThighPads : UTArmor
 		Inventory.MaxAmount 50;
 		Inventory.InterHubAmount 50;
 		UTArmor.ArmorAbsorption 50;
+		UTArmor.AbsorptionPriority 7;
 		Inventory.PickupMessage "$I_THIGHPADS";
 		Inventory.PickupSound "misc/ut_armor";
 	}
@@ -96,7 +122,7 @@ Class UTBodyArmor : UTArmor
 {
 	override bool HandlePickup( Inventory item )
 	{
-		if ( item is 'UTBodyArmor' )
+		if ( flak_vanillaarmor && (item is 'UTBodyArmor') )
 		{
 			let s = Owner.FindInventory("UTShieldBelt");
 			if ( s )
@@ -120,6 +146,7 @@ Class UTBodyArmor : UTArmor
 		Inventory.MaxAmount 100;
 		Inventory.InterHubAmount 100;
 		UTArmor.ArmorAbsorption 75;
+		UTArmor.AbsorptionPriority 7;
 		Inventory.PickupMessage "$I_BODYARMOR";
 		Inventory.PickupSound "misc/ut_armor";
 	}
@@ -140,13 +167,17 @@ Class UTShieldBelt : UTArmor
 			Owner.A_PlaySound("belt/absorb",CHAN_7);
 			UTMainHandler.DoFlash(Owner,Color(80,255,224,0),5);
 		}
-		int oldamt = amount;
 		Super.AbsorbDamage(damage,damageType,newdamage);
-		if ( (oldamt > 0) && (amount <= 0) ) PrintPickupMessage(true,StringTable.Localize("$D_SHIELDBELT"));
+	}
+	override void DepleteOrDestroy()
+	{
+		if ( (amount <= 0) && Owner.CheckLocalView() )
+			Console.Printf(StringTable.Localize("$D_SHIELDBELT"));
+		Super.DepleteOrDestroy();
 	}
 	override bool HandlePickup( Inventory item )
 	{
-		if ( (item is 'UTBodyArmor') || (item is 'UTThighPads') )
+		if ( flak_vanillaarmor && ((item is 'UTBodyArmor') || (item is 'UTThighPads')) )
 		{
 			// sum up current amounts
 			let a = Owner.FindInventory("UTBodyArmor");
@@ -167,8 +198,11 @@ Class UTShieldBelt : UTArmor
 	override bool Use( bool pickup )
 	{
 		// removes thigh pads and body armor like in UT
-		Owner.TakeInventory("UTThighPads",50);
-		Owner.TakeInventory("UTBodyArmor",150);
+		if ( flak_vanillaarmor )
+		{
+			Owner.TakeInventory("UTThighPads",50);
+			Owner.TakeInventory("UTBodyArmor",150);
+		}
 		return false;
 	}
 	Default
@@ -180,6 +214,7 @@ Class UTShieldBelt : UTArmor
 		Inventory.MaxAmount 150;
 		Inventory.InterHubAmount 150;
 		UTArmor.ArmorAbsorption 100;
+		UTArmor.AbsorptionPriority 10;
 		Inventory.PickupMessage "$I_SHIELDBELT";
 		Inventory.PickupSound "belt/pickup";
 		Inventory.RespawnTics 2100;

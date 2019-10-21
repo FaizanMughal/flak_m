@@ -5,5 +5,6 @@ GameInfo
 	StatusBarClass = "UTHud"
 	BackpackType = "UTBackpack"
 	BorderFlat = "TEMPBG"
-	Border = 0,0,"","","","","","","",""
+	Border = 3, 3, "BordTR", "BordT", "BordTL", "BordR", "BordL", "BordBR", "BordB", "BordBL"
+	MessageBoxClass = "UTMessageBox"
 }

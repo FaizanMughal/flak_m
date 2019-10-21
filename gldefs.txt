@@ -1,3 +1,244 @@
+// Lights
+PulseLight "UTRedKeyLight"
+{
+	Color 1.0 0.0 0.0
+	Size 15
+	SecondarySize 20
+	Interval 2.0
+	Offset 0 16 0
+	DontLightSelf 1
+}
+PulseLight "UTBlueKeyLight"
+{
+	Color 0.0 0.0 1.0
+	Size 15
+	SecondarySize 20
+	Interval 2.0
+	Offset 0 16 0
+	DontLightSelf 1
+}
+PulseLight "UTGoldKeyLight"
+{
+	Color 1.0 0.8 0.0
+	Size 15
+	SecondarySize 20
+	Interval 2.0
+	Offset 0 16 0
+	DontLightSelf 1
+}
+PulseLight "UTGreenKeyLight"
+{
+	Color 0.0 1.0 0.0
+	Size 15
+	SecondarySize 20
+	Interval 2.0
+	Offset 0 16 0
+	DontLightSelf 1
+}
+Object "UTRedSkull"
+{
+	Frame "USKL" { light "UTRedKeyLight" }
+}
+Object "UTBlueSkull"
+{
+	Frame "USKL" { light "UTBlueKeyLight" }
+}
+Object "UTGoldSkull"
+{
+	Frame "USKL" { light "UTGoldKeyLight" }
+}
+Object "UTRedKey"
+{
+	Frame "UKEY" { light "UTRedKeyLight" }
+}
+Object "UTBlueKey"
+{
+	Frame "UKEY" { light "UTBlueKeyLight" }
+}
+Object "UTGoldKey"
+{
+	Frame "UKEY" { light "UTGoldKeyLight" }
+}
+Object "UTHereticYellowKey"
+{
+	Frame "UKEY" { light "UTGoldKeyLight" }
+}
+Object "UTHereticGreenKey"
+{
+	Frame "UKEY" { light "UTGreenKeyLight" }
+}
+Object "UTHereticBlueKey"
+{
+	Frame "UKEY" { light "UTBlueKeyLight" }
+}
+
+PointLight SHOCKAMMOLIGHT
+{
+	Color 0.0 0.2 0.8
+	Size 20
+	Offset 0 12 0
+	Attenuate 1
+	DontLightSelf 1
+}
+PointLight SHOCKAMMOLIGHT2
+{
+	Color 0.0 0.1 0.3
+	Size 12
+	Offset 0 5 0
+	Attenuate 1
+	DontLightSelf 1
+}
+Object ShockAmmo
+{
+	Frame "SHOA" { light "SHOCKAMMOLIGHT" }
+}
+Object ShockAmmo2
+{
+	Frame "SHOA" { light "SHOCKAMMOLIGHT2" }
+}
+PointLight BIOAMMOLIGHT
+{
+	Color 0.3 1.0 0.1
+	Size 12
+	Offset 3 4 0
+	Attenuate 1
+	DontLightSelf 1
+}
+PointLight BIOAMMOLIGHT2
+{
+	Color 0.3 1.0 0.1
+	Size 9
+	Offset 2 3 0
+	Attenuate 1
+	DontLightSelf 1
+}
+Object BioAmmo
+{
+	Frame "BIOA" { light "BIOAMMOLIGHT" }
+}
+Object BioAmmo2
+{
+	Frame "BIOA" { light "BIOAMMOLIGHT2" }
+}
+PointLight PULSEAMMOLIGHT
+{
+	Color 0.15 0.3 0.05
+	Size 12
+	Offset 0 4 0
+	Attenuate 1
+	DontLightSelf 1
+}
+Object PulseAmmo
+{
+	Frame "PAMO" { light "PULSEAMMOLIGHT" }
+}
+
+PointLight HEALTHPACKLIGHT
+{
+	Color 0.0 0.2 1.0
+	Size 40
+	Offset 12 12 0
+	Attenuate 1
+	DontLightSelf 1
+}
+Object UTHealthPack
+{
+	Frame "HBOX" { light "HEALTHPACKLIGHT" }
+}
+Object ActHealthPack
+{
+	Frame "HBOX" { light "HEALTHPACKLIGHT" }
+}
+PointLight HEALTHBOXLIGHT
+{
+	Color 0.0 0.2 1.0
+	Size 30
+	Offset 0 12 0
+	Attenuate 1
+	DontLightSelf 1
+}
+Object UTHealthBox
+{
+	Frame "HBOX" { light "HEALTHBOXLIGHT" }
+}
+Object ActHealthBox
+{
+	Frame "HBOX" { light "HEALTHBOXLIGHT" }
+}
+PointLight MEDBOXLIGHT
+{
+	Color 0.0 0.2 1.0
+	Size 20
+	Offset 0 12 0
+	Attenuate 1
+	DontLightSelf 1
+}
+Object UTMedBox
+{
+	Frame "HBOX" { light "MEDBOXLIGHT" }
+}
+Object ActMedBox
+{
+	Frame "HBOX" { light "MEDBOXLIGHT" }
+}
+PointLight HEALTHVIALLIGHT
+{
+	Color 0.3 0.6 1.0
+	Size 20
+	Offset 0 12 0
+	Attenuate 1
+	DontLightSelf 1
+}
+Object UTHealthBonus
+{
+	Frame "VIAL" { light "HEALTHVIALLIGHT" }
+}
+
+PointLight UTCOMPLIGHT
+{
+	Color 0.3 1.0 0.2
+	Size 12
+	Offset 0 8 0
+	Attenuate 1
+}
+Object UTMapRevealer
+{
+	Frame "TRNS" { light "UTCOMPLIGHT" }
+}
+
+PointLight UTINVISLIGHT
+{
+	Color 0.3 0.3 0.32
+	Size 12
+	Offset 0 8 0
+	Attenuate 1
+}
+Object UTInvisibility
+{
+	Frame "INVS" { light "UTINVISLIGHT" }
+}
+Object ActUTInvisibility
+{
+	Frame "INVS" { light "UTINVISLIGHT" }
+}
+
+PointLight UTVISLIGHT
+{
+	Color 0.3 0.5 0.8
+	Size 30
+	Offset 0 24 0
+	Attenuate 1
+}
+Object UTNightVision
+{
+	Frame "UKEY" { light "UTVISLIGHT" }
+}
+Object ActUTNightVision
+{
+	Frame "UKEY" { light "UTVISLIGHT" }
+}
+
+// Shaders / Brightmaps
 HardwareShader Texture "models/Jgreen.png"
 {
 	Shader "shaders/glsl/MeshEnviroMap.fp"
@@ -462,16 +703,6 @@ HardwareShader Texture "invis31"
 {
 	Shader "shaders/glsl/MeshEnviroMap.fp"
 }
-HardwareShader Texture "models/JTranslator1.png"
-{
-	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
-	Texture "brighttex" "brightmaps/JTranslator1.png"
-}
-HardwareShader Texture "models/JBigFlash1.png"
-{
-	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
-	Texture "brighttex" "brightmaps/JBigFlash1.png"
-}
 Brightmap Texture "models/Chunk_a00.png"
 {
 	Map "brightmaps/Chunk_a00.png"
@@ -528,74 +759,51 @@ HardwareShader Texture "models/jbarrel4.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
-PulseLight "UTRedKeyLight"
+HardwareShader Texture "models/shield.png"
 {
-	Color 1.0 0.0 0.0
-	Size 15
-	SecondarySize 20
-	Interval 2.0
-	Offset 0 16 0
+	Shader "shaders/glsl/AmbientGlow.fp"
 }
-PulseLight "UTBlueKeyLight"
+HardwareShader Texture "models/JAllMap1_a00.png"
 {
-	Color 0.0 0.0 1.0
-	Size 15
-	SecondarySize 20
-	Interval 2.0
-	Offset 0 16 0
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JAllMap1_a00.png"
 }
-PulseLight "UTGoldKeyLight"
+HardwareShader Texture "models/JAllMap1_a01.png"
 {
-	Color 1.0 0.8 0.0
-	Size 15
-	SecondarySize 20
-	Interval 2.0
-	Offset 0 16 0
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JAllMap1_a01.png"
 }
-PulseLight "UTGreenKeyLight"
+HardwareShader Texture "models/JAllMap1_a02.png"
 {
-	Color 0.0 1.0 0.0
-	Size 15
-	SecondarySize 20
-	Interval 2.0
-	Offset 0 16 0
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JAllMap1_a02.png"
 }
-Object "UTRedSkull"
+HardwareShader Texture "models/JAllMap1_a03.png"
 {
-	Frame "USKL" { light "UTRedKeyLight" }
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JAllMap1_a03.png"
 }
-Object "UTBlueSkull"
+HardwareShader Texture "models/JAllMap2.png"
 {
-	Frame "USKL" { light "UTBlueKeyLight" }
+	Shader "shaders/glsl/AmbientGlow.fp"
 }
-Object "UTGoldSkull"
+HardwareShader Texture "models/JAllMap3.png"
 {
-	Frame "USKL" { light "UTGoldKeyLight" }
+	Shader "shaders/glsl/AmbientGlow.fp"
 }
-Object "UTRedKey"
+HardwareShader Texture "models/GOLD.png"
 {
-	Frame "UKEY" { light "UTRedKeyLight" }
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
 }
-Object "UTBlueKey"
+HardwareShader Texture "models/s_camera.png"
 {
-	Frame "UKEY" { light "UTBlueKeyLight" }
+	Shader "shaders/glsl/AmbientGlow.fp"
 }
-Object "UTGoldKey"
+HardwareShader Texture "models/Effect1.png"
 {
-	Frame "UKEY" { light "UTGoldKeyLight" }
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
 }
-Object "UTHereticYellowKey"
-{
-	Frame "UKEY" { light "UTGoldKeyLight" }
-}
-Object "UTHereticGreenKey"
-{
-	Frame "UKEY" { light "UTGreenKeyLight" }
-}
-Object "UTHereticBlueKey"
-{
-	Frame "UKEY" { light "UTBlueKeyLight" }
-}
+// PP shaders
 HardwareShader PostProcess scene
 {
 	Name "RedeemerView"
@@ -603,6 +811,13 @@ HardwareShader PostProcess scene
 	Texture StaticTexture "textures/static1.png"
 	Uniform float Timer
 }
+HardwareShader PostProcess scene
+{
+	Name "UTRifleScope"
+	Shader "shaders/glsl/UTRifleScope.fp" 330
+}
+
+// Skyboxes
 SkyBox "KGDaySky" fliptop
 {
 	"graphics/SkySetB_front.png"

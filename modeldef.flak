@@ -182,6 +182,22 @@ Model "FlakChunk"
 	FrameIndex FCH4 L 3 0
 }
 
+Model "FlakMag"
+{
+	Path "models"
+	Model 0 "UsedFlak_d.3d"
+	Skin 0 "flak_t_.png"
+	Scale 0.15 0.3 0.36
+	AngleOffset 90
+	ZOffset 1
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex PCAS A 0 0
+}
+
 Model "FlakCannon"
 {
 	Path "models"

@@ -6,7 +6,7 @@ Class PulseAmmo : Ammo
 		Inventory.PickupMessage "$I_PULSEAMMO";
 		Inventory.Amount 25;
 		Inventory.MaxAmount 200;
-		Ammo.BackpackAmount 40;
+		Ammo.BackpackAmount 10;
 		Ammo.BackpackMaxAmount 400;
 		Ammo.DropAmount 10;
 	}
@@ -88,8 +88,8 @@ Class ViewPulseSpark : PulseSpark
 		}
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
-		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
-		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
+		Vector3 origin = level.Vec3Offset(target.Vec2OffsetZ(0,0,target.player.viewz),x*ofs.x+y*ofs.y+z*ofs.z);
+		SetOrigin(origin,true);
 		bInvisible = (players[consoleplayer].camera != target);
 		if ( isFrozen() ) return;
 		ofs += vvel;
@@ -132,28 +132,13 @@ Class PulseBallLight : DynamicLight
 	}
 }
 
-Class PulseExplLight : DynamicLight
+Class PulseExplLight : PaletteLight
 {
-	double lifetime;
 	Default
 	{
-		DynamicLight.Type "Point";
+		Tag "ExplGreen";
 		ReactionTime 20;
-		Args 64,255,0,30;
-	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		lifetime = 1.0;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( isFrozen() ) return;
-		args[LIGHT_RED] = int(64*lifetime);
-		args[LIGHT_GREEN] = int(255*lifetime);
-		lifetime -= 1./ReactionTime;
-		if ( lifetime <= 0 ) Destroy();
+		Args 0,0,0,30;
 	}
 }
 
@@ -241,6 +226,7 @@ Class PulseBoltLight : DynamicLight
 Class PulseBoltTracer : LineTracer
 {
 	Actor ignore;
+	Array<Line> ShootThroughList;
 
 	override ETraceStatus TraceCallback()
 	{
@@ -254,6 +240,7 @@ Class PulseBoltTracer : LineTracer
 		{
 			if ( !Results.HitLine.sidedef[1] || (Results.HitLine.Flags&Line.ML_BlockHitscan) )
 				return TRACE_Stop;
+			ShootThroughList.Push(Results.HitLine);
 			return TRACE_Skip;
 		}
 		return TRACE_Stop;
@@ -367,7 +354,10 @@ Class PulseBolt : Actor
 	}
 	void CheckBeam( Vector3 x )
 	{
+		t.ShootThroughList.Clear();
 		t.Trace(pos,cursector,x,beamsize,0);
+		for ( int i=0; i<t.ShootThroughList.Size(); i++ )
+			t.ShootThroughList[i].Activate(target,0,SPAC_PCross);
 		if ( t.Results.HitType != TRACE_HitNone )
 		{
 			if ( t.Results.HitType == TRACE_HitActor )
@@ -399,8 +389,16 @@ Class PulseBolt : Actor
 				if ( t.Results.Side ) norm *= -1;
 				t.Results.HitLine.RemoteActivate(tracer,t.Results.Side,SPAC_Impact,t.Results.HitPos);
 			}
-			else if ( t.Results.HitType == TRACE_HitFloor ) norm = t.Results.HitSector.floorplane.Normal;
-			else if ( t.Results.HitType == TRACE_HitCeiling ) norm = t.Results.HitSector.ceilingplane.Normal;
+			else if ( t.Results.HitType == TRACE_HitFloor )
+			{
+				if ( t.Results.ffloor ) norm = -t.Results.ffloor.top.Normal;
+				else norm = t.Results.HitSector.floorplane.Normal;
+			}
+			else if ( t.Results.HitType == TRACE_HitCeiling )
+			{
+				if ( t.Results.ffloor ) norm = -t.Results.ffloor.bottom.Normal;
+				else norm = t.Results.HitSector.ceilingplane.Normal;
+			}
 			int numpt = Random[Pulse](10,20)*!Random[Pulse](0,2);
 			for ( int i=0; i<numpt; i++ )
 			{
@@ -477,7 +475,7 @@ Class PulseBolt : Actor
 	{
 		bRELATIVETOFLOOR = parent.bRELATIVETOFLOOR;
 		frame = parent.frame;
-		SetOrigin(parent.Vec3Offset(x.x*beamsize,x.y*beamsize,x.z*beamsize),true);
+		SetOrigin(level.Vec3Offset(parent.pos,x*beamsize),true);
 		A_SetAngle(parent.angle);
 		A_SetPitch(parent.pitch);
 		CheckBeam(x);
@@ -521,7 +519,7 @@ Class StarterBolt : PulseBolt
 		if ( target.player )
 		{
 			[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
-			origin = target.Vec2OffsetZ(0,0,target.player.viewz)+8.0*x+4.1*y-2.7*z;
+			origin = level.Vec3Offset(target.Vec2OffsetZ(0,0,target.player.viewz),8*x+4.1*y-2.7*z);
 		}
 		else origin = target.Vec3Offset(0,0,target.missileheight);
 		SetOrigin(origin,true);
@@ -530,6 +528,31 @@ Class StarterBolt : PulseBolt
 		frame++;
 		if ( frame > 4 ) frame = 0;
 		CheckBeam((cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch)));
+	}
+}
+
+Class PulseMag : UTCasing
+{
+	Default
+	{
+		BounceSound "enforcer/bounce";
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		heat = 0.;
+	}
+	States
+	{
+	Death:
+		PCAS A -1
+		{
+			pitch = Normalize180(pitch);
+			if ( abs(deltaangle(pitch,0)) < 35 ) pitch = 0;
+			else pitch = (pitch>0)?90:-90;
+			angle = FRandom[Junk](0,360);
+		}
+		Stop;
 	}
 }
 
@@ -542,28 +565,31 @@ Class PulseGun : UTWeapon
 
 	Property ClipCount : clipcount;
 
-	action void A_Reloading()
-	{
-		Weapon weap = Weapon(invoker);
-		if ( !weap ) return;
-		invoker.clipcount = Min(50,weap.Ammo1.Amount);
-		A_PlaySound("pulse/reload",CHAN_WEAPON);
-	}
 	action void A_DrainAmmo()
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
-		if ( weap.Ammo1.Amount <= 0 ) return;
+		if ( (weap.Ammo1.Amount <= 0) || !(player.cmd.buttons&BT_ALTATTACK) || (flak_pulsereload && (invoker.clipcount <= 0)) )
+		{
+			player.SetPSprite(PSP_WEAPON,ResolveState("AltRelease"));
+			return;
+		}
+		if ( invoker.special1 > 0 )
+		{
+			invoker.special1--;
+			return;
+		}
+		invoker.special1 = 9;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.clipcount--;
-		if ( !flak_pulsereload && (invoker.clipcount <= 0) ) invoker.clipcount = (weap.Ammo1.Amount>0)?Min(50,weap.Ammo1.Amount):50;
+		if ( !flak_pulsereload && (invoker.clipcount <= 0) ) invoker.clipcount = min(invoker.default.clipcount,weap.Ammo1.Amount);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,128,255,128),1);
-		UTMainHandler.DoSwing(self,(FRandom[Pulse](-1,-1),FRandom[Pulse](-1,1)),0.1,-0.02,3,SWING_Spring,0,2);
+		UTMainHandler.DoSwing(self,(FRandom[Pulse](-1,1),FRandom[Pulse](-1,1)),0.1,-0.02,3,SWING_Spring,0,2);
 		A_AlertMonsters();
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x+4.1*y-2.7*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+4.1*y-2.7*z);
 		for ( int i=0; i<4; i++ )
 		{
 			let s = Spawn("UTViewSmoke",origin);
@@ -583,38 +609,38 @@ Class PulseGun : UTWeapon
 			ViewPulseSpark(s).vvel += (FRandom[Pulse](0.2,0.8),FRandom[Pulse](-0.5,0.5),FRandom[Pulse](-0.5,0.5));
 		}
 	}
-	action void A_PulseRefire( statelabel flash = null, bool noreload = false )
+	action void A_PulseRefire()
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap || !player ) return;
-		if ( (invoker.clipcount <= 0) || (weap.Ammo1.Amount <= 0) )
-		{
-			if ( noreload ) return;
-			A_ClearRefire();
-			if ( weap.bAltFire ) player.setpsprite(PSP_WEAPON,weap.FindState("AltRelease"));
-			else player.setpsprite(PSP_WEAPON,weap.FindState("Release"));
+		if ( (flak_pulsereload && (invoker.clipcount <= 0)) || (weap.Ammo1.Amount <= 0) )
 			return;
-		}
-		if ( noreload )
+		if ( player.cmd.buttons&BT_ALTATTACK )
 		{
-			if ( player.cmd.buttons&BT_ALTATTACK )
-			{
-				weap.bAltFire = true;
-				flash = "AltFire";
-			}
-			else
-			{
-				weap.bAltFire = false;
-				flash = "Fire";
-			}
+			weap.bAltFire = true;
+			player.SetPSprite(PSP_WEAPON,ResolveState("AltHold"));
 		}
-		A_Refire(flash);
+		else if ( player.cmd.buttons&BT_ATTACK )
+		{
+			weap.bAltFire = false;
+			player.SetPSprite(PSP_WEAPON,ResolveState("Fire"));
+		}
 	}
 	action void A_PulseFire()
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
-		if ( weap.Ammo1.Amount <= 0 ) return;
+		if ( (weap.Ammo1.Amount <= 0) || !(player.cmd.buttons&BT_ATTACK) || (flak_pulsereload && (invoker.clipcount <= 0)) )
+		{
+			player.SetPSprite(PSP_WEAPON,ResolveState("Release"));
+			return;
+		}
+		if ( invoker.special1 > 0 )
+		{
+			invoker.special1--;
+			return;
+		}
+		invoker.special1 = 5;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.clipcount--;
 		if ( !flak_pulsereload && (invoker.clipcount <=0) ) invoker.clipcount = (weap.Ammo1.Amount>0)?Min(50,weap.Ammo1.Amount):50;
@@ -629,8 +655,8 @@ Class PulseGun : UTWeapon
 		Vector3 x, y, z;
 		double a;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x+3.0*y-1.8*z;
-		origin += y*cos(invoker.sangle)*2.0+z*sin(invoker.sangle)*2.0;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+3*y-1.8*z);
+		origin = level.Vec3Offset(origin,y*cos(invoker.sangle)*2+z*sin(invoker.sangle)*2);
 		invoker.sangle += 100;
 		Actor p = Spawn("PulseBall",origin);
 		p.angle = angle;
@@ -640,7 +666,7 @@ Class PulseGun : UTWeapon
 		for ( int i=0; i<8; i++ )
 		{
 			let s = Spawn("UTViewSmoke",origin);
-			UTViewSmoke(s).ofs = (10,3.0,-1.8);
+			UTViewSmoke(s).ofs = (10,3,-1.8);
 			s.scale *= 1.8;
 			s.target = self;
 			s.SetShade("206010");
@@ -651,17 +677,18 @@ Class PulseGun : UTWeapon
 		for ( int i=0; i<numpt; i++ )
 		{
 			let s = Spawn("ViewPulseSpark",origin);
-			ViewPulseSpark(s).ofs = (10,3.0,-1.8);
+			ViewPulseSpark(s).ofs = (10,3,-1.8);
 			s.target = self;
 			ViewPulseSpark(s).vvel += (FRandom[Pulse](0.4,1.6),FRandom[Pulse](-1.2,1.2),FRandom[Pulse](-1.2,1.2));
 		}
 	}
 	action void A_StartBeam()
 	{
+		invoker.special1 = 0;
 		A_PlaySound("pulse/bolt",CHAN_WEAPON,1.0,true);
 		Vector3 x, y, z, origin;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x+4.1*y-2.7*z;
+		origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+4.1*y-2.7*z);
 		invoker.beam = Spawn("StarterBolt",origin);
 		invoker.beam.angle = angle;
 		invoker.beam.pitch = BulletSlope();
@@ -717,7 +744,7 @@ Class PulseGun : UTWeapon
 			A_CheckReload();
 			if ( flak_pulsereload )
 			{
-				if ( (invoker.clipcount <= 0) && (invoker.Ammo1.Amount > 0) ) return A_Jump(255,"Reload");
+				if ( (invoker.clipcount <= 0) && (invoker.Ammo1.Amount > 0) ) return ResolveState("Reload");
 				A_WeaponReady(WRF_ALLOWRELOAD);
 			}
 			else A_WeaponReady();
@@ -727,89 +754,71 @@ Class PulseGun : UTWeapon
 		PGNI ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
 		{
 			A_CheckReload();
-			A_WeaponReady(WRF_ALLOWRELOAD);
+			if ( flak_pulsereload )
+			{
+				if ( (invoker.clipcount <= 0) && (invoker.Ammo1.Amount > 0) ) return ResolveState("Reload");
+				A_WeaponReady(WRF_ALLOWRELOAD);
+			}
+			else A_WeaponReady();
+			return ResolveState(null);
 		}
 		Goto Idle;
 	Fire:
-		PGNI A 0 A_PlaySound("pulse/fire",CHAN_WEAPON,1.0,true);
-	Hold:
-		PGNF A 1 A_PulseFire();
-		PGNF BCDEF 1;
-		PNGF G 0 A_PulseRefire(1);
-		Goto Release;
-		PGNF G 1 A_PulseFire();
-		PGNF HIJKL 1;
-		PNGF M 0 A_PulseRefire(1);
-		Goto Release;
-		PGNF N 1 A_PulseFire();
-		PGNF OPQRS 1;
-		PNGF T 0 A_PulseRefire(1);
-		Goto Release;
-		PGNF U 1 A_PulseFire();
-		PGNF VWXYZ 1;
-		PGF2 A 0 A_PulseRefire(1);
-		Goto Release;
-		PGF2 A 1 A_PulseFire();
-		PGF2 BCDEF 1;
-		PGF2 G 0 A_PulseRefire(1);
-		Goto Release;
-		PGF2 H 1 A_PulseFire();
-		PGF2 IJKLM 1;
-		PGF2 N 0 A_PulseRefire();
-		Goto Release;
+		PGNI A 0
+		{
+			invoker.special1 = 0;
+			A_PlaySound("pulse/fire",CHAN_WEAPON,1.0,true);
+		}
+		PGNF ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_PulseFire();
+		PGF2 ABCDEFGHIJKLMN 1 A_PulseFire();
+		Goto Fire+1;
 	Release:
 		PGNC A 0 A_PlaySound("pulse/down",CHAN_WEAPON);
-		PGNC ABCDEFGHIJKLMNOPQRSTUVWXY 1 A_PulseRefire(null,true);
+		PGNC ABCDEFGHIJKLMNOPQRSTUVWXY 1 A_PulseRefire();
 		PGNC Y 0;
 		Goto Idle;
 	AltFire:
 		PGBS ABCDE 1;
-		PGBL A 0 A_StartBeam();
+		Goto AltHold;
 	AltHold:
-		PGBL A 1 A_DrainAmmo();
-		PGBL B 0 A_PulseRefire(1);
-		Goto AltRelease;
-		PGBL B 1;
-		PGBL C 0 A_PulseRefire(1);
-		Goto AltRelease;
-		PGBL C 1;
-		PGBL D 0 A_PulseRefire(1);
-		Goto AltRelease;
-		PGBL D 1;
-		PGBL E 0 A_PulseRefire(1);
-		Goto AltRelease;
-		PGBL E 1;
-		PGBL F 0 A_PulseRefire(1);
-		Goto AltRelease;
-		PGBL F 1;
-		PGBL G 0 A_PulseRefire(1);
-		Goto AltRelease;
-		PGBL G 1;
-		PGBL H 0 A_PulseRefire(1);
-		Goto AltRelease;
-		PGBL H 1;
-		PGBL I 0 A_PulseRefire(1);
-		Goto AltRelease;
-		PGBL I 1;
-		PGBL J 0 A_PulseRefire(1);
-		Goto AltRelease;
-		PGBL J 1;
-		PGBL A 0 A_PulseRefire();
+		PGBL A 0 A_StartBeam();
+		PGBL ABCDEFGHIJ 1 A_DrainAmmo();
+		Goto AltHold+1;
 	AltRelease:
 		PGBE A 0 A_StopBeam();
-		PGBE ABCDE 1 A_PulseRefire(null,true);
+		PGBE ABCDE 1 A_PulseRefire();
 		Goto Idle;
 	Reload:
 		PGNI A 1;
-		PGNI A 0 A_JumpIf(invoker.clipcount >= Min(50,invoker.Ammo1.Amount),"Idle");
+		PGNI A 0 A_JumpIf(invoker.clipcount >= Min(invoker.default.clipcount,invoker.Ammo1.Amount),"Idle");
 		PGNR A 1
 		{
-			A_Reloading();
+			A_PlaySound("pulse/reload",CHAN_WEAPON);
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayReloading();
 		}
-		PGNR BCDEFGHIJKLMNOPQRSTUVWXYZ 1;
-		PGR2 ABCDEFGHIJKLMNOPQRSTUVWX 1;
+		PGNR BCDEFGHIJKLMNO 1;
+		PGNR P 1
+		{
+			invoker.clipcount = 0;
+		}
+		PGNR QRSTUVWXYZ 1;
+		PGR2 A 1
+		{
+			Vector3 x, y, z, origin;
+			[x,y,z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+			origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),x*4.-y*6.-z*8.);
+			let c = Spawn("PulseMag",origin);
+			c.angle = angle;
+			c.pitch = pitch;
+			c.vel = vel*.5+x*FRandom[Junk](-.5,.5)+y*FRandom[Junk](-.5,.5)-z*FRandom[Junk](1,2);
+		}
+		PGR2 BCD 1;
+		PGR2 E 1
+		{
+			invoker.clipcount = Min(invoker.default.clipcount,invoker.Ammo1.Amount);
+		}
+		PGR2 FGHIJKLMNOPQRSTUVWX 1;
 		Goto Idle;
 	Deselect:
 		PGNS W 1 A_StopSound(CHAN_WEAPON);

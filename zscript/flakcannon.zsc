@@ -6,7 +6,7 @@ Class FlakAmmo : Ammo
 		Inventory.PickupMessage "";
 		Inventory.Amount 10;
 		Inventory.MaxAmount 50;
-		Ammo.BackpackAmount 20;
+		Ammo.BackpackAmount 5;
 		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 5;
 	}
@@ -94,7 +94,7 @@ Class ChunkTrail : Actor
 			SetState(FindState("Death")+dist);
 			return;
 		}
-		SetOrigin(target.pos+(0,0,speed),true);
+		SetOrigin(target.Vec3Offset(0,0,speed),true);
 	}
 	States
 	{
@@ -109,20 +109,48 @@ Class ChunkTrail : Actor
 
 Class FlakAccumulator : Thinker
 {
-	Actor victim;
-	int amount;
-	int cnt;
+	Actor victim, inflictor, source;
+	Array<Int> amounts;
+	int total;
+	Name type;
 
 	override void Tick()
 	{
 		Super.Tick();
-		cnt++;
-		if ( cnt < 5 ) return;
+		// so many damn safeguards in this
+		if ( !victim )
+		{
+			Destroy();
+			return;
+		}
+		int gibhealth = victim.GetGibHealth();
+		// おまえはもう死んでいる
+		if ( victim.health-total <= gibhealth )
+		{
+			// safeguard for inflictors that have somehow ceased to exist, which apparently STILL CAN HAPPEN
+			if ( inflictor ) inflictor.bEXTREMEDEATH = true;
+			else type = 'Extreme';
+		}
+		// make sure accumulation isn't reentrant
+		if ( inflictor && (inflictor is 'FlakChunk') ) inflictor.bAMBUSH = true;
+		// 何？
+		for ( int i=0; i<amounts.Size(); i++ )
+		{
+			if ( !victim ) break;
+			victim.DamageMobj(inflictor,source,amounts[i],type,DMG_THRUSTLESS);
+		}
+		// clean up
+		if ( inflictor )
+		{
+			if ( inflictor is 'FlakChunk' ) inflictor.bAMBUSH = false;
+			inflictor.bEXTREMEDEATH = false;
+		}
 		Destroy();
 	}
 
-	static void Accumulate( Actor victim, int amount )
+	static void Accumulate( Actor victim, int amount, Actor inflictor, Actor source, Name type )
 	{
+		if ( !victim ) return;
 		let ti = ThinkerIterator.Create("FlakAccumulator",STAT_USER);
 		FlakAccumulator a, match = null;
 		while ( a = FlakAccumulator(ti.Next()) )
@@ -136,19 +164,23 @@ Class FlakAccumulator : Thinker
 			match = new("FlakAccumulator");
 			match.ChangeStatNum(STAT_USER);
 			match.victim = victim;
+			match.amounts.Clear();
 		}
-		match.cnt = 0;
-		match.amount += amount;
+		match.amounts.Push(amount);
+		match.total += amount;
+		match.inflictor = inflictor;
+		match.source = source;
+		match.type = type;
 	}
 
-	static int GetAmount( Actor victim )
+	static clearscope int GetAmount( Actor victim )
 	{
 		let ti = ThinkerIterator.Create("FlakAccumulator",STAT_USER);
-		FlakAccumulator a;
+		FlakAccumulator a, match = null;
 		while ( a = FlakAccumulator(ti.Next()) )
 		{
 			if ( a.victim != victim ) continue;
-			return a.amount;
+			return a.total;
 		}
 		return 0;
 	}
@@ -161,6 +193,7 @@ Class FlakChunk : Actor
 	double lifetime, lifespeed;
 	int lifetics;
 	Vector3 oldvel;
+	Actor lasthit;
 	Default
 	{
 		Obituary "$O_FLAKCANNON";
@@ -239,8 +272,31 @@ Class FlakChunk : Actor
 		// chunks in vanilla have a special variation on the standard reflect formula that causes them to bounce differently when hitting a surface head-on
 		// (0.5 to 0.8 reduction perpendicular to the surface normal, to be specific)
 		Vector3 HitNormal = -vel.unit();
-		if ( BlockingFloor ) HitNormal = BlockingFloor.floorplane.Normal;
-		else if ( BlockingCeiling ) HitNormal = BlockingCeiling.ceilingplane.Normal;
+		F3DFloor ff;
+		if ( BlockingFloor )
+		{
+			// find closest 3d floor for its normal
+			for ( int i=0; i<CurSector.Get3DFloorCount(); i++ )
+			{
+				if ( !(CurSector.Get3DFloor(i).top.ZAtPoint(pos.xy) ~== floorz) ) continue;
+				ff = CurSector.Get3DFloor(i);
+				break;
+			}
+			if ( ff ) HitNormal = -ff.top.Normal;
+			else HitNormal = BlockingFloor.floorplane.Normal;
+		}
+		else if ( BlockingCeiling )
+		{
+			// find closest 3d floor for its normal
+			for ( int i=0; i<CurSector.Get3DFloorCount(); i++ )
+			{
+				if ( !(CurSector.Get3DFloor(i).bottom.ZAtPoint(pos.xy) ~== ceilingz) ) continue;
+				ff = CurSector.Get3DFloor(i);
+				break;
+			}
+			if ( ff ) HitNormal = -ff.bottom.Normal;
+			else HitNormal = BlockingCeiling.ceilingplane.Normal;
+		}
 		else if ( BlockingLine )
 		{
 			HitNormal = (-BlockingLine.delta.y,BlockingLine.delta.x,0).unit();
@@ -286,22 +342,42 @@ Class FlakChunk : Actor
 		yawvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
 		A_PlaySound("flak/bounce",volume:0.3);
 		A_AlertMonsters();
-		if ( vel.length() < 5.0 ) ExplodeMissile();
+		if ( vel.length() < 5 ) ExplodeMissile();
 	}
 	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
 	{
-		if ( vel.length() <= 5.0 ) return -1;
-		FlakAccumulator.Accumulate(target,damage);
-		int gibhealth = (target.GibHealth==int.min)?-target.SpawnHealth():target.GibHealth;
-		int calcdmg = FlakAccumulator.GetAmount(target);
-		if ( target.Health-calcdmg <= (gibhealth/2) ) bEXTREMEDEATH = true;
+		if ( bAMBUSH || (vel.length() <= 5) ) return damage;
 		if ( !target.bNOBLOOD )
 		{
 			target.SpawnBlood(pos,AngleTo(target),damage);
 			A_PlaySound("flak/meat",volume:0.3);
 			A_AlertMonsters();
 		}
-		return damage;
+		return -1;
+	}
+	override int SpecialMissileHit( Actor victim )
+	{
+		if ( bAMBUSH || (vel.length() <= 5) || ((victim == target) && !bHITOWNER) || (victim == lasthit) )
+			return 1;
+		// with this we can guarantee that the chunk won't just keep on dealing damage
+		// this is something I wish Unreal's boulders did
+		lasthit = victim;
+		// gather damage
+		FlakAccumulator.Accumulate(victim,GetMissileDamage(0,0),self,target,damagetype);
+		int amt = FlakAccumulator.GetAmount(victim);
+		// pass through if it's already dead
+		if ( victim.health-amt <= 0 )
+		{
+			// bleed if not gibbed (reduces effect spam)
+			if ( !victim.bNOBLOOD && (victim.health-amt > victim.GetGibHealth()) )
+			{
+				victim.SpawnBlood(pos,AngleTo(victim),damage);
+				A_PlaySound("flak/meat",volume:0.3);
+				A_AlertMonsters();
+			}
+			return 1;
+		}
+		return -1;
 	}
 	States
 	{
@@ -345,7 +421,7 @@ Class FlakChunk : Actor
 			A_AlertMonsters();
 		}
 	XDeath:
-		TNT1 A 1;
+		TNT1 A 2;	// must exist for at least two tics so the accumulator gets the right inflictor
 		Stop;
 	Dummy:
 		FCH1 ABCDEFGHIJKL -1;
@@ -395,28 +471,12 @@ Class SlugSmoke : Actor
 	}
 }
 
-Class SlugLight : DynamicLight
+Class SlugLight : PaletteLight
 {
-	double lifetime;
 	Default
 	{
-		DynamicLight.Type "Point";
-		Args 255,224,128,80;
-	}
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		lifetime = 1.0;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( isFrozen() ) return;
-		args[LIGHT_RED] = int(255*lifetime);
-		args[LIGHT_GREEN] = int(224*lifetime);
-		args[LIGHT_BLUE] = int(128*lifetime);
-		lifetime -= 0.05;
-		if ( lifetime <= 0 ) Destroy();
+		Args 0,0,0,80;
+		ReactionTime 20;
 	}
 }
 
@@ -541,9 +601,36 @@ Class FlakLight : DynamicLight
 			Destroy();
 			return;
 		}
-		if ( target.player ) SetOrigin(target.Vec3Offset(0,0,target.player.viewz-target.pos.z),true);
+		if ( target.player ) SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
 		else SetOrigin(target.pos,true);
 		if ( cnt++ > 2 ) Destroy();
+	}
+}
+
+Class FlakMag : UTCasing
+{
+	Default
+	{
+		BounceSound "flak/sbounce";
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		if ( special1 )
+		{
+			anglevel *= .1;
+			pitchvel *= .1;
+		}
+	}
+	States
+	{
+	Death:
+		PCAS A -1
+		{
+			pitch = RandomPick[Junk](-90,90);
+			angle = FRandom[Junk](0,360);
+		}
+		Stop;
 	}
 }
 
@@ -569,7 +656,7 @@ Class FlakCannon : UTWeapon
 		Vector3 x, y, z;
 		double a, s;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+4.0*y-3.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+4*y-3*z);
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);
@@ -628,7 +715,7 @@ Class FlakCannon : UTWeapon
 		Vector3 x, y, z;
 		double a, s;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+2.0*y-3.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2*y-3*z);
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 		A_OverlayRenderstyle(-2,STYLE_Add);
@@ -654,6 +741,11 @@ Class FlakCannon : UTWeapon
 			s.scale *= 2.4;
 			s.alpha *= 0.5;
 		}
+		let c = Spawn("FlakMag",origin);
+		c.angle = angle;
+		c.pitch = BulletSlope();
+		c.vel = x*FRandom[Junk](15.,20.)+y*FRandom[Junk](-.1,.1)+z*FRandom[Junk](.1,.8);
+		c.special1 = 1;
 	}
 
 	Default
@@ -696,7 +788,16 @@ Class FlakCannon : UTWeapon
 	Fire:
 		FLKF A 1 A_FireChunks();
 		FLKF BCDEFGHI 1;
-		FLKF J 4;
+		FLKF J 4
+		{
+			Vector3 x, y, z, origin;
+			[x,y,z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+			origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),x*4.+y*3.-z*8.);
+			let c = Spawn("FlakMag",origin);
+			c.angle = angle;
+			c.pitch = pitch;
+			c.vel = vel*.5+x*FRandom[Junk](-.8,.1)+y*FRandom[Junk](-.2,.2)-z*FRandom[Junk](1,2);
+		}
 		Goto Loading;
 	AltFire:
 		FLKA A 1 A_FireSlug();

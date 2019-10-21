@@ -13,6 +13,10 @@ Class UTHealthPack : Health
 		Inventory.PickupSound "misc/ut_keg";
 		Inventory.RespawnTics 3500;
 	}
+	override String PickupMessage()
+	{
+		return String.Format("%s +%d",StringTable.Localize(PickupMsg),Amount);
+	}
 	States
 	{
 	Spawn:
@@ -29,6 +33,10 @@ Class UTHealthBox : Health
 		Inventory.Amount 50;
 		Inventory.PickupMessage "$I_HEALTHBOX";
 		Inventory.PickupSound "misc/ut_heal";
+	}
+	override String PickupMessage()
+	{
+		return String.Format("%s +%d",StringTable.Localize(PickupMsg),Amount);
 	}
 	States
 	{
@@ -47,6 +55,10 @@ Class UTMedBox : Health
 		Inventory.PickupMessage "$I_MEDBOX";
 		Inventory.PickupSound "misc/ut_heal";
 		Inventory.RespawnTics 700;
+	}
+	override String PickupMessage()
+	{
+		return String.Format("%s +%d",StringTable.Localize(PickupMsg),Amount);
 	}
 	States
 	{
@@ -68,6 +80,10 @@ Class UTHealthBonus : Health
 		Inventory.PickupMessage "$I_VIAL";
 		Inventory.PickupSound "misc/ut_heal";
 		RenderStyle "Add";
+	}
+	override String PickupMessage()
+	{
+		return String.Format("%s +%d",StringTable.Localize(PickupMsg),Amount);
 	}
 	States
 	{

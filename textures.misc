@@ -6,8 +6,6 @@ Texture "DefTex",128,128
 	Patch "-noflat-", 0, 0
 }
 Sprite "HBOXA0",1,1{}
-Sprite "HBOXB0",1,1{}
-Sprite "HBOXC0",1,1{}
 Sprite "VIALA0",1,1{}
 Sprite "XANHA0",1,1{}
 Sprite "THIGA0",1,1{}
@@ -20,13 +18,6 @@ Sprite "TRNSA0",1,1{}
 Sprite "JBUTA0",1,1{}
 Sprite "SLITA0",1,1{}
 Sprite "CHIPA0",1,1{}
-Sprite "CHIPB0",1,1{}
-Sprite "CHIPC0",1,1{}
-Sprite "CHIPD0",1,1{}
 Sprite "USKLA0",1,1{}
-Sprite "USKLB0",1,1{}
-Sprite "USKLC0",1,1{}
 Sprite "UKEYA0",1,1{}
-Sprite "UKEYB0",1,1{}
-Sprite "UKEYC0",1,1{}
-Sprite "UKEYD0",1,1{}
+Sprite "RNGXA0",1,1{}

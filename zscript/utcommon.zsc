@@ -11,6 +11,7 @@ Class UTPlayer : DoomPlayer
 	int last_fm_tap, last_sm_tap;
 	int last_tap_fm, last_tap_sm;
 	int last_jump_held;
+	Actor underwatersnd;
 
 	int tempslide;
 	double ssup;
@@ -69,6 +70,7 @@ Class UTPlayer : DoomPlayer
 		Player.ViewHeight 46;
 		Player.GruntSpeed 20;
 		+NOMENU;
+		+DONTTRANSLATE;
 		UTPlayer.DollType DOLL_Male;
 		UTPlayer.VoiceType VOICE_None;
 	}
@@ -137,12 +139,21 @@ Class UTPlayer : DoomPlayer
 		if ( giveall || (name ~== "armor") )
 		{
 			// Doom Tournament just gives the player a shield belt and maximum bonuses
-			let belt = Inventory(Spawn("UTShieldBelt"));
-			if ( !belt.CallTryPickup(self) ) belt.Destroy();
-			let bonus = Inventory(Spawn("UTArmorBonus"));
-			bonus.Amount = bonus.MaxAmount;
-			if ( !bonus.CallTryPickup(self) ) bonus.Destroy();
-			level.total_items -= 2; // spawning them in raises item count
+			// in non-vanilla mode, also gives body/thigh armor
+			Class<Inventory> which[] =
+			{
+				"UTShieldBelt", "UTArmorBonus",
+				"UTBodyArmor", "UTThighpads"
+			};
+			Inventory inv;
+			int mx = flak_vanillaarmor?2:4;
+			for ( int i=0; i<mx; i++ )
+			{
+				inv = Inventory(Spawn(which[i]));
+				inv.ClearCounters();
+				inv.Amount = inv.MaxAmount;
+				if ( !inv.CallTryPickup(self) ) inv.Destroy();
+			}
 			if ( !giveall ) return;
 		}
 		if ( giveall || (name ~== "keys") )
@@ -248,7 +259,7 @@ Class UTPlayer : DoomPlayer
 			if ( lastvelz < -8 )
 			{
 				double vol = clamp((-lastvelz-8)*0.05,0.01,1.0);
-				if ( ((waterlevel > 0) || GetFloorTerrain().IsLiquid) && !bOnMobj ) A_PlaySound("ut/wetsplash",CHAN_AUTO,vol);
+				if ( ((waterlevel > 0) || GetFloorTerrain().IsLiquid) && !bOnMobj ) PlaySplash(vol);
 				else A_PlaySound("*uland",CHAN_AUTO,vol);
 				PlayLanding();
 			}
@@ -263,13 +274,20 @@ Class UTPlayer : DoomPlayer
 		{
 			double vol = abs(vel.xy.length())*0.03;
 			if ( forcefootstep ) vol = clamp(-lastvelz*0.05,0.01,1.0);
-			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid && !bOnMobj ) A_PlaySound("ut/playerfootstepwet",CHAN_5,vol);
+			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid && !bOnMobj ) PlayWetFootstep(vol);
 			else PlayFootstep(vol);
 		}
 		if ( (waterlevel >= 2) && (lastwaterlevel < 2) )
-			A_PlaySound("ut/wetsplash",CHAN_AUTO);
+			PlaySplash(1.);
 		else if ( (waterlevel < 2) && (lastwaterlevel >= 2) )
-			A_PlaySound("ut/wetsurface",CHAN_AUTO);
+			PlaySurface();
+		if ( (waterlevel >= 3) && !underwatersnd )
+		{
+			underwatersnd = Spawn("UTUnderSound",pos);
+			underwatersnd.target = self;
+		}
+		else if ( (waterlevel < 3) && underwatersnd )
+			underwatersnd.Destroy();
 		lastground = player.onground;
 		lastvelz = prevvelz;
 		prevvelz = vel.z;
@@ -383,8 +401,17 @@ Class UTPlayer : DoomPlayer
 		else Angle += cmd.yaw*(360./65536.);
 		player.onground = (pos.z <= floorz) || bOnMobj || bMBFBouncer || (player.cheats & CF_NOCLIP2);
 		// slant (aka steep slope) detection
-		// TODO make it 3d floor aware when the PR makes it in
-		if ( floorsector.floorplane.normal dot (0,0,1) < (46342./65536.) )
+		Vector3 floornormal = floorsector.floorplane.normal;
+		for ( int i=0; i<floorsector.Get3DFloorCount(); i++ )
+		{
+			F3DFloor ff = floorsector.Get3DFloor(i);
+			if ( ff.top.ZAtPoint(pos.xy) ~== floorz )
+			{
+				floornormal = -ff.top.normal;
+				break;
+			}
+		}
+		if ( floornormal dot (0,0,1) < (46342./65536.) )
 			player.onground = false;
 		if ( player.onground ) lastgroundtic = gametic;
 		if ( !player.onground && !bNoGravity && (waterlevel < 2) && (abs(pos.z-floorz) <= maxdropoffheight) && (player.jumptics == 0) && (vel.z < 0) )
@@ -724,11 +751,75 @@ Class UTPlayer : DoomPlayer
 
 	virtual void PlayFootstep( double vol )
 	{
-		A_PlaySound("ut/playerfootstep",CHAN_5,vol);
+		A_PlaySound("ut/playerfootstep",CHAN_AUTO,vol);
+	}
+
+	virtual void PlaySplash( double vol )
+	{
+		TerrainDef t = GetFloorTerrain();
+		String snd = "ut/wetsplash";
+		switch ( t.TerrainName )
+		{
+		case 'UTLava':
+		case 'Lava':
+			snd = "ut/lavasplash";
+			break;
+		case 'UTSlime':
+		case 'UTNukage':
+		case 'Slime':
+		case 'Nukage':
+		case 'Sludge':
+			snd = "ut/slimesplash";
+			break;
+		}
+		A_PlaySound(snd,CHAN_AUTO,vol);
+	}
+
+	virtual void PlaySurface()
+	{
+		TerrainDef t = GetFloorTerrain();
+		String snd = "ut/wetsurface";
+		switch ( t.TerrainName )
+		{
+		case 'UTLava':
+		case 'Lava':
+			snd = "ut/lavasurface";
+			break;
+		case 'UTSlime':
+		case 'UTNukage':
+		case 'Slime':
+		case 'Nukage':
+		case 'Sludge':
+			snd = "ut/slimesurface";
+			break;
+		}
+		A_PlaySound(snd,CHAN_AUTO);
+	}
+
+	virtual void PlayWetFootstep( double vol )
+	{
+		TerrainDef t = GetFloorTerrain();
+		String snd = "ut/playerfootstepwet";
+		switch ( t.TerrainName )
+		{
+		case 'UTLava':
+		case 'Lava':
+			snd = "ut/playerfootsteplava";
+			break;
+		case 'UTSlime':
+		case 'UTNukage':
+		case 'Slime':
+		case 'Nukage':
+		case 'Sludge':
+			snd = "ut/playerfootstepslime";
+			break;
+		}
+		A_PlaySound(snd,CHAN_AUTO,vol);
 	}
 
 	override void PlayIdle()
 	{
+		if ( player.Health <= 0 ) return;
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) )
 		{
 			// Crouching
@@ -740,7 +831,7 @@ Class UTPlayer : DoomPlayer
 			// Ground
 			if ( (player && (player.mo == self)) && player.cmd.yaw )
 			{
-				if ( InStateSequence(CurState,FindState("See"))
+				if ( InStateSequence(CurState,FindState("See2"))
 					|| InStateSequence(CurState,FindState("SeeAir"))
 					|| InStateSequence(CurState,FindState("SeeSwim"))
 					|| InStateSequence(CurState,FindState("SeeCrouch"))
@@ -752,7 +843,7 @@ Class UTPlayer : DoomPlayer
 			}
 			else
 			{
-				if ( InStateSequence(CurState,FindState("See"))
+				if ( InStateSequence(CurState,FindState("See2"))
 					|| InStateSequence(CurState,FindState("SeeAir"))
 					|| InStateSequence(CurState,FindState("SeeSwim"))
 					|| InStateSequence(CurState,FindState("SeeCrouch"))
@@ -765,7 +856,7 @@ Class UTPlayer : DoomPlayer
 		else if ( !bNoGravity && (waterlevel < 2) )
 		{
 			// Falling
-			if ( InStateSequence(CurState,FindState("See"))
+			if ( InStateSequence(CurState,FindState("See2"))
 				|| InStateSequence(CurState,FindState("SeeAir"))
 				|| InStateSequence(CurState,FindState("SeeSwim"))
 				|| InStateSequence(CurState,FindState("SeeCrouch"))
@@ -778,7 +869,7 @@ Class UTPlayer : DoomPlayer
 		else
 		{
 			// Swimming
-			if ( InStateSequence(CurState,FindState("See"))
+			if ( InStateSequence(CurState,FindState("See2"))
 				|| InStateSequence(CurState,FindState("SeeAir"))
 				|| InStateSequence(CurState,FindState("SeeSwim"))
 				|| InStateSequence(CurState,FindState("SeeCrouch"))
@@ -792,6 +883,7 @@ Class UTPlayer : DoomPlayer
 
 	override void PlayRunning()
 	{
+		if ( player.Health <= 0 ) return;
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) )
 		{
 			// Crouching
@@ -809,7 +901,7 @@ Class UTPlayer : DoomPlayer
 				|| InStateSequence(CurState,FindState("SeeSwim"))
 				|| InStateSequence(CurState,FindState("SeeCrouch"))
 				|| InStateSequence(CurState,FindState("Turn")) )
-				SetStateLabel("See");
+				SetStateLabel("See2");
 		}
 		else if ( !bNoGravity && (waterlevel < 2) )
 		{
@@ -818,7 +910,7 @@ Class UTPlayer : DoomPlayer
 				|| InStateSequence(CurState,FindState("SpawnAir"))
 				|| InStateSequence(CurState,FindState("SpawnSwim"))
 				|| InStateSequence(CurState,FindState("SpawnCrouch"))
-				|| InStateSequence(CurState,FindState("See"))
+				|| InStateSequence(CurState,FindState("See2"))
 				|| InStateSequence(CurState,FindState("SeeSwim"))
 				|| InStateSequence(CurState,FindState("SeeCrouch"))
 				|| InStateSequence(CurState,FindState("Turn")) )
@@ -831,7 +923,7 @@ Class UTPlayer : DoomPlayer
 				|| InStateSequence(CurState,FindState("SpawnAir"))
 				|| InStateSequence(CurState,FindState("SpawnSwim"))
 				|| InStateSequence(CurState,FindState("SpawnCrouch"))
-				|| InStateSequence(CurState,FindState("See"))
+				|| InStateSequence(CurState,FindState("See2"))
 				|| InStateSequence(CurState,FindState("SeeAir"))
 				|| InStateSequence(CurState,FindState("SeeCrouch"))
 				|| InStateSequence(CurState,FindState("Turn")) )
@@ -841,6 +933,7 @@ Class UTPlayer : DoomPlayer
 
 	override void PlayAttacking()
 	{
+		if ( player.Health <= 0 ) return;
 		// no animation if crouched
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
 		// check weapon type
@@ -870,18 +963,21 @@ Class UTPlayer : DoomPlayer
 
 	virtual void PlayAttacking3()
 	{
+		if ( player.Health <= 0 ) return;
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
 		SetStateLabel("Missile");
 	}
 
 	virtual void PlayReloading()
 	{
+		if ( player.Health <= 0 ) return;
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
 		SetStateLabel("Reload");
 	}
 
 	virtual void PlayLanding()
 	{
+		if ( player.Health <= 0 ) return;
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
 		SetStateLabel("Landing");
 	}
@@ -957,10 +1053,11 @@ Class UTPlayer : DoomPlayer
 		#### # 5;
 		PLYC A -1;
 		Wait;
-	See:
+	// See state needs to be defined on each subclass for the selection menu
+	See2:
 		#### # 5;
 		PLAY HIJKL 4;
-		Goto See+1;
+		Goto See2+1;
 	SeeAir:
 		#### # 5;
 		PLYA A 50;
@@ -1109,6 +1206,281 @@ Class UTPlayer : DoomPlayer
 		PLT4 ABCDEFGHIJKLMNO 3;
 		Goto Spawn;
 	}
+}
+
+Class UTUnderSound : Actor
+{
+	enum EFluidType
+	{
+		FLUID_WATER,
+		FLUID_SLIME,
+		FLUID_LAVA,
+		FLUID_NITRO
+	};
+	int curfluid, lastfluid;
+	String fluidsounds[4];
+	Default
+	{
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+DONTSPLASH;
+		+NOINTERACTION;
+	}
+	int GetFluid()
+	{
+		int thisfluid = FLUID_WATER;
+		// try to guess where we are
+		for ( int i=0; i<CurSector.Get3DFloorCount(); i++ )
+		{
+			F3DFloor ff = CurSector.Get3DFloor(i);
+			switch ( ff.model.damagetype )
+			{
+			case 'Slime':
+				thisfluid = FLUID_SLIME;
+				break;
+			case 'Fire':
+				thisfluid = FLUID_LAVA;
+				break;
+			case 'Ice':
+				thisfluid = FLUID_NITRO;
+				break;
+			}
+		}
+		return thisfluid;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
+		curfluid = lastfluid = GetFluid();
+		fluidsounds[0] = 'ut/underwater';
+		fluidsounds[1] = 'ut/underslime';
+		fluidsounds[2] = 'ut/underlava';
+		fluidsounds[3] = 'ut/undernitro';
+		A_PlaySound(fluidsounds[curfluid],CHAN_VOICE|CHAN_LISTENERZ,1.,true,100.);
+		A_SoundVolume(CHAN_VOICE,(players[consoleplayer].camera==target)?1.:0.);
+	}
+	override void OnDestroy()
+	{
+		A_StopSound(CHAN_VOICE);
+		Super.OnDestroy();
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
+		curfluid = GetFluid();
+		if ( curfluid != lastfluid )
+			A_PlaySound(fluidsounds[curfluid],CHAN_VOICE|CHAN_LISTENERZ,1.,true,100.);
+		lastfluid = curfluid;
+		A_SoundVolume(CHAN_VOICE,(players[consoleplayer].camera==target)?1.:0.);
+	}
+}
+
+// terrain splashes
+Class UTTerrainFX : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		+DONTSPLASH;
+		+NOTELEPORT;
+	}
+	States
+	{
+	Spawn:
+		SPSH ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_FadeOut(1./26.);
+		Stop;
+	}
+}
+
+Class UTWaterSplish : UTTerrainFX
+{
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		let r = Spawn("WaterRing",pos);
+		r.scale *= 0.3;
+	}
+}
+
+Class UTWaterSplash : UTTerrainFX
+{
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		Spawn("WaterRing",pos);
+	}
+}
+
+Class WaterRing : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Scale 0.15;
+		Radius 0.1;
+		Height 0;
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		+DONTSPLASH;
+		+NOTELEPORT;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		alpha -= 1./20.;
+	}
+	States
+	{
+	Spawn:
+		RNGX ABCDEF 5 Bright;
+		Stop;
+	}
+}
+
+Class UTBloodSplish : UTTerrainFX
+{
+}
+
+Class UTBloodSplash : UTTerrainFX
+{
+}
+
+Class UTSlimeSplish : UTTerrainFX
+{
+}
+
+Class UTSlimeSplash : UTTerrainFX
+{
+}
+
+Class UTNukageSplish : UTTerrainFX
+{
+	Default
+	{
+		+BRIGHT;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		int numpt = Random[Terrain](3,5);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Terrain](-1,1),FRandom[Terrain](-1,1),FRandom[Terrain](-1,1)).unit()*FRandom[Terrain](2,5);
+			let s = Spawn("BioSpark",pos);
+			s.vel = pvel;
+		}
+		numpt = Random[Terrain](1,2);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Terrain](-1,1),FRandom[Terrain](-1,1),FRandom[Terrain](-1,1)).unit()*FRandom[Terrain](.6,1.2);
+			let s = Spawn("UTSmoke",pos);
+			s.vel = pvel;
+			s.scale *= 0.7;
+			s.A_SetRenderStyle(0.5,STYLE_AddShaded);
+			if ( Random[Terrain](0,1) ) s.SetShade("40FF60");
+			else s.SetShade("60FF40");
+		}
+	}
+}
+
+Class UTNukageSplash : UTTerrainFX
+{
+	Default
+	{
+		+BRIGHT;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		int numpt = Random[Terrain](8,12);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Terrain](-1,1),FRandom[Terrain](-1,1),FRandom[Terrain](-1,1)).unit()*FRandom[Terrain](3,12);
+			let s = Spawn("BioSpark",pos);
+			s.vel = pvel;
+		}
+		numpt = Random[Terrain](3,5);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Terrain](-1,1),FRandom[Terrain](-1,1),FRandom[Terrain](-1,1)).unit()*FRandom[Terrain](1.2,2.4);
+			let s = Spawn("UTSmoke",pos);
+			s.vel = pvel;
+			s.scale *= 2;
+			s.A_SetRenderStyle(0.5,STYLE_AddShaded);
+			if ( Random[Terrain](0,1) ) s.SetShade("40FF60");
+			else s.SetShade("60FF40");
+		}
+	}
+}
+
+Class UTLavaSplish : UTTerrainFX
+{
+	Default
+	{
+		+BRIGHT;
+	}
+}
+
+Class UTLavaSplash : UTTerrainFX
+{
+	Default
+	{
+		+BRIGHT;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		Spawn("FlameExplosion",pos);
+	}
+}
+
+Class FlameExplosion : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		Scale 0.8;
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		+DONTSPLASH;
+		+NOTELEPORT;
+		+FORCEXYBILLBOARD;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		A_PlaySound("ut/lavaex",CHAN_VOICE);
+		Spawn("SlugSmoke",pos);
+		Spawn("SlugLight",pos);
+	}
+	States
+	{
+	Spawn:
+		FEXP ABCDEFGHIJ 2 BRIGHT;
+		Stop;
+	}
+}
+
+Class UTNitroSplish : UTTerrainFX
+{
+}
+
+Class UTNitroSplash : UTTerrainFX
+{
 }
 
 // these only exist for sound
@@ -1279,6 +1651,7 @@ Class UTWeapon : Weapon
 {
 	int DropAmmo;
 	bool bExtraPickup;
+	transient int lastnoammotic;
 
 	Property DropAmmo: DropAmmo;
 
@@ -1321,16 +1694,23 @@ Class UTWeapon : Weapon
 		Owner.player.WeaponState |= WF_WEAPONBOBBING; // UT weapons always bob
 	}
 
-	void FireEffect()
+	virtual void FireEffect()
 	{
 		let amp = DamageAmplifier(Owner.FindInventory("DamageAmplifier",true));
 		if ( amp ) amp.FireEffect();
 	}
 
+	override void DetachFromOwner()
+	{
+		Owner.A_StopSound(CHAN_WEAPON);
+		Super.DetachFromOwner();
+	}
 	override void OwnerDied()
 	{
-		Super.OwnerDied();
+		if ( Owner.player && (Owner.player.ReadyWeapon == self) )
+			Owner.A_StopSound(CHAN_WEAPON);
 		A_ClearRefire();
+		Super.OwnerDied();
 	}
 
 	override bool HandlePickup( Inventory item )
@@ -1419,6 +1799,17 @@ Class UTWeapon : Weapon
 		roll = 0;
 	}
 
+	override bool CheckAmmo( int fireMode, bool autoSwitch, bool requireAmmo, int ammocount )
+	{
+		bool rslt = Super.CheckAmmo(fireMode,autoSwitch,requireAmmo,ammocount);
+		if ( (gametic > lastnoammotic) && !rslt && !autoSwitch && !requireAmmo && Owner.CheckLocalView() )
+		{
+			lastnoammotic = gametic;
+			Console.Printf(StringTable.Localize((Amount>1)?"$M_NOAMMO2":"$M_NOAMMO"),GetTag());
+		}
+		return rslt;
+	}
+
 	Default
 	{
 		Weapon.BobStyle "Smooth";
@@ -1445,11 +1836,11 @@ Class UTTeleportLight : DynamicLight
 			Destroy();
 			return;
 		}
-		args[LIGHT_RED] = int(128*alpha);
-		args[LIGHT_GREEN] = int(160*alpha);
-		args[LIGHT_BLUE] = int(255*alpha);
+		args[LIGHT_RED] = int(128*alpha*(.5+.5*cos(GetAge()*30)));
+		args[LIGHT_GREEN] = int(160*alpha*(.5+.5*cos(GetAge()*30)));
+		args[LIGHT_BLUE] = int(255*alpha*(.5+.5*cos(GetAge()*30)));
 		args[LIGHT_INTENSITY] = Random[Tele](10,14)*8;
-		alpha -= 1./35;
+		alpha -= 1./TICRATE;
 	}
 }
 
@@ -1472,7 +1863,7 @@ Class UTItemLight : DynamicLight
 		args[LIGHT_GREEN] = int(224*alpha);
 		args[LIGHT_BLUE] = int(160*alpha);
 		args[LIGHT_INTENSITY] = Random[Tele](6,8)*8;
-		alpha -= 3./35;
+		alpha -= 1.5/TICRATE;
 	}
 }
 
@@ -1488,8 +1879,9 @@ Class UTTeleportFog : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		Spawn("UTTeleportLight",pos+(0,0,16));
+		Spawn("UTTeleportLight",Vec3Offset(0,0,16));
 		A_PlaySound ("misc/teleport");
+		Spawn("UTTeleportParticles",Vec3Offset(0,0,16));
 	}
 	States
 	{
@@ -1512,7 +1904,8 @@ Class UTItemFog : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		Spawn("UTItemLight",pos+(0,0,16));
+		Spawn("UTItemLight",Vec3Offset(0,0,16));
+		Spawn("UTRespawnParticles",Vec3Offset(0,0,12));
 	}
 	States
 	{
@@ -1583,8 +1976,8 @@ Class UTViewSpark : UTSpark
 		}
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
-		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
-		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
+		Vector3 origin = level.Vec3Offset(target.Vec2OffsetZ(0,0,target.player.viewz),x*ofs.x+y*ofs.y+z*ofs.z);
+		SetOrigin(origin,true);
 		bInvisible = (players[consoleplayer].camera != target);
 		if ( isFrozen() ) return;
 		ofs += vvel;
@@ -1828,8 +2221,8 @@ Class UTViewSmoke : UTSmoke
 		}
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
-		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
-		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
+		Vector3 origin = level.Vec3Offset(target.Vec2OffsetZ(0,0,target.player.viewz),x*ofs.x+y*ofs.y+z*ofs.z);
+		SetOrigin(origin,true);
 		bInvisible = (players[consoleplayer].camera != target);
 		if ( isFrozen() ) return;
 		ofs += vvel;
@@ -2018,6 +2411,278 @@ Class ShredCorpseHitbox : Actor
 			Destroy();
 		}
 		return 0;
+	}
+}
+
+// imitates UE1 light type LT_TexturePaletteOnce/LT_TexturePaletteLoop
+Class PaletteLight : DynamicLight
+{
+	Color pal[256];
+	bool IsLooping;
+
+	Default
+	{
+		Tag "Explosion";
+		DynamicLight.Type "Point";
+		Args 0,0,0,80;
+		ReactionTime 15;
+	}
+	private void UpdateLight()
+	{
+		int index = 255-((255*ReactionTime)/abs(default.ReactionTime));
+		args[LIGHT_RED] = pal[index].r;
+		args[LIGHT_GREEN] = pal[index].g;
+		args[LIGHT_BLUE] = pal[index].b;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		int lump = Wads.CheckNumForFullname(String.Format("palettes/%s.pal",GetTag()));
+		String paldat = Wads.ReadLump(lump);
+		for ( int i=0; i<256; i++ )
+		{
+			pal[i].r = paldat.ByteAt(i*3);
+			pal[i].g = paldat.ByteAt(i*3+1);
+			pal[i].b = paldat.ByteAt(i*3+2);
+		}
+		if ( ReactionTime < 0 )
+		{
+			ReactionTime = -ReactionTime;
+			IsLooping = true;
+		}
+		UpdateLight();
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		ReactionTime--;
+		if ( ReactionTime < 0 )
+		{
+			if ( !IsLooping )
+			{
+				Destroy();
+				return;
+			}
+			else ReactionTime = abs(default.ReactionTime);
+		}
+		UpdateLight();
+	}
+}
+
+// A bParticles type actor, reads from the anivfile directly
+// Tag: semicolon-separated, starting with the model, then the particle class
+// of UTMeshParticle to use
+Class UTParticleMesh : Actor
+{
+	Array<double> px, py, pz;
+	Array<Actor> parts;
+	Class<UTMeshParticle> pclass;
+	int numframes, numverts;
+	double animframe, animrate;
+
+	Default
+	{
+		Tag "telepo;UTMeshParticle";
+		Args 28;	// animation rate in fps
+		ReactionTime 35;	// total lifespan
+		XScale 0.015;	// scale of the model
+		YScale 0.03;	// scale of the model
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+		+NOTELEPORT;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		Array<String> strs;
+		strs.Clear();
+		GetTag().Split(strs,";");
+		pclass = strs[1];
+		int lump = Wads.CheckNumForFullname(String.Format("models/%s_a.3d",strs[0]));
+		String anivfile = Wads.ReadLump(lump);
+		numframes = anivfile.ByteAt(0);
+		numframes |= anivfile.ByteAt(1)<<8;
+		int fsiz = anivfile.ByteAt(2);
+		fsiz |= anivfile.ByteAt(3)<<8;
+		numverts = fsiz/4;
+		px.Resize(numverts*numframes);
+		py.Resize(numverts*numframes);
+		pz.Resize(numverts*numframes);
+		parts.Resize(numverts);
+		int cursor = 4;
+		for ( int i=0; i<numverts*numframes; i++ )
+		{
+			int avert = anivfile.ByteAt(cursor++);
+			avert |= anivfile.ByteAt(cursor++)<<8;
+			avert |= anivfile.ByteAt(cursor++)<<16;
+			avert |= anivfile.ByteAt(cursor++)<<24;
+			int ax = ((avert&0x7ff)<<21),
+				ay = ((avert>>11)&0x7ff)<<21,
+				az = ((avert>>22)&0x3ff)<<22;
+			px[i] = ax/2097152.;
+			py[i] = ay/2097152.;
+			pz[i] = az/4194304.;
+		}
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		for ( int i=0; i<numverts; i++ )
+			parts[i] = Spawn(pclass,level.Vec3Offset(pos,px[i]*scale.x*x+py[i]*scale.x*y+pz[i]*scale.y*z));
+		animframe = 0;
+		animrate = Args[0];
+	}
+	override void OnDestroy()
+	{
+		for ( int i=0; i<numverts; i++ )
+		{
+			if ( !parts[i] ) continue;
+			parts[i].Destroy();
+		}
+		Super.OnDestroy();
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		animframe += animrate/TICRATE;
+		ReactionTime--;
+		if ( (ceil(animframe) >= numframes) || (ReactionTime <= 0) )
+		{
+			Destroy();
+			return;
+		}
+		int framea = int(floor(animframe)), frameb = int(ceil(animframe));
+		double theta = animframe-framea;
+		Vector3 posa, posb, ipos;
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		for ( int i=0; i<numverts; i++ )
+		{
+			posa = (px[i+numverts*framea],py[i+numverts*framea],pz[i+numverts*framea]);
+			posb = (px[i+numverts*frameb],py[i+numverts*frameb],pz[i+numverts*frameb]);
+			ipos = posa*(1.-theta)+posb*theta;
+			if ( !parts[i] ) parts[i] = Spawn(pclass,level.Vec3Offset(pos,ipos.x*scale.x*x+ipos.y*scale.x*y+ipos.z*scale.y*z));
+			else parts[i].SetOrigin(level.Vec3Offset(pos,ipos.x*scale.x*x+ipos.y*scale.x*y+ipos.z*scale.y*z),true);
+			parts[i].alpha = ReactionTime/double(default.ReactionTime);
+		}
+	}
+	States
+	{
+	Spawn:
+		TNT1 A -1;
+		Stop;
+	}
+}
+
+// Individual particle
+Class UTMeshParticle : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Scale 0.25;
+		FloatBobPhase 0;
+		+NOGRAVITY;
+		+NOCLIP;
+		+NOTELEPORT;
+		+DONTSPLASH;
+		+FORCEXYBILLBOARD;
+	}
+	States
+	{
+	Spawn:
+		DBEF A -1 Bright;
+		Stop;
+	}
+}
+Class UTRespawnParticles : UTParticleMesh
+{
+	Default
+	{
+		Tag "telepo;UTRespawnParticle";
+	}
+}
+Class UTRespawnParticle : UTMeshParticle
+{
+	Default
+	{
+		Scale 1.1;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		A_SetScale(0.03+alpha*0.37);
+	}
+}
+Class UTTeleportParticles : UTParticleMesh
+{
+	Default
+	{
+		Tag "telepo;UTTeleParticle";
+		Args 21;
+		XScale 0.06;
+		YScale 0.16;
+	}
+}
+Class UTTeleParticle : UTMeshParticle
+{
+	Default
+	{
+		Scale 0.2;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		SetState(FindState("Spawn")+Random[UTParticle](0,7));
+	}
+	States
+	{
+	Spawn:
+		UTFL ABCDEFGH -1 Bright;
+		Stop;
+	}
+}
+
+// Follows a single line trail, spawns bubbles if underwater
+// In addition, also activates shoot-through lines, since LineTrace can't do it
+Class UTBulletTrail : LineTracer
+{
+	Array<Line> ShootThroughList;
+	Actor ignoreme;
+
+	static play void DoTrail( Actor target, Vector3 pos, Vector3 dir, int dist, int bubblechance )
+	{
+		let t = new("UTBulletTrail");
+		t.ignoreme = target;
+		t.ShootThroughList.Clear();
+		t.Trace(pos,level.PointInSector(pos.xy),dir,dist,0);
+		for ( int i=0; i<t.ShootThroughList.Size(); i++ )
+			t.ShootThroughList[i].Activate(target,0,SPAC_PCross);
+		for ( int i=5; i<t.Results.Distance; i+=10 )
+		{
+			if ( !Random[Boolet](0,bubblechance) ) continue;
+			let b = Actor.Spawn("UTBubble",level.Vec3Offset(pos,dir*i));
+			b.Scale *= FRandom[Boolet](0.4,0.6);
+		}
+		t.Destroy();
+	}
+
+	override ETraceStatus TraceCallback()
+	{
+		if ( Results.HitType == TRACE_HitActor )
+		{
+			if ( Results.HitActor == ignoreme ) return TRACE_Skip;
+			if ( Results.HitActor.bSHOOTABLE ) return TRACE_Stop;
+			return TRACE_Skip;
+		}
+		else if ( (Results.HitType == TRACE_HitWall) && (Results.Tier == TIER_Middle) )
+		{
+			if ( !Results.HitLine.sidedef[1] || (Results.HitLine.Flags&(Line.ML_BlockHitscan|Line.ML_BlockEverything)) )
+				return TRACE_Stop;
+			ShootThroughList.Push(Results.HitLine);
+			return TRACE_Skip;
+		}
+		return TRACE_Stop;
 	}
 }
 
@@ -2260,25 +2925,31 @@ Class UTMainHandler : EventHandler
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'MiniAmmo';
 			else e.Replacement = 'RifleAmmo';
 		}
-		else if ( e.Replacee == 'InvulnerabilitySphere' ) e.Replacement = (!deathmatch||flak_dmsshock)?'EnhancedShockRifle':'UDamage';
+		else if ( e.Replacee == 'InvulnerabilitySphere' ) e.Replacement = 'UTInvulnerability';
 		else if ( e.Replacee == 'Berserk' ) e.Replacement = 'UDamage';
 		else if ( (e.Replacee == 'ArtiTomeOfPower') || (e.Replacee == 'ArtiEgg') ) e.Replacement = 'ActUDamage';
 		else if ( e.Replacee == 'Soulsphere' ) e.Replacement = 'UTHealthPack';
 		else if ( e.Replacee == 'ArtiSuperHealth' ) e.Replacement = 'ActHealthPack';
 		else if ( e.Replacee == 'Megasphere' ) e.Replacement = 'UTShieldBelt';
-		else if ( e.Replacee == 'ArtiInvulnerability' ) e.Replacement = 'ActShieldBelt';
+		else if ( e.Replacee == 'ArtiInvulnerability' ) e.Replacement = 'ActUTInvulnerability';
 		else if ( (e.Replacee == 'Allmap') || (e.Replacee == 'SuperMap') ) e.Replacement = 'UTMapRevealer';
 		else if ( e.Replacee == 'BlurSphere' ) e.Replacement = 'UTInvisibility';
-		else if ( e.Replacee == 'ArtiInvisibility' ) e.Replacement = 'ActInvisibility';
-		else if ( e.Replacee == 'Infrared' ) e.Replacement = 'Searchlight';
-		else if ( e.Replacee == 'ArtiTorch' ) e.Replacement = 'ActSearchlight';
+		else if ( e.Replacee == 'ArtiInvisibility' ) e.Replacement = 'ActUTInvisibility';
+		else if ( e.Replacee == 'Infrared' ) e.Replacement = 'UTNightVision';
+		else if ( e.Replacee == 'ArtiTorch' ) e.Replacement = 'ActUTNightVision';
 		else if ( e.Replacee == 'RadSuit' ) e.Replacement = 'UTJumpBoots';
 		else if ( e.Replacee == 'ArtiFly' ) e.Replacement = 'ActJumpBoots';
 		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') ) e.Replacement = 'UTBackpack';
 		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') ) e.Replacement = 'UTArmorBonus';
 		else if ( (e.Replacee == 'HealthBonus') || (e.Replacee == 'CrystalVial') ) e.Replacement = 'UTHealthBonus';
-		else if ( (e.Replacee == 'GreenArmor') || (e.Replacee == 'Silvershield') ) e.Replacement = 'UTThighPads';
-		else if ( (e.Replacee == 'BlueArmor') || (e.Replacee == 'EnchantedShield') ) e.Replacement = 'UTBodyArmor';
+		else if ( e.Replacee == 'GreenArmor' ) e.Replacement = 'UTThighPads';
+		else if ( e.Replacee == 'Silvershield' )
+		{
+			if ( Random[Replacements](0,1) ) e.Replacement = 'UTThighPads';
+			else e.Replacement = 'UTBodyArmor';
+		}
+		else if ( e.Replacee == 'BlueArmor' ) e.Replacement = 'UTBodyArmor';
+		else if ( e.Replacee == 'EnchantedShield' ) e.Replacement = 'UTShieldBelt';
 		else if ( e.Replacee == 'Stimpack' ) e.Replacement = 'UTMedBox';
 		else if ( e.Replacee == 'Medikit' ) e.Replacement = 'UTHealthBox';
 		else if ( e.Replacee == 'ArtiHealth' )
@@ -2289,9 +2960,7 @@ Class UTMainHandler : EventHandler
 		else if ( e.Replacee == 'ArtiTeleport' )
 		{
 			// I have no idea what to replace this with, so just have some random stuff
-			if ( Random[Replacements](0,1) ) e.Replacement = 'UTBackpack';
-			else if ( Random[Replacements](0,1) ) e.Replacement = 'ActShieldBelt';
-			else if ( Random[Replacements](0,1) ) e.Replacement = 'ActHealthPack';
+			if ( Random[Replacements](0,1) ) e.Replacement = 'ActHealthPack';
 			else e.Replacement = 'ActUDamage';
 		}
 		else if ( e.Replacee == 'RedCard' ) e.Replacement = 'UTRedKey';
@@ -2343,6 +3012,7 @@ Class UTMainHandler : EventHandler
 		// prettify Kinsie's test map for a more Unreal feel
 		if ( level.GetChecksum() ~== "959A613006CC3AA912C4A22908B7566A" )
 		{
+			S_ChangeMusic("Course");
 			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
 			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
 			TextureID baseflor = TexMan.CheckForTexture("rClfFlr0",TexMan.Type_Any);
@@ -2353,9 +3023,9 @@ Class UTMainHandler : EventHandler
 			level.ChangeSky(skytx,skytx);
 			for ( int i=0; i<level.sectors.size(); i++ )
 			{
-				level.sectors[i].lightlevel = min(level.sectors[i].lightlevel,64);
-				level.sectors[i].SetPlaneLight(0,0);
-				level.sectors[i].SetPlaneLight(1,0);
+				level.sectors[i].lightlevel = min(level.sectors[i].lightlevel,96);
+				if ( level.sectors[i].GetPlaneLight(0) ) level.sectors[i].SetPlaneLight(0,96);
+				if ( level.sectors[i].GetPlaneLight(1) ) level.sectors[i].SetPlaneLight(1,96);
 				// open some ceilings
 				if ( level.sectors[i].ceilingplane.ZAtPoint(level.sectors[i].centerspot) == 1280 )
 					level.sectors[i].SetTexture(1,skyflatnum);
@@ -2375,6 +3045,7 @@ Class UTMainHandler : EventHandler
 			for ( int i=0; i<level.sides.size(); i++ )
 			{
 				level.sides[i].light = 0;
+				level.sides[i].flags &= ~Side.WALLF_ABSLIGHTING;
 				for ( int j=0; j<3; j++ )
 				{
 					if ( level.sides[i].GetTexture(j) != deftex ) continue;
@@ -2440,6 +3111,7 @@ Class UTMainHandler : EventHandler
 		}
 		else if ( level.GetChecksum() ~== "0EADB2F82732A968B8513E4DC6138439" )
 		{
+			S_ChangeMusic("Course");
 			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
 			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
 			TextureID baseflor = TexMan.CheckForTexture("rClfFlr0",TexMan.Type_Any);
@@ -2450,9 +3122,9 @@ Class UTMainHandler : EventHandler
 			level.ChangeSky(skytx,skytx);
 			for ( int i=0; i<level.sectors.size(); i++ )
 			{
-				level.sectors[i].lightlevel = 0;
-				level.sectors[i].SetPlaneLight(0,0);
-				level.sectors[i].SetPlaneLight(1,0);
+				level.sectors[i].lightlevel = min(level.sectors[i].lightlevel,96);
+				if ( level.sectors[i].GetPlaneLight(0) ) level.sectors[i].SetPlaneLight(0,96);
+				if ( level.sectors[i].GetPlaneLight(1) ) level.sectors[i].SetPlaneLight(1,96);
 				// open some ceilings
 				if ( level.sectors[i].ceilingplane.ZAtPoint(level.sectors[i].centerspot) == 1280 )
 					level.sectors[i].SetTexture(1,skyflatnum);
@@ -2472,6 +3144,7 @@ Class UTMainHandler : EventHandler
 			for ( int i=0; i<level.sides.size(); i++ )
 			{
 				level.sides[i].light = 0;
+				level.sides[i].flags &= ~Side.WALLF_ABSLIGHTING;
 				for ( int j=0; j<3; j++ )
 				{
 					if ( level.sides[i].GetTexture(j) != deftex ) continue;
@@ -2660,7 +3333,7 @@ Class UTMainHandler : EventHandler
 			e.Thing.A_XScream();
 			e.Thing.A_NoBlocking();
 			e.Thing.A_BossDeath();
-			e.Thing.Destroy();
+			e.Thing.SetStateLabel("Null");	// instead of destroying, should prevent random VM aborts
 			return;
 		}
 		// attach damage accumulator for corpses
@@ -2688,7 +3361,7 @@ Class UTMainHandler : EventHandler
 		while ( bi.Next() )
 		{
 			Actor a = bi.Thing;
-			if ( !a || !a.bSHOOTABLE || !Source.CheckSight(a,0xf) || (a == Source) || (Source.Distance3D(a) > ExplosionRadius) )
+			if ( !a || !a.bSHOOTABLE || !Source.CheckSight(a,0xf) || (a == Source) || (Source.Distance3D(a) > ExplosionRadius) || a.bCANNOTPUSH || (a.Mass >= 10000000) )
 				continue;
 			Vector3 midpoint = a.Vec3Offset(0,0,a.height*0.5);
 			Vector3 dir = Level.Vec3Diff(Source.pos,midpoint);
@@ -2704,7 +3377,7 @@ Class UTMainHandler : EventHandler
 	// Same for this
 	static void DoKnockback( Actor Victim, Vector3 HitDirection, double MomentumTransfer )
 	{
-		if ( !Victim ) return;
+		if ( !Victim || !Victim.bSHOOTABLE || Victim.bCANNOTPUSH || (Victim.Mass >= 10000000) ) return;
 		if ( (Victim is 'ShredCorpseHitbox') && Victim.target )
 			Victim.target.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.target.Mass));
 		else Victim.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.Mass));

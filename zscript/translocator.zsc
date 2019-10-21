@@ -20,6 +20,7 @@ Class ModuleHitbox : Actor
 			master.vel.z = 5;
 		}
 		if ( !master || (master.target && ((master.target == source) || master.target.isTeammate(source))) ) return 0;
+		Health = 0;
 		master.bAMBUSH = true;
 		return 0;
 	}
@@ -50,6 +51,9 @@ Class ModuleHitbox : Actor
 	Spawn:
 		TNT1 A 10 A_AlertMonsters(0,AMF_TARGETEMITTER);
 		Wait;
+	Death:
+		TNT1 A -1;
+		Stop;
 	}
 }
 
@@ -232,6 +236,8 @@ Class TranslocatorModule : Actor
 			{
 				SetOrigin(tracer.Vec2OffsetZ(0,0,pos.z),false);
 				vel.xy *= 0;
+				tracer = null;
+				bHITTRACER = false;
 			}
 		}
 		TMOD A 12;
@@ -241,8 +247,34 @@ Class TranslocatorModule : Actor
 	}
 }
 
+Class TranslocatorAfterimageParticle : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Scale 0.6;
+		Alpha 0.4;
+		+NOCLIP;
+		+NOGRAVITY;
+		+DONTSPLASH;
+		+NOTELEPORT;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		A_SetScale(.1+.2*alpha);
+	}
+	States
+	{
+	Spawn:
+		TPEF A 1 Bright A_FadeOut(.4/TICRATE);
+		Wait;
+	}
+}
+
 Class TranslocatorAfterimage : Actor
 {
+	Array<Actor> particles;
 	Vector3 spreaddir;
 	Default
 	{
@@ -266,21 +298,47 @@ Class TranslocatorAfterimage : Actor
 			return;
 		}
 		scale = target.scale;
-		angle = target.angle;
-		pitch = target.pitch;
-		roll = target.roll;
-		vel = (FRandom[Transloc](-.5,.5),FRandom[Transloc](-.5,.5),FRandom[Transloc](-.5,.5));
+		angle = target.angle-90;
+		roll = -90;
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(0,angle,roll);
+		int lump = Wads.CheckNumForFullname("models/TeleSoldier_a.3d");
+		String anivfile = Wads.ReadLump(lump);
+		int numframes = anivfile.ByteAt(0);
+		numframes |= anivfile.ByteAt(1)<<8;
+		int fsiz = anivfile.ByteAt(2);
+		fsiz |= anivfile.ByteAt(3)<<8;
+		particles.Resize(fsiz/4);
+		int cursor = 4;
+		for ( int i=0; i<fsiz/4; i++ )
+		{
+			int avert = anivfile.ByteAt(cursor++);
+			avert |= anivfile.ByteAt(cursor++)<<8;
+			avert |= anivfile.ByteAt(cursor++)<<16;
+			avert |= anivfile.ByteAt(cursor++)<<24;
+			int ax = ((avert&0x7ff)<<21),
+				ay = ((avert>>11)&0x7ff)<<21,
+				az = ((avert>>22)&0x3ff)<<22;
+			Vector3 ppos = (ax/2097152.-5.,ay/2097152.+1.25,az/4194304.);
+			ppos.xy *= 0.0625;
+			ppos.z *= 0.125;
+			particles[i] = Spawn("TranslocatorAfterimageParticle",level.Vec3Offset(pos,ppos.x*x+ppos.y*y+ppos.z*z+(0,0,30)));
+			particles[i].vel = (FRandom[Transloc](-.25,.25),FRandom[Transloc](-.25,.25),FRandom[Transloc](-.25,.25));
+		}
 	}
-	action void A_Spread()
+	void A_Spread()
 	{
-		vel += invoker.spreaddir*speed;
-		A_FadeOut(0.003);
+		for ( int i=0; i<particles.Size(); i++ )
+		{
+			if ( !particles[i] ) continue;
+			particles[i].vel += spreaddir*speed*FRandom[Transloc](0.6,1.3);
+		}
 	}
 	States
 	{
 	Spawn:
-		PLAY A 10 A_SetTics(Random[Transloc](20,50));
-		PLAY A 1 A_Spread();
+		TNT1 A 10;
+		TNT1 A 1 A_Spread();
 		Wait;
 	}
 }
@@ -333,7 +391,7 @@ Class Translocator : UTWeapon
 		A_AlertMonsters();
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x-8.0*y-12.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x-8*y-12*z);
 		let p = Spawn("TranslocatorModule",origin);
 		p.target = self;
 		p.angle = angle;
@@ -384,21 +442,32 @@ Class Translocator : UTWeapon
 		A_AlertMonsters();
 		// squeeze down new z if ceiling is in the way
 		if ( (newpos.z+height > moduleceilingz) ) newpos.z = max(modulefloorz,moduleceilingz-height);
+		// temporarily disable telefragging for all allies
+		bool oldnotele[MAXPLAYERS];
+		for ( int i=0; i<MAXPLAYERS; i++ )
+		{
+			if ( !playeringame[i] || !players[i].mo ) continue;
+			oldnotele[i] = players[i].mo.bNOTELEFRAG;
+			if ( !IsFriend(players[i].mo) ) continue;
+			players[i].mo.bNOTELEFRAG = true;
+		}
 		if ( Warp(self,newpos.x,newpos.y,newpos.z,flags:WARPF_ABSOLUTEPOSITION|WARPF_TESTONLY) && TeleportMove(newpos,true) )
 		{
 			SpawnTeleportFog(oldpos,true,false);
 			Vector3 diff = level.Vec3Diff(oldpos,newpos);
-			for ( int i=0; i<40; i++ )
-			{
-				let a = Spawn("TranslocatorAfterimage",oldpos);
-				a.target = self;
-				TranslocatorAfterimage(a).spreaddir = diff.unit();
-				a.speed = (diff.length()/400)**0.5;
-			}
+			let a = Spawn("TranslocatorAfterimage",oldpos);
+			a.target = self;
+			TranslocatorAfterimage(a).spreaddir = diff.unit();
+			a.speed = (diff.length()/400)**0.5;
 			SpawnTeleportFog(newpos,false,false);
 			player.fov = min(175,player.desiredfov+60);
 		}
 		else A_PlaySound("transloc/return",CHAN_WEAPON);
+		for ( int i=0; i<MAXPLAYERS; i++ )
+		{
+			if ( !playeringame[i] || !players[i].mo ) continue;
+			players[i].mo.bNOTELEFRAG = oldnotele[i];
+		}
 		if ( bBroken )
 		{
 			UTMainHandler.DoFlash(self,Color(255,255,255,255),50);
