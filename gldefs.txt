@@ -820,10 +820,10 @@ HardwareShader PostProcess scene
 // Skyboxes
 SkyBox "KGDaySky" fliptop
 {
-	"graphics/SkySetB_front.png"
-	"graphics/SkySetB_right.png"
-	"graphics/SkySetB_back.png"
-	"graphics/SkySetB_left.png"
-	"graphics/SkySetB_up.png"
-	"graphics/SkySetB_down.png"
+	"graphics/dtsky_front.png"
+	"graphics/dtsky_right.png"
+	"graphics/dtsky_back.png"
+	"graphics/dtsky_left.png"
+	"graphics/dtsky_up.png"
+	"graphics/dtsky_down.png"
 }

@@ -248,7 +248,7 @@ Class Minigun : UTWeapon
 			A_Overlay(-9999,"FireDummy");
 		}
 		MGNF ABCDEFGHIJKLMNOPQRS 1 A_FireBullet();
-		MGNF A 0 A_JumpIf(invoker.bAltFire,1);
+		MGNF A 0 A_JumpIf(player.cmd.buttons&BT_ALTATTACK,1);
 		Goto Hold+1;
 	AltHold:
 		MGNF B 0 A_PlaySound("minigun/altfire",CHAN_WEAPON,1.0,true);
