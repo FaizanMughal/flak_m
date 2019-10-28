@@ -62,7 +62,7 @@ Class UTArmorBonus : UTArmor
 	{
 		Tag "$T_ARMORBONUS";
 		+COUNTITEM;
-		Inventory.Amount 1;
+		Inventory.Amount 5;
 		Inventory.MaxAmount 50;
 		Inventory.InterHubAmount 50;
 		UTArmor.ArmorAbsorption 25;

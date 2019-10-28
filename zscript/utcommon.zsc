@@ -238,6 +238,8 @@ Class UTPlayer : DoomPlayer
 	override void Tick()
 	{
 		Super.Tick();
+		if ( InStateSequence(CurState,FindState("See",true)) )
+			SetStateLabel("See2");
 		if ( !player || (player.mo != self) ) return;
 		if ( flak_utmovement )
 		{
@@ -386,7 +388,7 @@ Class UTPlayer : DoomPlayer
 
 	override void MovePlayer()
 	{
-		if ( !flak_utmovement || !player || (player.mo != self) )
+		if ( !flak_utmovement || !player || (player.mo != self) || (player.cheats&(CF_FROZEN|CF_TOTALLYFROZEN)) )
 		{
 			Super.MovePlayer();
 			return;
@@ -457,7 +459,7 @@ Class UTPlayer : DoomPlayer
 			}
 		}
 		last_sm = sm;
-		if ( !bNoGravity && player.onground && (waterlevel < 2) )
+		if ( !bNoGravity && player.onground && (waterlevel < 3) )
 		{
 			if ( flak_tapdodge && (dodge.length() > 0) && !tempslide )
 			{
@@ -521,7 +523,7 @@ Class UTPlayer : DoomPlayer
 				else player.vel = vel.xy;
 			}
 		}
-		else if ( !bNoGravity && (waterlevel < 2) )
+		else if ( !bNoGravity && (waterlevel < 1) )
 		{
 			// air acceleration when falling
 			float maxaccel = accelrate/TICRATE;
@@ -639,7 +641,9 @@ Class UTPlayer : DoomPlayer
 			return;
 		}
 		if ( player.cmd.buttons&BT_JUMP ) player.cmd.buttons &= ~BT_CROUCH;
-		if ( CanCrouch() && (player.health > 0) && level.IsCrouchingAllowed() && player.onground )	// in UT you can't crouch unless you're on the ground
+		// in UT you can't crouch unless you're on the ground
+		// however for the sake of compatibility with a whole lot of maps, crouch-jumping will be a thing here
+		if ( CanCrouch() && (player.health > 0) && level.IsCrouchingAllowed() )
 		{
 			if ( !totallyfrozen )
 			{
@@ -694,10 +698,10 @@ Class UTPlayer : DoomPlayer
 	override void DeathThink()
 	{
 		Super.DeathThink();
-		if ( !flak_utmovement ) return;
+		if ( !flak_utmovement || !player || (player.mo != self) || (player.cheats&(CF_FROZEN|CF_TOTALLYFROZEN)) ) return;
 		// unreal physics while dead
 		double friction = FrictionToUnreal();
-		if ( !bNoGravity && player.onground && (waterlevel < 2) )
+		if ( !bNoGravity && player.onground && (waterlevel < 3) )
 		{
 			// Hook in Unreal physics
 			Vector2 dir = (0,0);
@@ -713,7 +717,7 @@ Class UTPlayer : DoomPlayer
 			if ( vel.xy.length() > maxvel ) vel.xy = vel.xy.unit()*maxvel;
 			player.vel *= 0;
 		}
-		else if ( !bNoGravity && (waterlevel < 2) )
+		else if ( !bNoGravity && (waterlevel < 1) )
 		{
 			// air acceleration when falling
 			Vector2 dir = (0,0);
@@ -820,13 +824,7 @@ Class UTPlayer : DoomPlayer
 	override void PlayIdle()
 	{
 		if ( player.Health <= 0 ) return;
-		if ( (player && (player.mo == self)) && (player.crouchdir == -1) )
-		{
-			// Crouching
-			if ( !InStateSequence(CurState,FindState("SpawnCrouch")) )
-				SetStateLabel("SpawnCrouch");
-		}
-		else if ( !bNoGravity && player.onground && (waterlevel < 2) )
+		if ( !bNoGravity && player.onground && (waterlevel < 3) )
 		{
 			// Ground
 			if ( (player && (player.mo == self)) && player.cmd.yaw )
@@ -841,6 +839,12 @@ Class UTPlayer : DoomPlayer
 					|| InStateSequence(CurState,FindState("Spawn")+1) )
 					SetStateLabel("Turn");
 			}
+			else if ( player.crouchdir == -1 )
+			{
+				// Crouching
+				if ( !InStateSequence(CurState,FindState("SpawnCrouch")) )
+					SetStateLabel("SpawnCrouch");
+			}
 			else
 			{
 				if ( InStateSequence(CurState,FindState("See2"))
@@ -853,7 +857,7 @@ Class UTPlayer : DoomPlayer
 					SetStateLabel("Spawn");
 			}
 		}
-		else if ( !bNoGravity && (waterlevel < 2) )
+		else if ( !bNoGravity && (waterlevel < 1) )
 		{
 			// Falling
 			if ( InStateSequence(CurState,FindState("See2"))
@@ -884,16 +888,16 @@ Class UTPlayer : DoomPlayer
 	override void PlayRunning()
 	{
 		if ( player.Health <= 0 ) return;
-		if ( (player && (player.mo == self)) && (player.crouchdir == -1) )
-		{
-			// Crouching
-			if ( !InStateSequence(CurState,FindState("SeeCrouch")) )
-				SetStateLabel("SeeCrouch");
-		}
-		else if ( !bNoGravity && player.onground && (waterlevel < 2) )
+		if ( !bNoGravity && player.onground && (waterlevel < 3) )
 		{
 			// Ground
-			if ( InStateSequence(CurState,FindState("Spawn"))
+			if ( player.crouchdir == -1 )
+			{
+				// Crouching
+				if ( !InStateSequence(CurState,FindState("SeeCrouch")) )
+					SetStateLabel("SeeCrouch");
+			}
+			else if ( InStateSequence(CurState,FindState("Spawn"))
 				|| InStateSequence(CurState,FindState("SpawnAir"))
 				|| InStateSequence(CurState,FindState("SpawnSwim"))
 				|| InStateSequence(CurState,FindState("SpawnCrouch"))
@@ -903,7 +907,7 @@ Class UTPlayer : DoomPlayer
 				|| InStateSequence(CurState,FindState("Turn")) )
 				SetStateLabel("See2");
 		}
-		else if ( !bNoGravity && (waterlevel < 2) )
+		else if ( !bNoGravity && (waterlevel < 1) )
 		{
 			// Falling
 			if ( InStateSequence(CurState,FindState("Spawn"))
@@ -1268,7 +1272,7 @@ Class UTUnderSound : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !target )
+		if ( !target || !target.player || (target.waterlevel < 3) )
 		{
 			Destroy();
 			return;
@@ -2838,6 +2842,7 @@ Class UTMainHandler : EventHandler
 
 	override void CheckReplacement( ReplaceEvent e )
 	{
+		if ( e.IsFinal ) return;
 		if ( (e.Replacee == 'Chainsaw') || (e.Replacee == 'Gauntlets') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'UTChainsaw';

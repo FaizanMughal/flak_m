@@ -497,6 +497,8 @@ Class UTHud : BaseStatusBar
 		if ( a ) allarmor += a.amount;
 		if ( t ) allarmor += t.amount;
 		if ( s ) allarmor += s.amount;
+		let ba = CPlayer.mo.FindInventory("BasicArmor");
+		if ( ba ) allarmor += ba.amount;
 		CurX += 8*hudsize*HScale;
 		CurY += 14*hudsize*HScale;
 		if ( !showstatus && b ) DrawColor = GoldColor;
@@ -748,7 +750,7 @@ Class UTHud : BaseStatusBar
 				Vector2 scl = TexMan.GetScaledSize(itm.Icon);
 				double mscl = 56./max(scl.x,scl.y);
 				CurX = BaseX+(4+(56.-scl.x*mscl)/2.)*hudsize*HScale;
-				CurY = BaseY+4*hudsize*HScale;
+				CurY = BaseY+(4+(56.-scl.y*mscl)/2.)*hudsize*HScale;
 				UTDrawTintedTex(itm.Icon,hudsize*mscl);
 				// amount if >1
 				if ( itm.Amount > 1 )
@@ -795,7 +797,7 @@ Class UTHud : BaseStatusBar
 				Vector2 scl = TexMan.GetScaledSize(LastItem);
 				double mscl = 56./max(scl.x,scl.y);
 				CurX += (4+(56.-scl.x*mscl)/2.)*hudsize*HScale;
-				CurY += 4*hudsize*HScale;
+				CurY += (4+(56.-scl.y*mscl)/2.)*hudsize*HScale;
 				UTDrawTintedTex(LastItem,hudsize*mscl);
 				if ( LastAmount <= 1 ) return;
 				CurX = 32*hudsize*HScale;
@@ -809,7 +811,7 @@ Class UTHud : BaseStatusBar
 			Vector2 scl = TexMan.GetScaledSize(CPlayer.mo.InvSel.Icon);
 			double mscl = 56./max(scl.x,scl.y);
 			CurX += (4+(56.-scl.x*mscl)/2.)*hudsize*HScale;
-			CurY += 4*hudsize*HScale;
+			CurY += (4+(56.-scl.y*mscl)/2.)*hudsize*HScale;
 			UTDrawTintedTex(CPlayer.mo.InvSel.Icon,hudsize*mscl);
 			// amount if >1
 			if ( CPlayer.mo.InvSel.Amount <= 1 ) return;
