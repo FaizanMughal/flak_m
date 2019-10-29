@@ -188,6 +188,7 @@ Class Minigun : UTWeapon
 			return;
 		}
 		weap.bAltFire = !!(player.cmd.buttons&BT_ALTATTACK);
+		invoker.bcnt = 5;
 		A_Refire("Hold");
 	}
 
@@ -229,6 +230,7 @@ Class Minigun : UTWeapon
 	FireDummy:
 		TNT1 A 1
 		{
+			if ( Health <= 0 ) return ResolveState("Null");
 			let weap = Weapon(invoker);
 			if ( !(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)) || (weap.Ammo1.Amount <= 0) )
 			{

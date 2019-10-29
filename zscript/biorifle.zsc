@@ -802,6 +802,11 @@ Class BioRifle : UTWeapon
 	AltCheck:
 		TNT1 A 1
 		{
+			if ( Health <= 0 )
+			{
+				invoker.bCharging = false;
+				return ResolveState("Null");
+			}
 			if ( player.cmd.buttons&BT_ALTATTACK )
 				return ResolveState(null);
 			player.SetPSprite(PSP_WEAPON,ResolveState("AltRelease"));
