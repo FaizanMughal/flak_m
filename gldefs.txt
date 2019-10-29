@@ -484,6 +484,10 @@ HardwareShader Texture "models/JEClip.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
+HardwareShader Texture "models/Jautot1.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
 HardwareShader Texture "models/BladeHopperT.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"

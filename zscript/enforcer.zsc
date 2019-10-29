@@ -527,7 +527,7 @@ Class Enforcer : UTWeapon
 	Dummy:
 		TNT1 A 1
 		{
-			if ( (invoker.clipcount <= 0) && (invoker.Ammo1.Amount > 0) ) player.SetPSprite(PSP_WEAPON,ResolveState("Reload"));
+			if ( flak_enforcerreload && (invoker.clipcount <= 0) && (invoker.Ammo1.Amount > 0) ) player.SetPSprite(PSP_WEAPON,ResolveState("Reload"));
 			else if ( flak_enforcerreload && ((invoker.clipcount < min(invoker.default.clipcount,invoker.Ammo1.Amount)) || (invoker.slaveclipcount < min(invoker.default.slaveclipcount,invoker.Ammo1.Amount))) ) A_WeaponReady(WRF_ALLOWRELOAD);
 			else A_WeaponReady();
 			if ( !invoker.slaveactive && (CountInv("Enforcer") > 1) )
@@ -600,7 +600,7 @@ Class Enforcer : UTWeapon
 		{
 			if ( invoker.clipcount >= invoker.default.clipcount )
 			{
-				invoker.slavereload = (invoker.slaveactive&&(invoker.slaveclipcount<min(invoker.default.slaveclipcount,invoker.Ammo1.Amount)));
+				invoker.slavereload = (flak_enforcerreload&&invoker.slaveactive&&(invoker.slaveclipcount<min(invoker.default.slaveclipcount,invoker.Ammo1.Amount)));
 				return ResolveState("Idle");
 			}
 			return ResolveState(null);
@@ -619,7 +619,7 @@ Class Enforcer : UTWeapon
 			A_PlaySound("enforcer/reload",CHAN_WEAPON);
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayReloading();
-			invoker.slavereload = (invoker.slaveactive&&(invoker.slaveclipcount<min(invoker.default.slaveclipcount,invoker.Ammo1.Amount)));
+			invoker.slavereload = (flak_enforcerreload&&invoker.slaveactive&&(invoker.slaveclipcount<min(invoker.default.slaveclipcount,invoker.Ammo1.Amount)));
 			Vector3 x, y, z, origin;
 			[x,y,z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 			origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),x*4.+y*4.-z*8.);
