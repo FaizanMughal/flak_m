@@ -95,7 +95,7 @@ ut/femalejump	fjump1
 ut/femalesurf	lgasp1
 ut/femalegasp	hgasp3
 ut/femaledrowned1	uwhit01
-$random ut/femaledrowned { ut/femaledroenwd1 ut/drowned }
+$random ut/femaledrowned { ut/femaledrowned1 ut/drowned }
 ut/femaledrowning	mdrown2f
 
 $playeralias	tfemale	neutral	*death		ut/femaledie
@@ -335,6 +335,7 @@ warhead/explode	warexplo
 warhead/fly	warfly
 warhead/select	warhpick
 warhead/fire	warhshot
+warhead/altfire	warhalt
 
 testamb/slime	aslime2
 testamb/lava	lava31

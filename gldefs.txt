@@ -71,6 +71,10 @@ Object "UTHereticBlueKey"
 {
 	Frame "UKEY" { light "UTBlueKeyLight" }
 }
+Object "UTHereticRedKey"
+{
+	Frame "UKEY" { light "UTRedKeyLight" }
+}
 
 PointLight SHOCKAMMOLIGHT
 {

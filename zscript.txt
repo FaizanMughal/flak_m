@@ -1,4 +1,4 @@
-version "4.2.2"
+version "4.2.4"
 
 #include "zscript/dt_libeye/projector.txt"
 #include "zscript/dt_libeye/projector gl.txt"

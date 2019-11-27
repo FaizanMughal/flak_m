@@ -3,7 +3,7 @@
 What began as a test for importing UT vertex meshes has turned into an actual
 full UT weapon and item mod.
 
-This mod requires GZDoom 4.2.3 or later.
+This mod requires GZDoom 4.2.4 or later.
 
 ## Currently implemented
 
@@ -61,7 +61,9 @@ This mod requires GZDoom 4.2.3 or later.
 
 ## In progress
 
- - N/A, this is the 1.0.4 release
+ - Implementing Ice death support.
+ - Small bugfixes here and there.
+ - Adjustments to firing speeds for more vanilla consistency.
 
 ## Planned
 
@@ -81,4 +83,5 @@ This mod requires GZDoom 4.2.3 or later.
 ## Known bugs
 
  - Biorifle sludge doesn't attach properly when it lands on the edge between
-   sectors. This is most noticeable with moving sectors and 3d floors.
+   sectors. This is most noticeable with moving sectors and 3d floors. This
+   might be fixed once there's virtuals for world collision.

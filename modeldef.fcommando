@@ -280,4 +280,10 @@ Model "UTPlayerTFemale1"
 	FrameIndex PLT4 M 0 477
 	FrameIndex PLT4 N 0 478
 	FrameIndex PLT4 O 0 479
+	// Ice Death (start of zap death)
+	SurfaceSkin 0 0 "fcmd1ice.png"
+	SurfaceSkin 0 1 "fcmd2ice.png"
+	SurfaceSkin 0 2 "fcmd4ice.png"
+	SurfaceSkin 0 4 "GunPick1ice.png"
+	FrameIndex PICE A 0 609
 }

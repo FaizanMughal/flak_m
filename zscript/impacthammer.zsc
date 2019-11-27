@@ -44,6 +44,10 @@ Class ImpactHammer : UTWeapon
 {
 	double chargesize, count;
 
+	override int, int, bool, bool GetClipAmount()
+	{
+		return (chargesize>0)?min(10,int(chargesize/.15)):-1, -1, false, false;
+	}
 	action void A_ResetCharge()
 	{
 		invoker.chargesize = 0;

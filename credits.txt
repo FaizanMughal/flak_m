@@ -3,3 +3,4 @@ Models, textures and audio (C)1999 Epic Games.
 Porting and adjustments by Marisa Kirisame.
 
 Special thanks to KeksDose for libeye.
+Special thanks also to Skerion for the video used by the anti-bd switch.

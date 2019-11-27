@@ -12,6 +12,7 @@ Class FlakAmmo : Ammo
 	}
 	override String PickupMessage()
 	{
+		if ( PickupMsg.Length() > 0 ) return Super.PickupMessage();
 		return String.Format("%s%d%s",StringTable.Localize("$I_FLAKAMMOL"),Amount,StringTable.Localize("$I_FLAKAMMOR"));
 	}
 	States
@@ -782,6 +783,15 @@ Class FlakCannon : UTWeapon
 			if ( invoker.Ammo1.Amount > 0 ) A_Loading();
 		}
 		FLKL BCEFGIJKMNO 1;
+		Goto Idle;
+	AltLoading:
+		FLKL A 2
+		{
+			A_CheckReload();
+			if ( invoker.Ammo1.Amount > 0 ) A_Loading();
+		}
+		FLKL BCEFGIJKMNO 2;
+		Goto Idle;
 	Idle:
 		FLKI A 1 A_WeaponReady();
 		Wait;
@@ -801,9 +811,9 @@ Class FlakCannon : UTWeapon
 		Goto Loading;
 	AltFire:
 		FLKA A 1 A_FireSlug();
-		FLKA BCDEFGHIJK 2;
+		FLKA BCDEFGHIJK 1;
 		FLKA K 4;
-		Goto Loading;
+		Goto AltLoading;
 	Select:
 		FLKS A 1 A_Raise(int.max);
 		Wait;

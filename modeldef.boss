@@ -305,4 +305,11 @@ Model "UTPlayerTBoss"
 	FrameIndex PLT4 M 0 498
 	FrameIndex PLT4 N 0 499
 	FrameIndex PLT4 O 0 500
+	// Ice Death (start of zap death)
+	SurfaceSkin 0 0 "boss1ice.png"
+	SurfaceSkin 0 1 "boss2ice.png"
+	SurfaceSkin 0 2 "boss3ice.png"
+	SurfaceSkin 0 3 "boss4ice.png"
+	SurfaceSkin 0 5 "GunPick1ice.png"
+	FrameIndex PICE A 0 622
 }

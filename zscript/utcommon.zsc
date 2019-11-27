@@ -240,16 +240,28 @@ Class UTPlayer : DoomPlayer
 		Super.Tick();
 		if ( InStateSequence(CurState,FindState("See",true)) )
 			SetStateLabel("See2");
-		if ( !player || (player.mo != self) ) return;
-		if ( flak_utmovement )
+		if ( (waterlevel >= 2) && (lastwaterlevel < 2) )
+			PlaySplash(1.);
+		else if ( (waterlevel < 2) && (lastwaterlevel >= 2) )
+			PlaySurface();
+		if ( (waterlevel >= 3) && !underwatersnd )
 		{
-			bNOFRICTION = true;
-			bNOFRICTIONBOUNCE = true;
+			underwatersnd = Spawn("UTUnderSound",pos);
+			underwatersnd.target = self;
 		}
-		else
+		else if ( (waterlevel < 3) && underwatersnd )
+			underwatersnd.Destroy();
+		lastwaterlevel = waterlevel;
+		if ( !flak_utmovement || !player || (player.mo != self) || (player.cheats&(CF_FROZEN|CF_TOTALLYFROZEN)) )
 		{
 			bNOFRICTION = false;
 			bNOFRICTIONBOUNCE = false;
+			return;
+		}
+		else
+		{
+			bNOFRICTION = true;
+			bNOFRICTIONBOUNCE = true;
 		}
 		if ( !footsteps ) footsteps = CVar.GetCVar('flak_footsteps',players[consoleplayer]);
 		if ( !footsteps.GetBool() || (Health <= 0) ) return;
@@ -279,21 +291,9 @@ Class UTPlayer : DoomPlayer
 			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid && !bOnMobj ) PlayWetFootstep(vol);
 			else PlayFootstep(vol);
 		}
-		if ( (waterlevel >= 2) && (lastwaterlevel < 2) )
-			PlaySplash(1.);
-		else if ( (waterlevel < 2) && (lastwaterlevel >= 2) )
-			PlaySurface();
-		if ( (waterlevel >= 3) && !underwatersnd )
-		{
-			underwatersnd = Spawn("UTUnderSound",pos);
-			underwatersnd.target = self;
-		}
-		else if ( (waterlevel < 3) && underwatersnd )
-			underwatersnd.Destroy();
 		lastground = player.onground;
 		lastvelz = prevvelz;
 		prevvelz = vel.z;
-		lastwaterlevel = waterlevel;
 	}
 
 	double FrictionToUnreal()
@@ -698,7 +698,8 @@ Class UTPlayer : DoomPlayer
 	override void DeathThink()
 	{
 		Super.DeathThink();
-		if ( !flak_utmovement || !player || (player.mo != self) || (player.cheats&(CF_FROZEN|CF_TOTALLYFROZEN)) ) return;
+		if ( !flak_utmovement || !player || (player.mo != self) || (player.cheats&(CF_FROZEN|CF_TOTALLYFROZEN)) )
+			return;
 		// unreal physics while dead
 		double friction = FrictionToUnreal();
 		if ( !bNoGravity && player.onground && (waterlevel < 3) )
@@ -1027,6 +1028,60 @@ Class UTPlayer : DoomPlayer
 		return Super.GetDeathHeight();
 	}
 
+	// mostly a copy of A_FreezeDeathChunks but with some DT specific gib
+	// behaviour
+	void A_FreezeDeathChunksDT()
+	{
+		if ( (vel != (0,0,0)) && !bShattering )
+		{
+			tics = 3*TICRATE;
+			return;
+		}
+		vel = (0,0,0);
+		A_PlaySound ("misc/icebreak",CHAN_BODY);
+		// [RH] In Hexen, this creates a random number of shards (range [24,56])
+		// with no relation to the size of the self shattering. I think it should
+		// base the number of shards on the size of the dead thing, so bigger
+		// things break up into more shards than smaller things.
+		// An actor with radius 20 and height 64 creates ~40 chunks.
+		int numChunks = max(4,int(radius*Height)/32);
+		int i = Random[FreezeDeathChunks](0,numChunks/4-1);
+		for ( i=max(24,numChunks+i); i>=0; i-- )
+		{
+			double xo = (random[FreezeDeathChunks]()-128)*radius/128;
+			double yo = (random[FreezeDeathChunks]()-128)*radius/128;
+			double zo = (random[FreezeDeathChunks]()*Height/255);
+			Actor mo = Spawn("IceChunk",Vec3Offset(xo,yo,zo),ALLOW_REPLACE);
+			if ( !mo ) continue;
+			mo.SetState(mo.SpawnState+random[FreezeDeathChunks](0,2));
+			mo.Vel.X = random2[FreezeDeathChunks]()/128.;
+			mo.Vel.Y = random2[FreezeDeathChunks]()/128.;
+			mo.Vel.Z = (mo.pos.Z-pos.Z)/Height*4;
+		}
+		// Gib the player, the camera will attach to the head at this point
+		A_GibMe();
+		A_NoBlocking();
+		SetStateLabel('null');
+	}
+
+	void A_PainDT()
+	{
+		if ( waterlevel > 2 ) A_PlaySound("*death-drowning",CHAN_VOICE);
+		else A_Pain();
+	}
+
+	void A_PlayerScreamDT()
+	{
+		if ( waterlevel > 2 ) A_PlaySound("*death-drowning",CHAN_VOICE);
+		else A_PlayerScream();
+	}
+
+	void A_XScreamDT()
+	{
+		if ( waterlevel > 2 ) A_PlaySound("*death-drowning",CHAN_VOICE);
+		else A_XScream();
+	}
+
 	States
 	{
 	Spawn:
@@ -1108,21 +1163,21 @@ Class UTPlayer : DoomPlayer
 	Pain:
 		#### # 0 A_Jump(256,1,3,5,7);
 		#### # 2;
-		PLAY W 3 A_Pain();
+		PLAY W 3 A_PainDT();
 		Goto Spawn;
 		#### # 2;
-		PLAY Y 3 A_Pain();
+		PLAY Y 3 A_PainDT();
 		Goto Spawn;
 		#### # 2;
-		PLAY Z 3 A_Pain();
+		PLAY Z 3 A_PainDT();
 		Goto Spawn;
 	Pain.Decapitated:
 		#### # 2;
-		PLAY X 3 A_Pain();
+		PLAY X 3 A_PainDT();
 		Goto Spawn;
 	Death.Decapitated:
 		#### # 0 A_HeadPop();
-		PLD4 A 3 A_PlayerScream();
+		PLD4 A 3 A_PlayerScreamDT();
 		PLD4 B 3 A_NoBlocking();
 		PLD4 CDEFGHIJKLMNO 3;
 		PLD4 P 1 A_DMFade();
@@ -1133,14 +1188,14 @@ Class UTPlayer : DoomPlayer
 		#### # 0 A_Jump(256,"Death2","Death3","Death7","Death8");
 	Death11:
 		#### # 3;
-		PD11 A 3 A_PlayerScream();
+		PD11 A 3 A_PlayerScreamDT();
 		PD11 B 3 A_NoBlocking();
 		PD11 CDEFGHIJKLMNOPQ 3;
 		PD11 R 1 A_DMFade();
 		Wait;
 	Death.Zapped:
 		#### # 3;
-		PLD9 A 3 A_PlayerScream();
+		PLD9 A 3 A_PlayerScreamDT();
 		PLD9 B 3 A_NoBlocking();
 		PLD9 CDEFGHIJKLMNOPQRST 2;
 		PD9B A 2 A_SetSize(-1,height*0.25);	// reduce now
@@ -1149,35 +1204,35 @@ Class UTPlayer : DoomPlayer
 		Wait;
 	Death8:
 		#### # 3;
-		PLD8 A 3 A_PlayerScream();
+		PLD8 A 3 A_PlayerScreamDT();
 		PLD8 B 3 A_NoBlocking();
 		PLD8 CDEFGHIJKLMNOPQ 3;
 		PLD8 R 1 A_DMFade();
 		Wait;
 	Death7:
 		#### # 3;
-		PLD7 A 3 A_PlayerScream();
+		PLD7 A 3 A_PlayerScreamDT();
 		PLD7 B 3 A_NoBlocking();
 		PLD7 CDEFGHIJKLMNOPQRST 3;
 		PLD7 U 1 A_DMFade();
 		Wait;
 	Death3:
 		#### # 3;
-		PLD3 A 3 A_PlayerScream();
+		PLD3 A 3 A_PlayerScreamDT();
 		PLD3 B 3 A_NoBlocking();
 		PLD3 CDEFGHIJKL 3;
 		PLD3 M 1 A_DMFade();
 		Wait;
 	Death2:
 		#### # 3;
-		PLD2 A 3 A_PlayerScream();
+		PLD2 A 3 A_PlayerScreamDT();
 		PLD2 B 3 A_NoBlocking();
 		PLD2 CDEFGHIJKLMNO 3;
 		PLD2 P 1 A_DMFade();
 		Wait;
 	Death1:
 		#### # 3;
-		PLD1 A 3 A_PlayerScream();
+		PLD1 A 3 A_PlayerScreamDT();
 		PLD1 B 3 A_NoBlocking();
 		PLD1 CDEFGHIJKL 3;
 		PLD1 M 1 A_DMFade();
@@ -1185,7 +1240,7 @@ Class UTPlayer : DoomPlayer
 	XDeath:
 		TNT1 A 350
 		{
-			A_XScream();
+			A_XScreamDT();
 			A_NoBlocking();
 			A_GibMe();
 		}
@@ -1209,6 +1264,10 @@ Class UTPlayer : DoomPlayer
 		#### # 5;
 		PLT4 ABCDEFGHIJKLMNO 3;
 		Goto Spawn;
+	Ice:
+		PICE A 5 A_FreezeDeath();
+		PICE A 1 A_FreezeDeathChunksDT();
+		Wait;
 	}
 }
 
@@ -1255,13 +1314,13 @@ Class UTUnderSound : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
+		SetOrigin(target.pos,true);
 		curfluid = lastfluid = GetFluid();
 		fluidsounds[0] = 'ut/underwater';
 		fluidsounds[1] = 'ut/underslime';
 		fluidsounds[2] = 'ut/underlava';
 		fluidsounds[3] = 'ut/undernitro';
-		A_PlaySound(fluidsounds[curfluid],CHAN_VOICE|CHAN_LISTENERZ,1.,true,100.);
+		A_PlaySound(fluidsounds[curfluid],CHAN_VOICE|CHAN_LISTENERZ,1.,true,0.);
 		A_SoundVolume(CHAN_VOICE,(players[consoleplayer].camera==target)?1.:0.);
 	}
 	override void OnDestroy()
@@ -1272,15 +1331,15 @@ Class UTUnderSound : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !target || !target.player || (target.waterlevel < 3) )
+		if ( !target || (target.waterlevel < 3) )
 		{
 			Destroy();
 			return;
 		}
-		SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
+		SetOrigin(target.pos,true);
 		curfluid = GetFluid();
 		if ( curfluid != lastfluid )
-			A_PlaySound(fluidsounds[curfluid],CHAN_VOICE|CHAN_LISTENERZ,1.,true,100.);
+			A_PlaySound(fluidsounds[curfluid],CHAN_VOICE|CHAN_LISTENERZ,1.,true,0.);
 		lastfluid = curfluid;
 		A_SoundVolume(CHAN_VOICE,(players[consoleplayer].camera==target)?1.:0.);
 	}
@@ -1499,6 +1558,12 @@ Class UTPlayerTMale1 : UTPlayer
 		UTPlayer.VoiceType VOICE_MaleOne;
 		-NOMENU;
 	}
+	States
+	{
+	See:
+		TMAL A -1;
+		Stop;
+	}
 }
 Class UTPlayerTMale2 : UTPlayer
 {
@@ -1509,6 +1574,12 @@ Class UTPlayerTMale2 : UTPlayer
 		Player.Portrait "Brock";
 		UTPlayer.VoiceType VOICE_MaleTwo;
 		-NOMENU;
+	}
+	States
+	{
+	See:
+		TMAL B -1;
+		Stop;
 	}
 }
 Class UTPlayerTFemale : UTPlayer
@@ -1545,14 +1616,14 @@ Class UTPlayerTFemale : UTPlayer
 		Goto Spawn;
 	Death.Decapitated:
 		#### # 0 A_HeadPop();
-		PLD6 A 3 A_PlayerScream();
+		PLD6 A 3 A_PlayerScreamDT();
 		PLD6 B 3 A_NoBlocking();
 		PLD6 CDEFGHIJ 3;
 		PLD6 K 1 A_DMFade();
 		Wait;
 	Death.Zapped:
 		#### # 3;
-		PLD9 A 3 A_PlayerScream();
+		PLD9 A 3 A_PlayerScreamDT();
 		PLD9 B 3 A_NoBlocking();
 		PLD9 CDEFGHIJKLMNOPQRST 2;
 		PD9B A 2 A_SetSize(-1,height*0.25);	// reduce now
@@ -1565,42 +1636,42 @@ Class UTPlayerTFemale : UTPlayer
 		#### # 0 A_Jump(256,"Death1","Death3","Death4","Death7");
 	Death7:
 		#### # 3;
-		PLD7 A 3 A_PlayerScream();
+		PLD7 A 3 A_PlayerScreamDT();
 		PLD7 B 3 A_NoBlocking();
 		PLD7 CDEFGHIJ 3;
 		PLD7 K 1 A_DMFade();
 		Wait;
 	Death5:
 		#### # 0 A_LegPop();
-		PLD5 A 3 A_PlayerScream();
+		PLD5 A 3 A_PlayerScreamDT();
 		PLD5 B 3 A_NoBlocking();
 		PLD5 CDEFGHIJKL 3;
 		PLD5 M 1 A_DMFade();
 		Wait;
 	Death4:
 		#### # 3;
-		PLD4 A 3 A_PlayerScream();
+		PLD4 A 3 A_PlayerScreamDT();
 		PLD4 B 3 A_NoBlocking();
 		PLD4 CDEFGHIJKL 3;
 		PLD4 M 1 A_DMFade();
 		Wait;
 	Death3:
 		#### # 3;
-		PLD3 A 3 A_PlayerScream();
+		PLD3 A 3 A_PlayerScreamDT();
 		PLD3 B 3 A_NoBlocking();
 		PLD3 CDEFGHIJKLMNO 3;
 		PLD3 P 1 A_DMFade();
 		Wait;
 	Death2:
 		#### # 3;
-		PLD2 A 3 A_PlayerScream();
+		PLD2 A 3 A_PlayerScreamDT();
 		PLD2 B 3 A_NoBlocking();
 		PLD2 CDEFGHIJKLMNOPQ 3;
 		PLD2 R 1 A_DMFade();
 		Wait;
 	Death1:
 		#### # 3;
-		PLD1 A 3 A_PlayerScream();
+		PLD1 A 3 A_PlayerScreamDT();
 		PLD1 B 3 A_NoBlocking();
 		PLD1 CDEFGHIJKLMNOPQRSTUV 3;
 		PLD1 W 1 A_DMFade();
@@ -1617,6 +1688,12 @@ Class UTPlayerTFemale1 : UTPlayerTFemale
 		UTPlayer.VoiceType VOICE_FemaleOne;
 		-NOMENU;
 	}
+	States
+	{
+	See:
+		TFEM A -1;
+		Stop;
+	}
 }
 Class UTPlayerTFemale2 : UTPlayerTFemale
 {
@@ -1627,6 +1704,12 @@ Class UTPlayerTFemale2 : UTPlayerTFemale
 		Player.Portrait "Lauren";
 		UTPlayer.VoiceType VOICE_FemaleTwo;
 		-NOMENU;
+	}
+	States
+	{
+	See:
+		TFEM B -1;
+		Stop;
 	}
 }
 Class UTPlayerTBoss : UTPlayer
@@ -1648,6 +1731,12 @@ Class UTPlayerTBoss : UTPlayer
 		if ( !bossfootsteps ) bossfootsteps = CVar.GetCVar('flak_bossfootsteps',players[consoleplayer]);
 		if ( bossfootsteps.GetBool() ) A_PlaySound("ut/bossfootstep",CHAN_5,vol);
 		else Super.PlayFootstep(vol);
+	}
+	States
+	{
+	See:
+		TBOS A -1;
+		Stop;
 	}
 }
 
@@ -1812,6 +1901,12 @@ Class UTWeapon : Weapon
 			Console.Printf(StringTable.Localize((Amount>1)?"$M_NOAMMO2":"$M_NOAMMO"),GetTag());
 		}
 		return rslt;
+	}
+
+	// For clips
+	virtual clearscope int, int, bool, bool GetClipAmount() const
+	{
+		return -1, -1, false, false;
 	}
 
 	Default
@@ -2367,6 +2462,7 @@ Class ShredCorpseHitbox : Actor
 		}
 		accdamage = target.Health;
 		A_SetSize(target.radius,target.height);
+		if ( target.bIceCorpse ) bNOBLOOD = true;	// ice statue
 	}
 	override void Tick()
 	{
@@ -2408,6 +2504,15 @@ Class ShredCorpseHitbox : Actor
 		int gibhealth = (target.GibHealth==int.min)?-target.SpawnHealth():target.GibHealth;
 		if ( accdamage < gibhealth )
 		{
+			// force chunks if frozen
+			if ( target.bIceCorpse )
+			{
+				target.bSHATTERING = true;
+				if ( target is 'UTPlayer' ) UTPlayer(target).A_FreezeDeathChunksDT();
+				else target.A_FreezeDeathChunks();
+				Destroy();
+				return 0;
+			}
 			// force gib (cheap ATM)
 			State gib = target.FindState("XDeath",true);
 			if ( !gib ) gib = target.FindState("Death.Extreme",true);
@@ -2839,6 +2944,10 @@ Class UTStaticHandler : StaticEventHandler
 Class UTMainHandler : EventHandler
 {
 	Array<QueuedFlash> flashes;
+	TextureID gframes[166];
+	transient ui int gframe;
+	transient ui Font rfont;
+	bool isbd, ispb;
 
 	override void CheckReplacement( ReplaceEvent e )
 	{
@@ -2980,6 +3089,13 @@ Class UTMainHandler : EventHandler
 		else if ( e.Replacee == 'KeyYellow' ) e.Replacement = 'UTHereticYellowKey';
 		else if ( e.Replacee == 'KeyGreen' ) e.Replacement = 'UTHereticGreenKey';
 		else if ( e.Replacee == 'KeyBlue' ) e.Replacement = 'UTHereticBlueKey';
+		else if ( e.Replacee.GetClassName() == 'KeyRed' )
+		{
+			// pretty sure that is a standardized name, so it should work for any heretic mod that adds it
+			e.Replacement = 'UTHereticRedKey';
+		}
+		// TODO Hexen replacements
+		// TODO Strife replacements
 	}
 
 	private Actor AddLight( Vector3 pos, Color col, int radius )
@@ -3003,6 +3119,19 @@ Class UTMainHandler : EventHandler
 
 	override void WorldLoaded( WorldEvent e )
 	{
+		isbd = ispb = false;
+		for ( int i=0; i<AllActorClasses.size(); i++ )
+		{
+			if ( AllActorClasses[i].GetClassName() == "BrutalWeapon" )
+				isbd = true;
+			else if ( AllActorClasses[i].GetClassName() == "BrutalDoomer" )
+				ispb = true;
+		}
+		if ( isbd || ispb )
+		{
+			for ( int i=0; i<166; i++ )
+				gframes[i] = TexMan.CheckForTexture(String.Format("graphics/grunt/B_%03d.jpg",i+1),TexMan.Type_Any);
+		}
 		// just replace the -noflat- with a better scaled version and change the sky
 		if ( !flak_doomtest )
 		{
@@ -3404,5 +3533,62 @@ Class UTMainHandler : EventHandler
 		s.cstate = 0;
 		s.str = initial;
 		s.tstr = initial;
+	}
+
+	override void UiTick()
+	{
+		if ( !ispb && !isbd ) return;
+		if ( !(gametic%2) )
+		{
+			if ( !(gframe%11) && gframe < 160 )
+			{
+				S_Sound("ut/malejump",CHAN_VOICE|CHAN_UI,(gframe>100)?.5:1.);
+				S_Sound("ut/malejump",CHAN_WEAPON|CHAN_UI,(gframe>100)?.5:1.);
+			}
+			if ( ((gframe >= 37) && (gframe < 49) && !((gframe-37)%3))
+				|| ((gframe >= 89) && (gframe < 101) && !((gframe-89)%3))
+				|| ((gframe >= 141) && (gframe < 153) && !((gframe-141)%3)) )
+			{
+				S_Sound("ut/land",CHAN_BODY|CHAN_UI,(gframe>100)?.5:1.);
+				S_Sound("ut/land",CHAN_ITEM|CHAN_UI,(gframe>100)?.5:1.);
+			}
+			gframe++;
+		}
+		if ( gframe >= 166 ) gframe = 0;
+	}
+
+	// almost forgot about this
+	override void RenderUnderlay( RenderEvent e )
+	{
+		if ( !ispb && !isbd ) return;
+		double ar = Screen.GetAspectRatio();
+		Vector2 tsize = TexMan.GetScaledSize(gframes[gframe]);
+		double sar = tsize.x/tsize.y;
+		Vector2 vsize;
+		if ( sar > ar ) vsize = (tsize.y*ar,tsize.y);
+		else if ( sar < ar ) vsize = (tsize.x,tsize.x/ar);
+		else vsize = tsize;
+		Screen.DrawTexture(gframes[gframe],false,(vsize.x-tsize.x)/2,(vsize.y-tsize.y)/2,DTA_VirtualWidthF,vsize.x,DTA_VirtualHeightF,vsize.y,DTA_KeepRatio,true,DTA_LegacyRenderStyle,STYLE_Add);
+		String txtme = "STOP LOADING BRUTAL DOOM WITH EVERYTHING";
+		if ( !rfont ) rfont = Font.GetFont('USmallFont');
+		Vector2 bcoord = ((CleanWidth-rfont.StringWidth(txtme))*.5,CleanHeight*0.8);
+		for ( int i=0; i<txtme.Length(); i++ )
+		{
+			String chr = txtme.Mid(i,1);
+			for ( int j=0; j<8; j++ )
+			{
+				Vector2 ccoord = bcoord + (cos((gametic+e.fractic+i-j)*8.),sin((gametic+e.fractic+i-j)*8.))*CleanXFac*3;
+				Screen.DrawText(rfont,Font.CR_DARKRED,ccoord.x,ccoord.y,chr,DTA_VirtualWidth,CleanWidth,DTA_VirtualHeight,CleanHeight,DTA_KeepRatio,true,DTA_Alpha,(8-j)/8.);
+			}
+			bcoord.x += rfont.StringWidth(chr);
+		}
+		bcoord = ((CleanWidth-rfont.StringWidth(txtme))*.5,CleanHeight*0.8);
+		for ( int i=0; i<txtme.Length(); i++ )
+		{
+			String chr = txtme.Mid(i,1);
+			Vector2 ccoord = bcoord + (cos((gametic+e.fractic+i)*8.),sin((gametic+e.fractic+i)*8.))*CleanXFac*3;
+			Screen.DrawText(rfont,Font.CR_FIRE,ccoord.x,ccoord.y,chr,DTA_VirtualWidth,CleanWidth,DTA_VirtualHeight,CleanHeight,DTA_KeepRatio,true);
+			bcoord.x += rfont.StringWidth(chr);
+		}
 	}
 }

@@ -47,6 +47,23 @@ Class UTHereticBlueKey : KeyBlue
 	}
 }
 
+// for heretic mods that add it
+Class UTHereticRedKey : HereticKey
+{
+	Default
+	{
+		Tag "$T_REDKEY";
+		Species "KeyRed";
+		Inventory.PickupMessage "$I_REDKEY";
+	}
+	States
+	{
+	Spawn:
+		UKEY A -1;
+		Stop;
+	}
+}
+
 // Base class for items that can be activated from the inventory bar
 Class UTActivatable : Inventory
 {

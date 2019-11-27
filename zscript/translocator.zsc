@@ -360,6 +360,12 @@ Class Translocator : UTWeapon
 	Actor module;
 	double ammocharge;
 
+	override int, int, bool, bool GetClipAmount()
+	{
+		if ( !flak_transloc2k4 ) return Super.GetClipAmount();
+		return (ammocharge>0)?int(ammocharge*9.9):-1, -1, false, false;
+	}
+
 	override void Tick()
 	{
 		Super.Tick();

@@ -537,7 +537,7 @@ Class BioGel : Actor
 		invoker.deadtimer = -2;
 		if ( invoker.atline ) invoker.atline.RemoteActivate(target,invoker.atside,SPAC_Impact,pos);
 		UTMainHandler.DoBlast(self,Min(175,int(Scale.x*50)),20000*Scale.x);
-		A_Explode(int(20*Scale.x),Min(175,int(Scale.x*50)));
+		A_Explode(int(Args[0]*Scale.x),Min(175,int(Scale.x*50)));
 		A_PlaySound("ges/explode",CHAN_VOICE);
 		int numpt = Min(300,int(Scale.x*30))+Random[GES](-10,10);
 		for ( int i=0; i<numpt; i++ )
@@ -564,6 +564,7 @@ Class BioGel : Actor
 		Obituary "$O_BIORIFLE";
 		DamageType 'Slime';
 		RenderStyle "Add";
+		Args 20;
 		Radius 3;
 		Height 3;
 		Scale 2;
@@ -639,6 +640,11 @@ Class BioGlob : BioGel
 {
 	int numsplash;
 
+	Default
+	{
+		Args 75;
+	}
+
 	void SpawnSplash()
 	{
 		Vector3 ofs = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
@@ -685,6 +691,10 @@ Class BioRifle : UTWeapon
 	double charge;
 	bool bCharging;
 
+	override int, int, bool, bool GetClipAmount()
+	{
+		return bCharging?min(5,int(charge+0.1)):-1, -1, false, false;
+	}
 	action void A_BioFire( bool alt = false )
 	{
 		Weapon weap = Weapon(invoker);

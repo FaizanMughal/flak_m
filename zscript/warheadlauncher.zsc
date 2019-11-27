@@ -352,6 +352,7 @@ Class GuidedWarShell : WarShell
 	{
 		Super.PostBeginPlay();
 		if ( target && target.player ) target.player.camera = self;
+		A_PlaySound("warhead/altfire",CHAN_WEAPON,local:true);
 		justleft = true;
 	}
 	override void Tick()
@@ -721,7 +722,7 @@ Class WarheadLauncher : UTWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		A_PlaySound("warhead/fire",CHAN_WEAPON);
+		A_PlaySound("warhead/altfire",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,128),1);
 		A_AlertMonsters();

@@ -312,6 +312,17 @@ Model "UTHereticBlueKey"
 
 	FrameIndex UKEY C 0 0
 }
+Model "UTHereticRedKey"
+{
+	Path "models"
+	Model 0 "DomR_d.3d"
+	Skin 0 "RedSkin2.png"
+	Scale 0.04 0.04 0.048
+	ZOffset 16
+	ROTATING
+
+	FrameIndex UKEY A 0 0
+}
 
 Model "UTBackpack"
 {

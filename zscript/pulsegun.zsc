@@ -559,11 +559,18 @@ Class PulseMag : UTCasing
 Class PulseGun : UTWeapon
 {
 	int clipcount;
+	bool ClipOut;
 	double sangle;
 	Actor beam;
 	transient ui Font usmf;
 
 	Property ClipCount : clipcount;
+
+	override int, int, bool, bool GetClipAmount()
+	{
+		if ( !flak_pulsereload ) return Super.GetClipAmount();
+		return ClipOut?-1:ClipCount, -1, (ClipCount<10), false;
+	}
 
 	action void A_DrainAmmo()
 	{
@@ -737,6 +744,10 @@ Class PulseGun : UTWeapon
 		PGNP B -1;
 		Stop;
 	Ready:
+		PGNS A 0
+		{
+			invoker.clipout = false;
+		}
 		PGNS ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_NOFIRE);
 	Idle:
 		PGNI A 1
@@ -800,6 +811,7 @@ Class PulseGun : UTWeapon
 		PGNR BCDEFGHIJKLMNO 1;
 		PGNR P 1
 		{
+			invoker.clipout = true;
 			invoker.clipcount = 0;
 		}
 		PGNR QRSTUVWXYZ 1;
@@ -816,6 +828,7 @@ Class PulseGun : UTWeapon
 		PGR2 BCD 1;
 		PGR2 E 1
 		{
+			invoker.clipout = false;
 			invoker.clipcount = Min(invoker.default.clipcount,invoker.Ammo1.Amount);
 		}
 		PGR2 FGHIJKLMNOPQRSTUVWX 1;
