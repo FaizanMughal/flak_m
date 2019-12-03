@@ -175,7 +175,7 @@ Class Razor2Alt : Razor2
 		bFORCEXYBILLBOARD = true;
 		Scale *= 0.65;
 		A_StopSound(CHAN_VOICE);
-		A_PlaySound("ripper/althit");
+		A_PlaySound("ripper/althit",CHAN_VOICE);
 		Spawn("Razor2AltLight",pos);
 		A_AlertMonsters();
 		A_SprayDecal("RazorBlast",20);

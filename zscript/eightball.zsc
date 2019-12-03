@@ -109,7 +109,7 @@ Class UTRocket : Actor
 	int ticcnt;
 	Default
 	{
-		Obituary "$O_EIGHTBALL";
+		Obituary "$O_UTROCKET";
 		DamageType 'RocketDeath';
 		Radius 2;
 		Height 2;
@@ -477,8 +477,8 @@ Class UTRocketLauncher : UTWeapon
 
 	Default
 	{
-		Tag "$T_EIGHTBALL";
-		Inventory.PickupMessage "$I_EIGHTBALL";
+		Tag "$T_UTROCKET";
+		Inventory.PickupMessage "$I_UTROCKET";
 		Weapon.UpSound "utrl/select";
 		Weapon.SlotNumber 9;
 		Weapon.SelectionOrder 1;

@@ -260,13 +260,13 @@ bullet/hit1	impact1
 bullet/hit2	impact2
 $random bullet/hit { bullet/hit1 bullet/hit2 }
 
-ges/hit		gelhit
-ges/select	gelselec
-ges/fire	gelshot
-ges/charge	bioaltrp
-ges/explode	explg02
-$limit ges/hit 64
-$limit ges/explode 64
+bio/hit		gelhit
+bio/select	gelselec
+bio/fire	gelshot
+bio/charge	bioaltrp
+bio/explode	explg02
+$limit bio/hit 64
+$limit bio/explode 64
 
 shock/select	tazersel
 shock/fire	tazefire

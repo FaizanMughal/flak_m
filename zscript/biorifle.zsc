@@ -505,7 +505,7 @@ Class BioGel : Actor
 		}
 		b = Spawn("BioHitbox",pos);
 		b.target = self;
-		A_PlaySound("ges/hit");
+		A_PlaySound("bio/hit");
 		A_SprayDecal("BioSplat",-172);
 		int numpt = Min(100,int(Scale.x*10))+Random[GES](-5,5);
 		for ( int i=0; i<numpt; i++ )
@@ -538,7 +538,7 @@ Class BioGel : Actor
 		if ( invoker.atline ) invoker.atline.RemoteActivate(target,invoker.atside,SPAC_Impact,pos);
 		UTMainHandler.DoBlast(self,Min(175,int(Scale.x*50)),20000*Scale.x);
 		A_Explode(int(Args[0]*Scale.x),Min(175,int(Scale.x*50)));
-		A_PlaySound("ges/explode",CHAN_VOICE);
+		A_PlaySound("bio/explode",CHAN_VOICE);
 		int numpt = Min(300,int(Scale.x*30))+Random[GES](-10,10);
 		for ( int i=0; i<numpt; i++ )
 		{
@@ -704,7 +704,7 @@ Class BioRifle : UTWeapon
 			if ( weap.Ammo1.Amount <= 0 ) return;
 			if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		}
-		A_PlaySound("ges/fire",CHAN_WEAPON);
+		A_PlaySound("bio/fire",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(48,0,255,0),1);
 		A_AlertMonsters();
@@ -749,7 +749,7 @@ Class BioRifle : UTWeapon
 		if ( !weap ) return;
 		invoker.charge = 0;
 		invoker.special1 = 0;
-		A_PlaySound("ges/charge",CHAN_WEAPON);
+		A_PlaySound("bio/charge",CHAN_WEAPON);
 		invoker.bCharging = true;
 	}
 	action void A_ChargeUp()
@@ -777,7 +777,7 @@ Class BioRifle : UTWeapon
 	{
 		Tag "$T_BIORIFLE";
 		Inventory.PickupMessage "$I_BIORIFLE";
-		Weapon.UpSound "ges/select";
+		Weapon.UpSound "bio/select";
 		Weapon.SlotNumber 3;
 		Weapon.SelectionOrder 7;
 		Weapon.AmmoType "BioAmmo";
