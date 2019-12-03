@@ -2980,12 +2980,7 @@ Class UTMainHandler : EventHandler
 			if ( Random[Replacements](0,1) ) e.Replacement = 'Minigun';
 			else e.Replacement = 'SniperRifle';
 		}
-		else if ( e.Replacee == 'BFG9000' ) e.Replacement = 'WarheadLauncher';
-		else if ( e.Replacee == 'Mace' )
-		{
-			if ( (!deathmatch || flak_dmsshock) && !Random[Replacements](0,6) ) e.Replacement = 'EnhancedShockRifle';
-			else e.Replacement = 'WarheadLauncher';
-		}
+		else if ( (e.Replacee == 'BFG9000') || (e.Replacee == 'Mace') ) e.Replacement = 'WarheadLauncher';
 		else if ( (e.Replacee == 'Clip') || (e.Replacee == 'GoldWandAmmo') || (e.Replacee == 'GoldWandHefty') ) e.Replacement = 'EClip';
 		else if ( (e.Replacee == 'ClipBox') )
 		{

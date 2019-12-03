@@ -580,8 +580,8 @@ Class FlakSlug : Actor
 		}
 		Wait;
 	Death:
-		EXP2 A 0 A_FlakExplode();
-		EXP2 ABCDEFGHIJKLMNOPQR 1 BRIGHT;
+		FLEX A 0 A_FlakExplode();
+		FLEX ABCDEFGHIJKLMNOPQR 1 BRIGHT;
 		Stop;
 	}
 }
