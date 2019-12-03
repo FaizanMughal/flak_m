@@ -61,9 +61,7 @@ This mod requires GZDoom 4.2.4 or later.
 
 ## In progress
 
- - Implementing Ice death support.
- - Small bugfixes here and there.
- - Adjustments to firing speeds for more vanilla consistency.
+ - N/A, this is the 1.0.5 release.
 
 ## Planned
 
