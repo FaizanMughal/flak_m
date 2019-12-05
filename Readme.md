@@ -61,7 +61,8 @@ This mod requires GZDoom 4.2.4 or later.
 
 ## In progress
 
- - N/A, this is the 1.0.6 release.
+ - Tooltips for menu options.
+ - Help screens describing items and stuff (maybe?).
 
 ## Planned
 

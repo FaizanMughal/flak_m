@@ -84,3 +84,67 @@ Class UTMessageBox : MessageBoxMenu
 		mMessage = textFont.BreakLines(Stringtable.Localize(message),generic_ui?600:300);
 	}
 }
+
+// Option Menu with tooltips at bottom
+Class UTOptionMenu : OptionMenu
+{
+	private String ttip;
+
+	override void Ticker()
+	{
+		Super.Ticker();
+		// fetch the tooltip for whatever's selected (if any)
+		if ( mDesc.mSelectedItem == -1 ) return;
+		String mcvar = mDesc.mItems[mDesc.mSelectedItem].GetAction();
+		mcvar.Replace(" ","_");	// need to strip whitespace for command actions
+		String locstr = String.Format("TOOLTIP_%s",mcvar);
+		ttip = StringTable.Localize(locstr,false);
+		if ( ttip == locstr ) ttip = "";
+	}
+	override void Drawer()
+	{
+		Super.Drawer();
+		if ( ttip == "" ) return;
+		// re-evaluate y to check where the cursor is
+		int cy = 0;
+		int y = mDesc.mPosition;
+		if ( y <= 0 )
+		{
+			let font = generic_ui||!mDesc.mFont?NewSmallFont:mDesc.mFont;
+			if ( font && (mDesc.mTitle.Length() > 0) )
+				y = -y+font.GetHeight();
+			else y = -y;
+		}
+		int fontheight = OptionMenuSettings.mLinespacing*CleanYfac_1;
+		y *= CleanYfac_1;
+		int lastrow = Screen.GetHeight()-OptionHeight()*CleanYfac_1;
+		for ( int i=0; ((i < mDesc.mItems.Size()) && (y <= lastrow)); i++ )
+		{
+			// Don't scroll the uppermost items
+			if ( i == mDesc.mScrollTop )
+			{
+				i += mDesc.mScrollPos;
+				if ( i >= mDesc.mItems.Size() ) break;	// skipped beyond end of menu
+			}
+			y += fontheight;
+			if ( mDesc.mSelectedItem == i )
+			{
+				cy = y;
+				break;
+			}
+		}
+		let fnt = Font.GetFont('UTFont12');
+		let lines = fnt.BreakLines(ttip,CleanWidth_1-8);
+		int height = (8+fnt.GetHeight()*lines.Count())*CleanYFac_1;
+		// draw at the bottom unless the selected option could is covered by the tooltip
+		int ypos = Screen.GetHeight()-height;
+		if ( cy >= ypos ) ypos = 0;
+		Screen.Dim("Black",.75,0,ypos,Screen.GetWidth(),height);
+		ypos += 4*CleanYFac_1;
+		for ( int i=0; i<lines.Count(); i++ )
+		{
+			Screen.DrawText(fnt,Font.CR_WHITE,4*CleanXFac_1,ypos,lines.StringAt(i),DTA_CleanNoMove_1,true);
+			ypos += fnt.GetHeight()*CleanYFac_1;
+		}
+	}
+}

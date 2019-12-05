@@ -12,6 +12,7 @@ OptionValue "ColorPrefs"
 }
 OptionMenu "UTOptionMenu"
 {
+	Class "UTOptionMenu"
 	Title "$FLAK_MTITLE"
 
 	StaticText "$FLAK_MOPTS", "Gold"
