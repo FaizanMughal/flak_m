@@ -61,7 +61,7 @@ This mod requires GZDoom 4.2.4 or later.
 
 ## In progress
 
- - N/A, this is the 1.0.5 release.
+ - N/A, this is the 1.0.6 release.
 
 ## Planned
 

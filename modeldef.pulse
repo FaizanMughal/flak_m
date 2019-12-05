@@ -3,8 +3,8 @@ Model "PulseAmmo"
 	Path "models"
 	Model 0 "PAmmo_d.3d"
 	Skin 0 "JPammo_01.png"
-	Scale 0.06 0.06 0.072
-	ZOffset 6
+	Scale 0.06 0.06 0.06
+	ZOffset 5
 
 	FrameIndex PAMO A 0 0
 }
@@ -14,7 +14,7 @@ Model "PulseBolt"
 	Path "models"
 	Model 0 "PBolt_d.3d"
 	Offset 40.5 0 0
-	Scale 0.405 0.2025 0.243
+	Scale 0.405 0.2025 0.2025
 	AngleOffset 90
 	DONTCULLBACKFACES
 	USEACTORPITCH
@@ -37,7 +37,7 @@ Model "StarterBolt"
 	Path "models"
 	Model 0 "SBolt_d.3d"
 	Offset 40.5 0 0
-	Scale 0.405 0.2025 0.243
+	Scale 0.405 0.2025 0.2025
 	AngleOffset 90
 	DONTCULLBACKFACES
 	USEACTORPITCH
@@ -60,7 +60,7 @@ Model "PulseMag"
 	Path "models"
 	Model 0 "UsedPulse_d.3d"
 	Skin 0 "JPulseGun_02.png"
-	Scale 0.2 0.2 0.24
+	Scale 0.2 0.2 0.2
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -75,12 +75,12 @@ Model "PulseGun"
 	Path "models"
 	Model 1 "PulsePickup_d.3d"
 	Skin 1 "JPulsePickup_01.png"
-	Scale 0.16 0.16 0.192
-	ZOffset 8
+	Scale 0.16 0.16 0.16
+	ZOffset 7
 
 	FrameIndex PGNP B 1 0
 
-	ZOffset 12
+	ZOffset 10
 	ROTATING
 	FrameIndex PGNP A 1 0
 }

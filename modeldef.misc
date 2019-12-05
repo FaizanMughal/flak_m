@@ -3,8 +3,8 @@ Model "UTTeleportFog"
 	Path "models"
 	Model 0 "Tele2_d.3d"
 	Skin 0 "JTele2_01.png"
-	Scale 0.2 0.2 0.24
-	ZOffset 16
+	Scale 0.2 0.2 0.2
+	ZOffset 14
 	DONTCULLBACKFACES
 
 	FrameIndex TELE A 0 0
@@ -51,7 +51,7 @@ Model "UTHealthPack"
 	// indices start at 1 for this mesh
 	SurfaceSkin 0 1 "jhbox1.png"
 	SurfaceSkin 0 2 "fizzfull"
-	Scale 0.2 0.24 0.2
+	Scale 0.2 0.2 0.2
 	RollOffset -90
 	ZOffset 16
 
@@ -65,7 +65,7 @@ Model "ActHealthPack"
 	// indices start at 1 for this mesh
 	SurfaceSkin 0 1 "jhbox1.png"
 	SurfaceSkin 0 2 "fizzfull"
-	Scale 0.2 0.24 0.2
+	Scale 0.2 0.2 0.2
 	RollOffset -90
 	ZOffset 16
 
@@ -80,8 +80,8 @@ Model "UTHealthBox"
 	SurfaceSkin 0 1 "jhboxbeta1.png"
 	SurfaceSkin 0 2 "fizzside"
 	SurfaceSkin 0 3 "fizzfull"
-	Scale 0.08 0.08 0.096
-	ZOffset 4
+	Scale 0.08 0.08 0.08
+	ZOffset 3.5
 
 	FrameIndex HBOX B 0 0
 }
@@ -94,8 +94,8 @@ Model "ActHealthBox"
 	SurfaceSkin 0 1 "jhboxbeta1.png"
 	SurfaceSkin 0 2 "fizzside"
 	SurfaceSkin 0 3 "fizzfull"
-	Scale 0.08 0.08 0.096
-	ZOffset 4
+	Scale 0.08 0.08 0.08
+	ZOffset 3.5
 
 	FrameIndex HBOX B 0 0
 }
@@ -107,8 +107,8 @@ Model "UTMedBox"
 	// indices start at 1 for this mesh
 	SurfaceSkin 0 1 "JMedBox1.png"
 	SurfaceSkin 0 2 "fizzfull"
-	Scale 0.06 0.06 0.072
-	ZOffset 5
+	Scale 0.06 0.06 0.06
+	ZOffset 4
 
 	FrameIndex HBOX C 0 0
 }
@@ -120,8 +120,8 @@ Model "ActMedBox"
 	// indices start at 1 for this mesh
 	SurfaceSkin 0 1 "JMedBox1.png"
 	SurfaceSkin 0 2 "fizzfull"
-	Scale 0.06 0.06 0.072
-	ZOffset 5
+	Scale 0.06 0.06 0.06
+	ZOffset 4
 
 	FrameIndex HBOX C 0 0
 }
@@ -133,8 +133,8 @@ Model "UTHealthBonus"
 	SurfaceSkin 0 0 "JVial0.png"
 	SurfaceSkin 0 1 "fizzside"
 	SurfaceSkin 0 2 "fizztop"
-	Scale 0.04 0.04 0.048
-	ZOffset 8
+	Scale 0.04 0.04 0.04
+	ZOffset 7
 	DONTCULLBACKFACES
 
 	FrameIndex VIAL A 0 0
@@ -145,7 +145,7 @@ Model "UTArmorBonus"
 	Path "models"
 	Model 0 "ubonus_d.3d"
 	Skin 0 "shield.png"
-	Scale 0.08 -0.08 0.096
+	Scale 0.08 -0.08 0.08
 	AngleOffset 90
 
 	FrameIndex XANH A 0 0
@@ -156,7 +156,7 @@ Model "UTThighPads"
 	Path "models"
 	Model 0 "ThighPads_d.3d"
 	Skin 0 "JThighPads_01.png"
-	Scale 0.08 0.08 0.096
+	Scale 0.08 0.08 0.08
 	ZOffset 12
 	ROTATING
 
@@ -168,8 +168,8 @@ Model "UTBodyArmor"
 	Path "models"
 	Model 0 "Armor2M_d.3d"
 	Skin 0 "Jarmor2.png"
-	Scale 0.12 0.12 0.134
-	ZOffset 12
+	Scale 0.12 0.12 0.12
+	ZOffset 10
 
 	FrameIndex UARM A 0 0
 }
@@ -179,9 +179,9 @@ Model "UTShieldBelt"
 	Path "models"
 	Model 0 "ShieldBeltMeshM_d.3d"
 	Skin 0 "AUbelt1.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	AngleOffset -90
-	ZOffset 4
+	ZOffset 3.5
 
 	FrameIndex BELT A 0 0
 }
@@ -191,8 +191,8 @@ Model "UDamage"
 	Path "models"
 	Model 0 "UDamage_d.3d"
 	Skin 0 "GoldSkin2.png"
-	Scale 0.16 0.16 0.192
-	ZOffset 24
+	Scale 0.16 0.16 0.16
+	ZOffset 20
 	ROTATING
 
 	FrameIndex UDAM A 0 0
@@ -203,8 +203,8 @@ Model "ActUDamage"
 	Path "models"
 	Model 0 "UDamage_d.3d"
 	Skin 0 "GoldSkin2.png"
-	Scale 0.16 0.16 0.192
-	ZOffset 24
+	Scale 0.16 0.16 0.16
+	ZOffset 20
 	ROTATING
 
 	FrameIndex UDAM A 0 0
@@ -215,9 +215,9 @@ Model "UTRedSkull"
 	Path "models"
 	Model 0 "RelicSkull_d.3d"
 	Skin 0 "JRelicSkull_01r.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	AngleOffset -90	// relic of death faces to the side originally
-	ZOffset 12
+	ZOffset 10
 	ROTATING
 
 	FrameIndex USKL A 0 15
@@ -227,9 +227,9 @@ Model "UTGoldSkull"
 	Path "models"
 	Model 0 "RelicSkull_d.3d"
 	Skin 0 "JRelicSkull_01g.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	AngleOffset -90	// relic of death faces to the side originally
-	ZOffset 12
+	ZOffset 10
 	ROTATING
 
 	FrameIndex USKL B 0 15
@@ -239,9 +239,9 @@ Model "UTBlueSkull"
 	Path "models"
 	Model 0 "RelicSkull_d.3d"
 	Skin 0 "JRelicSkull_01b.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	AngleOffset -90	// relic of death faces to the side originally
-	ZOffset 12
+	ZOffset 10
 	ROTATING
 
 	FrameIndex USKL C 0 15
@@ -251,8 +251,8 @@ Model "UTRedKey"
 	Path "models"
 	Model 0 "DomR_d.3d"
 	Skin 0 "RedSkin2.png"
-	Scale 0.04 0.04 0.048
-	ZOffset 16
+	Scale 0.04 0.04 0.04
+	ZOffset 14
 	ROTATING
 
 	FrameIndex UKEY A 0 0
@@ -262,8 +262,8 @@ Model "UTGoldKey"
 	Path "models"
 	Model 0 "MercSymbol_d.3d"
 	Skin 0 "GoldSkin2.png"
-	Scale 0.08 0.08 0.096
-	ZOffset 16
+	Scale 0.08 0.08 0.08
+	ZOffset 14
 	ROTATING
 
 	FrameIndex UKEY B 0 0
@@ -273,8 +273,8 @@ Model "UTBlueKey"
 	Path "models"
 	Model 0 "DomB_d.3d"
 	Skin 0 "BlueSkin2.png"
-	Scale 0.04 0.04 0.048
-	ZOffset 16
+	Scale 0.04 0.04 0.04
+	ZOffset 14
 	ROTATING
 
 	FrameIndex UKEY C 0 0
@@ -284,8 +284,8 @@ Model "UTHereticYellowKey"
 	Path "models"
 	Model 0 "MercSymbol_d.3d"
 	Skin 0 "GoldSkin2.png"
-	Scale 0.08 0.08 0.096
-	ZOffset 16
+	Scale 0.08 0.08 0.08
+	ZOffset 14
 	ROTATING
 
 	FrameIndex UKEY B 0 0
@@ -295,8 +295,8 @@ Model "UTHereticGreenKey"
 	Path "models"
 	Model 0 "UDamage_d.3d"
 	Skin 0 "NewGreen.png"
-	Scale 0.08 0.08 0.096
-	ZOffset 16
+	Scale 0.08 0.08 0.08
+	ZOffset 14
 	ROTATING
 
 	FrameIndex UKEY D 0 0
@@ -306,8 +306,8 @@ Model "UTHereticBlueKey"
 	Path "models"
 	Model 0 "DomB_d.3d"
 	Skin 0 "BlueSkin2.png"
-	Scale 0.04 0.04 0.048
-	ZOffset 16
+	Scale 0.04 0.04 0.04
+	ZOffset 14
 	ROTATING
 
 	FrameIndex UKEY C 0 0
@@ -317,8 +317,8 @@ Model "UTHereticRedKey"
 	Path "models"
 	Model 0 "DomR_d.3d"
 	Skin 0 "RedSkin2.png"
-	Scale 0.04 0.04 0.048
-	ZOffset 16
+	Scale 0.04 0.04 0.04
+	ZOffset 14
 	ROTATING
 
 	FrameIndex UKEY A 0 0
@@ -329,8 +329,8 @@ Model "UTBackpack"
 	Path "models"
 	Model 0 "Backpack2_d.3d"	// edited out of SelectionMale1
 	Skin 0 "bpak.png"
-	ZOffset 16
-	Scale 0.3 0.3 0.36
+	ZOffset 14
+	Scale 0.3 0.3 0.3
 	AngleOffset -90
 	ROTATING
 
@@ -343,8 +343,8 @@ Model "UTInvisibility"
 	Model 0 "invis2M_d.3d"
 	// indices start at 1 for this mesh
 	SurfaceSkin 0 1 "jinvis.png"
-	Scale 0.1 0.1 0.12
-	ZOffset 9
+	Scale 0.1 0.1 0.1
+	ZOffset 7.5
 
 	FrameIndex INVS A 0 0
 }
@@ -355,8 +355,8 @@ Model "UTInvisibilityX"
 	// gzdoom doesn't handle the environment mapped flag, so I had to edit
 	// it into a separate texnum
 	SurfaceSkin 0 2 "invis00"
-	Scale 0.1 0.1 0.12
-	ZOffset 9
+	Scale 0.1 0.1 0.1
+	ZOffset 7.5
 
 	FrameIndex INVS A 0 0
 }
@@ -367,8 +367,8 @@ Model "ActUTInvisibility"
 	Model 0 "invis2M_d.3d"
 	// indices start at 1 for this mesh
 	SurfaceSkin 0 1 "jinvis.png"
-	Scale 0.1 0.1 0.12
-	ZOffset 9
+	Scale 0.1 0.1 0.1
+	ZOffset 7.5
 
 	FrameIndex INVS A 0 0
 }
@@ -379,8 +379,8 @@ Model "UTMapRevealer"
 	Model 0 "cheapcomp_d.3d"
 	SurfaceSkin 0 1 "JAllMap2.png"
 	SurfaceSkin 0 2 "JAllMap3.png"
-	Scale 0.04 0.04 0.048
-	ZOffset 3
+	Scale 0.04 0.04 0.04
+	ZOffset 2.5
 	AngleOffset 90
 
 	SurfaceSkin 0 0 "JAllMap1_a00.png"
@@ -398,8 +398,8 @@ Model "UTJumpBoots"
 	Path "models"
 	Model 0 "jboot_d.3d"
 	Skin 0 "Jlboot2.png"
-	Scale 0.09 0.09 0.108
-	ZOffset 7
+	Scale 0.09 0.09 0.09
+	ZOffset 6
 
 	FrameIndex JBUT A 0 0
 }
@@ -409,8 +409,8 @@ Model "ActJumpBoots"
 	Path "models"
 	Model 0 "jboot_d.3d"
 	Skin 0 "Jlboot2.png"
-	Scale 0.09 0.09 0.108
-	ZOffset 7
+	Scale 0.09 0.09 0.09
+	ZOffset 6
 
 	FrameIndex JBUT A 0 0
 }
@@ -420,7 +420,7 @@ Model "UTChip"
 	Path "models"
 	Model 0 "ChipM_d.3d"
 	Skin 0 "Chip1.png"
-	Scale 0.12 0.12 0.134
+	Scale 0.12 0.12 0.12
 	USEACTORPITCH
 	USEACTORROLL
 	USEROTATIONCENTER
@@ -438,8 +438,8 @@ Model "UTInvulnerability"
 	Path "models"
 	Model 0 "U_d.3d"
 	Skin 0 "GOLD.png"
-	Scale 0.15 0.15 0.18
-	ZOffset 24
+	Scale 0.15 0.15 0.15
+	ZOffset 20
 	ROTATING
 
 	FrameIndex UKEY A 0 0
@@ -450,8 +450,8 @@ Model "ActUTInvulnerability"
 	Path "models"
 	Model 0 "U_d.3d"
 	Skin 0 "GOLD.png"
-	Scale 0.15 0.15 0.18
-	ZOffset 24
+	Scale 0.15 0.15 0.15
+	ZOffset 20
 	ROTATING
 
 	FrameIndex UKEY A 0 0
@@ -462,8 +462,8 @@ Model "UTNightVision"
 	Path "models"
 	Model 0 "VisionM_d.3d"
 	SurfaceSkin 0 0 "s_camera.png"
-	Scale 0.15 0.15 0.18
-	ZOffset 24
+	Scale 0.15 0.15 0.15
+	ZOffset 20
 	ROTATING
 
 	FrameIndex UKEY A 0 0
@@ -474,8 +474,8 @@ Model "ActUTNightVision"
 	Path "models"
 	Model 0 "VisionM_d.3d"
 	SurfaceSkin 0 0 "s_camera.png"
-	Scale 0.15 0.15 0.18
-	ZOffset 24
+	Scale 0.15 0.15 0.15
+	ZOffset 20
 	ROTATING
 
 	FrameIndex UKEY A 0 0
@@ -486,8 +486,8 @@ Model "UTNightVisionX"
 	Path "models"
 	Model 0 "VisionM_d.3d"
 	SurfaceSkin 0 1 "Effect1.png"
-	Scale 0.15 0.15 0.18
-	ZOffset 24
+	Scale 0.15 0.15 0.15
+	ZOffset 20
 	ROTATING
 	DONTCULLBACKFACES
 
@@ -499,7 +499,7 @@ Model "WaterRing"
 	Path "models"
 	Model 0 "RingEx_d.3d"
 	Skin 0 "WetRing.png"
-	Scale 1.0 1.0 1.2
+	Scale 1.0 1.0 1.0
 	ZOffset 1
 	DONTCULLBACKFACES
 	USEACTORPITCH
@@ -517,7 +517,7 @@ Model "UTWaterSplash"
 	Path "models"
 	Model 0 "WaterImpactM_d.3d"
 	Skin 0 "splash_water.png"
-	Scale 0.16 0.16 0.192
+	Scale 0.16 0.16 0.16
 	USEACTORPITCH
 	USEACTORROLL
 	DONTCULLBACKFACES
@@ -554,7 +554,7 @@ Model "UTWaterSplish"
 	Path "models"
 	Model 0 "WaterImpactM_d.3d"
 	Skin 0 "splash_water.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	USEACTORPITCH
 	USEACTORROLL
 	DONTCULLBACKFACES
@@ -592,7 +592,7 @@ Model "UTBloodSplash"
 	Path "models"
 	Model 0 "WaterImpactM_d.3d"
 	Skin 0 "splash_blood.png"
-	Scale 0.16 0.16 0.192
+	Scale 0.16 0.16 0.16
 	USEACTORPITCH
 	USEACTORROLL
 	DONTCULLBACKFACES
@@ -629,7 +629,7 @@ Model "UTBloodSplish"
 	Path "models"
 	Model 0 "WaterImpactM_d.3d"
 	Skin 0 "splash_blood.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	USEACTORPITCH
 	USEACTORROLL
 	DONTCULLBACKFACES
@@ -667,7 +667,7 @@ Model "UTSlimeSplash"
 	Path "models"
 	Model 0 "WaterImpactM_d.3d"
 	Skin 0 "splash_sludge.png"
-	Scale 0.16 0.16 0.192
+	Scale 0.16 0.16 0.16
 	USEACTORPITCH
 	USEACTORROLL
 	DONTCULLBACKFACES
@@ -704,7 +704,7 @@ Model "UTSlimeSplish"
 	Path "models"
 	Model 0 "WaterImpactM_d.3d"
 	Skin 0 "splash_sludge.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	USEACTORPITCH
 	USEACTORROLL
 	DONTCULLBACKFACES
@@ -742,7 +742,7 @@ Model "UTNukageSplash"
 	Path "models"
 	Model 0 "WaterImpactM_d.3d"
 	Skin 0 "splash_nukage.png"
-	Scale 0.16 0.16 0.192
+	Scale 0.16 0.16 0.16
 	USEACTORPITCH
 	USEACTORROLL
 	DONTCULLBACKFACES
@@ -779,7 +779,7 @@ Model "UTNukageSplish"
 	Path "models"
 	Model 0 "WaterImpactM_d.3d"
 	Skin 0 "splash_nukage.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	USEACTORPITCH
 	USEACTORROLL
 	DONTCULLBACKFACES
@@ -817,7 +817,7 @@ Model "UTLavaSplash"
 	Path "models"
 	Model 0 "WaterImpactM_d.3d"
 	Skin 0 "splash_lava.png"
-	Scale 0.16 0.16 0.192
+	Scale 0.16 0.16 0.16
 	USEACTORPITCH
 	USEACTORROLL
 	DONTCULLBACKFACES
@@ -854,7 +854,7 @@ Model "UTLavaSplish"
 	Path "models"
 	Model 0 "WaterImpactM_d.3d"
 	Skin 0 "splash_lava.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	USEACTORPITCH
 	USEACTORROLL
 	DONTCULLBACKFACES

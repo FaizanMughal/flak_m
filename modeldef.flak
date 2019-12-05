@@ -3,7 +3,7 @@ Model "FlakAmmo"
 	Path "models"
 	Model 0 "FlakAmmoM_d.3d"
 	Skin 0 "jfa1.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	ZOffset 4.5
 
 	FrameIndex FAMO A 0 0
@@ -14,7 +14,7 @@ Model "FlakAmmo2"
 	Path "models"
 	Model 0 "flakslugm_d.3d"
 	Skin 0 "jflakslugel1_.png"
-	Scale 0.04 0.04 0.048
+	Scale 0.04 0.04 0.04
 	AngleOffset 180
 	ZOffset 2
 
@@ -26,7 +26,7 @@ Model "FlakSlug"
 	Path "models"
 	Model 0 "flakslugm_d.3d"
 	Skin 0 "jflakslugel1.png"
-	Scale 0.048 0.04 0.04
+	Scale 0.04 0.04 0.04
 	AngleOffset 180
 	PitchOffset 90
 	USEACTORPITCH
@@ -38,7 +38,7 @@ Model "FlakChunk"
 {
 	Path "models"
 	Model 0 "chunkm_d.3d"
-	Scale 0.06 0.06 0.072
+	Scale 0.06 0.06 0.06
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -75,7 +75,7 @@ Model "FlakChunk"
 {
 	Path "models"
 	Model 1 "chunk2m_d.3d"
-	Scale 0.06 0.06 0.072
+	Scale 0.06 0.06 0.06
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -112,7 +112,7 @@ Model "FlakChunk"
 {
 	Path "models"
 	Model 2 "chunk3m_d.3d"
-	Scale 0.06 0.06 0.072
+	Scale 0.06 0.06 0.06
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -149,7 +149,7 @@ Model "FlakChunk"
 {
 	Path "models"
 	Model 3 "chunk4m_d.3d"
-	Scale 0.06 0.06 0.072
+	Scale 0.06 0.06 0.06
 	ZOffset 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -187,7 +187,7 @@ Model "FlakMag"
 	Path "models"
 	Model 0 "UsedFlak_d.3d"
 	Skin 0 "flak_t_.png"
-	Scale 0.15 0.3 0.36
+	Scale 0.15 0.3 0.3
 	AngleOffset 90
 	ZOffset 1
 	USEACTORPITCH
@@ -204,8 +204,8 @@ Model "FlakCannon"
 	Model 1 "flak2pick_d.3d"
 	Skin 1 "flak_t.png"
 	AngleOffset 90
-	Scale 0.14 0.14 0.168
-	Offset 18.9 0 12
+	Scale 0.14 0.14 0.14
+	Offset 18.9 0 10
 
 	FrameIndex FPCK B 1 0
 

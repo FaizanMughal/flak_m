@@ -7,7 +7,7 @@ Model "UTPlayerTMale2"
 	SurfaceSkin 0 2 "sldr3.png"
 	SurfaceSkin 0 3 "sldr4.png"
 	SurfaceSkin 0 5 "GunPick1.png"
-	Scale 0.256 0.23 0.23
+	Scale 0.23 0.23 0.23
 	Offset 0 -5 29
 	RollOffset -90
 	AngleOffset -90

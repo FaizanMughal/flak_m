@@ -3,8 +3,8 @@ Model "ShockAmmo"
 	Path "models"
 	Model 0 "ShockCoreM_d.3d"
 	Skin 0 "JShockCore.png"
-	Scale 0.11 0.11 0.132
-	ZOffset 12
+	Scale 0.11 0.11 0.11
+	ZOffset 10
 
 	FrameIndex SHOA A 0 0
 }
@@ -13,8 +13,8 @@ Model "ShockAmmo2"
 	Path "models"
 	Model 0 "ShockCoreM_d.3d"
 	Skin 0 "JShockCore_2.png"
-	Scale 0.11 0.11 0.132
-	ZOffset 12
+	Scale 0.11 0.11 0.11
+	ZOffset 10
 
 	FrameIndex SHOA A 0 0
 }
@@ -24,8 +24,8 @@ Model "EnhancedShockAmmo"
 	Path "models"
 	Model 0 "ShockCoreM_d.3d"
 	Skin 0 "JSShockCore.png"
-	Scale 0.11 0.11 0.132
-	ZOffset 12
+	Scale 0.11 0.11 0.11
+	ZOffset 10
 
 	FrameIndex SHOA A 0 0
 }
@@ -35,8 +35,7 @@ Model "ShockRifleWave"
 	Path "models"
 	Model 0 "shockrwm_d.3d"
 	Skin 0 "shocktt1.png"
-	Scale 0.6 0.5 0.5
-	PitchOffset 90
+	Scale 0.5 0.5 0.5
 
 	FrameIndex SWAV A 0 0
 	FrameIndex SWAV B 0 1
@@ -47,8 +46,7 @@ Model "SuperShockRifleWave"
 	Path "models"
 	Model 0 "shockrwm_d.3d"
 	Skin 0 "sshocktt1.png"
-	Scale 0.6 0.5 0.5
-	PitchOffset 90
+	Scale 0.5 0.5 0.5
 
 	FrameIndex SWAV A 0 0
 	FrameIndex SWAV B 0 1
@@ -59,7 +57,7 @@ Model "ShockBeamRing"
 	Path "models"
 	Model 0 "utringex_d.3d"
 	Skin 0 "asaring.png"
-	Scale 1.2 1.0 1.0
+	Scale 1.0 1.0 1.0
 	PitchOffset 90
 	DONTCULLBACKFACES
 	USEACTORPITCH
@@ -81,7 +79,7 @@ Model "SuperShockBeamRing"
 	Path "models"
 	Model 0 "utringex_d.3d"
 	Skin 0 "ASasRing.png"
-	Scale 1.2 1.0 1.0
+	Scale 1.0 1.0 1.0
 	PitchOffset 90
 	DONTCULLBACKFACES
 	USEACTORPITCH
@@ -103,7 +101,7 @@ Model "ShockBlastRing"
 	Path "models"
 	Model 0 "utringex_d.3d"
 	Skin 0 "ppurplering.png"
-	Scale 1.2 1.0 1.0
+	Scale 1.0 1.0 1.0
 	PitchOffset 90
 	DONTCULLBACKFACES
 	USEACTORPITCH
@@ -125,7 +123,7 @@ Model "SuperShockBlastRing"
 	Path "models"
 	Model 0 "utringex_d.3d"
 	Skin 0 "ASasRing.png"
-	Scale 1.2 1.0 1.0
+	Scale 1.0 1.0 1.0
 	PitchOffset 90
 	DONTCULLBACKFACES
 	USEACTORPITCH
@@ -148,12 +146,12 @@ Model "ShockRifle"
 	Model 1 "asmd2pick_d.3d"
 	Skin 1 "asmd_t.png"
 	AngleOffset 90
-	Scale 0.14 0.14 0.18
-	ZOffset 4
+	Scale 0.14 0.14 0.14
+	ZOffset 3
 
 	FrameIndex ASMP B 1 0
 
-	ZOffset 12
+	ZOffset 10
 	ROTATING
 	FrameIndex ASMP A 1 0
 }
@@ -227,22 +225,14 @@ Model "EnhancedShockRifle"
 	Model 1 "asmd2pick_d.3d"
 	Skin 1 "sasmd_t.png"
 	AngleOffset 90
-	Scale 0.14 0.14 0.18
-	ZOffset 12
-	ROTATING
-
-	FrameIndex ASMP A 1 0
-}
-Model "EnhancedShockRifle"
-{
-	Path "models"
-	Model 1 "asmd2pick_d.3d"
-	Skin 1 "sasmd_t.png"
-	AngleOffset 90
-	Scale 0.14 0.14 0.18
-	ZOffset 4
+	Scale 0.14 0.14 0.14
+	ZOffset 3
 
 	FrameIndex ASMP B 1 0
+
+	ZOffset 10
+	ROTATING
+	FrameIndex ASMP A 1 0
 }
 
 Model "EnhancedShockRifle"

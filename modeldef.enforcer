@@ -3,8 +3,8 @@ Model "EClip"
 	Path "models"
 	Model 0 "EClipM_d.3d"
 	Skin 0 "JEClip.png"
-	Scale 0.072 0.072 0.0864
-	ZOffset 2.5
+	Scale 0.072 0.072 0.072
+	ZOffset 2
 
 	FrameIndex ECLP A 0 0
 }
@@ -14,7 +14,7 @@ Model "EnforcerMag"
 	Path "models"
 	Model 0 "UsedMag_d.3d"
 	Skin 0 "jautot1_.png"
-	Scale 0.06 0.06 0.072
+	Scale 0.06 0.06 0.06
 	ZOffset 1
 	USEACTORPITCH
 	USEACTORROLL
@@ -29,7 +29,7 @@ Model "UTCasing"
 	Path "models"
 	Model 0 "Shellc_d.3d"
 	Skin 0 "Shellcase1.png"
-	Scale 0.0168 0.014 0.014
+	Scale 0.014 0.014 0.014
 	AngleOffset 270
 	RollOffset 90
 	ZOffset 1
@@ -45,7 +45,7 @@ Model "BulletImpact"
 {
 	Path "models"
 	Model 0 "BulletImpact_d.3d"
-	Scale 0.32 0.268 0.24
+	Scale 0.32 0.24 0.24
 	PitchOffset -90
 	USEACTORPITCH
 	USEACTORROLL
@@ -67,13 +67,13 @@ Model "Enforcer"
 	Path "models"
 	Model 1 "MagPick_d.3d"
 	Skin 1 "Jautot1.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	AngleOffset 90
-	ZOffset 6
+	ZOffset 5
 
 	FrameIndex ENFP B 1 0
 
-	ZOffset 12
+	ZOffset 10
 	ROTATING
 	FrameIndex ENFP A 1 0
 }

@@ -14,8 +14,8 @@ Model "UTChainsaw"
 	Path "models"
 	Model 1 "ChainSawPick_d.3d"
 	Skin 1 "JChainSawPick1.png"
-	Offset -10.5 -0.84 6
-	Scale 0.14 0.168 0.14
+	Offset -10.5 -0.7 6
+	Scale 0.14 0.14 0.14
 	RollOffset -90
 
 	FrameIndex CSWP B 1 0

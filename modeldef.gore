@@ -3,7 +3,7 @@ Model "UTGenericGib1"
 	Path "models"
 	Model 0 "chunkM_d.3d"
 	Skin 0 "JGCow1.png"
-	Scale 0.04 0.04 0.048
+	Scale 0.04 0.04 0.04
 	Offset 0 0 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -18,7 +18,7 @@ Model "UTGenericGib2"
 	Path "models"
 	Model 0 "chunk2M_d.3d"
 	Skin 0 "JGCow1.png"
-	Scale 0.04 0.04 0.048
+	Scale 0.04 0.04 0.04
 	Offset 0 0 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -33,7 +33,7 @@ Model "UTGenericGib3"
 	Path "models"
 	Model 0 "chunk3M_d.3d"
 	Skin 0 "JGCow1.png"
-	Scale 0.04 0.04 0.048
+	Scale 0.04 0.04 0.04
 	Offset 0 0 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -48,7 +48,7 @@ Model "UTGenericGib4"
 	Path "models"
 	Model 0 "chunk4M_d.3d"
 	Skin 0 "JGCow1.png"
-	Scale 0.04 0.04 0.048
+	Scale 0.04 0.04 0.04
 	Offset 0 0 2
 	USEACTORPITCH
 	USEACTORROLL
@@ -63,7 +63,7 @@ Model "UTThigh"
 	Path "models"
 	Model 0 "ThighUTM_d.3d"
 	Skin 0 "ThighT.png"
-	Scale 0.1 0.12 0.1
+	Scale 0.1 0.1 0.1
 	Offset 0 3.5 0
 	PitchOffset 90
 	AngleOffset -90
@@ -80,7 +80,7 @@ Model "UTLiver"
 	Path "models"
 	Model 0 "LiverM_d.3d"
 	Skin 0 "Jparts1.png"
-	Scale 0.04 0.04 0.048
+	Scale 0.04 0.04 0.04
 	Offset 0 0 1
 	USEACTORPITCH
 	USEACTORROLL
@@ -95,7 +95,7 @@ Model "UTStomach"
 	Path "models"
 	Model 0 "stomachM_d.3d"
 	Skin 0 "Jparts1.png"
-	Scale 0.06 0.06 0.072
+	Scale 0.06 0.06 0.06
 	Offset 0 0 1
 	USEACTORPITCH
 	USEACTORROLL
@@ -110,7 +110,7 @@ Model "UTHeart"
 	Path "models"
 	Model 0 "PHeartM_d.3d"
 	Skin 0 "Jmisc1.png"
-	Scale 0.03 0.03 0.036
+	Scale 0.03 0.03 0.03
 	Offset 0 0 0.5
 	USEACTORPITCH
 	USEACTORROLL
@@ -130,7 +130,7 @@ Model "UTFemaleArm"
 	Path "models"
 	Model 0 "femalearmm_d.3d"
 	Skin 0 "femalearmT.png"
-	Scale 0.2 0.2 0.24
+	Scale 0.2 0.2 0.2
 	Offset 0 0 1.5
 	USEACTORPITCH
 	USEACTORROLL
@@ -145,7 +145,7 @@ Model "UTFemaleFoot"
 	Path "models"
 	Model 0 "femalefootm_d.3d"
 	Skin 0 "femalefootT.png"
-	Scale 0.2 0.2 0.24
+	Scale 0.2 0.2 0.2
 	Offset 0 0 1.5
 	USEACTORPITCH
 	USEACTORROLL
@@ -160,7 +160,7 @@ Model "UTFemaleTorso"
 	Path "models"
 	Model 0 "femaletorsom_d.3d"
 	Skin 0 "femaletorsoT.png"
-	Scale 0.2 0.2 0.24
+	Scale 0.2 0.2 0.2
 	Offset 0 0 4
 	USEACTORPITCH
 	USEACTORROLL
@@ -175,7 +175,7 @@ Model "UTMaleArm"
 	Path "models"
 	Model 0 "malearmm_d.3d"
 	Skin 0 "malearmT.png"
-	Scale 0.2 0.2 0.24
+	Scale 0.2 0.2 0.2
 	Offset 0 0 1.5
 	USEACTORPITCH
 	USEACTORROLL
@@ -190,7 +190,7 @@ Model "UTMaleFoot"
 	Path "models"
 	Model 0 "malefootm_d.3d"
 	Skin 0 "malefootT.png"
-	Scale 0.2 0.2 0.24
+	Scale 0.2 0.2 0.2
 	Offset 0 0 1.5
 	USEACTORPITCH
 	USEACTORROLL
@@ -205,7 +205,7 @@ Model "UTMaleTorso"
 	Path "models"
 	Model 0 "maletorsom_d.3d"
 	Skin 0 "maletorsoT.png"
-	Scale 0.2 0.2 0.24
+	Scale 0.2 0.2 0.2
 	Offset 0 0 4
 	USEACTORPITCH
 	USEACTORROLL
@@ -220,7 +220,7 @@ Model "UTBossArm"
 	Path "models"
 	Model 0 "bossarmm_d.3d"
 	Skin 0 "bossgibT.png"
-	Scale 0.12 0.12 0.144
+	Scale 0.12 0.12 0.12
 	Offset 0 0 1.5
 	USEACTORPITCH
 	USEACTORROLL
@@ -235,7 +235,7 @@ Model "UTBossFoot"
 	Path "models"
 	Model 0 "bossthighm_d.3d"
 	Skin 0 "bossgibT.png"
-	Scale 0.12 0.12 0.144
+	Scale 0.12 0.12 0.12
 	Offset 0 0 1.5
 	USEACTORPITCH
 	USEACTORROLL
@@ -250,7 +250,7 @@ Model "UTHeadFemale"
 	Path "models"
 	Model 0 "HeadFemaleM_d.3d"
 	Skin 0 "FMT1.png"
-	Scale 0.2 0.2 0.24
+	Scale 0.2 0.2 0.2
 	Offset 0 0 3
 	AngleOffset -90
 	USEACTORPITCH
@@ -266,7 +266,7 @@ Model "UTHeadMale"
 	Path "models"
 	Model 0 "headmalem_d.3d"
 	Skin 0 "MMT1.png"
-	Scale 0.2 0.2 0.24
+	Scale 0.2 0.2 0.2
 	Offset 0 0 3
 	AngleOffset -90
 	USEACTORPITCH
@@ -282,7 +282,7 @@ Model "UTHeadBoss"
 	Path "models"
 	Model 0 "bossheadm_d.3d"
 	Skin 0 "bossgibT.png"
-	Scale 0.07 0.07 0.084
+	Scale 0.07 0.07 0.07
 	Offset 0 0 3
 	AngleOffset -90
 	USEACTORPITCH

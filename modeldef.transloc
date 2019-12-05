@@ -3,8 +3,8 @@ Model "TranslocatorModule"
 	Path "models"
 	Model 0 "Module_d.3d"
 	Skin 0 "tloc2_.png"
-	Scale 0.056 0.056 0.0672
-	ZOffset 6
+	Scale 0.056 0.056 0.056
+	ZOffset 5
 	USEACTORPITCH
 
 	FrameIndex TMOD A 0 0
@@ -18,7 +18,7 @@ Model "Translocator"
 	Model 1 "Trans3loc_d.3d"
 	SurfaceSkin 1 0 "tloc1_.png"
 	SurfaceSkin 1 1 "tloc2_.png"
-	Scale 0.046 0.046 0.0552
+	Scale 0.046 0.046 0.046
 	AngleOffset -90
 	ZOffset 1
 

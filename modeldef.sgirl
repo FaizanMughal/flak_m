@@ -7,8 +7,8 @@ Model "UTPlayerTFemale2"
 	SurfaceSkin 0 2 "army3.png"
 	SurfaceSkin 0 3 "army4.png"
 	SurfaceSkin 0 5 "GunPick1.png"
-	Scale 0.256 0.23 0.23
-	Offset -3 3 36
+	Scale 0.23 0.23 0.23
+	Offset -2.5 3 36
 	RollOffset -90
 	AngleOffset -90
 	IGNORETRANSLATION	// I'll figure out eventually how to make color changes work, but for now this is it

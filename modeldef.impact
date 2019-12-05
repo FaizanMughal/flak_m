@@ -3,13 +3,13 @@ Model "ImpactHammer"
 	Path "models"
 	Model 1 "ImpPick_d.3d"
 	Skin 1 "JImpPick1.png"
-	Scale 0.2 0.24 0.2
+	Scale 0.2 0.2 0.2
 	RollOffset -90
-	ZOffset 9
+	ZOffset 7.5
 
 	FrameIndex IMPP B 1 0
 
-	ZOffset 12
+	ZOffset 10
 	ROTATING
 	FrameIndex IMPP A 1 0
 }
