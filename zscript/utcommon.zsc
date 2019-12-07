@@ -2896,23 +2896,24 @@ Class QueuedFlash
 
 Class UTStaticHandler : StaticEventHandler
 {
-	ui TextureID tex;
+	ui TextureID tex[2];
 
 	ui void StartMenu()
 	{
+		tex[0] = TexMan.CheckForTexture("DTLogo",TexMan.Type_Any);
 		CVar protomenu = CVar.GetCVar('flak_protomenu',players[consoleplayer]);
 		if ( !protomenu ) return;	// this can happen
 		int proto = protomenu.GetInt();
 		if ( proto )
 		{
-			tex = TexMan.CheckForTexture("protobg",TexMan.Type_Any);
+			tex[1] = TexMan.CheckForTexture("protobg",TexMan.Type_Any);
 			if ( gamestate != GS_TITLELEVEL ) return;
 			if ( proto > 1 ) S_ChangeMusic("menu2");
 			else S_ChangeMusic("xyzdMenu");
 		}
 		else
 		{
-			tex = TexMan.CheckForTexture("finalbg",TexMan.Type_Any);
+			tex[1] = TexMan.CheckForTexture("finalbg",TexMan.Type_Any);
 			if ( gamestate != GS_TITLELEVEL ) return;
 			S_ChangeMusic("utmenu23");
 		}
@@ -2928,16 +2929,29 @@ Class UTStaticHandler : StaticEventHandler
 		if ( gametic <= 0 ) StartMenu();
 	}
 
+	override void RenderUnderlay( RenderEvent e )
+	{
+		if ( gamestate != GS_TITLELEVEL ) return;
+		double ar = Screen.GetAspectRatio();
+		Vector2 tsize = TexMan.GetScaledSize(tex[0]);
+		double sar = tsize.x/tsize.y;
+		Vector2 vsize;
+		if ( sar > ar ) vsize = (tsize.x,tsize.x/ar);
+		else if ( sar < ar ) vsize = (tsize.y*ar,tsize.y);
+		else vsize = tsize;
+		Screen.Dim("Black",1.0,0,0,Screen.GetWidth(),Screen.GetHeight());
+		Screen.DrawTexture(tex[0],false,(vsize.x-tsize.x)/2,(vsize.y-tsize.y)/2,DTA_VirtualWidthF,vsize.x,DTA_VirtualHeightF,vsize.y,DTA_KeepRatio,true);
+	}
+
 	override void RenderOverlay( RenderEvent e )
 	{
 		// well this if sure is a long one
 		if ( players[consoleplayer].camera.player && players[consoleplayer].camera.player.ReadyWeapon && (players[consoleplayer].camera.player.ReadyWeapon is 'UTWeapon') )
 			UTWeapon(players[consoleplayer].camera.player.ReadyWeapon).RenderOverlay(e);
-		if ( !menuactive ) return;
-		if ( tex.IsNull() || !tex.IsValid() ) return;
+		if ( !menuactive || (Menu.GetCurrentMenu() is 'ConversationMenu') ) return;
 		if ( !CVar.GetCVar('flak_showmenu',players[consoleplayer]).GetBool() ) return;
 		Screen.Dim("Black",1.0,0,0,Screen.GetWidth(),Screen.GetHeight());
-		Screen.DrawTexture(tex,true,0,0,DTA_VirtualWidth,1024,DTA_VirtualHeight,768);
+		Screen.DrawTexture(tex[1],true,0,0,DTA_VirtualWidth,1024,DTA_VirtualHeight,768);
 	}
 }
 
@@ -3127,68 +3141,74 @@ Class UTMainHandler : EventHandler
 			for ( int i=0; i<166; i++ )
 				gframes[i] = TexMan.CheckForTexture(String.Format("graphics/grunt/B_%03d.jpg",i+1),TexMan.Type_Any);
 		}
+		if ( level.levelname != "Modder Test Map" ) return;
 		// just replace the -noflat- with a better scaled version and change the sky
 		if ( !flak_doomtest )
 		{
-			if ( (level.GetChecksum() ~== "959A613006CC3AA912C4A22908B7566A") || (level.GetChecksum() ~== "0EADB2F82732A968B8513E4DC6138439") )
-			{
-				Level.ReplaceTextures("-noflat-","DefTex",0);
-				TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
-				level.ChangeSky(skytx,skytx);
-			}
+			Level.ReplaceTextures("-noflat-","DefTex",0);
+			TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
+			level.ChangeSky(skytx,skytx);
 			return;
 		}
+		S_ChangeMusic("Course");
+		TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
+		TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
+		TextureID baseflor = TexMan.CheckForTexture("rClfFlr0",TexMan.Type_Any);
+		TextureID baseceil = TexMan.CheckForTexture("rClfBas0",TexMan.Type_Any);
+		TextureID basewall = TexMan.CheckForTexture("uAlnWl2b",TexMan.Type_Any);
+		TextureID xbasewall = TexMan.CheckForTexture("xAlnWl2b",TexMan.Type_Any);
+		TextureID glasstex = TexMan.CheckForTexture("Glassg",TexMan.Type_Any);
+		level.ChangeSky(skytx,skytx);
 		// prettify Kinsie's test map for a more Unreal feel
-		if ( level.GetChecksum() ~== "959A613006CC3AA912C4A22908B7566A" )
+		for ( int i=0; i<level.sectors.size(); i++ )
 		{
-			S_ChangeMusic("Course");
-			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
-			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
-			TextureID baseflor = TexMan.CheckForTexture("rClfFlr0",TexMan.Type_Any);
-			TextureID baseceil = TexMan.CheckForTexture("rClfBas0",TexMan.Type_Any);
-			TextureID basewall = TexMan.CheckForTexture("uAlnWl2b",TexMan.Type_Any);
-			TextureID xbasewall = TexMan.CheckForTexture("xAlnWl2b",TexMan.Type_Any);
-			TextureID glasstex = TexMan.CheckForTexture("Glassg",TexMan.Type_Any);
-			level.ChangeSky(skytx,skytx);
-			for ( int i=0; i<level.sectors.size(); i++ )
+			level.sectors[i].lightlevel = min(level.sectors[i].lightlevel,96);
+			if ( level.sectors[i].GetPlaneLight(0) ) level.sectors[i].SetPlaneLight(0,96);
+			if ( level.sectors[i].GetPlaneLight(1) ) level.sectors[i].SetPlaneLight(1,96);
+			// open some ceilings
+			if ( level.sectors[i].ceilingplane.ZAtPoint(level.sectors[i].centerspot) == 1280 )
+				level.sectors[i].SetTexture(1,skyflatnum);
+			if ( level.sectors[i].GetTexture(0) == deftex )
 			{
-				level.sectors[i].lightlevel = min(level.sectors[i].lightlevel,96);
-				if ( level.sectors[i].GetPlaneLight(0) ) level.sectors[i].SetPlaneLight(0,96);
-				if ( level.sectors[i].GetPlaneLight(1) ) level.sectors[i].SetPlaneLight(1,96);
-				// open some ceilings
-				if ( level.sectors[i].ceilingplane.ZAtPoint(level.sectors[i].centerspot) == 1280 )
-					level.sectors[i].SetTexture(1,skyflatnum);
-				if ( level.sectors[i].GetTexture(0) == deftex )
-				{
+				if ( gameinfo.gametype == GAME_DOOM )
 					level.sectors[i].SetTexture(0,((i==47)||((i>=256)&&(i<=260)))?baseceil:baseflor);
-					level.sectors[i].SetXScale(0,2.);
-					level.sectors[i].SetYScale(0,2.);
-				}
-				if ( level.sectors[i].GetTexture(1) == deftex )
-				{
-					level.sectors[i].SetTexture(1,((i==47)||((i>=256)&&(i<=260)))?baseflor:baseceil);
-					level.sectors[i].SetXScale(1,2.);
-					level.sectors[i].SetYScale(1,2.);
-				}
+				else if ( gameinfo.gametype == GAME_HERETIC )
+					level.sectors[i].SetTexture(0,((i==47)||((i>=144)&&(i<=148)))?baseceil:baseflor);
+				level.sectors[i].SetXScale(0,2.);
+				level.sectors[i].SetYScale(0,2.);
 			}
-			for ( int i=0; i<level.sides.size(); i++ )
+			if ( level.sectors[i].GetTexture(1) == deftex )
 			{
-				level.sides[i].light = 0;
-				level.sides[i].flags &= ~Side.WALLF_ABSLIGHTING;
-				for ( int j=0; j<3; j++ )
-				{
-					if ( level.sides[i].GetTexture(j) != deftex ) continue;
-					if ( (i==529) || (i==530) || (i==533) || (i==534) )
-					{
-						level.sides[i].SetTexture(j,xbasewall);
-						level.sides[i].SetTextureYOffset(j,-2304);
-					}
-					else level.sides[i].SetTexture(j,basewall);
-					level.sides[i].SetTextureXScale(j,2.);
-					level.sides[i].SetTextureYScale(j,2.);
-				}
+				if ( gameinfo.gametype == GAME_DOOM )
+					level.sectors[i].SetTexture(1,((i==47)||((i>=256)&&(i<=260)))?baseflor:baseceil);
+				else if ( gameinfo.gametype == GAME_HERETIC )
+					level.sectors[i].SetTexture(1,((i==47)||((i>=144)&&(i<=148)))?baseflor:baseceil);
+				level.sectors[i].SetXScale(1,2.);
+				level.sectors[i].SetYScale(1,2.);
 			}
-			// fixup
+		}
+		for ( int i=0; i<level.sides.size(); i++ )
+		{
+			level.sides[i].light = 0;
+			level.sides[i].flags &= ~Side.WALLF_ABSLIGHTING;
+			for ( int j=0; j<3; j++ )
+			{
+				if ( level.sides[i].GetTexture(j) != deftex ) continue;
+				if ( ((gameinfo.gametype == GAME_DOOM) && ((i==529) || (i==530) || (i==533) || (i==534)))
+					|| ((gameinfo.gametype == GAME_HERETIC) && ((i==295) || (i==296) || (i==309) || (i==310))) )
+				{
+					level.sides[i].SetTexture(j,xbasewall);
+					level.sides[i].SetTextureYOffset(j,-2304);
+				}
+				else level.sides[i].SetTexture(j,basewall);
+				level.sides[i].SetTextureXScale(j,2.);
+				level.sides[i].SetTextureYScale(j,2.);
+			}
+		}
+		// fixup
+		level.sectors[53].SetFade("00 00 20");
+		if ( gameinfo.gametype == GAME_DOOM )
+		{
 			for ( int i=215; i<246; i++ )
 			{
 				if ( (i==218) || (i==221) || (i==227)
@@ -3196,20 +3216,34 @@ Class UTMainHandler : EventHandler
 					|| (i==238) || (i==243) ) continue;
 				level.sectors[i].SetSpecialColor(0,"00 00 00");
 			}
-			level.sectors[53].SetFade("00 00 20");
 			level.sides[1844].SetTexture(1,glasstex);
 			level.lines[945].alpha = 0.5;
-			AddLight((0,-288,128),"E0 E0 FF",256);
-			AddLight((-2560,1024,1280),"E0 E0 FF",1024);
-			AddLight((0,1024,1280),"E0 E0 FF",1024);
-			AddLight((2560,1024,1280),"E0 E0 FF",1024);
-			AddLight((-384,-160,64),"FF FF FF",128);
-			AddLight((-384,-288,64),"FF FF FF",128);
-			AddLight((-384,-416,64),"FF FF FF",128);
-			AddLight((0,2816,96),"FF FF FF",512);
-			AddLight((2904,1344,128),"80 80 FF",256);
-			AddLight((3408,1344,128),"80 80 FF",256);
-			AddLight((1568,1760,64),"20 20 80",128);
+		}
+		else if ( gameinfo.gametype == GAME_HERETIC )
+		{
+			for ( int i=104; i<134; i++ )
+			{
+				if ( (i==107) || (i==110) || (i==116)
+					|| (i==119) || (i==121) || (i==127)
+					|| (i==132) ) continue;
+				level.sectors[i].SetSpecialColor(0,"00 00 00");
+			}
+			level.sides[216].SetTexture(1,glasstex);
+			level.lines[125].alpha = 0.5;
+		}
+		AddLight((0,-288,128),"E0 E0 FF",256);
+		AddLight((-2560,1024,1280),"E0 E0 FF",1024);
+		AddLight((0,1024,1280),"E0 E0 FF",1024);
+		AddLight((2560,1024,1280),"E0 E0 FF",1024);
+		AddLight((-384,-160,64),"FF FF FF",128);
+		AddLight((-384,-288,64),"FF FF FF",128);
+		AddLight((-384,-416,64),"FF FF FF",128);
+		AddLight((0,2816,96),"FF FF FF",512);
+		AddLight((2904,1344,128),"80 80 FF",256);
+		AddLight((3408,1344,128),"80 80 FF",256);
+		AddLight((1568,1760,64),"20 20 80",128);
+		if ( gameinfo.gametype == GAME_DOOM )
+		{
 			AddLight((1824,1760,64),"80 20 20",128);
 			AddLight((2080,1760,64),"FF 80 20",128);
 			AddLight((2336,1760,64),"20 FF 20",128);
@@ -3218,97 +3252,9 @@ Class UTMainHandler : EventHandler
 			AddLight((2944,960,64),"20 FF 20",128);
 			AddLight((2944,736,64),"20 FF 20",128);
 			AddLight((3264,960,64),"FF 20 20",128);
-			AddLight((3264,736,64),"A0 A0 30",128);
-			AddLight((3264,512,64),"80 80 20",128);
-			AddLight((3584,960,64),"80 80 20",128);
-			AddLight((3584,736,64),"20 FF 20",128);
-			AddLight((3584,512,64),"FF 80 20",128);
-			AddLight((3584,288,64),"FF 80 FF",128);
-			AddAmbient((0,-288,192),"testamb/wind1",0.5,1.6);
-			AddAmbient((-2560,1024,768),"testamb/wind1",0.4,0.8);
-			AddAmbient((0,1024,768),"testamb/wind1",0.4,0.8);
-			AddAmbient((2560,1024,768),"testamb/wind1",0.4,0.8);
-			AddAmbient((768,1600,1280),"testamb/wind2",0.8,1.6);
-			AddAmbient((3174,1344,128),"testamb/water",0.4,1.6);
-			AddAmbient((1568,1760,64),"testamb/water",0.4,2.4);
-			AddAmbient((2080,1760,64),"testamb/lava",0.8,2.4);
-			AddAmbient((2336,1760,64),"testamb/slime",0.4,2.4);
-			AddAmbient((2944,960,64),"testamb/slime",0.4,2.4);
-			AddAmbient((2944,736,64),"testamb/slime",0.4,2.4);
-			AddAmbient((3584,736,64),"testamb/slime",0.4,2.4);
-			AddAmbient((3584,512,64),"testamb/lava",0.8,2.4);
 		}
-		else if ( level.GetChecksum() ~== "0EADB2F82732A968B8513E4DC6138439" )
+		else if ( gameinfo.gametype == GAME_HERETIC )
 		{
-			S_ChangeMusic("Course");
-			TextureID deftex = TexMan.CheckForTexture("-noflat-",TexMan.Type_Any);
-			TextureID skytx = TexMan.CheckForTexture("KGDaySky",TexMan.Type_Any);
-			TextureID baseflor = TexMan.CheckForTexture("rClfFlr0",TexMan.Type_Any);
-			TextureID baseceil = TexMan.CheckForTexture("rClfBas0",TexMan.Type_Any);
-			TextureID basewall = TexMan.CheckForTexture("uAlnWl2b",TexMan.Type_Any);
-			TextureID xbasewall = TexMan.CheckForTexture("xAlnWl2b",TexMan.Type_Any);
-			TextureID glasstex = TexMan.CheckForTexture("Glassg",TexMan.Type_Any);
-			level.ChangeSky(skytx,skytx);
-			for ( int i=0; i<level.sectors.size(); i++ )
-			{
-				level.sectors[i].lightlevel = min(level.sectors[i].lightlevel,96);
-				if ( level.sectors[i].GetPlaneLight(0) ) level.sectors[i].SetPlaneLight(0,96);
-				if ( level.sectors[i].GetPlaneLight(1) ) level.sectors[i].SetPlaneLight(1,96);
-				// open some ceilings
-				if ( level.sectors[i].ceilingplane.ZAtPoint(level.sectors[i].centerspot) == 1280 )
-					level.sectors[i].SetTexture(1,skyflatnum);
-				if ( level.sectors[i].GetTexture(0) == deftex )
-				{
-					level.sectors[i].SetTexture(0,((i==47)||((i>=144)&&(i<=148)))?baseceil:baseflor);
-					level.sectors[i].SetXScale(0,2.);
-					level.sectors[i].SetYScale(0,2.);
-				}
-				if ( level.sectors[i].GetTexture(1) == deftex )
-				{
-					level.sectors[i].SetTexture(1,((i==47)||((i>=144)&&(i<=148)))?baseflor:baseceil);
-					level.sectors[i].SetXScale(1,2.);
-					level.sectors[i].SetYScale(1,2.);
-				}
-			}
-			for ( int i=0; i<level.sides.size(); i++ )
-			{
-				level.sides[i].light = 0;
-				level.sides[i].flags &= ~Side.WALLF_ABSLIGHTING;
-				for ( int j=0; j<3; j++ )
-				{
-					if ( level.sides[i].GetTexture(j) != deftex ) continue;
-					if ( (i==295) || (i==296) || (i==309) || (i==310) )
-					{
-						level.sides[i].SetTexture(j,xbasewall);
-						level.sides[i].SetTextureYOffset(j,-2304);
-					}
-					else level.sides[i].SetTexture(j,basewall);
-					level.sides[i].SetTextureXScale(j,2.);
-					level.sides[i].SetTextureYScale(j,2.);
-				}
-			}
-			// fixup
-			for ( int i=104; i<134; i++ )
-			{
-				if ( (i==107) || (i==110) || (i==116)
-					|| (i==119) || (i==121) || (i==127)
-					|| (i==132) ) continue;
-				level.sectors[i].SetSpecialColor(0,"00 00 00");
-			}
-			level.sectors[53].SetFade("00 00 20");
-			level.sides[216].SetTexture(1,glasstex);
-			level.lines[125].alpha = 0.5;
-			AddLight((0,-288,128),"E0 E0 FF",256);
-			AddLight((-2560,1024,1280),"E0 E0 FF",1024);
-			AddLight((0,1024,1280),"E0 E0 FF",1024);
-			AddLight((2560,1024,1280),"E0 E0 FF",1024);
-			AddLight((-384,-160,64),"FF FF FF",128);
-			AddLight((-384,-288,64),"FF FF FF",128);
-			AddLight((-384,-416,64),"FF FF FF",128);
-			AddLight((0,2816,96),"FF FF FF",512);
-			AddLight((2904,1344,128),"80 80 FF",256);
-			AddLight((3408,1344,128),"80 80 FF",256);
-			AddLight((1568,1760,64),"20 20 80",128);
 			AddLight((1824,1760,64),"A0 A0 30",128);
 			AddLight((2080,1760,64),"80 80 20",128);
 			AddLight((2336,1760,64),"20 20 80",128);
@@ -3316,6 +3262,18 @@ Class UTMainHandler : EventHandler
 			AddLight((2944,960,64),"A0 A0 30",128);
 			AddLight((2944,736,64),"A0 A0 30",128);
 			AddLight((3264,960,64),"A0 A0 30",128);
+		}
+		AddLight((3264,736,64),"A0 A0 30",128);
+		if ( gameinfo.gametype == GAME_DOOM )
+		{
+			AddLight((3264,512,64),"80 80 20",128);
+			AddLight((3584,960,64),"80 80 20",128);
+			AddLight((3584,736,64),"20 FF 20",128);
+			AddLight((3584,512,64),"FF 80 20",128);
+			AddLight((3584,288,64),"FF 80 FF",128);
+		}
+		else if ( gameinfo.gametype == GAME_HERETIC )
+		{
 			AddLight((3264,736,64),"A0 A0 30",128);
 			AddLight((3264,512,64),"A0 A0 30",128);
 			AddLight((3264,288,64),"FF 80 20",128);
@@ -3323,18 +3281,29 @@ Class UTMainHandler : EventHandler
 			AddLight((3584,736,64),"80 80 20",128);
 			AddLight((3584,512,64),"FF 80 20",128);
 			AddLight((3584,288,64),"A0 A0 30",128);
-			AddAmbient((0,-288,192),"testamb/wind1",0.5,1.6);
-			AddAmbient((-2560,1024,768),"testamb/wind1",0.4,0.8);
-			AddAmbient((0,1024,768),"testamb/wind1",0.4,0.8);
-			AddAmbient((2560,1024,768),"testamb/wind1",0.4,0.8);
-			AddAmbient((768,1600,1280),"testamb/wind2",0.8,1.6);
-			AddAmbient((3174,1344,128),"testamb/water",0.4,1.6);
-			AddAmbient((1568,1760,64),"testamb/water",0.4,2.4);
+		}
+		AddAmbient((0,-288,192),"testamb/wind1",0.5,1.6);
+		AddAmbient((-2560,1024,768),"testamb/wind1",0.4,0.8);
+		AddAmbient((0,1024,768),"testamb/wind1",0.4,0.8);
+		AddAmbient((2560,1024,768),"testamb/wind1",0.4,0.8);
+		AddAmbient((768,1600,1280),"testamb/wind2",0.8,1.6);
+		AddAmbient((3174,1344,128),"testamb/water",0.4,1.6);
+		AddAmbient((1568,1760,64),"testamb/water",0.4,2.4);
+		if ( gameinfo.gametype == GAME_DOOM )
+		{
+			AddAmbient((2080,1760,64),"testamb/lava",0.8,2.4);
+			AddAmbient((2336,1760,64),"testamb/slime",0.4,2.4);
+			AddAmbient((2944,960,64),"testamb/slime",0.4,2.4);
+			AddAmbient((2944,736,64),"testamb/slime",0.4,2.4);
+			AddAmbient((3584,736,64),"testamb/slime",0.4,2.4);
+		}
+		else if ( gameinfo.gametype == GAME_HERETIC )
+		{
 			AddAmbient((2336,1760,64),"testamb/water",0.4,2.4);
 			AddAmbient((2592,1760,64),"testamb/lava",0.8,2.4);
-			AddAmbient((3584,512,64),"testamb/lava",0.8,2.4);
 			AddAmbient((3264,288,64),"testamb/lava",0.8,2.4);
 		}
+		AddAmbient((3584,512,64),"testamb/lava",0.8,2.4);
 	}
 
 	override void WorldThingSpawned( WorldEvent e )

@@ -244,7 +244,7 @@ FLAK_CMUSNSND = "Music & Sound:";
 FLAK_CBIZ = "Biz:";
 /* menu tooltips */
 TOOLTIP_FLAK_PROTOMENU = "Picks which background to use when menus are open, in addition this will also change the main title music.";
-TOOLTIP_FLAK_SHOWMENU = "Shows a background graphic when menus are open. May also affect dialogue sceens. I have no idea how to fix that.";
+TOOLTIP_FLAK_SHOWMENU = "Shows a background graphic when game menus are open.";
 TOOLTIP_FLAK_PULSERELOAD = "Pulse Gun reloads after 50 shots, like in early builds.";
 TOOLTIP_FLAK_ENFORCERRELOAD = "Enforcer reloads after 20 shots, like the Unreal Automag.";
 TOOLTIP_FLAK_REDEEMERREADOUT = "Marks nearby shootable targets, may be framerate intensive.";
@@ -511,7 +511,7 @@ FLAK_CMUSNSND = "Música y Sonido:";
 FLAK_CBIZ = "Negocios:";
 /* menu tooltips */
 TOOLTIP_FLAK_PROTOMENU = "Elige qué imagen de fondo usar cuando hay menus abiertos, también cambia la música del menú principal.";
-TOOLTIP_FLAK_SHOWMENU = "Muestra una imagen de fondo cuando hay menus abiertos. Puede afectar pantallas de diálogos. No sé como arreglar eso.";
+TOOLTIP_FLAK_SHOWMENU = "Muestra una imagen de fondo cuando hay menus abiertos.";
 TOOLTIP_FLAK_PULSERELOAD = "El Arma de Impulsos recarga cada 50 disparos, como en las betas.";
 TOOLTIP_FLAK_ENFORCERRELOAD = "El Reforzador recarga cada 20 disparos, como el Automag de Unreal.";
 TOOLTIP_FLAK_REDEEMERREADOUT = "Marca objetivos cercanos, puede tener un impacto notable en el rendimiento.";
