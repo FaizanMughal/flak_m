@@ -2955,6 +2955,17 @@ Class UTStaticHandler : StaticEventHandler
 	}
 }
 
+// nothing at all
+Class UTNothing : Actor
+{
+	States
+	{
+	Spawn:
+		TNT1 A 1;
+		Stop;
+	}
+}
+
 Class UTMainHandler : EventHandler
 {
 	Array<QueuedFlash> flashes;
@@ -3050,29 +3061,28 @@ Class UTMainHandler : EventHandler
 		}
 		else if ( e.Replacee == 'InvulnerabilitySphere' ) e.Replacement = 'UTInvulnerability';
 		else if ( e.Replacee == 'Berserk' ) e.Replacement = 'UDamage';
-		else if ( (e.Replacee == 'ArtiTomeOfPower') || (e.Replacee == 'ArtiEgg') ) e.Replacement = 'ActUDamage';
+		else if ( (e.Replacee == 'ArtiTomeOfPower') || (e.Replacee == 'ArtiEgg') || (e.Replacee == 'ArtiPork') ) e.Replacement = 'ActUDamage';
 		else if ( e.Replacee == 'Soulsphere' ) e.Replacement = 'UTHealthPack';
 		else if ( e.Replacee == 'ArtiSuperHealth' ) e.Replacement = 'ActHealthPack';
-		else if ( e.Replacee == 'Megasphere' ) e.Replacement = 'UTShieldBelt';
-		else if ( e.Replacee == 'ArtiInvulnerability' ) e.Replacement = 'ActUTInvulnerability';
+		else if ( (e.Replacee == 'Megasphere') || (e.Replacee == 'EnchantedShield') || (e.Replacee == 'ArtiBoostArmor') ) e.Replacement = 'UTShieldBelt';
+		else if ( (e.Replacee == 'ArtiInvulnerability') || (e.Replacee == 'ArtiInvulnerability2') ) e.Replacement = 'ActUTInvulnerability';
 		else if ( (e.Replacee == 'Allmap') || (e.Replacee == 'SuperMap') ) e.Replacement = 'UTMapRevealer';
 		else if ( e.Replacee == 'BlurSphere' ) e.Replacement = 'UTInvisibility';
 		else if ( e.Replacee == 'ArtiInvisibility' ) e.Replacement = 'ActUTInvisibility';
 		else if ( e.Replacee == 'Infrared' ) e.Replacement = 'UTNightVision';
 		else if ( e.Replacee == 'ArtiTorch' ) e.Replacement = 'ActUTNightVision';
 		else if ( e.Replacee == 'RadSuit' ) e.Replacement = 'UTJumpBoots';
-		else if ( e.Replacee == 'ArtiFly' ) e.Replacement = 'ActJumpBoots';
-		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') ) e.Replacement = 'UTBackpack';
-		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') ) e.Replacement = 'UTArmorBonus';
+		else if ( (e.Replacee == 'ArtiFly') || (e.Replacee == 'ArtiSpeedBoots') ) e.Replacement = 'ActJumpBoots';
+		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') || (e.Replacee == 'ArtiHealingRadius') ) e.Replacement = 'UTBackpack';
+		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') || (e.Replacee is 'ArtiPoisonBag') || (e.Replacee is 'ArtiBlastRadius') ) e.Replacement = 'UTArmorBonus';
 		else if ( (e.Replacee == 'HealthBonus') || (e.Replacee == 'CrystalVial') ) e.Replacement = 'UTHealthBonus';
-		else if ( e.Replacee == 'GreenArmor' ) e.Replacement = 'UTThighPads';
+		else if ( (e.Replacee == 'GreenArmor') || (e.Replacee == 'AmuletOfWarding') || (e.Replacee == 'PlatinumHelm') ) e.Replacement = 'UTThighPads';
 		else if ( e.Replacee == 'Silvershield' )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'UTThighPads';
 			else e.Replacement = 'UTBodyArmor';
 		}
-		else if ( e.Replacee == 'BlueArmor' ) e.Replacement = 'UTBodyArmor';
-		else if ( e.Replacee == 'EnchantedShield' ) e.Replacement = 'UTShieldBelt';
+		else if ( (e.Replacee == 'BlueArmor') || (e.Replacee == 'FalconShield') || (e.Replacee == 'MeshArmor') ) e.Replacement = 'UTBodyArmor';
 		else if ( e.Replacee == 'Stimpack' ) e.Replacement = 'UTMedBox';
 		else if ( e.Replacee == 'Medikit' ) e.Replacement = 'UTHealthBox';
 		else if ( e.Replacee == 'ArtiHealth' )
@@ -3080,10 +3090,11 @@ Class UTMainHandler : EventHandler
 			if ( !Random[Replacements](0,3) ) e.Replacement = 'ActHealthBox';
 			else e.Replacement = 'ActMedBox';
 		}
-		else if ( e.Replacee == 'ArtiTeleport' )
+		else if ( (e.Replacee == 'ArtiTeleport') || (e.Replacee == 'ArtiTeleportOther') || (e.Replacee == 'ArtiDarkServant') )
 		{
 			// I have no idea what to replace this with, so just have some random stuff
-			if ( Random[Replacements](0,1) ) e.Replacement = 'ActHealthPack';
+			if ( (gameinfo.gametype&GAME_Hexen) && Random[Replacements](0,1) ) e.Replacement = 'UTBackpack';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'ActHealthPack';
 			else e.Replacement = 'ActUDamage';
 		}
 		else if ( e.Replacee == 'RedCard' ) e.Replacement = 'UTRedKey';
@@ -3094,7 +3105,7 @@ Class UTMainHandler : EventHandler
 		else if ( e.Replacee == 'YellowSkull' ) e.Replacement = 'UTGoldSkull';
 		else if ( e.Replacee == 'TeleportFog' ) e.Replacement = 'UTTeleportFog';
 		else if ( e.Replacee == 'ItemFog' ) e.Replacement = 'UTItemFog';
-		else if ( flak_blood && (e.Replacee == 'Blood') ) e.Replacement = 'UTBlood';
+		else if ( flak_blood && ((e.Replacee == 'Blood') || (e.Replacee == 'BloodSplatter') || (e.Replacee == 'AxeBlood')) ) e.Replacement = 'UTBlood';
 		else if ( e.Replacee == 'KeyYellow' ) e.Replacement = 'UTHereticYellowKey';
 		else if ( e.Replacee == 'KeyGreen' ) e.Replacement = 'UTHereticGreenKey';
 		else if ( e.Replacee == 'KeyBlue' ) e.Replacement = 'UTHereticBlueKey';
@@ -3103,7 +3114,25 @@ Class UTMainHandler : EventHandler
 			// pretty sure that is a standardized name, so it should work for any heretic mod that adds it
 			e.Replacement = 'UTHereticRedKey';
 		}
-		// TODO Hexen replacements
+		// Hexen weapon replacements will attempt to follow some sort of progression
+		// (also additional support for Hexmas because of course)
+		else if ( (e.Replacee == 'FWeapFist') || (e.Replacee == 'CWeapMace') || (e.Replacee == 'MWeapWand') )
+			e.Replacement = 'ImpactHammer';
+		else if ( e.Replacee == 'FWeapAxe' ) e.Replacement = 'BioRifle';
+		else if ( e.Replacee == 'CWeapStaff' ) e.Replacement = 'ShockRifle';
+		else if ( e.Replacee == 'MWeapFrost' ) e.Replacement = 'PulseGun';
+		else if ( (e.Replacee == 'FWeaponPiece3') || (e.Replacee == 'FWeapQuietus') || (e.Replacee.GetClassName() == 'mkFullQuietus') ) e.Replacement = 'FlakCannon';
+		else if ( e.Replacee == 'CWeaponPiece3' ) e.Replacement = 'UTBackpack';
+		else if ( e.Replacee == 'MWeaponPiece3' ) e.Replacement = 'Enforcer';
+		else if ( e.Replacee == 'FWeapHammer' ) e.Replacement = 'Ripper2';
+		else if ( e.Replacee == 'CWeapFlame' ) e.Replacement = 'Minigun';
+		else if ( e.Replacee == 'MWeapLightning' ) e.Replacement = 'SniperRifle';
+		else if ( e.Replacee == 'FWeaponPiece2' ) e.Replacement = 'UTChainsaw';
+		else if ( (e.Replacee == 'CWeaponPiece2') || (e.Replacee == 'CWeapWraithverge') || (e.Replacee.GetClassName() == 'mkFullWraithverge') ) e.Replacement = 'UTRocketLauncher';
+		else if ( e.Replacee == 'MWeaponPiece2' ) e.Replacement = 'UTBackpack';
+		else if ( e.Replacee == 'FWeaponPiece1' ) e.Replacement = 'WarheadAmmo';
+		else if ( e.Replacee == 'CWeaponPiece1' ) e.Replacement = 'UTBackpack';
+		else if ( (e.Replacee == 'MWeaponPiece1') || (e.Replacee == 'MWeapBloodscourge') || (e.Replacee.GetClassName() == 'mkFullBloodscourge') ) e.Replacement = 'WarheadLauncher';
 		// TODO Strife replacements
 	}
 
