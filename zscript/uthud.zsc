@@ -681,7 +681,41 @@ Class UTHud : BaseStatusBar
 	private void DrawKeys()
 	{
 		if ( deathmatch ) return;	// no need to draw in DM
-		if ( gameinfo.gametype&(GAME_Hexen|GAME_Strife) ) return;	// no key display for these ATM (will do eventually)
+		if ( gameinfo.gametype&(GAME_Hexen|GAME_Strife) )
+		{
+			if ( !automapactive ) return;
+			int kw = (gameinfo.gametype&GAME_Strife)?20:30,
+				kh = (gameinfo.gametype&GAME_Strife)?20:40;
+			double ks = (gameinfo.gametype&GAME_Strife)?2.:1.5;
+			int nkeys = 0;
+			Array<int> rows;
+			Array<Inventory> keys;
+			keys.Clear();
+			rows.Clear();
+			rows.Push(0);
+			for ( Inventory i=CPlayer.mo.inv; i; i=i.inv )
+			{
+				if ( !(i is 'Key') ) continue;
+				keys.Push(i);
+				if ( rows[rows.Size()-1] >= 6 ) rows.Push(1);
+				else rows[rows.Size()-1]++;
+			}
+			int j = 0;
+			CurX = (Screen.GetWidth()-kw*hudsize*HScale*ks);
+			for ( int i=0; i<rows.Size(); i++ )
+			{
+				CurY = (Screen.GetHeight()-rows[i]*kh*hudsize*HScale*ks)*0.5;
+				CurY += 64*hudsize*HScale;
+				for ( int k=0; k<rows[i]; k++ )
+				{
+					UTDrawPlainTex(keys[j].Icon,hudsize*ks,min(opacity,15));
+					j++;
+					CurY += kh*hudsize*HScale*ks;
+				}
+				CurX -= kw*hudsize*HScale*ks;
+			}
+			return;
+		}
 		bool locks[6];
 		for ( int i=0; i<6; i++ ) locks[i] = CPlayer.mo.CheckKeys(i+1,false,true);
 		int nrows = 0, nrowss = 0;

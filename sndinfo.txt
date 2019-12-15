@@ -166,6 +166,12 @@ $random ut/playerfootstep { ut/playerfootstep1 ut/playerfootstep2 ut/playerfoots
 
 ut/bossfootstep	bfootstp
 
+// Hexen fixup
+PlayerLand		DSEMPTY
+PuzzleFailFighter	DSEMPTY
+PuzzleFailCleric	DSEMPTY
+PuzzleFailMage		DSEMPTY
+
 // fluid sounds
 
 ut/playerfootstepwet	lsplash

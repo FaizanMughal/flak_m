@@ -1,5 +1,6 @@
 Class UTPlayer : DoomPlayer
 {
+	bool doprintnoammo;
 	bool lastground;
 	int lastwaterlevel;
 	int lastgroundtic;
@@ -198,9 +199,14 @@ Class UTPlayer : DoomPlayer
 				let type = (class<Inventory>)(AllActorClasses[i]);
 				if ( !type ) continue;
 				let def = GetDefaultByType(type);
-				if ( !(gameinfo.gametype&GAME_Raven)
-					&& ((type is "UTActivatable") || (type is "UTActivatableHealth")) )
-					continue;	// don't give these outside of Heretic/Hexen
+				if ( (!(gameinfo.gametype&GAME_Raven)
+					&& ((type is "UTActivatable") || (type is "UTActivatableHealth")))
+					|| ((gameinfo.gametype&GAME_HERETIC) && (type is 'ActUTFullAmmoBox')) )
+				{
+					// don't give activatables outside of Heretic/Hexen
+					// don't give full ammo cubes outside of Hexen
+					continue;
+				}
 				if ( def.Icon.isValid() && (def.MaxAmount > 1) &&
 					!(type is "PuzzleItem") && !(type is "Powerup") && !(type is "Ammo") &&	!(type is "Armor"))
 				{
@@ -235,9 +241,28 @@ Class UTPlayer : DoomPlayer
 		else GiveInventory(type,amount,true);
 	}
 
+	// modified so it displays the "has no ammo" message
+	override Weapon PickWeapon( int slot, bool checkammo )
+	{
+		doprintnoammo = true;
+		let rslt = Super.PickWeapon(slot,checkammo);
+		doprintnoammo = false;
+		return rslt;
+	}
+
 	override void Tick()
 	{
 		Super.Tick();
+		if ( !flak_utmovement || !player || (player.mo != self) || (player.cheats&(CF_FROZEN|CF_TOTALLYFROZEN)) )
+		{
+			bNOFRICTION = false;
+			bNOFRICTIONBOUNCE = false;
+		}
+		else
+		{
+			bNOFRICTION = true;
+			bNOFRICTIONBOUNCE = true;
+		}
 		if ( InStateSequence(CurState,FindState("See",true)) )
 			SetStateLabel("See2");
 		if ( (waterlevel >= 2) && (lastwaterlevel < 2) )
@@ -252,17 +277,6 @@ Class UTPlayer : DoomPlayer
 		else if ( (waterlevel < 3) && underwatersnd )
 			underwatersnd.Destroy();
 		lastwaterlevel = waterlevel;
-		if ( !flak_utmovement || !player || (player.mo != self) || (player.cheats&(CF_FROZEN|CF_TOTALLYFROZEN)) )
-		{
-			bNOFRICTION = false;
-			bNOFRICTIONBOUNCE = false;
-			return;
-		}
-		else
-		{
-			bNOFRICTION = true;
-			bNOFRICTIONBOUNCE = true;
-		}
 		if ( !footsteps ) footsteps = CVar.GetCVar('flak_footsteps',players[consoleplayer]);
 		if ( !footsteps.GetBool() || (Health <= 0) ) return;
 		double ang = level.time/(20*TICRATE/35.)*360.;
@@ -1895,11 +1909,9 @@ Class UTWeapon : Weapon
 	override bool CheckAmmo( int fireMode, bool autoSwitch, bool requireAmmo, int ammocount )
 	{
 		bool rslt = Super.CheckAmmo(fireMode,autoSwitch,requireAmmo,ammocount);
-		if ( (gametic > lastnoammotic) && !rslt && !autoSwitch && !requireAmmo && Owner.CheckLocalView() )
-		{
-			lastnoammotic = gametic;
-			Console.Printf(StringTable.Localize((Amount>1)?"$M_NOAMMO2":"$M_NOAMMO"),GetTag());
-		}
+		if ( (gametic <= lastnoammotic) || rslt || !Owner.CheckLocalView() || !(Owner is 'UTPlayer') || !UTPlayer(Owner).doprintnoammo ) return rslt;
+		lastnoammotic = gametic;
+		Console.Printf(StringTable.Localize((Amount>1)?"$M_NOAMMO2":"$M_NOAMMO"),GetTag());
 		return rslt;
 	}
 
@@ -3133,6 +3145,10 @@ Class UTMainHandler : EventHandler
 		else if ( e.Replacee == 'FWeaponPiece1' ) e.Replacement = 'WarheadAmmo';
 		else if ( e.Replacee == 'CWeaponPiece1' ) e.Replacement = 'UTBackpack';
 		else if ( (e.Replacee == 'MWeaponPiece1') || (e.Replacee == 'MWeapBloodscourge') || (e.Replacee.GetClassName() == 'mkFullBloodscourge') ) e.Replacement = 'WarheadLauncher';
+		else if ( e.Replacee == 'Mana1' ) e.Replacement = 'UTMinorAmmoBox';
+		else if ( e.Replacee == 'Mana2' ) e.Replacement = 'UTMediumAmmoBox';
+		else if ( e.Replacee == 'Mana3' ) e.Replacement = 'UTMajorAmmoBox';
+		else if ( e.Replacee == 'ArtiBoostMana' ) e.Replacement = 'ActUTFullAmmoBox';
 		// TODO Strife replacements
 	}
 
@@ -3199,19 +3215,23 @@ Class UTMainHandler : EventHandler
 				level.sectors[i].SetTexture(1,skyflatnum);
 			if ( level.sectors[i].GetTexture(0) == deftex )
 			{
-				if ( gameinfo.gametype == GAME_DOOM )
+				if ( gameinfo.gametype&GAME_DOOM )
 					level.sectors[i].SetTexture(0,((i==47)||((i>=256)&&(i<=260)))?baseceil:baseflor);
-				else if ( gameinfo.gametype == GAME_HERETIC )
+				else if ( gameinfo.gametype&GAME_HERETIC )
 					level.sectors[i].SetTexture(0,((i==47)||((i>=144)&&(i<=148)))?baseceil:baseflor);
+				else if ( gameinfo.gametype&GAME_HEXEN )
+					level.sectors[i].SetTexture(0,((i==47)||((i>=152)&&(i<=155)))?baseceil:baseflor);
 				level.sectors[i].SetXScale(0,2.);
 				level.sectors[i].SetYScale(0,2.);
 			}
 			if ( level.sectors[i].GetTexture(1) == deftex )
 			{
-				if ( gameinfo.gametype == GAME_DOOM )
+				if ( gameinfo.gametype&GAME_DOOM )
 					level.sectors[i].SetTexture(1,((i==47)||((i>=256)&&(i<=260)))?baseflor:baseceil);
-				else if ( gameinfo.gametype == GAME_HERETIC )
+				else if ( gameinfo.gametype&GAME_HERETIC )
 					level.sectors[i].SetTexture(1,((i==47)||((i>=144)&&(i<=148)))?baseflor:baseceil);
+				else if ( gameinfo.gametype&GAME_HEXEN )
+					level.sectors[i].SetTexture(1,((i==47)||((i>=152)&&(i<=155)))?baseflor:baseceil);
 				level.sectors[i].SetXScale(1,2.);
 				level.sectors[i].SetYScale(1,2.);
 			}
@@ -3223,8 +3243,8 @@ Class UTMainHandler : EventHandler
 			for ( int j=0; j<3; j++ )
 			{
 				if ( level.sides[i].GetTexture(j) != deftex ) continue;
-				if ( ((gameinfo.gametype == GAME_DOOM) && ((i==529) || (i==530) || (i==533) || (i==534)))
-					|| ((gameinfo.gametype == GAME_HERETIC) && ((i==295) || (i==296) || (i==309) || (i==310))) )
+				if ( ((gameinfo.gametype&GAME_DOOM) && ((i==529) || (i==530) || (i==533) || (i==534)))
+					|| ((gameinfo.gametype&GAME_RAVEN) && ((i==295) || (i==296) || (i==309) || (i==310))) )
 				{
 					level.sides[i].SetTexture(j,xbasewall);
 					level.sides[i].SetTextureYOffset(j,-2304);
@@ -3236,7 +3256,7 @@ Class UTMainHandler : EventHandler
 		}
 		// fixup
 		level.sectors[53].SetFade("00 00 20");
-		if ( gameinfo.gametype == GAME_DOOM )
+		if ( gameinfo.gametype&GAME_DOOM )
 		{
 			for ( int i=215; i<246; i++ )
 			{
@@ -3248,13 +3268,25 @@ Class UTMainHandler : EventHandler
 			level.sides[1844].SetTexture(1,glasstex);
 			level.lines[945].alpha = 0.5;
 		}
-		else if ( gameinfo.gametype == GAME_HERETIC )
+		else if ( gameinfo.gametype&GAME_HERETIC )
 		{
 			for ( int i=104; i<134; i++ )
 			{
 				if ( (i==107) || (i==110) || (i==116)
 					|| (i==119) || (i==121) || (i==127)
 					|| (i==132) ) continue;
+				level.sectors[i].SetSpecialColor(0,"00 00 00");
+			}
+			level.sides[216].SetTexture(1,glasstex);
+			level.lines[125].alpha = 0.5;
+		}
+		else if ( gameinfo.gametype&GAME_HEXEN )
+		{
+			for ( int i=111; i<141; i++ )
+			{
+				if ( (i==114) || (i==117) || (i==123)
+					|| (i==126) || (i==128) || (i==134)
+					|| (i==139) ) continue;
 				level.sectors[i].SetSpecialColor(0,"00 00 00");
 			}
 			level.sides[216].SetTexture(1,glasstex);
@@ -3271,7 +3303,7 @@ Class UTMainHandler : EventHandler
 		AddLight((2904,1344,128),"80 80 FF",256);
 		AddLight((3408,1344,128),"80 80 FF",256);
 		AddLight((1568,1760,64),"20 20 80",128);
-		if ( gameinfo.gametype == GAME_DOOM )
+		if ( gameinfo.gametype&GAME_DOOM )
 		{
 			AddLight((1824,1760,64),"80 20 20",128);
 			AddLight((2080,1760,64),"FF 80 20",128);
@@ -3281,8 +3313,14 @@ Class UTMainHandler : EventHandler
 			AddLight((2944,960,64),"20 FF 20",128);
 			AddLight((2944,736,64),"20 FF 20",128);
 			AddLight((3264,960,64),"FF 20 20",128);
+			AddLight((3264,736,64),"A0 A0 30",128);
+			AddLight((3264,512,64),"80 80 20",128);
+			AddLight((3584,960,64),"80 80 20",128);
+			AddLight((3584,736,64),"20 FF 20",128);
+			AddLight((3584,512,64),"FF 80 20",128);
+			AddLight((3584,288,64),"FF 80 FF",128);
 		}
-		else if ( gameinfo.gametype == GAME_HERETIC )
+		else if ( gameinfo.gametype&GAME_HERETIC )
 		{
 			AddLight((1824,1760,64),"A0 A0 30",128);
 			AddLight((2080,1760,64),"80 80 20",128);
@@ -3291,18 +3329,6 @@ Class UTMainHandler : EventHandler
 			AddLight((2944,960,64),"A0 A0 30",128);
 			AddLight((2944,736,64),"A0 A0 30",128);
 			AddLight((3264,960,64),"A0 A0 30",128);
-		}
-		AddLight((3264,736,64),"A0 A0 30",128);
-		if ( gameinfo.gametype == GAME_DOOM )
-		{
-			AddLight((3264,512,64),"80 80 20",128);
-			AddLight((3584,960,64),"80 80 20",128);
-			AddLight((3584,736,64),"20 FF 20",128);
-			AddLight((3584,512,64),"FF 80 20",128);
-			AddLight((3584,288,64),"FF 80 FF",128);
-		}
-		else if ( gameinfo.gametype == GAME_HERETIC )
-		{
 			AddLight((3264,736,64),"A0 A0 30",128);
 			AddLight((3264,512,64),"A0 A0 30",128);
 			AddLight((3264,288,64),"FF 80 20",128);
@@ -3311,6 +3337,23 @@ Class UTMainHandler : EventHandler
 			AddLight((3584,512,64),"FF 80 20",128);
 			AddLight((3584,288,64),"A0 A0 30",128);
 		}
+		else if ( gameinfo.gametype&GAME_HEXEN )
+		{
+			AddLight((1824,1760,64),"40 80 20",128);
+			AddLight((2080,1760,64),"FF 80 20",128);
+			AddLight((2336,1760,64),"20 20 80",128);
+			AddLight((2592,1760,64),"20 20 80",128);
+			AddLight((2944,960,64),"40 80 20",128);
+			AddLight((2944,736,64),"40 80 20",128);
+			AddLight((3264,960,64),"40 80 20",128);
+			AddLight((3264,736,64),"40 80 20",128);
+			AddLight((3264,512,64),"40 80 20",128);
+			AddLight((3264,288,64),"FF 80 20",128);
+			AddLight((3584,960,64),"40 80 20",128);
+			AddLight((3584,736,64),"FF 80 20",128);
+			AddLight((3584,512,64),"FF 80 20",128);
+			AddLight((3584,288,64),"FF 80 20",128);
+		}
 		AddAmbient((0,-288,192),"testamb/wind1",0.5,1.6);
 		AddAmbient((-2560,1024,768),"testamb/wind1",0.4,0.8);
 		AddAmbient((0,1024,768),"testamb/wind1",0.4,0.8);
@@ -3318,7 +3361,7 @@ Class UTMainHandler : EventHandler
 		AddAmbient((768,1600,1280),"testamb/wind2",0.8,1.6);
 		AddAmbient((3174,1344,128),"testamb/water",0.4,1.6);
 		AddAmbient((1568,1760,64),"testamb/water",0.4,2.4);
-		if ( gameinfo.gametype == GAME_DOOM )
+		if ( gameinfo.gametype&GAME_DOOM )
 		{
 			AddAmbient((2080,1760,64),"testamb/lava",0.8,2.4);
 			AddAmbient((2336,1760,64),"testamb/slime",0.4,2.4);
@@ -3326,11 +3369,18 @@ Class UTMainHandler : EventHandler
 			AddAmbient((2944,736,64),"testamb/slime",0.4,2.4);
 			AddAmbient((3584,736,64),"testamb/slime",0.4,2.4);
 		}
-		else if ( gameinfo.gametype == GAME_HERETIC )
+		else if ( gameinfo.gametype&GAME_HERETIC )
 		{
 			AddAmbient((2336,1760,64),"testamb/water",0.4,2.4);
 			AddAmbient((2592,1760,64),"testamb/lava",0.8,2.4);
 			AddAmbient((3264,288,64),"testamb/lava",0.8,2.4);
+		}
+		else if ( gameinfo.gametype&GAME_HEXEN )
+		{
+			AddAmbient((2080,1760,64),"testamb/lava",0.8,2.4);
+			AddAmbient((3264,288,64),"testamb/lava",0.8,2.4);
+			AddAmbient((3584,736,64),"testamb/lava",0.4,2.4);
+			AddAmbient((3584,288,64),"testamb/lava",0.4,2.4);
 		}
 		AddAmbient((3584,512,64),"testamb/lava",0.8,2.4);
 	}

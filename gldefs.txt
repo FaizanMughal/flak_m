@@ -242,6 +242,51 @@ Object ActUTNightVision
 	Frame "UKEY" { light "UTVISLIGHT" }
 }
 
+PointLight UTAMMOBOXLOW
+{
+	Color 0.1 0.2 0.5
+	Size 16
+	Offset 0 20 0
+	Attenuate 1
+}
+PointLight UTAMMOBOXMED
+{
+	Color 0.2 0.5 0.1
+	Size 18
+	Offset 0 20 0
+	Attenuate 1
+}
+PointLight UTAMMOBOXHIGH
+{
+	Color 0.5 0.1 0.2
+	Size 20
+	Offset 0 20 0
+	Attenuate 1
+}
+PointLight UTAMMOBOXFULL
+{
+	Color 0.3 0.1 0.5
+	Size 24
+	Offset 0 20 0
+	Attenuate 1
+}
+Object UTMinorAmmoBox
+{
+	Frame "ABOX" { light "UTAMMOBOXLOW" }
+}
+Object UTMediumAmmoBox
+{
+	Frame "ABOX" { light "UTAMMOBOXMED" }
+}
+Object UTMajorAmmoBox
+{
+	Frame "ABOX" { light "UTAMMOBOXHIGH" }
+}
+Object ActUTFullAmmoBox
+{
+	Frame "ABOX" { light "UTAMMOBOXFULL" }
+}
+
 // Shaders / Brightmaps
 HardwareShader Texture "models/Jgreen.png"
 {
@@ -810,6 +855,32 @@ HardwareShader Texture "models/s_camera.png"
 HardwareShader Texture "models/Effect1.png"
 {
 	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
+HardwareShader Texture "models/ABoxBlue_env.png"
+{
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
+HardwareShader Texture "models/ABoxGreen_env.png"
+{
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
+HardwareShader Texture "models/ABoxRed_env.png"
+{
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
+HardwareShader Texture "models/ABoxPurple_env.png"
+{
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
+HardwareShader Texture "models/JAmmoBox1.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture brighttex "brightmaps/JAmmoBox1.png"
+}
+HardwareShader Texture "models/S_Ammo.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture brighttex "brightmaps/S_Ammo.png"
 }
 // PP shaders
 HardwareShader PostProcess scene

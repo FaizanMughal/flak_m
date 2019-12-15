@@ -10,5 +10,5 @@ vec4 ProcessTexel()
 {
 	vec3 eyedir = normalize(uCameraPos.xyz-pixelpos.xyz);
 	vec3 norm = reflect(eyedir,normalize(vWorldNormal.xyz));
-	return getTexel(norm.xz*0.5);
+	return getTexel(norm.xz*0.5+0.5);
 }

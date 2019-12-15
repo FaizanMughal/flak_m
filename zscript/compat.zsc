@@ -287,13 +287,13 @@ Class UTHexenAmmoBox : Inventory
 	default
 	{
 		UTHexenAmmoBox.AmmoFactor -1;
-		+INVENTORY.ALWAYSPICKUP;
-		Inventory.PickupSound = "misc/i_pkup";
+		+FLOATBOB;
+		Inventory.PickupSound "misc/i_pkup";
 	}
 
 	override bool TryPickup( in out Actor toucher )
 	{
-		bool hasgiven = (AmmoFactor <= 0);	// always true
+		bool hasgiven = (AmmoFactor < 0);	// always true
 		for ( int i=0; i<AllActorClasses.Size(); i++ )
 		{
 			let type = (class<Ammo>)(AllActorClasses[i]);
@@ -315,23 +315,27 @@ Class UTHexenAmmoBox : Inventory
 				}
 			}
 			// sneaky fix for chainsaw ammo
-			if ( (type is 'ChainsawAmmo') && flak_sawammo ) isvalid = true;
+			if ( (type is 'ChainsawAmmo') && flak_sawammo && (GetReplacement(type) == type) ) isvalid = true;
 			if ( !isvalid ) continue;
 			let ammoitem = Ammo(toucher.FindInventory(type));
-			int amount;
-			if ( AmmoFactor < 0 ) amount = GetDefaultByType(type).MaxAmount;
+			int amount = GetDefaultByType(type).BackpackAmount;
+			if ( AmmoFactor < 0 )
+			{
+				if ( ammoitem ) amount = ammoitem.MaxAmount;
+				else amount = GetDefaultByType(type).MaxAmount;
+			}
 			else
 			{
-				amount = (GetDefaultByType(type).Amount*100)/AmmoFactor;
+				amount = (amount*AmmoFactor)/100;
 				// extra ammo in baby mode and nightmare mode
 				if ( !bIgnoreSkill ) amount = int(amount*G_SkillPropertyFloat(SKILLP_AmmoFactor));
 			}
-			if ( amount < 0 ) amount = 0;
+			if ( amount <= 0 ) continue;
 			if ( !ammoitem )
 			{
 				// The player did not have the ammoitem. Add it.
 				ammoitem = Ammo(Spawn(type));
-				ammoitem.Amount = bDepleted?0:amount;
+				ammoitem.Amount = amount;
 				if ( ammoitem.Amount > ammoitem.MaxAmount )
 					ammoitem.Amount = ammoitem.MaxAmount;
 				ammoitem.AttachToOwner(toucher);
@@ -340,7 +344,7 @@ Class UTHexenAmmoBox : Inventory
 			else
 			{
 				// The player had the ammoitem. Give some more.
-				if ( !bDepleted && (ammoitem.Amount < ammoitem.MaxAmount) )
+				if ( ammoitem.Amount < ammoitem.MaxAmount )
 				{
 					ammoitem.Amount += amount;
 					if ( ammoitem.Amount > ammoitem.MaxAmount )
@@ -375,12 +379,12 @@ Class UTMediumAmmoBox : UTHexenAmmoBox
 	{
 		Tag "$T_AMMOBOXMED";
 		Inventory.PickupMessage "$I_AMMOBOXMED";
-		UTHexenAmmoBox.AmmoFactor 120;
+		UTHexenAmmoBox.AmmoFactor 90;
 	}
 	States
 	{
 	Spawn:
-		ABOX B -1;
+		ABOX A -1;
 		Stop;
 	}
 }
@@ -390,12 +394,12 @@ Class UTMajorAmmoBox : UTHexenAmmoBox
 	{
 		Tag "$T_AMMOBOXHIGH";
 		Inventory.PickupMessage "$I_AMMOBOXHIGH";
-		UTHexenAmmoBox.AmmoFactor 180;
+		UTHexenAmmoBox.AmmoFactor 120;
 	}
 	States
 	{
 	Spawn:
-		ABOX C -1;
+		ABOX A -1;
 		Stop;
 	}
 }
@@ -407,6 +411,7 @@ Class ActUTFullAmmoBox : UTActivatable
 		Inventory.Icon "ItemABox";
 		Inventory.PickupMessage "$I_AMMOBOXFULL";
 		+COUNTITEM;
+		+FLOATBOB;
 		+INVENTORY.BIGPOWERUP;
 		UTActivatable.GiveItem "UTHexenAmmoBox";
 		Inventory.RespawnTics 4200;
@@ -414,7 +419,7 @@ Class ActUTFullAmmoBox : UTActivatable
 	States
 	{
 	Spawn:
-		ABOX D -1;
+		ABOX A -1;
 		Stop;
 	}
 }

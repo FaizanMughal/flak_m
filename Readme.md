@@ -58,19 +58,21 @@ This mod requires GZDoom 4.2.4 or later.
  - UT gore system (WIP, toggleable)
  - Liquid splashes
  - Original Invulnerability and Night Vision items
+ - Hexen compatibility
 
 ## In progress
 
- - Tooltips for menu options.
- - Help screens describing items and stuff (maybe?).
+ - N/A, this is the 1.1 release.
 
 ## Planned
 
- - Stuff for 1.1
-   - Fancy titlemap like Doomreal.
+ - Stuff for 1.2
+   - Fancy titlemap with intro narration.
    - Touch up blood/gibbing features. At the moment, Nashgore is still a
      superior alternative.
-   - Hexen/Strife compatibility ???
+   - Help screens describing items and stuff (maybe?).
+   - Chex Quest compatibility ?
+   - Strife compatibility ????
  - Stuff for much later
    - Add ammo counters to Pulsegun, Minigun, Flak Cannon and Rocket Launcher
      once scripted textures are implemented

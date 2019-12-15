@@ -88,6 +88,10 @@ I_REDEEMER = "You got the Redeemer.";
 I_CHAINSAWAMMO = "You picked up a Fuel Can.";
 I_UTINVUL = "You have Invulnerability!";
 I_UTVISION = "You have Night Vision.";
+I_AMMOBOXLOW = "You picked up a lesser Ammo Cube.";
+I_AMMOBOXMED = "You picked up a medium Ammo Cube.";
+I_AMMOBOXHIGH = "You picked up a greater Ammo Cube.";
+I_AMMOBOXFULL = "You got a full Ammo Cube.";
 /* Tags */
 T_ARMORBONUS = "Armor Bonus";
 T_THIGHPADS = "Thigh Pads";
@@ -144,6 +148,10 @@ T_REDEEMER = "Redeemer";
 T_CHAINSAWAMMO = "Chainsaw Fuel";
 T_UTINVUL = "Invulnerability";
 T_UTVISION = "Night Vision";
+T_AMMOBOXLOW = "Lesser Ammo Cube";
+T_AMMOBOXMED = "Medium Ammo Cube";
+T_AMMOBOXHIGH = "Greater Ammo Cube";
+T_AMMOBOXFULL = "Full Ammo Cube";
 /* Miscellaneous */
 D_SHIELDBELT = "The Shield Belt has depleted.";
 D_UDAMAGE = "Damage Amplifier has worn off.";
@@ -362,6 +370,10 @@ I_REDEEMER = "Has obtenido el Redentor.";
 I_CHAINSAWAMMO = "Has recogido una Lata de Combustible.";
 I_UTINVUL = "Tienes la Invulnerabilidad!";
 I_UTVISION = "Tienes la Visión Nocturna.";
+I_AMMOBOXLOW = "Has recogido un Cubo de Munición menor.";
+I_AMMOBOXMED = "Has recogido un Cubo de Munición mediano.";
+I_AMMOBOXHIGH = "Has recogido un Cubo de Munición mayor.";
+I_AMMOBOXFULL = "Has obtenido un Cubo de Munición completa.";
 /* Tags */
 T_ARMORBONUS = "Armadura Extra";
 T_THIGHPADS = "Musleras";
@@ -418,6 +430,10 @@ T_REDEEMER = "Redentor";
 T_CHAINSAWAMMO = "Combustible de Motosierra";
 T_UTINVUL = "Invulnerabilidad";
 T_UTVISION = "Visión Nocturna";
+T_AMMOBOXLOW = "Cubo de Munición menor";
+T_AMMOBOXMED = "Cubo de Munición mediano";
+T_AMMOBOXHIGH = "Cubo de Munición mayor";
+T_AMMOBOXFULL = "Cubo de Munición completa";
 /* Miscellaneous */
 D_SHIELDBELT = "El Cinturón Protector se ha agotado.";
 D_UDAMAGE = "El Amplificador de Daño ha desaparecido.";

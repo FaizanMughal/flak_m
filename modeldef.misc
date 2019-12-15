@@ -886,3 +886,60 @@ Model "UTLavaSplish"
 	FrameIndex SPSH Y 0 25
 	FrameIndex SPSH Z 0 26
 }
+
+Model "UTMinorAmmoBox"
+{
+	Path "models"
+	Model 0 "AmmoCube_d.3d"
+	SurfaceSkin 0 0 "JAmmoBox1.png"
+	SurfaceSkin 0 1 "ABoxBlue_env.png"
+	SurfaceSkin 0 2 "S_Ammo.png"
+	Scale 0.015 0.015 0.015
+	ZOffset 20
+	ROTATING
+	Rotation-Speed 3
+
+	FrameIndex ABOX A 0 0
+}
+Model "UTMediumAmmoBox"
+{
+	Path "models"
+	Model 0 "AmmoCube_d.3d"
+	SurfaceSkin 0 0 "JAmmoBox1.png"
+	SurfaceSkin 0 1 "ABoxGreen_env.png"
+	SurfaceSkin 0 2 "S_Ammo.png"
+	Scale 0.017 0.017 0.017
+	ZOffset 20
+	ROTATING
+	Rotation-Speed 3
+
+	FrameIndex ABOX A 0 0
+}
+Model "UTMajorAmmoBox"
+{
+	Path "models"
+	Model 0 "AmmoCube_d.3d"
+	SurfaceSkin 0 0 "JAmmoBox1.png"
+	SurfaceSkin 0 1 "ABoxRed_env.png"
+	SurfaceSkin 0 2 "S_Ammo.png"
+	Scale 0.02 0.02 0.02
+	ZOffset 20
+	ROTATING
+	Rotation-Speed 3
+
+	FrameIndex ABOX A 0 0
+}
+Model "ActUTFullAmmoBox"
+{
+	Path "models"
+	Model 0 "AmmoCube_d.3d"
+	SurfaceSkin 0 0 "JAmmoBox1.png"
+	SurfaceSkin 0 1 "ABoxPurple_env.png"
+	SurfaceSkin 0 2 "S_Ammo.png"
+	Scale 0.03 0.03 0.03
+	ZOffset 20
+	ROTATING
+	Rotation-Speed 3
+
+	FrameIndex ABOX A 0 0
+}
