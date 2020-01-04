@@ -361,7 +361,7 @@ Class ShockBeam : Actor
 				let r = Spawn("ShockBlastRing",b.pos);
 				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
 				r.pitch = asin(-t.Results.HitVector.z);
-				A_PlaySound("shock/blast",CHAN_WEAPON,attenuation:0.5,pitch:0.6);
+				A_StartSound("shock/blast",CHAN_WEAPON,attenuation:0.5,pitch:0.6);
 				int numpt = Random[ASMD](200,300);
 				for ( int i=0; i<numpt; i++ )
 				{
@@ -414,7 +414,7 @@ Class ShockBeam : Actor
 	{
 		Spawn("ShockBeamLight",pos);
 		A_QuakeEx(2,2,2,5,0,120,"",QF_RELATIVE|QF_SCALEDOWN,falloff:60,rollIntensity:0.1);
-		A_PlaySound("shock/hit",CHAN_VOICE);
+		A_StartSound("shock/hit",CHAN_VOICE);
 		A_AlertMonsters();
 		int numpt = Random[ASMD](20,50);
 		for ( int i=0; i<numpt; i++ )
@@ -598,8 +598,8 @@ Class SuperShockBeam : Actor
 				let r = Spawn("SuperShockBlastRing",b.pos);
 				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
 				r.pitch = asin(-t.Results.HitVector.z);
-				A_PlaySound("shock/blast",CHAN_WEAPON,attenuation:0.5,pitch:0.6);
-				A_PlaySound("sshock/blast",CHAN_6,attenuation:0.5);
+				A_StartSound("shock/blast",CHAN_WEAPON,attenuation:0.5,pitch:0.6);
+				A_StartSound("sshock/blast",CHAN_6,attenuation:0.5);
 				int numpt = Random[ASMD](200,300);
 				for ( int i=0; i<numpt; i++ )
 				{
@@ -664,8 +664,8 @@ Class SuperShockBeam : Actor
 			A_Explode(int.max,50);
 		}
 		A_QuakeEx(6,6,6,5,0,100,"",QF_RELATIVE|QF_SCALEDOWN,falloff:50,rollIntensity:0.2);
-		A_PlaySound("shock/hit",CHAN_VOICE,attenuation:0.5);
-		A_PlaySound("sshock/blast",CHAN_6,attenuation:0.5);
+		A_StartSound("shock/hit",CHAN_VOICE,attenuation:0.5);
+		A_StartSound("sshock/blast",CHAN_6,attenuation:0.5);
 		A_AlertMonsters();
 		int numpt = Random[ASMD](20,50);
 		for ( int i=0; i<numpt; i++ )
@@ -881,8 +881,8 @@ Class ShockBall : Actor
 		r.angle = atan2(HitNormal.y,HitNormal.x);
 		r.pitch = asin(-HitNormal.z);
 		r.scale *= 1.5;
-		A_PlaySound("shock/hit",CHAN_VOICE);
-		A_PlaySound("shock/ball",CHAN_WEAPON,pitch:FRandom[ASMD](0.5,1.5));
+		A_StartSound("shock/hit",CHAN_VOICE);
+		A_StartSound("shock/ball",CHAN_WEAPON,pitch:FRandom[ASMD](0.5,1.5));
 		A_QuakeEx(4,4,4,30,0,200,"",QF_RELATIVE|QF_SCALEDOWN,falloff:70,rollIntensity:0.15);
 		A_AlertMonsters();
 		int numpt = Random[ASMD](50,100);
@@ -974,9 +974,9 @@ Class SuperShockBall : Actor
 		r.angle = atan2(HitNormal.y,HitNormal.x);
 		r.pitch = asin(-HitNormal.z);
 		r.scale *= 1.5;
-		A_PlaySound("shock/hit",CHAN_VOICE,attenuation:0.5);
-		A_PlaySound("shock/ball",CHAN_WEAPON,attenuation:0.5,pitch:FRandom[ASMD](0.5,1.5));
-		A_PlaySound("sshock/blast",CHAN_6,attenuation:0.5);
+		A_StartSound("shock/hit",CHAN_VOICE,attenuation:0.5);
+		A_StartSound("shock/ball",CHAN_WEAPON,attenuation:0.5,pitch:FRandom[ASMD](0.5,1.5));
+		A_StartSound("sshock/blast",CHAN_6,attenuation:0.5);
 		A_QuakeEx(8,8,8,30,0,300,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollIntensity:0.25);
 		A_AlertMonsters();
 		int numpt = Random[ASMD](50,100);
@@ -1066,7 +1066,7 @@ Class ShockRifle : UTWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		A_PlaySound("shock/fire",CHAN_WEAPON);
+		A_StartSound("shock/fire",CHAN_WEAPON,CHANF_OVERLAP);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,128,0,255),1);
 		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),2,-0.3,3,SWING_Spring,0,4);
@@ -1104,7 +1104,7 @@ Class ShockRifle : UTWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		A_PlaySound("shock/altfire",CHAN_WEAPON);
+		A_StartSound("shock/altfire",CHAN_WEAPON,CHANF_OVERLAP);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,128,0,255),1);
 		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),3,-0.4,3,SWING_Spring,0,4);
@@ -1249,7 +1249,7 @@ Class EnhancedShockRifle : UTWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		A_PlaySound("shock/fire",CHAN_WEAPON);
+		A_StartSound("shock/fire",CHAN_WEAPON,CHANF_OVERLAP);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,0),1);
 		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),4,-0.6,3,SWING_Spring,0,4);
@@ -1287,7 +1287,7 @@ Class EnhancedShockRifle : UTWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		A_PlaySound("shock/altfire",CHAN_WEAPON);
+		A_StartSound("shock/altfire",CHAN_WEAPON,CHANF_OVERLAP);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,0),1);
 		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),6,-0.8,3,SWING_Spring,0,4);
@@ -1370,7 +1370,7 @@ Class EnhancedShockRifle : UTWeapon
 	DryFire:
 		ASMA I 3
 		{
-			A_PlaySound("sshock/dryfire",CHAN_WEAPON);
+			A_StartSound("sshock/dryfire",CHAN_WEAPON,CHANF_OVERLAP);
 			A_AlertMonsters();
 		}
 		ASMA J 4;

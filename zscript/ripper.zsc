@@ -76,7 +76,7 @@ Class Razor2 : Actor
 		Super.PostBeginPlay();
 		let t = Spawn("Razor2Trail",pos);
 		t.target = self;
-		A_PlaySound("ripper/hum",CHAN_VOICE,1.0,true,3.0,pitch:3.125);
+		A_StartSound("ripper/hum",CHAN_VOICE,CHANF_LOOPING,1.,3.,3.125);
 		Vector3 dir = vel.unit();
 		A_SetAngle(atan2(dir.y,dir.x));
 		A_SetPitch(asin(-dir.z));
@@ -91,7 +91,7 @@ Class Razor2 : Actor
 		if ( !target.bNOBLOOD )
 		{
 			target.SpawnBlood(pos,AngleTo(target),damage);
-			A_PlaySound("ripper/flesh");
+			A_StartSound("ripper/flesh");
 			A_AlertMonsters();
 		}
 		UTMainHandler.DoKnockback(target,vel.unit(),15000);
@@ -99,7 +99,7 @@ Class Razor2 : Actor
 	}
 	action void A_RazorHit()
 	{
-		A_PlaySound("ripper/hit");
+		A_StartSound("ripper/hit");
 		A_AlertMonsters();
 		A_SprayDecal("WallCrack",-20);
 		int numpt = Random[Ripper](5,10);
@@ -175,7 +175,7 @@ Class Razor2Alt : Razor2
 		bFORCEXYBILLBOARD = true;
 		Scale *= 0.65;
 		A_StopSound(CHAN_VOICE);
-		A_PlaySound("ripper/althit",CHAN_VOICE);
+		A_StartSound("ripper/althit",CHAN_VOICE);
 		Spawn("Razor2AltLight",pos);
 		A_AlertMonsters();
 		A_SprayDecal("RazorBlast",20);
@@ -246,8 +246,8 @@ Class Ripper2 : UTWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		if ( alt ) A_PlaySound("ripper/altfire",CHAN_WEAPON);
-		else A_PlaySound("ripper/fire",CHAN_WEAPON);
+		if ( alt ) A_StartSound("ripper/altfire",CHAN_WEAPON,CHANF_OVERLAP);
+		else A_StartSound("ripper/fire",CHAN_WEAPON,CHANF_OVERLAP);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(8,0,255,255),1);
 		A_AlertMonsters();

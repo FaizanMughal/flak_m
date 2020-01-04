@@ -74,7 +74,7 @@ Class DamageAmplifier : Powerup
 	{
 		Super.DoEffect();
 		if ( (EffectTics == 175) || (EffectTics == 140) || (EffectTics == 105) || (EffectTics == 70) || (EffectTics == 35) )
-			Owner.A_PlaySound("udamage/drain",CHAN_7,1.0,false,0.25);
+			Owner.A_StartSound("udamage/drain",CHAN_POWERUP2,attenuation:.25);
 	}
 
 	override void EndEffect()
@@ -91,8 +91,8 @@ Class DamageAmplifier : Powerup
 	void FireEffect()
 	{
 		if ( gametic < lasteffect ) return;
-		if ( EffectTics < 350 ) Owner.A_PlaySound("udamage/fire2",CHAN_7,1.0,false,0.25);
-		else Owner.A_PlaySound("udamage/fire1",CHAN_7,1.0,false,0.25);
+		if ( EffectTics < 350 ) Owner.A_StartSound("udamage/fire2",CHAN_POWERUP,attenuation:.25);
+		else Owner.A_StartSound("udamage/fire1",CHAN_POWERUP,attenuation:.25);
 		UTMainHandler.DoFlash(Owner,Color(48,238,0,255),6);
 		lasteffect = gametic+5;	// prevent excess flash
 	}
@@ -181,7 +181,7 @@ Class UTInvulPower : Powerup
 	{
 		Super.DoEffect();
 		if ( (EffectTics == 175) || (EffectTics == 140) || (EffectTics == 105) || (EffectTics == 70) || (EffectTics == 35) )
-			Owner.A_PlaySound("uinvul/drain",CHAN_7,1.0,false,0.25);
+			Owner.A_StartSound("uinvul/drain",CHAN_POWERUP2,attenuation:.25);
 	}
 
 	override void EndEffect()
@@ -200,7 +200,7 @@ Class UTInvulPower : Powerup
 		if ( !passive || (damage <= 0) ) return;
 		newdamage = 0;
 		if ( gametic < lasteffect ) return;
-		Owner.A_PlaySound("uinvul/hit",CHAN_7,1.0,false,0.25);
+		Owner.A_StartSound("uinvul/hit",CHAN_POWERUP4,attenuation:.25);
 		UTMainHandler.DoFlash(Owner,Color(48,255,238,0),6);
 		lasteffect = gametic+5;	// prevent excess flash
 	}
@@ -441,7 +441,7 @@ Class UTJumpBoots : Inventory
 		if ( (amount > 0) && (owner.player.jumptics == -1) )
 		{
 			Amount = max(0,Amount-700);
-			Owner.A_PlaySound("boot/jump",CHAN_BODY);
+			Owner.A_StartSound("boot/jump",CHAN_POWERUP3);
 		}
 		else if ( (Amount <= 0) && owner.player.onground )
 		{

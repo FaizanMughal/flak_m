@@ -1,3 +1,14 @@
+// constants for extra sound stuff, all starting at 0x4360 (436 was the last official UT version)
+const CHAN_ANNOUNCER = 0x4360;		// announcer voices
+const CHAN_FOOTSTEP = 0x4361;		// footsteps and splashes (should have OVERLAP flag)
+const CHAN_LEFTWEAPON = 0x4362;		// for dual wielded weapons
+const CHAN_WEAPONMISC = 0x4363;		// extra sounds (e.g.: idle loops)
+const CHAN_LEFTWEAPONMISC = 0x4364;	// ... for dual wielded weapons
+const CHAN_POWERUP = 0x4365;		// powerup/item use sounds
+const CHAN_POWERUP2 = 0x4366;		// auxiliary powerup sounds
+const CHAN_POWERUP3 = 0x4367;		// even more powerup sounds (used by jump boots, mainly)
+const CHAN_POWERUP4 = 0x4368;		// even more (used by shield belt / invuln hit sounds)
+
 Class UTPlayer : DoomPlayer
 {
 	bool doprintnoammo;
@@ -288,7 +299,7 @@ Class UTPlayer : DoomPlayer
 			{
 				double vol = clamp((-lastvelz-8)*0.05,0.01,1.0);
 				if ( ((waterlevel > 0) || GetFloorTerrain().IsLiquid) && !bOnMobj ) PlaySplash(vol);
-				else A_PlaySound("*uland",CHAN_AUTO,vol);
+				else A_StartSound("*uland",CHAN_FOOTSTEP,CHANF_OVERLAP,vol);
 				PlayLanding();
 			}
 			else forcefootstep = true;
@@ -491,7 +502,7 @@ Class UTPlayer : DoomPlayer
 				}
 				bOnMobj = false;
 				if ( !(player.cheats&CF_PREDICTING) )
-					A_PlaySound("*jump",CHAN_BODY);
+					A_StartSound("*jump",CHAN_VOICE);
 				if ( player.cheats & CF_REVERTPLEASE )
 				{
 					player.cheats &= ~CF_REVERTPLEASE;
@@ -701,7 +712,7 @@ Class UTPlayer : DoomPlayer
 				bOnMobj = false;
 				player.jumpTics = -1;
 				if ( !(player.cheats&CF_PREDICTING) )
-					A_PlaySound("*jump",CHAN_BODY);
+					A_StartSound("*jump",CHAN_VOICE);
 			}
 			last_jump_held = gametic;
 		}
@@ -770,7 +781,7 @@ Class UTPlayer : DoomPlayer
 
 	virtual void PlayFootstep( double vol )
 	{
-		A_PlaySound("ut/playerfootstep",CHAN_AUTO,vol);
+		A_StartSound("ut/playerfootstep",CHAN_FOOTSTEP,CHANF_OVERLAP,vol);
 	}
 
 	virtual void PlaySplash( double vol )
@@ -791,7 +802,7 @@ Class UTPlayer : DoomPlayer
 			snd = "ut/slimesplash";
 			break;
 		}
-		A_PlaySound(snd,CHAN_AUTO,vol);
+		A_StartSound(snd,CHAN_FOOTSTEP,CHANF_OVERLAP,vol);
 	}
 
 	virtual void PlaySurface()
@@ -812,7 +823,7 @@ Class UTPlayer : DoomPlayer
 			snd = "ut/slimesurface";
 			break;
 		}
-		A_PlaySound(snd,CHAN_AUTO);
+		A_StartSound(snd,CHAN_FOOTSTEP,CHANF_OVERLAP);
 	}
 
 	virtual void PlayWetFootstep( double vol )
@@ -833,7 +844,7 @@ Class UTPlayer : DoomPlayer
 			snd = "ut/playerfootstepslime";
 			break;
 		}
-		A_PlaySound(snd,CHAN_AUTO,vol);
+		A_StartSound(snd,CHAN_FOOTSTEP,CHANF_OVERLAP,vol);
 	}
 
 	override void PlayIdle()
@@ -1052,7 +1063,7 @@ Class UTPlayer : DoomPlayer
 			return;
 		}
 		vel = (0,0,0);
-		A_PlaySound ("misc/icebreak",CHAN_BODY);
+		A_StartSound("misc/icebreak");
 		// [RH] In Hexen, this creates a random number of shards (range [24,56])
 		// with no relation to the size of the self shattering. I think it should
 		// base the number of shards on the size of the dead thing, so bigger
@@ -1080,19 +1091,19 @@ Class UTPlayer : DoomPlayer
 
 	void A_PainDT()
 	{
-		if ( waterlevel > 2 ) A_PlaySound("*death-drowning",CHAN_VOICE);
+		if ( waterlevel > 2 ) A_StartSound("*death-drowning",CHAN_VOICE);
 		else A_Pain();
 	}
 
 	void A_PlayerScreamDT()
 	{
-		if ( waterlevel > 2 ) A_PlaySound("*death-drowning",CHAN_VOICE);
+		if ( waterlevel > 2 ) A_StartSound("*death-drowning",CHAN_VOICE);
 		else A_PlayerScream();
 	}
 
 	void A_XScreamDT()
 	{
-		if ( waterlevel > 2 ) A_PlaySound("*death-drowning",CHAN_VOICE);
+		if ( waterlevel > 2 ) A_StartSound("*death-drowning",CHAN_VOICE);
 		else A_XScream();
 	}
 
@@ -1334,7 +1345,7 @@ Class UTUnderSound : Actor
 		fluidsounds[1] = 'ut/underslime';
 		fluidsounds[2] = 'ut/underlava';
 		fluidsounds[3] = 'ut/undernitro';
-		A_PlaySound(fluidsounds[curfluid],CHAN_VOICE|CHAN_LISTENERZ,1.,true,0.);
+		A_StartSound(fluidsounds[curfluid],CHAN_VOICE,CHANF_LOOPING|CHANF_LISTENERZ,1.,0.);
 		A_SoundVolume(CHAN_VOICE,(players[consoleplayer].camera==target)?1.:0.);
 	}
 	override void OnDestroy()
@@ -1353,7 +1364,7 @@ Class UTUnderSound : Actor
 		SetOrigin(target.pos,true);
 		curfluid = GetFluid();
 		if ( curfluid != lastfluid )
-			A_PlaySound(fluidsounds[curfluid],CHAN_VOICE|CHAN_LISTENERZ,1.,true,0.);
+			A_StartSound(fluidsounds[curfluid],CHAN_VOICE,CHANF_LOOPING|CHANF_LISTENERZ,1.,0.);
 		lastfluid = curfluid;
 		A_SoundVolume(CHAN_VOICE,(players[consoleplayer].camera==target)?1.:0.);
 	}
@@ -1540,7 +1551,7 @@ Class FlameExplosion : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		A_PlaySound("ut/lavaex",CHAN_VOICE);
+		A_StartSound("ut/lavaex",CHAN_VOICE);
 		Spawn("SlugSmoke",pos);
 		Spawn("SlugLight",pos);
 	}
@@ -1743,7 +1754,7 @@ Class UTPlayerTBoss : UTPlayer
 	override void PlayFootstep( double vol )
 	{
 		if ( !bossfootsteps ) bossfootsteps = CVar.GetCVar('flak_bossfootsteps',players[consoleplayer]);
-		if ( bossfootsteps.GetBool() ) A_PlaySound("ut/bossfootstep",CHAN_5,vol);
+		if ( bossfootsteps.GetBool() ) A_StartSound("ut/bossfootstep",CHAN_FOOTSTEP,CHANF_OVERLAP,vol);
 		else Super.PlayFootstep(vol);
 	}
 	States
@@ -1810,12 +1821,20 @@ Class UTWeapon : Weapon
 	override void DetachFromOwner()
 	{
 		Owner.A_StopSound(CHAN_WEAPON);
+		Owner.A_StopSound(CHAN_WEAPONMISC);
+		Owner.A_StopSound(CHAN_LEFTWEAPON);
+		Owner.A_StopSound(CHAN_LEFTWEAPONMISC);
 		Super.DetachFromOwner();
 	}
 	override void OwnerDied()
 	{
 		if ( Owner.player && (Owner.player.ReadyWeapon == self) )
+		{
 			Owner.A_StopSound(CHAN_WEAPON);
+			Owner.A_StopSound(CHAN_WEAPONMISC);
+			Owner.A_StopSound(CHAN_LEFTWEAPON);
+			Owner.A_StopSound(CHAN_LEFTWEAPONMISC);
+		}
 		A_ClearRefire();
 		Super.OwnerDied();
 	}
@@ -1991,7 +2010,7 @@ Class UTTeleportFog : Actor
 	{
 		Super.PostBeginPlay();
 		Spawn("UTTeleportLight",Vec3Offset(0,0,16));
-		A_PlaySound ("misc/teleport");
+		A_StartSound("misc/teleport");
 		Spawn("UTTeleportParticles",Vec3Offset(0,0,16));
 	}
 	States
@@ -2491,7 +2510,7 @@ Class ShredCorpseHitbox : Actor
 		{
 			if ( wasonair )
 			{
-				A_PlaySound("misc/corpsefall",CHAN_BODY,clamp(-lastvel.z*0.2,0.1,1.0));
+				A_StartSound("misc/corpsefall",CHAN_BODY,CHANF_DEFAULT,clamp(-lastvel.z*.2,.1,1.));
 				if ( lastvel.z < -20 ) DamageMobj(null,null,int.max,'Falling');
 			}
 			wasonair = false;
@@ -2908,24 +2927,26 @@ Class QueuedFlash
 
 Class UTStaticHandler : StaticEventHandler
 {
-	ui TextureID tex[2];
+	ui TextureID tex[3];
 
 	ui void StartMenu()
 	{
-		tex[0] = TexMan.CheckForTexture("DTLogo",TexMan.Type_Any);
+		tex[1] = TexMan.CheckForTexture("graphics/DTLogo.png",TexMan.Type_Any);
 		CVar protomenu = CVar.GetCVar('flak_protomenu',players[consoleplayer]);
 		if ( !protomenu ) return;	// this can happen
 		int proto = protomenu.GetInt();
 		if ( proto )
 		{
-			tex[1] = TexMan.CheckForTexture("protobg",TexMan.Type_Any);
+			tex[0] = TexMan.CheckForTexture("graphics/UTProtoBg.png",TexMan.Type_Any);
+			tex[2] = TexMan.CheckForTexture("graphics/protobg.png",TexMan.Type_Any);
 			if ( gamestate != GS_TITLELEVEL ) return;
 			if ( proto > 1 ) S_ChangeMusic("menu2");
 			else S_ChangeMusic("xyzdMenu");
 		}
 		else
 		{
-			tex[1] = TexMan.CheckForTexture("finalbg",TexMan.Type_Any);
+			tex[0] = TexMan.CheckForTexture("graphics/UTBg.png",TexMan.Type_Any);
+			tex[2] = TexMan.CheckForTexture("graphics/finalbg.png",TexMan.Type_Any);
 			if ( gamestate != GS_TITLELEVEL ) return;
 			S_ChangeMusic("utmenu23");
 		}
@@ -2948,22 +2969,26 @@ Class UTStaticHandler : StaticEventHandler
 		Vector2 tsize = TexMan.GetScaledSize(tex[0]);
 		double sar = tsize.x/tsize.y;
 		Vector2 vsize;
+		if ( sar > ar ) vsize = (tsize.y*ar,tsize.y);
+		else if ( sar < ar ) vsize = (tsize.x,tsize.x/ar);
+		else vsize = tsize;
+		Screen.DrawTexture(tex[0],false,(vsize.x-tsize.x)/2,(vsize.y-tsize.y)/2,DTA_VirtualWidthF,vsize.x,DTA_VirtualHeightF,vsize.y,DTA_KeepRatio,true);
+		tsize = TexMan.GetScaledSize(tex[1]);
+		sar = tsize.x/tsize.y;
 		if ( sar > ar ) vsize = (tsize.x,tsize.x/ar);
 		else if ( sar < ar ) vsize = (tsize.y*ar,tsize.y);
 		else vsize = tsize;
-		Screen.Dim("Black",1.0,0,0,Screen.GetWidth(),Screen.GetHeight());
-		Screen.DrawTexture(tex[0],false,(vsize.x-tsize.x)/2,(vsize.y-tsize.y)/2,DTA_VirtualWidthF,vsize.x,DTA_VirtualHeightF,vsize.y,DTA_KeepRatio,true);
+		Screen.DrawTexture(tex[1],false,(vsize.x-tsize.x)/2,(vsize.y-tsize.y)/2,DTA_VirtualWidthF,vsize.x,DTA_VirtualHeightF,vsize.y,DTA_KeepRatio,true);
 	}
 
 	override void RenderOverlay( RenderEvent e )
 	{
-		// well this if sure is a long one
 		if ( players[consoleplayer].camera.player && players[consoleplayer].camera.player.ReadyWeapon && (players[consoleplayer].camera.player.ReadyWeapon is 'UTWeapon') )
 			UTWeapon(players[consoleplayer].camera.player.ReadyWeapon).RenderOverlay(e);
 		if ( !menuactive || (Menu.GetCurrentMenu() is 'ConversationMenu') ) return;
 		if ( !CVar.GetCVar('flak_showmenu',players[consoleplayer]).GetBool() ) return;
-		Screen.Dim("Black",1.0,0,0,Screen.GetWidth(),Screen.GetHeight());
-		Screen.DrawTexture(tex[1],true,0,0,DTA_VirtualWidth,1024,DTA_VirtualHeight,768);
+		Screen.Dim("Black",1.,0,0,Screen.GetWidth(),Screen.GetHeight());
+		Screen.DrawTexture(tex[2],true,0,0,DTA_VirtualWidth,1024,DTA_VirtualHeight,768);
 	}
 }
 
@@ -3086,7 +3111,7 @@ Class UTMainHandler : EventHandler
 		else if ( e.Replacee == 'RadSuit' ) e.Replacement = 'UTJumpBoots';
 		else if ( (e.Replacee == 'ArtiFly') || (e.Replacee == 'ArtiSpeedBoots') ) e.Replacement = 'ActJumpBoots';
 		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') || (e.Replacee == 'ArtiHealingRadius') ) e.Replacement = 'UTBackpack';
-		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') || (e.Replacee is 'ArtiPoisonBag') || (e.Replacee is 'ArtiBlastRadius') ) e.Replacement = 'UTArmorBonus';
+		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') || (e.Replacee == 'ArtiBlastRadius') ) e.Replacement = 'UTArmorBonus';
 		else if ( (e.Replacee == 'HealthBonus') || (e.Replacee == 'CrystalVial') ) e.Replacement = 'UTHealthBonus';
 		else if ( (e.Replacee == 'GreenArmor') || (e.Replacee == 'AmuletOfWarding') || (e.Replacee == 'PlatinumHelm') ) e.Replacement = 'UTThighPads';
 		else if ( e.Replacee == 'Silvershield' )
@@ -3145,7 +3170,7 @@ Class UTMainHandler : EventHandler
 		else if ( e.Replacee == 'FWeaponPiece1' ) e.Replacement = 'WarheadAmmo';
 		else if ( e.Replacee == 'CWeaponPiece1' ) e.Replacement = 'UTBackpack';
 		else if ( (e.Replacee == 'MWeaponPiece1') || (e.Replacee == 'MWeapBloodscourge') || (e.Replacee.GetClassName() == 'mkFullBloodscourge') ) e.Replacement = 'WarheadLauncher';
-		else if ( e.Replacee == 'Mana1' ) e.Replacement = 'UTMinorAmmoBox';
+		else if ( (e.Replacee == 'Mana1') || (e.Replacee is 'ArtiPoisonBag') ) e.Replacement = 'UTMinorAmmoBox';
 		else if ( e.Replacee == 'Mana2' ) e.Replacement = 'UTMediumAmmoBox';
 		else if ( e.Replacee == 'Mana3' ) e.Replacement = 'UTMajorAmmoBox';
 		else if ( e.Replacee == 'ArtiBoostMana' ) e.Replacement = 'ActUTFullAmmoBox';
@@ -3167,7 +3192,7 @@ Class UTMainHandler : EventHandler
 	{
 		Actor a = Actor.Spawn("MapSpot",pos);
 		if ( !a ) return null;
-		a.A_PlaySound(snd,CHAN_BODY,volume,true,attenuation);
+		a.A_StartSound(snd,CHAN_BODY,CHANF_LOOPING,volume,attenuation);
 		return a;
 	}
 
@@ -3585,15 +3610,15 @@ Class UTMainHandler : EventHandler
 		{
 			if ( !(gframe%11) && gframe < 160 )
 			{
-				S_Sound("ut/malejump",CHAN_VOICE|CHAN_UI,(gframe>100)?.5:1.);
-				S_Sound("ut/malejump",CHAN_WEAPON|CHAN_UI,(gframe>100)?.5:1.);
+				S_StartSound("ut/malejump",CHAN_VOICE,CHANF_UI|CHANF_MAYBE_LOCAL,(gframe>100)?.5:1.);
+				S_StartSound("ut/malejump",CHAN_WEAPON,CHANF_UI|CHANF_MAYBE_LOCAL,(gframe>100)?.5:1.);
 			}
 			if ( ((gframe >= 37) && (gframe < 49) && !((gframe-37)%3))
 				|| ((gframe >= 89) && (gframe < 101) && !((gframe-89)%3))
 				|| ((gframe >= 141) && (gframe < 153) && !((gframe-141)%3)) )
 			{
-				S_Sound("ut/land",CHAN_BODY|CHAN_UI,(gframe>100)?.5:1.);
-				S_Sound("ut/land",CHAN_ITEM|CHAN_UI,(gframe>100)?.5:1.);
+				S_StartSound("ut/land",CHAN_BODY,CHANF_UI|CHANF_MAYBE_LOCAL,(gframe>100)?.5:1.);
+				S_StartSound("ut/land",CHAN_ITEM,CHANF_UI|CHANF_MAYBE_LOCAL,(gframe>100)?.5:1.);
 			}
 			gframe++;
 		}

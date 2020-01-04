@@ -166,8 +166,8 @@ Class UTChainsaw : UTWeapon
 		bool quitout = false;
 		if ( invoker.Ammo1 && (invoker.Ammo1.Amount <= 0) )
 		{
-			A_StopSound(CHAN_6);
-			A_PlaySound("chainsaw/lower",CHAN_WEAPON);
+			A_StopSound(CHAN_WEAPONMISC);
+			A_StartSound("chainsaw/lower",CHAN_WEAPON);
 			quitout = true;
 		}
 		else if ( !(player.cmd.buttons&BT_ATTACK) ) quitout = true;
@@ -218,9 +218,9 @@ Class UTChainsaw : UTWeapon
 	}
 	override void DetachFromOwner()
 	{
-		if ( Owner ) Owner.A_StopSound(CHAN_6);
+		if ( Owner ) Owner.A_StopSound(CHAN_WEAPONMISC);
 		if ( !Ammo1 || (Ammo1.Amount > 0) )
-			A_PlaySound("chainsaw/lower",CHAN_6);
+			A_StartSound("chainsaw/lower",CHAN_WEAPONMISC);
 		Super.DetachFromOwner();
 	}
 	action void A_Vibrate( bool bAlt = false )
@@ -287,7 +287,7 @@ Class UTChainsaw : UTWeapon
 		CSWI A 0
 		{
 			if ( !invoker.Ammo1 || (invoker.Ammo1.Amount > 0) )
-				A_PlaySound("chainsaw/idle",CHAN_6,looping:true);
+				A_StartSound("chainsaw/idle",CHAN_WEAPONMISC,CHANF_LOOPING);
 			else
 				return ResolveState("DryIdle");
 			return ResolveState(null);
@@ -298,8 +298,8 @@ Class UTChainsaw : UTWeapon
 			A_WeaponReady();
 			if ( invoker.Ammo1 && (invoker.Ammo1.Amount <= 0) )
 			{
-				A_StopSound(CHAN_6);
-				A_PlaySound("chainsaw/lower",CHAN_WEAPON);
+				A_StopSound(CHAN_WEAPONMISC);
+				A_StartSound("chainsaw/lower",CHAN_WEAPON);
 				return ResolveState("DryIdle");
 			}
 			return ResolveState(null);
@@ -311,7 +311,7 @@ Class UTChainsaw : UTWeapon
 			A_WeaponReady(WRF_NOFIRE);
 			if ( !invoker.Ammo1 || (invoker.Ammo1.Amount > 0) )
 			{
-				A_PlaySound("chainsaw/select",CHAN_WEAPON);
+				A_StartSound("chainsaw/select",CHAN_WEAPON);
 				return ResolveState("Idle");
 			}
 			else if ( player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK) )
@@ -320,7 +320,7 @@ Class UTChainsaw : UTWeapon
 		}
 		Wait;
 	Fire:
-		CSWJ A 1 A_PlaySound("chainsaw/fire",CHAN_6,looping:true);
+		CSWJ A 1 A_StartSound("chainsaw/fire",CHAN_WEAPONMISC,CHANF_LOOPING);
 		CSWJ BCDEF 1 A_Vibrate();
 		Goto Hold;
 	Hold:
@@ -332,7 +332,8 @@ Class UTChainsaw : UTWeapon
 	AltFire:
 		CSWA A 0
 		{
-			A_PlaySound("chainsaw/fire",CHAN_6);
+			A_StopSound(CHAN_WEAPONMISC);
+			A_StartSound("chainsaw/fire",CHAN_WEAPON);
 			UTMainHandler.DoSwing(self,(FRandom[Chainsaw](-0.8,-1.2),FRandom[Chainsaw](-0.4,-0.7)),0,1,5,SWING_Spring,6,3);
 		}
 		CSWA ABCDE 2 A_Vibrate(true);
@@ -347,10 +348,14 @@ Class UTChainsaw : UTWeapon
 		{
 			if ( invoker.Ammo1 && (invoker.Ammo1.Amount <= 0) )
 			{
-				A_StopSound(CHAN_6);
-				A_PlaySound("chainsaw/lower",CHAN_WEAPON);
+				A_StopSound(CHAN_WEAPONMISC);
+				A_StartSound("chainsaw/lower",CHAN_WEAPON);
 			}
-			else A_PlaySound("chainsaw/idle",CHAN_6,looping:true);
+			else
+			{
+				A_StopSound(CHAN_WEAPON);
+				A_StartSound("chainsaw/idle",CHAN_WEAPONMISC,CHANF_LOOPING);
+			}
 		}
 		Goto Ready;
 	AltFireSwipes:
@@ -361,7 +366,7 @@ Class UTChainsaw : UTWeapon
 		CSWD A 0
 		{
 			if ( !invoker.Ammo1 || (invoker.Ammo1.Amount > 0) )
-				A_PlaySound("chainsaw/lower",CHAN_6);
+				A_StartSound("chainsaw/lower",CHAN_WEAPONMISC);
 		}
 		CSWD ABCDEF 1;
 		CSWD F 1 A_Lower(int.max);

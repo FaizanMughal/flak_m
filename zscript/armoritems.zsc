@@ -164,7 +164,7 @@ Class UTShieldBelt : UTArmor
 	{
 		if ( (amount > 0) && !DamageTypeDefinition.IgnoreArmor(damageType) )
 		{
-			Owner.A_PlaySound("belt/absorb",CHAN_7);
+			Owner.A_StartSound("belt/absorb",CHAN_POWERUP4,CHANF_OVERLAP);
 			UTMainHandler.DoFlash(Owner,Color(80,255,224,0),5);
 		}
 		Super.AbsorbDamage(damage,damageType,newdamage);

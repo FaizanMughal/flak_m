@@ -127,7 +127,7 @@ Class UTRocket : Actor
 		Super.PostBeginPlay();
 		let l = Spawn("UTRocketTrail",pos);
 		l.target = self;
-		A_PlaySound("utrl/fly",CHAN_VOICE,1.0,true,2.5,pitch:1.5625);
+		A_StartSound("utrl/fly",CHAN_VOICE,CHANF_LOOPING,1.,2.5,1.5625);
 		if ( tracer ) vel *= 0.9;
 		Acceleration = vel.unit()*50;
 	}
@@ -141,7 +141,7 @@ Class UTRocket : Actor
 		UTMainHandler.DoBlast(self,rad,80000);
 		A_Explode(dmg,rad);
 		A_QuakeEx(3,3,3,8,0,rad+50,"",QF_RELATIVE|QF_SCALEDOWN,falloff:rad,rollIntensity:0.2);
-		A_PlaySound("utrl/explode",CHAN_VOICE);
+		A_StartSound("utrl/explode",CHAN_VOICE);
 		A_AlertMonsters();
 		Spawn("RocketExplLight",pos);
 		int numpt = Random[Eightball](15,30);
@@ -266,7 +266,7 @@ Class UTGrenade : UTRocket
 		RCKT A 0
 		{
 			bHITOWNER = true;
-			A_PlaySound("utrl/bounce");
+			A_StartSound("utrl/bounce",CHAN_BODY);
 			rollvel = FRandom[Eightball](-16,16);
 			pitchvel = FRandom[Eightball](-16,16);
 			anglevel = FRandom[Eightball](-16,16);
@@ -321,7 +321,7 @@ Class UTRocketLauncher : UTWeapon
 			LockedTarget = null;
 			LockedOn = false;
 			if ( Owner.player.ReadyWeapon == self )
-				Owner.A_PlaySound("utrl/seeklost",CHAN_WEAPON);
+				Owner.A_StartSound("utrl/seeklost",CHAN_WEAPONMISC,CHANF_OVERLAP);
 		}
 		if ( LockedTarget ) crosshair = 99;
 		else crosshair = 0;
@@ -358,8 +358,8 @@ Class UTRocketLauncher : UTWeapon
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
 		invoker.special1 = 0;
-		if ( weap.bAltFire ) A_PlaySound("utrl/altfire",CHAN_WEAPON);
-		else A_PlaySound("utrl/fire",CHAN_WEAPON);
+		if ( weap.bAltFire ) A_StartSound("utrl/altfire",CHAN_WEAPON,CHANF_OVERLAP);
+		else A_StartSound("utrl/fire",CHAN_WEAPON,CHANF_OVERLAP);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(64,255,0,0),1);
 		if ( self is 'UTPlayer' )
@@ -427,7 +427,7 @@ Class UTRocketLauncher : UTWeapon
 			}
 		}
 		// lose lock-on
-		if ( invoker.LockedOn ) A_PlaySound("utrl/seeklost",CHAN_6);
+		if ( invoker.LockedOn ) A_StartSound("utrl/seeklost",CHAN_WEAPONMISC,CHANF_OVERLAP);
 		invoker.LockedTarget = null;
 		invoker.LockedOn = false;
 		for ( int i=0; i<12; i++ )
@@ -462,8 +462,8 @@ Class UTRocketLauncher : UTWeapon
 				invoker.LockedTarget = a;
 			}
 		}
-		if ( invoker.LockedTarget ) A_PlaySound("utrl/seeklock",CHAN_WEAPON);
-		else if ( invoker.LockedOn ) A_PlaySound("utrl/seeklost",CHAN_WEAPON);
+		if ( invoker.LockedTarget ) A_StartSound("utrl/seeklock",CHAN_WEAPONMISC,CHANF_OVERLAP);
+		else if ( invoker.LockedOn ) A_StartSound("utrl/seeklost",CHAN_WEAPONMISC,CHANF_OVERLAP);
 		if ( invoker.LockedTarget ) invoker.LockedOn = true;
 	}
 
@@ -524,7 +524,7 @@ Class UTRocketLauncher : UTWeapon
 	Reload:
 		EBLI A 5
 		{
-			A_PlaySound("utrl/load",CHAN_6,0.3);
+			A_StartSound("utrl/load",CHAN_WEAPONMISC,CHANF_OVERLAP,0.3);
 			if ( invoker.bSingleRocket = !invoker.bSingleRocket )
 				A_Print(StringTable.Localize("$M_SINGLEROCKETON"));
 			else A_Print(StringTable.Localize("$M_SINGLEROCKETOFF"));
@@ -537,57 +537,57 @@ Class UTRocketLauncher : UTWeapon
 		EBLI A 2 A_JumpIf((!invoker.bAltFire&&invoker.bSingleRocket)||(invoker.Ammo1.Amount<=0)||FireCheck(),"FireOne");
 		EBLI A 0;	// no tween
 		// load two
-		EBR1 A 0 A_PlaySound("utrl/rotate",CHAN_6,0.1);
+		EBR1 A 0 A_StartSound("utrl/rotate",CHAN_WEAPONMISC,CHANF_OVERLAP,0.1);
 		EBR1 ABCDEFG 2 A_JumpIf(FireCheck(),"FireOne");
-		EBL2 A 0 A_PlaySound("utrl/load",CHAN_6);
-		EBL2 ABCDEFG 3 A_JumpIf(FireCheck(),"FireOne");
+		EBL2 A 0 A_StartSound("utrl/load",CHAN_WEAPONMISC,CHANF_OVERLAP);
+		EBL2 ABCDEFG 2 A_JumpIf(FireCheck(),"FireOne");
 		EBR2 A 0
 		{
 			A_LoadRocket();
 			return A_JumpIf((invoker.Ammo1.Amount<=0)||FireCheck(),"FireTwo");
 		}
 		// load three
-		EBR2 A 0 A_PlaySound("utrl/rotate",CHAN_6,0.1);
+		EBR2 A 0 A_StartSound("utrl/rotate",CHAN_WEAPONMISC,CHANF_OVERLAP,0.1);
 		EBR2 ABCDEFG 2 A_JumpIf(FireCheck(),"FireTwo");
-		EBL3 A 0 A_PlaySound("utrl/load",CHAN_6);
-		EBL3 ABCDEFG 3 A_JumpIf(FireCheck(),"FireTwo");
+		EBL3 A 0 A_StartSound("utrl/load",CHAN_WEAPONMISC,CHANF_OVERLAP);
+		EBL3 ABCDEFG 2 A_JumpIf(FireCheck(),"FireTwo");
 		EBR3 A 0
 		{
 			A_LoadRocket();
 			return A_JumpIf((invoker.Ammo1.Amount<=0)||FireCheck(),"FireThree");
 		}
 		// load four
-		EBR3 A 0 A_PlaySound("utrl/rotate",CHAN_6,0.1);
+		EBR3 A 0 A_StartSound("utrl/rotate",CHAN_WEAPONMISC,CHANF_OVERLAP,0.1);
 		EBR3 ABCDEFG 2 A_JumpIf(FireCheck(),"FireThree");
-		EBL4 A 0 A_PlaySound("utrl/load",CHAN_6);
-		EBL4 ABCDEFG 3 A_JumpIf(FireCheck(),"FireThree");
+		EBL4 A 0 A_StartSound("utrl/load",CHAN_WEAPONMISC,CHANF_OVERLAP);
+		EBL4 ABCDEFG 2 A_JumpIf(FireCheck(),"FireThree");
 		EBR4 A 0
 		{
 			A_LoadRocket();
 			return A_JumpIf((invoker.Ammo1.Amount<=0)||FireCheck(),"FireFour");
 		}
 		// load five
-		EBR4 A 0 A_PlaySound("utrl/rotate",CHAN_6,0.1);
+		EBR4 A 0 A_StartSound("utrl/rotate",CHAN_WEAPONMISC,CHANF_OVERLAP,0.1);
 		EBR4 ABCDEFG 2 A_JumpIf(FireCheck(),"FireFour");
-		EBL5 A 0 A_PlaySound("utrl/load",CHAN_6);
-		EBL5 ABCDEFG 3 A_JumpIf(FireCheck(),"FireFour");
+		EBL5 A 0 A_StartSound("utrl/load",CHAN_WEAPONMISC,CHANF_OVERLAP);
+		EBL5 ABCDEFG 2 A_JumpIf(FireCheck(),"FireFour");
 		EBR5 A 0
 		{
 			A_LoadRocket();
 			return A_JumpIf((invoker.Ammo1.Amount<=0)||FireCheck(),"FireFive");
 		}
 		// load six
-		EBR5 A 0 A_PlaySound("utrl/rotate",CHAN_6,0.1);
+		EBR5 A 0 A_StartSound("utrl/rotate",CHAN_WEAPONMISC,CHANF_OVERLAP,0.1);
 		EBR5 ABCDEFG 2 A_JumpIf(FireCheck(),"FireFive");
-		EBL6 A 0 A_PlaySound("utrl/load",CHAN_6);
-		EBL6 ABCDEF 3 A_JumpIf(FireCheck(),"FireFive");
+		EBL6 A 0 A_StartSound("utrl/load",CHAN_WEAPONMISC,CHANF_OVERLAP);
+		EBL6 ABCDEF 2 A_JumpIf(FireCheck(),"FireFive");
 		EBL6 F 0 A_LoadRocket();
 		Goto FireSix;
 	FireOne:
 		EBF1 A 0 A_FireRockets(1);
 		EBF1 ABCDEFGH 2;
 		EBL1 A 0 A_CheckReload();
-		EBL1 A 2 A_PlaySound("utrl/load",CHAN_6);
+		EBL1 A 2 A_StartSound("utrl/load",CHAN_WEAPONMISC,CHANF_OVERLAP);
 		EBL1 BCDEFG 2;
 		EBLI A 0;
 		Goto Idle;
@@ -595,7 +595,7 @@ Class UTRocketLauncher : UTWeapon
 		EBF2 A 0 A_FireRockets(2);
 		EBF2 ABCDEFGHIJK 2;
 		EBL1 A 0 A_CheckReload();
-		EBL1 A 2 A_PlaySound("utrl/load",CHAN_6);
+		EBL1 A 2 A_StartSound("utrl/load",CHAN_WEAPONMISC,CHANF_OVERLAP);
 		EBL1 BCDEFG 2;
 		EBLI A 0;
 		Goto Idle;
@@ -603,7 +603,7 @@ Class UTRocketLauncher : UTWeapon
 		EBF3 A 0 A_FireRockets(3);
 		EBF3 ABCDEFGHIJ 2;
 		EBL1 A 0 A_CheckReload();
-		EBL1 A 2 A_PlaySound("utrl/load",CHAN_6);
+		EBL1 A 2 A_StartSound("utrl/load",CHAN_WEAPONMISC,CHANF_OVERLAP);
 		EBL1 BCDEFG 2;
 		EBLI A 0;
 		Goto Idle;
@@ -611,7 +611,7 @@ Class UTRocketLauncher : UTWeapon
 		EBF4 A 0 A_FireRockets(4);
 		EBF4 ABCDEFGHIJK 2;
 		EBL1 A 0 A_CheckReload();
-		EBL1 A 2 A_PlaySound("utrl/load",CHAN_6);
+		EBL1 A 2 A_StartSound("utrl/load",CHAN_WEAPONMISC,CHANF_OVERLAP);
 		EBL1 BCDEFG 2;
 		EBLI A 0;
 		Goto Idle;
@@ -619,7 +619,7 @@ Class UTRocketLauncher : UTWeapon
 		EBF5 A 0 A_FireRockets(5);
 		EBF5 ABCDEFGHIJKLM 2;
 		EBL1 A 0 A_CheckReload();
-		EBL1 A 2 A_PlaySound("utrl/load",CHAN_6);
+		EBL1 A 2 A_StartSound("utrl/load",CHAN_WEAPONMISC,CHANF_OVERLAP);
 		EBL1 BCDEFG 2;
 		EBLI A 0;
 		Goto Idle;
@@ -627,7 +627,7 @@ Class UTRocketLauncher : UTWeapon
 		EBF6 A 0 A_FireRockets(6);
 		EBF6 ABCDEFGHIJKLMNOP 2;
 		EBL1 A 0 A_CheckReload();
-		EBL1 A 2 A_PlaySound("utrl/load",CHAN_6);
+		EBL1 A 2 A_StartSound("utrl/load",CHAN_WEAPONMISC,CHANF_OVERLAP);
 		EBL1 BCDEFG 2;
 		EBLI A 0;
 		Goto Idle;

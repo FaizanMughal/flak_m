@@ -82,7 +82,7 @@ Class SniperRifle : UTWeapon
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,0,0,255),1);
-		A_PlaySound("sniper/fire",CHAN_WEAPON);
+		A_StartSound("sniper/fire",CHAN_WEAPON,CHANF_OVERLAP);
 		A_AlertMonsters();
 		if ( zoomed )
 		{
@@ -255,11 +255,11 @@ Class SniperRifle : UTWeapon
 			if ( invoker.sniperzoom > 1. )
 			{
 				if ( CVar.GetCVar('flak_zoomsound',players[consoleplayer]).GetBool() && CheckLocalView() )
-					A_PlaySound("sniper/zoomdown",CHAN_WEAPON);
+					A_StartSound("sniper/zoomdown",CHAN_WEAPONMISC,CHANF_OVERLAP);
 				return ResolveState("AltHold2");
 			}
 			if ( CVar.GetCVar('flak_zoomsound',players[consoleplayer]).GetBool() && CheckLocalView() )
-				A_PlaySound("sniper/zoomup",CHAN_WEAPON);
+				A_StartSound("sniper/zoomup",CHAN_WEAPONMISC,CHANF_OVERLAP);
 			return ResolveState(null);
 		}
 	AltHold:
@@ -279,7 +279,7 @@ Class SniperRifle : UTWeapon
 		SRFD A 0
 		{
 			if ( (invoker.sniperzoom>1.0) && CVar.GetCVar('flak_zoomsound',players[consoleplayer]).GetBool() && CheckLocalView() )
-				A_PlaySound("sniper/zoomdown",CHAN_WEAPON);
+				A_StartSound("sniper/zoomdown",CHAN_WEAPONMISC,CHANF_OVERLAP);
 			A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
 		}
 		SRFD ABCDEFG 1;

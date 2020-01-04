@@ -43,7 +43,7 @@ Class ShockWave : Actor
 	override void PostBeginPlay()
 	{
 		lifespan = ReactionTime;
-		A_PlaySound("warhead/explode",CHAN_VOICE,attenuation:ATTN_NONE);
+		A_StartSound("warhead/explode",CHAN_VOICE,attenuation:ATTN_NONE);
 		A_QuakeEx(9,9,9,100,0,12000,"",QF_RELATIVE|QF_SCALEDOWN,falloff:1200,rollIntensity:0.5);
 	}
 	override void Tick()
@@ -250,7 +250,7 @@ Class WarShell : Actor
 		l.target = self;
 		b = Spawn("WarheadHitbox",pos);
 		b.target = self;
-		A_PlaySound("warhead/fly",CHAN_VOICE,1.0,true);
+		A_StartSound("warhead/fly",CHAN_VOICE,CHANF_LOOPING);
 		destangle = angle;
 		destpitch = pitch;
 	}
@@ -306,7 +306,7 @@ Class WarShell : Actor
 		A_Explode(1000,180);
 		A_SprayDecal("BigBlast");
 		A_QuakeEx(8,8,8,20,0,300,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.35);
-		A_PlaySound("shock/hit",CHAN_VOICE,attenuation:0.5);
+		A_StartSound("shock/hit",CHAN_VOICE,attenuation:0.5);
 		A_AlertMonsters();
 		A_SetRenderStyle(1.0,STYLE_Add);
 		Spawn("WarheadExplodLight",pos);
@@ -320,7 +320,7 @@ Class WarShell : Actor
 		A_Explode(1000,220);
 		A_SprayDecal("BigBlast");
 		A_QuakeEx(8,8,8,20,0,300,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.35);
-		A_PlaySound("shock/hit",CHAN_VOICE,attenuation:0.5);
+		A_StartSound("shock/hit",CHAN_VOICE,attenuation:0.5);
 		A_AlertMonsters();
 		A_SetRenderStyle(1.0,STYLE_Add);
 		Spawn("WarheadExplodLight",pos);
@@ -352,7 +352,7 @@ Class GuidedWarShell : WarShell
 	{
 		Super.PostBeginPlay();
 		if ( target && target.player ) target.player.camera = self;
-		A_PlaySound("warhead/altfire",CHAN_WEAPON,local:true);
+		A_StartSound("warhead/altfire",CHAN_WEAPON,CHANF_LOCAL);
 		justleft = true;
 	}
 	override void Tick()
@@ -682,7 +682,7 @@ Class WarheadLauncher : UTWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		A_PlaySound("warhead/fire",CHAN_WEAPON);
+		A_StartSound("warhead/fire",CHAN_WEAPON,CHANF_OVERLAP);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,128),1);
 		UTMainHandler.DoSwing(self,(FRandom[Warhead](0.6,1.2),FRandom[Warhead](0.2,0.5)),4,-1,3,SWING_Spring,2,5);
@@ -722,7 +722,7 @@ Class WarheadLauncher : UTWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		A_PlaySound("warhead/altfire",CHAN_WEAPON);
+		A_StartSound("warhead/altfire",CHAN_WEAPON,CHANF_OVERLAP);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,128),1);
 		A_AlertMonsters();

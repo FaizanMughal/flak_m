@@ -882,6 +882,16 @@ HardwareShader Texture "models/S_Ammo.png"
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 	Texture brighttex "brightmaps/S_Ammo.png"
 }
+HardwareShader Texture "graphics/UTBg.png"
+{
+	Shader "shaders/glsl/UTBg.fp"
+	Texture starstex "graphics/UTBg_Stars.png"
+	Texture moontex "graphics/UTBg_Moon.png"
+}
+HardwareShader Texture "graphics/UTProtoBg.png"
+{
+	Shader "shaders/glsl/UTProtoBg.fp"
+}
 // PP shaders
 HardwareShader PostProcess scene
 {

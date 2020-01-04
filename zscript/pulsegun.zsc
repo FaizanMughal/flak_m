@@ -161,14 +161,14 @@ Class PulseBall : Actor
 	}
 	override void PostBeginPlay()
 	{
-		A_PlaySound("pulse/fly",CHAN_BODY,0.8,true,8.0);
+		A_StartSound("pulse/fly",CHAN_BODY,CHANF_LOOPING,.8,8.);
 		let l = Spawn("PulseBallLight",pos);
 		l.target = self;
 	}
 	action void A_BallExp()
 	{
 		A_SetScale(0.45);
-		A_PlaySound("pulse/hit",CHAN_BODY);
+		A_StartSound("pulse/hit");
 		A_SprayDecal("BoltScorch");
 		Spawn("PulseExplLight",pos);
 		int numpt = Random[Pulse](20,40);
@@ -692,7 +692,7 @@ Class PulseGun : UTWeapon
 	action void A_StartBeam()
 	{
 		invoker.special1 = 0;
-		A_PlaySound("pulse/bolt",CHAN_WEAPON,1.0,true);
+		A_StartSound("pulse/bolt",CHAN_WEAPON,CHANF_LOOPING);
 		Vector3 x, y, z, origin;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+4.1*y-2.7*z);
@@ -778,13 +778,13 @@ Class PulseGun : UTWeapon
 		PGNI A 0
 		{
 			invoker.special1 = 0;
-			A_PlaySound("pulse/fire",CHAN_WEAPON,1.0,true);
+			A_StartSound("pulse/fire",CHAN_WEAPON,CHANF_LOOPING);
 		}
 		PGNF ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_PulseFire();
 		PGF2 ABCDEFGHIJKLMN 1 A_PulseFire();
 		Goto Fire+1;
 	Release:
-		PGNC A 0 A_PlaySound("pulse/down",CHAN_WEAPON);
+		PGNC A 0 A_StartSound("pulse/down",CHAN_WEAPON);
 		PGNC ABCDEFGHIJKLMNOPQRSTUVWXY 1 A_PulseRefire();
 		PGNC Y 0;
 		Goto Idle;
@@ -804,7 +804,7 @@ Class PulseGun : UTWeapon
 		PGNI A 0 A_JumpIf(invoker.clipcount >= Min(invoker.default.clipcount,invoker.Ammo1.Amount),"Idle");
 		PGNR A 1
 		{
-			A_PlaySound("pulse/reload",CHAN_WEAPON);
+			A_StartSound("pulse/reload",CHAN_WEAPONMISC);
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayReloading();
 		}

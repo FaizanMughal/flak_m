@@ -59,15 +59,16 @@ This mod requires GZDoom 4.2.4 or later.
  - Liquid splashes
  - Original Invulnerability and Night Vision items
  - Hexen compatibility
+ - Fancy titlemap
+ - Semi-accurate UT sound behaviour
 
 ## In progress
 
- - N/A, this is the 1.1 release.
+ - N/A this is the 1.1.1 release.
 
 ## Planned
 
  - Stuff for 1.2
-   - Fancy titlemap with intro narration.
    - Touch up blood/gibbing features. At the moment, Nashgore is still a
      superior alternative.
    - Help screens describing items and stuff (maybe?).

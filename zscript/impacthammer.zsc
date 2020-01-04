@@ -87,7 +87,8 @@ Class ImpactHammer : UTWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
-		A_PlaySound("impact/release",CHAN_WEAPON);
+		A_StopSound(CHAN_WEAPONMISC);
+		A_StartSound("impact/release",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoSwing(self,(FRandom[Impact](-0.3,-1.5),FRandom[Impact](-1.2,-0.4)),3,-0.8,3,SWING_Spring,3,2);
 		A_AlertMonsters(gameinfo.gametype&GAME_Strife?100:0);
@@ -152,7 +153,7 @@ Class ImpactHammer : UTWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
-		A_PlaySound("impact/fire",CHAN_WEAPON);
+		A_StartSound("impact/fire",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoSwing(self,(FRandom[Impact](-0.3,-1.5),FRandom[Impact](-1.2,-0.4)),2,-0.6,2,SWING_Spring,1,2);
 		A_AlertMonsters(gameinfo.gametype&GAME_Strife?100:0);
@@ -249,10 +250,10 @@ Class ImpactHammer : UTWeapon
 		{
 			A_ResetCharge();
 			A_Overlay(-9999,"Charging");
-			A_PlaySound("impact/pull",CHAN_WEAPON);
+			A_StartSound("impact/pull",CHAN_WEAPON);
 		}
 		IMPL ABCDE 5;
-		IMPR A 0 A_PlaySound("impact/loop",CHAN_WEAPON,looping:true);
+		IMPR A 0 A_StartSound("impact/loop",CHAN_WEAPONMISC,CHANF_LOOPING);
 		Goto Hold;
 	Hold:
 		IMPR ABCDEFGHIJ 1;

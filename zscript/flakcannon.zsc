@@ -341,7 +341,7 @@ Class FlakChunk : Actor
 		rollvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
 		pitchvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
 		yawvel = FRandom[Flak](50,100)*RandomPick[Flak](-1,1)*(vel.length()/speed);
-		A_PlaySound("flak/bounce",volume:0.3);
+		A_StartSound("flak/bounce",volume:0.3);
 		A_AlertMonsters();
 		if ( vel.length() < 5 ) ExplodeMissile();
 	}
@@ -351,7 +351,7 @@ Class FlakChunk : Actor
 		if ( !target.bNOBLOOD )
 		{
 			target.SpawnBlood(pos,AngleTo(target),damage);
-			A_PlaySound("flak/meat",volume:0.3);
+			A_StartSound("flak/meat",volume:0.3);
 			A_AlertMonsters();
 		}
 		return -1;
@@ -373,7 +373,7 @@ Class FlakChunk : Actor
 			if ( !victim.bNOBLOOD && (victim.health-amt > victim.GetGibHealth()) )
 			{
 				victim.SpawnBlood(pos,AngleTo(victim),damage);
-				A_PlaySound("flak/meat",volume:0.3);
+				A_StartSound("flak/meat",volume:0.3);
 				A_AlertMonsters();
 			}
 			return 1;
@@ -418,7 +418,7 @@ Class FlakChunk : Actor
 			else dir = vel.unit();
 			l.angle = atan2(dir.y,dir.x);
 			l.pitch = asin(-dir.z);
-			A_PlaySound("flak/hit",volume:0.3);
+			A_StartSound("flak/hit",volume:0.3);
 			A_AlertMonsters();
 		}
 	XDeath:
@@ -519,7 +519,7 @@ Class FlakSlug : Actor
 		UTMainHandler.DoBlast(self,120,75000);
 		A_Explode(70,120);
 		A_QuakeEx(4,4,4,8,0,170,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollIntensity:0.2);
-		A_PlaySound("flak/explode",CHAN_VOICE);
+		A_StartSound("flak/explode",CHAN_VOICE);
 		A_AlertMonsters();
 		if ( !Tracer ) Spawn("SlugSmoke",pos);
 		Spawn("SlugLight",pos);
@@ -639,8 +639,8 @@ Class FlakCannon : UTWeapon
 {
 	action void A_Loading( bool first = false )
 	{
-		if ( first ) A_PlaySound("flak/load",CHAN_WEAPON);
-		else A_PlaySound("flak/reload",CHAN_6);
+		if ( first ) A_StartSound("flak/load",CHAN_WEAPONMISC,CHANF_OVERLAP);
+		else A_StartSound("flak/reload",CHAN_WEAPONMISC,CHANF_OVERLAP);
 	}
 	action void A_FireChunks()
 	{
@@ -648,7 +648,7 @@ Class FlakCannon : UTWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		A_PlaySound("flak/fire",CHAN_WEAPON);
+		A_StartSound("flak/fire",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(160,255,96,0),1);
 		UTMainHandler.DoSwing(self,(FRandom[Flak](-0.3,-0.8),FRandom[Flak](-0.5,0.5)),4,-1.5,2,SWING_Spring,2,2);
@@ -707,7 +707,7 @@ Class FlakCannon : UTWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		A_PlaySound("flak/altfire",CHAN_WEAPON);
+		A_StartSound("flak/altfire",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,96,0),1);
 		UTMainHandler.DoSwing(self,(FRandom[Flak](-0.4,-0.8),FRandom[Flak](0.4,0.8)),4,-1,3,SWING_Spring,3,5);

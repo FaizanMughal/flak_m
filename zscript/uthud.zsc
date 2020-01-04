@@ -1088,7 +1088,7 @@ Class UTHud : BaseStatusBar
 			{
 				PickupMsg = CPlayer.mo.InvSel.GetTag();
 				PickupMsgTic = gametic+50;
-				S_Sound("misc/hud_sel",CHAN_UI);
+				S_StartSound("misc/hud_sel",CHAN_BODY,CHANF_UI|CHANF_MAYBE_LOCAL);
 			}
 		}
 		if ( CPlayer.inventorytics > 0 ) justselected = false;
@@ -1097,7 +1097,7 @@ Class UTHud : BaseStatusBar
 			if ( !justselected && CPlayer.mo.InvSel )
 			{
 				Console.Printf(StringTable.Localize("$M_ISELECT"),CPlayer.mo.InvSel.GetTag());
-				S_Sound("misc/hud_sel",CHAN_UI);
+				S_StartSound("misc/hud_sel",CHAN_BODY,CHANF_UI|CHANF_MAYBE_LOCAL);
 			}
 			justselected = true;
 		}

@@ -40,7 +40,7 @@ Class ModuleHitbox : Actor
 			if ( !bi.Thing || (bi.Thing != master.target) ) continue;
 			if ( (Distance2D(bi.Thing)-bi.Thing.radius <= radius) && ((bi.Thing.pos.z <= pos.z+height) && (bi.Thing.pos.z+bi.Thing.height >= pos.z-height)) )
 			{
-				A_PlaySound("misc/i_pkup");
+				A_StartSound("misc/i_pkup",CHAN_ITEM);
 				master.Destroy();
 				return;
 			}
@@ -154,7 +154,7 @@ Class TranslocatorModule : Actor
 		}
 		b = Spawn("ModuleHitbox",pos);
 		b.master = self;
-		A_PlaySound("transloc/hum",CHAN_VOICE,0.5,true,2.0);
+		A_StartSound("transloc/hum",CHAN_VOICE,CHANF_LOOPING,.5,2.);
 	}
 
 	override bool CanCollideWith( Actor other, bool passive )
@@ -188,7 +188,7 @@ Class TranslocatorModule : Actor
 		Super.Tick();
 		if ( bAMBUSH && !Random[Transloc](0,40) )
 		{
-			A_PlaySound("transloc/spark");
+			A_StartSound("transloc/spark",CHAN_BODY,CHANF_OVERLAP);
 			int numpt = Random[Transloc](20,40);
 			for ( int i=0; i<numpt; i++ )
 			{
@@ -223,7 +223,7 @@ Class TranslocatorModule : Actor
 			else
 			{
 				A_SetPitch(0);
-				A_PlaySound("transloc/bounce");
+				A_StartSound("transloc/bounce");
 				if ( BlockingFloor || (tracer && (pos.z >= tracer.pos.z+tracer.height) && tracer.bACTLIKEBRIDGE) ) alreadyhit = true;
 			}
 		}
@@ -391,7 +391,7 @@ Class Translocator : UTWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
-		A_PlaySound("transloc/throw",CHAN_WEAPON);
+		A_StartSound("transloc/throw",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoSwing(self,(FRandom[Translocator](-0.2,0.4),FRandom[Translocator](-0.2,0.7)),2,-0.3,3,SWING_Spring,2,3);
 		A_AlertMonsters();
@@ -413,14 +413,15 @@ Class Translocator : UTWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
-		A_PlaySound("transloc/return",CHAN_WEAPON);
+		A_StartSound("transloc/return",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoSwing(self,(FRandom[Translocator](-0.2,-0.4),FRandom[Translocator](-0.2,0.7)),3,-1,2,SWING_Spring,2,2);
 		A_AlertMonsters();
 		if ( invoker.module && invoker.module.bAMBUSH )
 		{
 			UTMainHandler.DoFlash(self,Color(255,255,255,255),50);
-			A_PlaySound("transloc/spark",CHAN_WEAPON);
+			for ( int i=0; i<3; i++ )
+				A_StartSound("transloc/spark",CHAN_WEAPONMISC,CHANF_OVERLAP);
 			DamageMobj(invoker,self,int.max,'Telefrag',DMG_THRUSTLESS);
 		}
 		if ( invoker.module ) invoker.module.Destroy();
@@ -434,7 +435,7 @@ Class Translocator : UTWeapon
 		{
 			invoker.FireEffect();
 			A_AlertMonsters();
-			A_PlaySound("transloc/return",CHAN_WEAPON);
+			A_StartSound("transloc/return",CHAN_WEAPON);
 			return;
 		}
 		// consume ammo if any
@@ -468,7 +469,7 @@ Class Translocator : UTWeapon
 			SpawnTeleportFog(newpos,false,false);
 			player.fov = min(175,player.desiredfov+60);
 		}
-		else A_PlaySound("transloc/return",CHAN_WEAPON);
+		else A_StartSound("transloc/return",CHAN_WEAPON);
 		for ( int i=0; i<MAXPLAYERS; i++ )
 		{
 			if ( !playeringame[i] || !players[i].mo ) continue;
@@ -477,7 +478,8 @@ Class Translocator : UTWeapon
 		if ( bBroken )
 		{
 			UTMainHandler.DoFlash(self,Color(255,255,255,255),50);
-			A_PlaySound("transloc/spark",CHAN_WEAPON);
+			for ( int i=0; i<3; i++ )
+				A_StartSound("transloc/spark",CHAN_WEAPONMISC,CHANF_OVERLAP);
 			DamageMobj(invoker,self,int.max,'Telefrag',DMG_THRUSTLESS);
 		}
 	}
