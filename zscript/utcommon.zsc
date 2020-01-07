@@ -2783,10 +2783,28 @@ Class UTTeleParticle : UTMeshParticle
 	}
 }
 
+Class WaterHit
+{
+	Sector sect;
+	Vector3 hitpos;
+}
+
+Class UTInvisibleSplasher : Actor
+{
+	States
+	{
+	Spawn:
+		TNT1 A 2;
+		Stop;
+	}
+}
+
 // Follows a single line trail, spawns bubbles if underwater
 // In addition, also activates shoot-through lines, since LineTrace can't do it
+// Also spawns splashes when crossing water sectors
 Class UTBulletTrail : LineTracer
 {
+	Array<WaterHit> WaterHitList;
 	Array<Line> ShootThroughList;
 	Actor ignoreme;
 
@@ -2794,10 +2812,16 @@ Class UTBulletTrail : LineTracer
 	{
 		let t = new("UTBulletTrail");
 		t.ignoreme = target;
+		t.WaterHitList.Clear();
 		t.ShootThroughList.Clear();
 		t.Trace(pos,level.PointInSector(pos.xy),dir,dist,0);
 		for ( int i=0; i<t.ShootThroughList.Size(); i++ )
 			t.ShootThroughList[i].Activate(target,0,SPAC_PCross);
+		for ( int i=0; i<t.WaterHitList.Size(); i++ )
+		{
+			let b = Actor.Spawn("UTInvisibleSplasher",t.WaterHitList[0].hitpos);
+			b.A_CheckTerrain();
+		}
 		for ( int i=5; i<t.Results.Distance; i+=10 )
 		{
 			if ( !Random[Boolet](0,bubblechance) ) continue;
@@ -2809,6 +2833,21 @@ Class UTBulletTrail : LineTracer
 
 	override ETraceStatus TraceCallback()
 	{
+		// liquid splashes
+		if ( Results.CrossedWater )
+		{
+			let hl = new("WaterHit");
+			hl.sect = Results.CrossedWater;
+			hl.hitpos = Results.CrossedWaterPos;
+			WaterHitList.Push(hl);
+		}
+		else if ( Results.Crossed3DWater )
+		{
+			let hl = new("WaterHit");
+			hl.sect = Results.Crossed3DWater;
+			hl.hitpos = Results.Crossed3DWaterPos;
+			WaterHitList.Push(hl);
+		}
 		if ( Results.HitType == TRACE_HitActor )
 		{
 			if ( Results.HitActor == ignoreme ) return TRACE_Skip;
@@ -3232,9 +3271,9 @@ Class UTMainHandler : EventHandler
 		// prettify Kinsie's test map for a more Unreal feel
 		for ( int i=0; i<level.sectors.size(); i++ )
 		{
-			level.sectors[i].lightlevel = min(level.sectors[i].lightlevel,96);
-			if ( level.sectors[i].GetPlaneLight(0) ) level.sectors[i].SetPlaneLight(0,96);
-			if ( level.sectors[i].GetPlaneLight(1) ) level.sectors[i].SetPlaneLight(1,96);
+			level.sectors[i].lightlevel = min(level.sectors[i].lightlevel,128);
+			if ( level.sectors[i].GetPlaneLight(0) ) level.sectors[i].SetPlaneLight(0,128);
+			if ( level.sectors[i].GetPlaneLight(1) ) level.sectors[i].SetPlaneLight(1,128);
 			// open some ceilings
 			if ( level.sectors[i].ceilingplane.ZAtPoint(level.sectors[i].centerspot) == 1280 )
 				level.sectors[i].SetTexture(1,skyflatnum);
