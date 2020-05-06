@@ -933,7 +933,7 @@ Class UTPlayer : DoomPlayer
 				|| InStateSequence(CurState,FindState("Turn")) )
 				SetStateLabel("See2");
 		}
-		else if ( !bNoGravity && (waterlevel < 1) )
+		else if ( !bNoGravity && (waterlevel < 1) && abs(pos.z-floorz) > maxstepheight )
 		{
 			// Falling
 			if ( InStateSequence(CurState,FindState("Spawn"))
@@ -1086,7 +1086,7 @@ Class UTPlayer : DoomPlayer
 		// Gib the player, the camera will attach to the head at this point
 		A_GibMe();
 		A_NoBlocking();
-		SetStateLabel('null');
+		SetStateLabel("IceBurst");
 	}
 
 	void A_PainDT()
@@ -1292,6 +1292,10 @@ Class UTPlayer : DoomPlayer
 	Ice:
 		PICE A 5 A_FreezeDeath();
 		PICE A 1 A_FreezeDeathChunksDT();
+		Wait;
+	IceBurst:
+		TNT1 A 35;
+		TNT1 A 1 A_CheckPlayerDone();
 		Wait;
 	}
 }
