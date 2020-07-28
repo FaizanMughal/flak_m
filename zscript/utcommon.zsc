@@ -3546,10 +3546,10 @@ Class UTMainHandler : EventHandler
 		if ( !e.Thing.player && !e.Thing.bIsMonster && !e.Thing.bCountKill ) return;
 		if ( (e.Inflictor && e.Inflictor.player && (e.Inflictor != e.Thing)) || (e.DamageSource && e.DamageSource.player && (e.DamageSource != e.Thing)) )
 		{
-			Weapon saw = Weapon(e.Inflictor.FindInventory("UTChainsaw"));
-			if ( !saw ) saw = Weapon(e.DamageSource.FindInventory("UTChainsaw"));
+			Weapon saw = Weapon(e.Inflictor?e.Inflictor.FindInventory("UTChainsaw"):null);
+			if ( !saw ) saw = Weapon(e.DamageSource?e.DamageSource.FindInventory("UTChainsaw"):null);
 			bool current = false;
-			if ( e.Inflictor.player && e.Inflictor.player.ReadyWeapon == saw ) current = true;
+			if ( e.Inflictor.player && (e.Inflictor.player.ReadyWeapon == saw) ) current = true;
 			if ( e.DamageSource.player && (e.DamageSource.player.ReadyWeapon == saw) ) current = true;
 			if ( flak_sawammo && saw && (saw.Ammo1.Amount < 40) && !current && !Random[SawDrop](0,9) )
 			{
