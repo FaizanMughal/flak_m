@@ -3549,8 +3549,8 @@ Class UTMainHandler : EventHandler
 			Weapon saw = Weapon(e.Inflictor?e.Inflictor.FindInventory("UTChainsaw"):null);
 			if ( !saw ) saw = Weapon(e.DamageSource?e.DamageSource.FindInventory("UTChainsaw"):null);
 			bool current = false;
-			if ( e.Inflictor.player && (e.Inflictor.player.ReadyWeapon == saw) ) current = true;
-			if ( e.DamageSource.player && (e.DamageSource.player.ReadyWeapon == saw) ) current = true;
+			if ( e.Inflictor && e.Inflictor.player && (e.Inflictor.player.ReadyWeapon == saw) ) current = true;
+			if ( e.DamageSource && e.DamageSource.player && (e.DamageSource.player.ReadyWeapon == saw) ) current = true;
 			if ( flak_sawammo && saw && (saw.Ammo1.Amount < 40) && !current && !Random[SawDrop](0,9) )
 			{
 				let a = Actor.Spawn("ChainsawAmmo",e.Thing.Vec3Offset(0,0,e.Thing.Height*.5));
