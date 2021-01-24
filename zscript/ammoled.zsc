@@ -8,6 +8,16 @@ Class PulseGunLED : Actor
 	Actor base, digits[3], bar;
 	transient PulseGun mygun;
 
+	Default
+	{
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		+NOINTERACTION;
+		+DONTSPLASH;
+		Radius .1;
+		Height 0;
+	}
+
 	override void PostBeginPlay()
 	{
 		SetOrigin((PULSELEDBASE+64,128,99),false);
@@ -46,6 +56,16 @@ Class FlakCannonLED : Actor
 	Actor base, digits[3];
 	transient FlakCannon mygun;
 
+	Default
+	{
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		+NOINTERACTION;
+		+DONTSPLASH;
+		Radius .1;
+		Height 0;
+	}
+
 	override void PostBeginPlay()
 	{
 		SetOrigin((FLAKLEDBASE+32,64,45),false);
@@ -71,6 +91,16 @@ Class MinigunLED : Actor
 {
 	Actor base, digits[3];
 	transient Minigun mygun;
+
+	Default
+	{
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		+NOINTERACTION;
+		+DONTSPLASH;
+		Radius .1;
+		Height 0;
+	}
 
 	override void PostBeginPlay()
 	{

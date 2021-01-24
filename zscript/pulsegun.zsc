@@ -579,7 +579,7 @@ Class PulseGun : UTWeapon
 		}
 		if ( !Owner || !Owner.player || (Owner != players[consoleplayer].Camera) ) return;
 		ammoled.mygun = self;
-		TexMan.SetCameraToTexture(ammoled,"PAmmoLed",90);
+		//TexMan.SetCameraToTexture(ammoled,"PAmmoLed",90);
 	}
 
 	override int, int, bool, bool GetClipAmount()

@@ -87,7 +87,7 @@ Class Minigun : UTWeapon
 		}
 		if ( !Owner || !Owner.player || (Owner != players[consoleplayer].Camera) ) return;
 		ammoled.mygun = self;
-		TexMan.SetCameraToTexture(ammoled,"MiniALed",90);
+		//TexMan.SetCameraToTexture(ammoled,"MiniALed",90);
 	}
 
 	action void A_FireBullet( bool alt = false )
