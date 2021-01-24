@@ -58,7 +58,7 @@ This mod requires GZDoom 4.3 or later.
  - Hexen compatibility
  - Fancy titlemap
  - Semi-accurate UT sound behaviour
- - Hacky cameratexture ammo counters for Pulsegun, Minigun, Flak Cannon and rocket launcher (TEMPORARILY DISABLED DUE TO A MAJOR BUG)
+ - Hacky cameratexture ammo counters for Pulsegun, Minigun, Flak Cannon and rocket launcher (may break)
 
 ## In progress
 

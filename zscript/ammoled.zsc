@@ -1,7 +1,7 @@
-const PULSELEDBASE = 60000;
-const FLAKLEDBASE = 61000;
-const MINILEDBASE = 62000;
-const ROCKETLEDBASE = 63000;
+const PULSELEDBASE = 60000.;
+const FLAKLEDBASE = 61000.;
+const MINILEDBASE = 62000.;
+const ROCKETLEDBASE = 63000.;
 
 Class PulseGunLED : Actor
 {
@@ -20,11 +20,30 @@ Class PulseGunLED : Actor
 
 	override void PostBeginPlay()
 	{
-		SetOrigin((PULSELEDBASE+64,128,99),false);
-		pitch = 90;
-		if ( !base ) base = Spawn("AmmoLEDScreen",(PULSELEDBASE+128,0,0));
-		for ( int i=0; i<3; i++ ) if ( !digits[i] ) digits[i] = Spawn("LEDFont",(PULSELEDBASE+99,104+48*i,1));
-		if ( !bar ) bar = Spawn("AmmoCountBar",(PULSELEDBASE+110,30,1));
+		SetOrigin((PULSELEDBASE+128,0,0),false);
+		SetZ(floorz);
+		roll = 180;
+		angle = 180;
+		double stretch = level.pixelstretch;
+		double halfstretch = (1.+level.pixelstretch)/2.;
+		if ( !base )
+		{
+			base = Spawn("AmmoLEDScreen",(PULSELEDBASE,-128.,floorz+64./halfstretch));
+			base.scale.y /= level.pixelstretch;
+		}
+		for ( int i=0; i<3; i++ )
+		{
+			if ( !digits[i] )
+			{
+				digits[i] = Spawn("LEDFont",(PULSELEDBASE+1.,-72.+48.*i,floorz+50./halfstretch));
+				digits[i].scale.y /= level.pixelstretch;
+			}
+		}
+		if ( !bar )
+		{
+			bar = Spawn("AmmoCountBar",(PULSELEDBASE+1.,-98.,floorz-26./halfstretch));
+			bar.scale.y /= level.pixelstretch;
+		}
 	}
 	override void Tick()
 	{
@@ -68,10 +87,25 @@ Class FlakCannonLED : Actor
 
 	override void PostBeginPlay()
 	{
-		SetOrigin((FLAKLEDBASE+32,64,45),false);
-		pitch = 90;
-		if ( !base ) base = Spawn("AmmoLEDScreen",(FLAKLEDBASE+64,0,0));
-		for ( int i=0; i<3; i++ ) if ( !digits[i] ) digits[i] = Spawn("LEDFont",(FLAKLEDBASE+51,54+20*i,1));
+		SetOrigin((FLAKLEDBASE+64,0,0),false);
+		SetZ(floorz);
+		roll = 180;
+		angle = 180;
+		double stretch = level.pixelstretch;
+		double halfstretch = (1.+level.pixelstretch)/2.;
+		if ( !base )
+		{
+			base = Spawn("AmmoLEDScreen",(FLAKLEDBASE,-64.,floorz+32./halfstretch));
+			base.scale.y /= level.pixelstretch;
+		}
+		for ( int i=0; i<3; i++ )
+		{
+			if ( !digits[i] )
+			{
+				digits[i] = Spawn("LEDFont",(FLAKLEDBASE+1.,-30.+20.*i,floorz+16./halfstretch));
+				digits[i].scale.y /= level.pixelstretch;
+			}
+		}
 	}
 	override void Tick()
 	{
@@ -104,10 +138,25 @@ Class MinigunLED : Actor
 
 	override void PostBeginPlay()
 	{
-		SetOrigin((MINILEDBASE+32,32,18),false);
-		pitch = 90;
-		if ( !base ) base = Spawn("AmmoLEDScreen",(MINILEDBASE+64,0,0));
-		for ( int i=0; i<3; i++ ) if ( !digits[i] ) digits[i] = Spawn("LEDFont",(MINILEDBASE+51,22+20*i,1));
+		SetOrigin((MINILEDBASE+32,0,0),false);
+		SetZ(floorz);
+		roll = 180;
+		angle = 180;
+		double stretch = level.pixelstretch;
+		double halfstretch = (1.+level.pixelstretch)/2.;
+		if ( !base )
+		{
+			base = Spawn("AmmoLEDScreen",(MINILEDBASE,-32.,floorz+32./halfstretch));
+			base.scale.y /= level.pixelstretch;
+		}
+		for ( int i=0; i<3; i++ )
+		{
+			if ( !digits[i] )
+			{
+				digits[i] = Spawn("LEDFont",(MINILEDBASE+1.,-30.+20.*i,floorz+16./halfstretch));
+				digits[i].scale.y /= level.pixelstretch;
+			}
+		}
 	}
 	override void Tick()
 	{
@@ -130,10 +179,25 @@ Class UTRocketLauncherLED : Actor
 
 	override void PostBeginPlay()
 	{
-		SetOrigin((ROCKETLEDBASE+32,32,18),false);
-		pitch = 90;
-		if ( !base ) base = Spawn("AmmoLEDScreen",(ROCKETLEDBASE+64,0,0));
-		for ( int i=0; i<3; i++ ) if ( !digits[i] ) digits[i] = Spawn("LEDFont",(ROCKETLEDBASE+51,22+20*i,1));
+		SetOrigin((ROCKETLEDBASE+32,0,0),false);
+		SetZ(floorz);
+		roll = 180;
+		angle = 180;
+		double stretch = level.pixelstretch;
+		double halfstretch = (1.+level.pixelstretch)/2.;
+		if ( !base )
+		{
+			base = Spawn("AmmoLEDScreen",(ROCKETLEDBASE,-32.,floorz+32./halfstretch));
+			base.scale.y /= level.pixelstretch;
+		}
+		for ( int i=0; i<3; i++ )
+		{
+			if ( !digits[i] )
+			{
+				digits[i] = Spawn("LEDFont",(ROCKETLEDBASE+1.,-30.+20.*i,floorz+16./halfstretch));
+				digits[i].scale.y /= level.pixelstretch;
+			}
+		}
 	}
 	override void Tick()
 	{
@@ -162,8 +226,7 @@ Class LEDFont : Actor
 		+NOGRAVITY;
 		+NOINTERACTION;
 		+DONTSPLASH;
-		+FLATSPRITE;
-		+YFLIP;	// flatsprites™
+		+WALLSPRITE;
 	}
 	States
 	{
@@ -186,9 +249,7 @@ Class AmmoCountBar : Actor
 		+NOGRAVITY;
 		+NOINTERACTION;
 		+DONTSPLASH;
-		+FLATSPRITE;
-		+XFLIP;	// flatsprites™
-		+YFLIP;	// flatsprites™
+		+WALLSPRITE;
 	}
 	States
 	{
@@ -209,9 +270,7 @@ Class AmmoLEDScreen : Actor
 		+NOGRAVITY;
 		+NOINTERACTION;
 		+DONTSPLASH;
-		+FLATSPRITE;
-		+XFLIP;	// flatsprites™
-		+YFLIP;	// flatsprites™
+		+WALLSPRITE;
 	}
 	States
 	{

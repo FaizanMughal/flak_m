@@ -307,7 +307,7 @@ Class UTRocketLauncher : UTWeapon
 		}
 		if ( !Owner || !Owner.player || (Owner != players[consoleplayer].Camera) ) return;
 		ammoled.mygun = self;
-		//TexMan.SetCameraToTexture(ammoled,"RAmmoLed",90);
+		TexMan.SetCameraToTexture(ammoled,"RAmmoLed",90);
 	}
 
 	override void PostBeginPlay()

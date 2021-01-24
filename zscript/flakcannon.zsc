@@ -650,7 +650,7 @@ Class FlakCannon : UTWeapon
 		}
 		if ( !Owner || !Owner.player || (Owner != players[consoleplayer].Camera) ) return;
 		ammoled.mygun = self;
-		//TexMan.SetCameraToTexture(ammoled,"FlakALed",90);
+		TexMan.SetCameraToTexture(ammoled,"FlakALed",90);
 	}
 
 	action void A_Loading( bool first = false )
