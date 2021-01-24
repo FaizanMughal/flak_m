@@ -1,0 +1,192 @@
+const PULSELEDBASE = 60000;
+const FLAKLEDBASE = 61000;
+const MINILEDBASE = 62000;
+const ROCKETLEDBASE = 63000;
+
+Class PulseGunLED : Actor
+{
+	Actor base, digits[3], bar;
+	transient PulseGun mygun;
+
+	override void PostBeginPlay()
+	{
+		SetOrigin((PULSELEDBASE+64,128,99),false);
+		pitch = 90;
+		if ( !base ) base = Spawn("AmmoLEDScreen",(PULSELEDBASE+128,0,0));
+		for ( int i=0; i<3; i++ ) if ( !digits[i] ) digits[i] = Spawn("LEDFont",(PULSELEDBASE+99,104+48*i,1));
+		if ( !bar ) bar = Spawn("AmmoCountBar",(PULSELEDBASE+110,30,1));
+	}
+	override void Tick()
+	{
+		if ( !mygun ) return;
+		base.SetState(base.SpawnState);
+		int amo = flak_pulsereload?mygun.ClipCount:mygun.Ammo1.Amount;
+		int mamo = flak_pulsereload?mygun.default.ClipCount:mygun.Ammo1.MaxAmount;
+		digits[0].SetState(digits[0].SpawnState+1+((amo/100)%10));
+		digits[1].SetState(digits[1].SpawnState+1+((amo/10)%10));
+		digits[2].SetState(digits[2].SpawnState+1+(amo%10));
+		if ( amo < 10 )
+		{
+			digits[0].SetShade(Color(255,0,0));
+			digits[1].SetShade(Color(255,0,0));
+			digits[2].SetShade(Color(255,0,0));
+		}
+		else
+		{
+			digits[0].SetShade(Color(0,0,255));
+			digits[1].SetShade(Color(0,0,255));
+			digits[2].SetShade(Color(0,0,255));
+		}
+		bar.scale.x = amo/double(mamo);
+	}
+}
+
+Class FlakCannonLED : Actor
+{
+	Actor base, digits[3];
+	transient FlakCannon mygun;
+
+	override void PostBeginPlay()
+	{
+		SetOrigin((FLAKLEDBASE+32,64,45),false);
+		pitch = 90;
+		if ( !base ) base = Spawn("AmmoLEDScreen",(FLAKLEDBASE+64,0,0));
+		for ( int i=0; i<3; i++ ) if ( !digits[i] ) digits[i] = Spawn("LEDFont",(FLAKLEDBASE+51,54+20*i,1));
+	}
+	override void Tick()
+	{
+		if ( !mygun ) return;
+		base.SetState(base.SpawnState+1);
+		int amo = mygun.Ammo1.Amount;
+		digits[0].SetState(digits[0].SpawnState+11+((amo/100)%10));
+		digits[1].SetState(digits[1].SpawnState+11+((amo/10)%10));
+		digits[2].SetState(digits[2].SpawnState+11+(amo%10));
+		digits[0].SetShade(Color(255,0,0));
+		digits[1].SetShade(Color(255,0,0));
+		digits[2].SetShade(Color(255,0,0));
+	}
+}
+
+Class MinigunLED : Actor
+{
+	Actor base, digits[3];
+	transient Minigun mygun;
+
+	override void PostBeginPlay()
+	{
+		SetOrigin((MINILEDBASE+32,32,18),false);
+		pitch = 90;
+		if ( !base ) base = Spawn("AmmoLEDScreen",(MINILEDBASE+64,0,0));
+		for ( int i=0; i<3; i++ ) if ( !digits[i] ) digits[i] = Spawn("LEDFont",(MINILEDBASE+51,22+20*i,1));
+	}
+	override void Tick()
+	{
+		if ( !mygun ) return;
+		base.SetState(base.SpawnState+2);
+		int amo = mygun.Ammo1.Amount;
+		digits[0].SetState(digits[0].SpawnState+11+((amo/100)%10));
+		digits[1].SetState(digits[1].SpawnState+11+((amo/10)%10));
+		digits[2].SetState(digits[2].SpawnState+11+(amo%10));
+		digits[0].SetShade(Color(255,0,0));
+		digits[1].SetShade(Color(255,0,0));
+		digits[2].SetShade(Color(255,0,0));
+	}
+}
+
+Class UTRocketLauncherLED : Actor
+{
+	Actor base, digits[3];
+	transient UTRocketLauncher mygun;
+
+	override void PostBeginPlay()
+	{
+		SetOrigin((ROCKETLEDBASE+32,32,18),false);
+		pitch = 90;
+		if ( !base ) base = Spawn("AmmoLEDScreen",(ROCKETLEDBASE+64,0,0));
+		for ( int i=0; i<3; i++ ) if ( !digits[i] ) digits[i] = Spawn("LEDFont",(ROCKETLEDBASE+51,22+20*i,1));
+	}
+	override void Tick()
+	{
+		if ( !mygun ) return;
+		base.SetState(base.SpawnState+3);
+		int amo = mygun.Ammo1.Amount;
+		digits[0].SetState(digits[0].SpawnState+11+((amo/100)%10));
+		digits[1].SetState(digits[1].SpawnState+11+((amo/10)%10));
+		digits[2].SetState(digits[2].SpawnState+11+(amo%10));
+		digits[0].SetShade(Color(255,0,0));
+		digits[1].SetShade(Color(255,0,0));
+		digits[2].SetShade(Color(255,0,0));
+	}
+}
+
+Class LEDFont : Actor
+{
+	Default
+	{
+		RenderStyle "Shaded";
+		StencilColor "FF 00 00";
+		Radius .1;
+		Height 0.;
+		RenderRadius 256;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+NOINTERACTION;
+		+DONTSPLASH;
+		+FLATSPRITE;
+		+YFLIP;	// flatsprites™
+	}
+	States
+	{
+	Spawn:
+		TNT1 A -1;
+		LFN1 ABCDEFGHIJ -1 Bright;
+		LFN2 ABCDEFGHIJ -1 Bright;
+		Stop;
+	}
+}
+
+Class AmmoCountBar : Actor
+{
+	Default
+	{
+		Radius .1;
+		Height 0.;
+		RenderRadius 256;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+NOINTERACTION;
+		+DONTSPLASH;
+		+FLATSPRITE;
+		+XFLIP;	// flatsprites™
+		+YFLIP;	// flatsprites™
+	}
+	States
+	{
+	Spawn:
+		AMCB A -1 Bright;
+		Stop;
+	}
+}
+
+Class AmmoLEDScreen : Actor
+{
+	Default
+	{
+		Radius .1;
+		Height 0.;
+		RenderRadius 256;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+NOINTERACTION;
+		+DONTSPLASH;
+		+FLATSPRITE;
+		+XFLIP;	// flatsprites™
+		+YFLIP;	// flatsprites™
+	}
+	States
+	{
+	Spawn:
+		AMLD ABCD -1 Bright;
+		Stop;
+	}
+}

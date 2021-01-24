@@ -124,7 +124,6 @@ Class UTChainsaw : UTWeapon
 	{
 		invoker.ammocharge += 10./TICRATE;
 		A_QuakeEx(2,2,2,2,0,1,"",QF_RELATIVE,rollIntensity:0.15);
-		UTMainHandler.DoSwing(self,(FRandom[Chainsaw](-1,1),FRandom[Chainsaw](-1,1)),0.6,-0.2,2,SWING_Spring);
 		invoker.sawcnt += 1./TICRATE;
 		if ( invoker.sawcnt > 0.15 )
 		{
@@ -177,7 +176,6 @@ Class UTChainsaw : UTWeapon
 	{
 		invoker.ammocharge += 20./TICRATE;
 		A_QuakeEx(2,2,2,3,0,1,"",QF_RELATIVE,rollIntensity:0.15);
-		UTMainHandler.DoSwing(self,(FRandom[Chainsaw](-1,1),FRandom[Chainsaw](-1,1)),0.6,-0.2,2,SWING_Spring);
 		if ( initial ) invoker.FireEffect();
 		A_AlertMonsters();
 		Vector3 x, y, z;
@@ -233,7 +231,6 @@ Class UTChainsaw : UTWeapon
 			A_QuakeEx(1,1,1,3,0,1,"",QF_RELATIVE,rollIntensity:0.4);
 		}
 		else A_QuakeEx(0,0,0,2,0,1,"",QF_RELATIVE,rollIntensity:0.2);
-		UTMainHandler.DoSwing(self,(FRandom[Chainsaw](-1,1),FRandom[Chainsaw](-1,1)),0.25,-0.1,2,SWING_Spring);
 		if ( bAlt || Random[Chainsaw](0,2) ) return;
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
@@ -334,14 +331,9 @@ Class UTChainsaw : UTWeapon
 		{
 			A_StopSound(CHAN_WEAPONMISC);
 			A_StartSound("chainsaw/fire",CHAN_WEAPON);
-			UTMainHandler.DoSwing(self,(FRandom[Chainsaw](-0.8,-1.2),FRandom[Chainsaw](-0.4,-0.7)),0,1,5,SWING_Spring,6,3);
 		}
 		CSWA ABCDE 2 A_Vibrate(true);
-		CSWA F 2
-		{
-			A_Overlay(PSP_WEAPON+1,"AltFireSwipes");
-			UTMainHandler.DoSwing(self,(FRandom[Chainsaw](0.8,1.2),0),0,2,6,SWING_Spring,1,3);
-		}
+		CSWA F 2 A_Overlay(PSP_WEAPON+1,"AltFireSwipes");
 		CSWA GHIJ 2;
 		CSWA K 2 A_Vibrate(true);
 		CSWA K 0

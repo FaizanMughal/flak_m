@@ -4,3 +4,7 @@ texture static1
 	range static4 tics 1
 texture invis00
 	range invis31 tics 2
+cameratexture PAmmoLed 256 128
+cameratexture FlakALed 128 64
+cameratexture MiniALed 64 64
+cameratexture RAmmoLed 64 64

@@ -103,7 +103,7 @@ Model "PulseGun"
 	Path "models"
 	Model 0 "PulseGunR_d.3d"
 	// indices start at 1 for this model
-	SurfaceSkin 0 1 "AmmoLedBase.png"
+	SurfaceSkin 0 1 "PAmmoLed"
 	SurfaceSkin 0 2 "JPulseGun_02.png"
 	SurfaceSkin 0 3 "JPulseGun_03.png"
 	AngleOffset 90

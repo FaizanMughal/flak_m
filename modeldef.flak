@@ -234,7 +234,7 @@ Model "FlakCannon"
 	SurfaceSkin 0 1 "flak_t2.png"
 	SurfaceSkin 0 2 "flak_t3.png"
 	SurfaceSkin 0 3 "flak_t4.png"
-	SurfaceSkin 0 4 "flakammoledbase.png"
+	SurfaceSkin 0 4 "FlakALed"
 	AngleOffset 90
 	PitchOffset 180
 	RollOffset 178
