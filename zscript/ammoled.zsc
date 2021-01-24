@@ -20,7 +20,7 @@ Class PulseGunLED : Actor
 
 	override void PostBeginPlay()
 	{
-		SetOrigin((PULSELEDBASE+128,0,0),false);
+		SetOrigin((PULSELEDBASE+128,PULSELEDBASE,0),false);
 		SetZ(floorz);
 		roll = 180;
 		angle = 180;
@@ -28,20 +28,20 @@ Class PulseGunLED : Actor
 		double halfstretch = (1.+level.pixelstretch)/2.;
 		if ( !base )
 		{
-			base = Spawn("AmmoLEDScreen",(PULSELEDBASE,-128.,floorz+64./halfstretch));
+			base = Spawn("AmmoLEDScreen",(PULSELEDBASE,PULSELEDBASE-128.,floorz+64./halfstretch));
 			base.scale.y /= level.pixelstretch;
 		}
 		for ( int i=0; i<3; i++ )
 		{
 			if ( !digits[i] )
 			{
-				digits[i] = Spawn("LEDFont",(PULSELEDBASE+1.,-72.+48.*i,floorz+50./halfstretch));
+				digits[i] = Spawn("LEDFont",(PULSELEDBASE+1.,PULSELEDBASE-72.+48.*i,floorz+50./halfstretch));
 				digits[i].scale.y /= level.pixelstretch;
 			}
 		}
 		if ( !bar )
 		{
-			bar = Spawn("AmmoCountBar",(PULSELEDBASE+1.,-98.,floorz-26./halfstretch));
+			bar = Spawn("AmmoCountBar",(PULSELEDBASE+1.,PULSELEDBASE-98.,floorz-26./halfstretch));
 			bar.scale.y /= level.pixelstretch;
 		}
 	}
@@ -87,7 +87,7 @@ Class FlakCannonLED : Actor
 
 	override void PostBeginPlay()
 	{
-		SetOrigin((FLAKLEDBASE+64,0,0),false);
+		SetOrigin((FLAKLEDBASE+64,FLAKLEDBASE,0),false);
 		SetZ(floorz);
 		roll = 180;
 		angle = 180;
@@ -95,14 +95,14 @@ Class FlakCannonLED : Actor
 		double halfstretch = (1.+level.pixelstretch)/2.;
 		if ( !base )
 		{
-			base = Spawn("AmmoLEDScreen",(FLAKLEDBASE,-64.,floorz+32./halfstretch));
+			base = Spawn("AmmoLEDScreen",(FLAKLEDBASE,FLAKLEDBASE-64.,floorz+32./halfstretch));
 			base.scale.y /= level.pixelstretch;
 		}
 		for ( int i=0; i<3; i++ )
 		{
 			if ( !digits[i] )
 			{
-				digits[i] = Spawn("LEDFont",(FLAKLEDBASE+1.,-30.+20.*i,floorz+16./halfstretch));
+				digits[i] = Spawn("LEDFont",(FLAKLEDBASE+1.,FLAKLEDBASE-30.+20.*i,floorz+16./halfstretch));
 				digits[i].scale.y /= level.pixelstretch;
 			}
 		}
@@ -138,7 +138,7 @@ Class MinigunLED : Actor
 
 	override void PostBeginPlay()
 	{
-		SetOrigin((MINILEDBASE+32,0,0),false);
+		SetOrigin((MINILEDBASE+32,MINILEDBASE,0),false);
 		SetZ(floorz);
 		roll = 180;
 		angle = 180;
@@ -146,14 +146,14 @@ Class MinigunLED : Actor
 		double halfstretch = (1.+level.pixelstretch)/2.;
 		if ( !base )
 		{
-			base = Spawn("AmmoLEDScreen",(MINILEDBASE,-32.,floorz+32./halfstretch));
+			base = Spawn("AmmoLEDScreen",(MINILEDBASE,MINILEDBASE-32.,floorz+32./halfstretch));
 			base.scale.y /= level.pixelstretch;
 		}
 		for ( int i=0; i<3; i++ )
 		{
 			if ( !digits[i] )
 			{
-				digits[i] = Spawn("LEDFont",(MINILEDBASE+1.,-30.+20.*i,floorz+16./halfstretch));
+				digits[i] = Spawn("LEDFont",(MINILEDBASE+1.,MINILEDBASE-30.+20.*i,floorz+16./halfstretch));
 				digits[i].scale.y /= level.pixelstretch;
 			}
 		}
@@ -179,7 +179,7 @@ Class UTRocketLauncherLED : Actor
 
 	override void PostBeginPlay()
 	{
-		SetOrigin((ROCKETLEDBASE+32,0,0),false);
+		SetOrigin((ROCKETLEDBASE+32,ROCKETLEDBASE,0),false);
 		SetZ(floorz);
 		roll = 180;
 		angle = 180;
@@ -187,14 +187,14 @@ Class UTRocketLauncherLED : Actor
 		double halfstretch = (1.+level.pixelstretch)/2.;
 		if ( !base )
 		{
-			base = Spawn("AmmoLEDScreen",(ROCKETLEDBASE,-32.,floorz+32./halfstretch));
+			base = Spawn("AmmoLEDScreen",(ROCKETLEDBASE,ROCKETLEDBASE-32.,floorz+32./halfstretch));
 			base.scale.y /= level.pixelstretch;
 		}
 		for ( int i=0; i<3; i++ )
 		{
 			if ( !digits[i] )
 			{
-				digits[i] = Spawn("LEDFont",(ROCKETLEDBASE+1.,-30.+20.*i,floorz+16./halfstretch));
+				digits[i] = Spawn("LEDFont",(ROCKETLEDBASE+1.,ROCKETLEDBASE-30.+20.*i,floorz+16./halfstretch));
 				digits[i].scale.y /= level.pixelstretch;
 			}
 		}
