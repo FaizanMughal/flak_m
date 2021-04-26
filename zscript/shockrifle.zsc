@@ -344,11 +344,7 @@ Class ShockBeam : Actor
 			ExplodeMissile(null,t.Results.HitActor);
 			if ( t.Results.HitActor is 'ShockHitbox' )
 			{
-				if ( target )
-				{
-					target.TakeInventory('ShockAmmo',2);
-					UTMainHandler.DoSwing(target,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),5,-1,3,SWING_Spring,3,6);
-				}
+				if ( target ) target.TakeInventory('ShockAmmo',2);
 				let b = t.Results.HitActor.target;
 				UTMainHandler.DoBlast(b,250,70000);
 				b.ExplodeMissile(null,self);
@@ -581,11 +577,7 @@ Class SuperShockBeam : Actor
 			ExplodeMissile(null,t.Results.HitActor);
 			if ( t.Results.HitActor is 'ShockHitbox' )
 			{
-				if ( target )
-				{
-					target.TakeInventory('EnhancedShockAmmo',1);
-					UTMainHandler.DoSwing(target,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),10,-2,3,SWING_Spring,3,6);
-				}
+				if ( target ) target.TakeInventory('EnhancedShockAmmo',1);
 				let b = t.Results.HitActor.target;
 				UTMainHandler.DoBlast(b,400,70000);
 				b.ExplodeMissile(null,self);
@@ -1069,7 +1061,6 @@ Class ShockRifle : UTWeapon
 		A_StartSound("shock/fire",CHAN_WEAPON,CHANF_OVERLAP);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,128,0,255),1);
-		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),2,-0.3,3,SWING_Spring,0,4);
 		A_AlertMonsters();
 		A_QuakeEx(2,2,2,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
@@ -1107,7 +1098,6 @@ Class ShockRifle : UTWeapon
 		A_StartSound("shock/altfire",CHAN_WEAPON,CHANF_OVERLAP);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,128,0,255),1);
-		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),3,-0.4,3,SWING_Spring,0,4);
 		A_AlertMonsters();
 		A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
@@ -1252,7 +1242,6 @@ Class EnhancedShockRifle : UTWeapon
 		A_StartSound("shock/fire",CHAN_WEAPON,CHANF_OVERLAP);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,0),1);
-		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),4,-0.6,3,SWING_Spring,0,4);
 		A_AlertMonsters();
 		A_QuakeEx(3,3,3,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.15);
 		Vector3 x, y, z;
@@ -1290,7 +1279,6 @@ Class EnhancedShockRifle : UTWeapon
 		A_StartSound("shock/altfire",CHAN_WEAPON,CHANF_OVERLAP);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(128,255,128,0),1);
-		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),6,-0.8,3,SWING_Spring,0,4);
 		A_AlertMonsters();
 		A_QuakeEx(3,3,3,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.15);
 		Vector3 x, y, z;

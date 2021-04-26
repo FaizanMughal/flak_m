@@ -566,6 +566,22 @@ Class PulseGun : UTWeapon
 
 	Property ClipCount : clipcount;
 
+	PulseGunLED ammoled;
+
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if ( !ammoled )
+		{
+			let ti = ThinkerIterator.Create("PulseGunLED");
+			while ( ammoled=PulseGunLED(ti.Next()) ) break;
+			if ( !ammoled ) ammoled = PulseGunLED(Spawn("PulseGunLED"));
+		}
+		if ( !Owner || !Owner.player || (Owner != players[consoleplayer].Camera) ) return;
+		ammoled.mygun = self;
+		TexMan.SetCameraToTexture(ammoled,"PAmmoLed",90);
+	}
+
 	override int, int, bool, bool GetClipAmount()
 	{
 		if ( !flak_pulsereload ) return Super.GetClipAmount();
@@ -592,7 +608,6 @@ Class PulseGun : UTWeapon
 		if ( !flak_pulsereload && (invoker.clipcount <= 0) ) invoker.clipcount = min(invoker.default.clipcount,weap.Ammo1.Amount);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,128,255,128),1);
-		UTMainHandler.DoSwing(self,(FRandom[Pulse](-1,1),FRandom[Pulse](-1,1)),0.1,-0.02,3,SWING_Spring,0,2);
 		A_AlertMonsters();
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
@@ -653,7 +668,6 @@ Class PulseGun : UTWeapon
 		if ( !flak_pulsereload && (invoker.clipcount <=0) ) invoker.clipcount = (weap.Ammo1.Amount>0)?Min(50,weap.Ammo1.Amount):50;
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,128,255,128),1);
-		UTMainHandler.DoSwing(self,(FRandom[Pulse](-1,-1),FRandom[Pulse](-1,1)),0.3,-0.1,2,SWING_Spring,0,3);
 		A_AlertMonsters();
 		A_QuakeEx(1,1,1,2,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
 		A_Overlay(-2,"MuzzleFlash");

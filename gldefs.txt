@@ -431,14 +431,6 @@ HardwareShader Texture "models/JPulsePickup_01.png"
 	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
 	Texture "brighttex" "brightmaps/JPulsePickup_01.png"
 }
-Brightmap Texture "models/AmmoLedBase.png"
-{
-	Map "brightmaps/fullbright.png"
-}
-Brightmap Texture "models/FlakAmmoLEDBase.png"
-{
-	Map "brightmaps/fullbright.png"
-}
 HardwareShader Texture "models/AToxSuit1.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
@@ -613,10 +605,6 @@ Brightmap Texture "models/Eight_t1.png"
 Brightmap Texture "models/Eight_t4.png"
 {
 	Map "brightmaps/Eight_t4.png"
-}
-Brightmap Texture "models/miniammoledbase.png"
-{
-	Map "brightmaps/fullbright.png"
 }
 HardwareShader Texture "models/tloc1_.png"
 {

@@ -1,9 +1,8 @@
 # DOOM TOURNAMENT
 
-What began as a test for importing UT vertex meshes has turned into an actual
-full UT weapon and item mod.
+What began as a test for importing UT vertex meshes has turned into an actual full UT weapon and item mod.
 
-This mod requires GZDoom 4.2.4 or later.
+This mod requires GZDoom 4.3 or later.
 
 ## Currently implemented
 
@@ -49,8 +48,6 @@ This mod requires GZDoom 4.2.4 or later.
    - "Instant Rocket" mode toggleable with reload
  - Scaling/Customization options for the HUD
  - UT-like player movement physics
- - Visual recoil affecting aim (improved A_Swing from Soundless Mound, can be
-   toggled)
  - UT-like weapon dropping style
  - UT player classes
  - Heretic compatibility
@@ -61,29 +58,23 @@ This mod requires GZDoom 4.2.4 or later.
  - Hexen compatibility
  - Fancy titlemap
  - Semi-accurate UT sound behaviour
+ - Hacky cameratexture ammo counters for Pulsegun, Minigun, Flak Cannon and rocket launcher (may break)
 
 ## In progress
 
- - N/A this is the 1.1.2 release.
+ - N/A this is the 1.1.3 release.
 
 ## Planned
 
  - Stuff for 1.2
-   - Touch up blood/gibbing features. At the moment, Nashgore is still a
-     superior alternative.
+   - Refactor everything, backporting many fixes and improvements from SWWM GZ.
+   - Touch up blood/gibbing features. At the moment, Nashgore is still a superior alternative.
    - Help screens describing items and stuff (maybe?).
-   - Chex Quest compatibility ?
-   - Strife compatibility ????
  - Stuff for much later
-   - Add ammo counters to Pulsegun, Minigun, Flak Cannon and Rocket Launcher
-     once scripted textures are implemented
-   - Redo player models once GZDoom gets a well deserved model animation system
-     overhaul (mainly to clean up the current, messy implementation of this)
-   - Add weapon attachment support to player models when that is also added in
-     (at the moment all player models have an integrated placeholder weapon)
+   - Proper scripted textures for ammo counters, if they are ever implemented.
+   - Redo player models once GZDoom gets a well deserved model animation system overhaul (mainly to clean up the current, messy implementation of this).
+   - Add weapon attachment support to player models when that is also added in (at the moment all player models have an integrated placeholder weapon).
 
 ## Known bugs
 
- - Biorifle sludge doesn't attach properly when it lands on the edge between
-   sectors. This is most noticeable with moving sectors and 3d floors. This
-   might be fixed once there's virtuals for world collision.
+ - Biorifle sludge doesn't attach properly when it lands on the edge between sectors. This is most noticeable with moving sectors and 3d floors. It doesn't seem like there's an easy fix for this.

@@ -933,7 +933,7 @@ Class UTPlayer : DoomPlayer
 				|| InStateSequence(CurState,FindState("Turn")) )
 				SetStateLabel("See2");
 		}
-		else if ( !bNoGravity && (waterlevel < 1) )
+		else if ( !bNoGravity && (waterlevel < 1) && abs(pos.z-floorz) > maxstepheight )
 		{
 			// Falling
 			if ( InStateSequence(CurState,FindState("Spawn"))
@@ -1086,7 +1086,7 @@ Class UTPlayer : DoomPlayer
 		// Gib the player, the camera will attach to the head at this point
 		A_GibMe();
 		A_NoBlocking();
-		SetStateLabel('null');
+		SetStateLabel("IceBurst");
 	}
 
 	void A_PainDT()
@@ -1292,6 +1292,10 @@ Class UTPlayer : DoomPlayer
 	Ice:
 		PICE A 5 A_FreezeDeath();
 		PICE A 1 A_FreezeDeathChunksDT();
+		Wait;
+	IceBurst:
+		TNT1 A 35;
+		TNT1 A 1 A_CheckPlayerDone();
 		Wait;
 	}
 }
@@ -2865,68 +2869,6 @@ Class UTBulletTrail : LineTracer
 	}
 }
 
-Enum ESwingMode
-{
-	SWING_Straight,	// constant increment
-	SWING_Spring,	// bounces back after a delay
-};
-
-Class Swinger : Thinker
-{
-	Actor target;
-	Vector2 dir;
-	double inc, rmul;
-	int steps, mode, delay;
-	double str, tstr;
-	int cnt, cstate;
-
-	Enum ESwingerState
-	{
-		STATE_Initial,
-		STATE_Wait,
-		STATE_Return,
-	};
-
-	override void Tick()
-	{
-		if ( !target ) cstate = -1;
-		switch ( cstate )
-		{
-		case STATE_Initial:
-			target.A_SetAngle(target.angle+dir.x*str*flak_swingerstrength,SPF_INTERPOLATE);
-			target.A_SetPitch(target.pitch+dir.y*str*flak_swingerstrength,SPF_INTERPOLATE);
-			str += inc;
-			if ( ++cnt >= steps )
-			{
-				cnt = 0;
-				str = tstr/steps;
-				cstate = (mode==SWING_Straight)?(-1):(delay>0)?STATE_Wait:STATE_Return;
-			}
-			else tstr += str;
-			break;
-		case STATE_Wait:
-			if ( ++cnt >= delay )
-			{
-				cnt = 0;
-				cstate = STATE_Return;
-			}
-			break;
-		case STATE_Return:
-			target.A_SetAngle(target.angle-dir.x*(str/rmul)*flak_swingerstrength,SPF_INTERPOLATE);
-			target.A_SetPitch(target.pitch-dir.y*(str/rmul)*flak_swingerstrength,SPF_INTERPOLATE);
-			if ( ++cnt >= steps*rmul )
-			{
-				cnt = 0;
-				cstate = -1;
-			}
-			break;
-		default:
-			Destroy();
-			return;
-		}
-	}
-}
-
 Class GenericFlash : HUDMessageBase
 {
 	Color col;
@@ -3542,11 +3484,11 @@ Class UTMainHandler : EventHandler
 		if ( !e.Thing.player && !e.Thing.bIsMonster && !e.Thing.bCountKill ) return;
 		if ( (e.Inflictor && e.Inflictor.player && (e.Inflictor != e.Thing)) || (e.DamageSource && e.DamageSource.player && (e.DamageSource != e.Thing)) )
 		{
-			Weapon saw = Weapon(e.Inflictor.FindInventory("UTChainsaw"));
-			if ( !saw ) saw = Weapon(e.DamageSource.FindInventory("UTChainsaw"));
+			Weapon saw = Weapon(e.Inflictor?e.Inflictor.FindInventory("UTChainsaw"):null);
+			if ( !saw ) saw = Weapon(e.DamageSource?e.DamageSource.FindInventory("UTChainsaw"):null);
 			bool current = false;
-			if ( e.Inflictor.player && e.Inflictor.player.ReadyWeapon == saw ) current = true;
-			if ( e.DamageSource.player && (e.DamageSource.player.ReadyWeapon == saw) ) current = true;
+			if ( e.Inflictor && e.Inflictor.player && (e.Inflictor.player.ReadyWeapon == saw) ) current = true;
+			if ( e.DamageSource && e.DamageSource.player && (e.DamageSource.player.ReadyWeapon == saw) ) current = true;
 			if ( flak_sawammo && saw && (saw.Ammo1.Amount < 40) && !current && !Random[SawDrop](0,9) )
 			{
 				let a = Actor.Spawn("ChainsawAmmo",e.Thing.Vec3Offset(0,0,e.Thing.Height*.5));
@@ -3622,24 +3564,6 @@ Class UTMainHandler : EventHandler
 		if ( (Victim is 'ShredCorpseHitbox') && Victim.target )
 			Victim.target.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.target.Mass));
 		else Victim.vel += HitDirection*(MomentumTransfer/(Thinker.TICRATE*Victim.Mass));
-	}
-
-	static void DoSwing( Actor target, Vector2 dir, double initial, double inc, int steps, int mode = 0, int delay = 0, double rmul = 1.0 )
-	{
-		if ( !flak_swingers ) return;
-		let s = new("Swinger");
-		s.ChangeStatNum(Thinker.STAT_USER);
-		s.target = target;
-		s.dir = dir;
-		s.inc = inc;
-		s.rmul = rmul;
-		s.steps = steps;
-		s.mode = mode;
-		s.delay = delay;
-		s.cnt = 0;
-		s.cstate = 0;
-		s.str = initial;
-		s.tstr = initial;
 	}
 
 	override void UiTick()
